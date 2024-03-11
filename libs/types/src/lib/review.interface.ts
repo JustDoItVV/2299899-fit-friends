@@ -1,10 +1,7 @@
-import { Training } from './training.interface';
-import { User } from './user.interface';
-
 export interface Review {
   id?: string;
-  user: User;
-  training: Training;
+  userId: string;
+  trainingId: string;
   rating: number;
   text: string;
 }

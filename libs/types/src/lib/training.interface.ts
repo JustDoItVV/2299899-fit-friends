@@ -1,7 +1,6 @@
 import { TrainingDuration } from './training-duration.enum';
 import { TrainingLevel } from './training-level.enum';
 import { TrainingType } from './training-type.enum';
-import { User } from './user.interface';
 
 export interface Training {
   id?: string;
@@ -15,7 +14,7 @@ export interface Training {
   description: string;
   gender: string;
   video: string;
-  rating: number;
-  user: User;
+  rating?: number;
+  userId: string;
   isSpecialOffer: boolean;
 }

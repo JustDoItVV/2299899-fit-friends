@@ -10,6 +10,7 @@ export const TrainingBackgroundPictureAllowedExtensions = {
 
 export enum PriceLimit {
   Min = 0,
+  Max = 10000000,
 }
 
 export enum TrainingDescriptionLimit {

@@ -27,12 +27,12 @@ model User {
   createdAt      DateTime @default(now()) @map("created_at")
   updatedAt      DateTime @updatedAt @map("updated_at")
 
-  trainingLevel String @map("training_level")
-  trainingType  String @map("training_type")
+  trainingLevel String   @map("training_level")
+  trainingType  String[] @map("training_type")
 
   trainingDuration  String  @map("training_duration")
-  caloriesTarget    String  @map("calories_target")
-  caloriesPerDay    String  @map("calories_per_day")
+  caloriesTarget    Int     @map("calories_target")
+  caloriesPerDay    Int     @map("calories_per_day")
   isReadyToTraining Boolean @map("is_ready_to_training")
 
   certificate       String
@@ -45,6 +45,7 @@ model User {
   requestsPersonalTriningTarget RequestPersonalTraining[] @relation("Target")
   Review                        Review[]
   Notification                  Notification[]
+  Balance                       Balance[]
 
   @@map("users")
 }
@@ -55,7 +56,7 @@ model Training {
   backgroundPicture String    @map("background_picture")
   level             String
   type              String
-  duration          Int
+  duration          String
   price             Int
   calories          Int
   description       String
@@ -137,6 +138,8 @@ model Notification {
 
 model Balance {
   id          String   @id @default(uuid())
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      String   @map("user_id")
   training    Training @relation(fields: [trainingId], references: [id], onDelete: Cascade)
   trainingId  String   @map("training_id")
   isAvailable Boolean

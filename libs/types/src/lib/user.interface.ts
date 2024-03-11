@@ -8,12 +8,12 @@ export interface User {
   id?: string;
   name: string;
   email: string;
-  avatar?: string;
-  passwordHash?: string;
+  avatar: string | undefined;
+  passwordHash: string;
   gender: UserGender;
-  birthDate?: Date;
+  birthdate: Date | undefined;
   role: UserRole;
-  description?: string;
+  description: string | undefined;
   location: string;
   pageBackground: string;
   trainingLevel: TrainingLevel;
@@ -23,7 +23,7 @@ export interface User {
   caloriesPerDay: number | undefined;
   isReadyToTraining: boolean | undefined;
   certificate: string | undefined;
-  merits?: string;
+  merits: string | undefined;
   isReadyToPersonal: boolean | undefined;
   accessToken?: string;
   refreshToken?: string;
