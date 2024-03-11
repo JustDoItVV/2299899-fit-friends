@@ -1,0 +1,8 @@
+{
+  "name": "consts",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/consts/src",
+  "projectType": "library",
+  "targets": {},
+  "tags": []
+}

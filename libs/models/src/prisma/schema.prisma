@@ -1,0 +1,150 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextSearch"]
+  output          = "../../../../node_modules/.prisma/client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id             String   @id @default(uuid())
+  name           String
+  email          String   @unique
+  avatar         String
+  passwordHash   String   @map("password_hash")
+  gender         String
+  birthdate      DateTime @default(now()) @map("publish_date") @db.Date
+  role           String
+  description    String
+  location       String
+  pageBackground String
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+
+  trainingLevel String   @map("training_level")
+  trainingType  String[] @map("training_type")
+
+  trainingDuration  String  @map("training_duration")
+  caloriesTarget    Int     @map("calories_target")
+  caloriesPerDay    Int     @map("calories_per_day")
+  isReadyToTraining Boolean @map("is_ready_to_training")
+
+  certificate       String
+  merits            String
+  isReadyToPersonal Boolean @map("is_ready_to_personal")
+
+  refreshTokens                 RefreshToken[]
+  trainings                     Training[]
+  requestsPersonalTriningAuthor RequestPersonalTraining[] @relation("Author")
+  requestsPersonalTriningTarget RequestPersonalTraining[] @relation("Target")
+  Review                        Review[]
+  Notification                  Notification[]
+  Balance                       Balance[]
+
+  @@map("users")
+}
+
+model Training {
+  id                String    @id @default(uuid())
+  title             String
+  backgroundPicture String    @map("background_picture")
+  level             String
+  type              String
+  duration          String
+  price             Int
+  calories          Int
+  description       String
+  gender            String
+  video             String
+  user              User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId            String    @map("user_id")
+  isSpecialOffer    Boolean   @map("is_special_offer")
+  createdAt         DateTime  @default(now()) @map("created_at")
+  updatedAt         DateTime  @updatedAt @map("updated_at")
+  Review            Review[]
+  Order             Order[]
+  Balance           Balance[]
+
+  @@map("trainings")
+}
+
+model RefreshToken {
+  id        String   @id @default(uuid())
+  tokenId   String   @map("token_id")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String   @map("user_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  expiresIn DateTime @map("expires_in")
+
+  @@map("refresh_tokens")
+}
+
+model Review {
+  id         String   @id @default(uuid())
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId     String   @map("user_id")
+  training   Training @relation(fields: [trainingId], references: [id], onDelete: Cascade)
+  trainingId String   @map("training_id")
+  rating     Int
+  text       String
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  @@map("reviews")
+}
+
+model Order {
+  id            String   @id @default(uuid())
+  type          String
+  training      Training @relation(fields: [trainingId], references: [id], onDelete: Cascade)
+  trainingId    String   @map("training_id")
+  price         Int
+  amount        Int
+  paymentMethod String   @map("payment_method")
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  @@map("orders")
+}
+
+model RequestPersonalTraining {
+  id        String   @id @default(uuid())
+  author    User     @relation("Author", fields: [authorId], references: [id], onDelete: Cascade)
+  authorId  String   @map("author_id")
+  target    User     @relation("Target", fields: [targetId], references: [id], onDelete: Cascade)
+  targetId  String   @map("target_id")
+  status    String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("requests_personal_training")
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  sentDate  DateTime @default(now()) @map("sent_date")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String   @map("user_id")
+  text      String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("notifications")
+}
+
+model Balance {
+  id          String   @id @default(uuid())
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      String   @map("user_id")
+  training    Training @relation(fields: [trainingId], references: [id], onDelete: Cascade)
+  trainingId  String   @map("training_id")
+  isAvailable Boolean
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@map("balances")
+}
