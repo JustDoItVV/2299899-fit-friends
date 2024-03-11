@@ -15,6 +15,7 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "@2299899-fit-friends/consts": ["libs/consts/src/index.ts"],
       "@2299899-fit-friends/models": ["libs/models/src/index.ts"],
       "@2299899-fit-friends/types": ["libs/types/src/index.ts"]
     }
