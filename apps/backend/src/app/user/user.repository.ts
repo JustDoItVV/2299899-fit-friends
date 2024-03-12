@@ -29,4 +29,18 @@ export class UserRepository extends BasePostgresRepository<UserEntity, User> {
       trainingDuration: document.trainingDuration as TrainingDuration,
     });
   }
+
+  public async findByEmail(email: string): Promise<UserEntity | null> {
+    const document = await this.clientService.user.findFirst({
+      where: { email },
+    });
+    return this.createEntityFromDocument({
+      ...document,
+      gender: document.gender as UserGender,
+      role: document.role as UserRole,
+      trainingLevel: document.trainingLevel as TrainingLevel,
+      trainingType: document.trainingType as TrainingType[],
+      trainingDuration: document.trainingDuration as TrainingDuration,
+    });
+  }
 }

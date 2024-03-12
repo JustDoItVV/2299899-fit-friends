@@ -53,3 +53,12 @@ export enum MeritsLength {
   Min = 10,
   Max = 140,
 }
+
+export enum UserErrorMessage {
+  NotString = 'Must be a string',
+  EmailRequired = 'Email required',
+  EmailNotValid = 'Email not valid',
+  PasswordRequired = 'Password required',
+  PasswordWrong = 'Wrong password',
+  NotFound = 'User with this email not found',
+}
