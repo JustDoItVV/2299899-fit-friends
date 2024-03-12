@@ -2,10 +2,7 @@ import {
   BackendConfigModule,
   getJwtOptions,
 } from '@2299899-fit-friends/config';
-import {
-  AnonymousStrategy,
-  JwtAccessStrategy,
-} from '@2299899-fit-friends/core';
+import { JwtAccessStrategy } from '@2299899-fit-friends/core';
 import { PrismaClientModule } from '@2299899-fit-friends/models';
 import { Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
@@ -33,7 +30,6 @@ import { UserService } from './user.service';
     UserService,
     JwtAccessStrategy,
     JwtRefreshStrategy,
-    AnonymousStrategy,
   ],
 })
 export class UserModule {}
