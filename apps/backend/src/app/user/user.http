@@ -1,0 +1,11 @@
+# Login user by email and password
+POST http://localhost:3001/api/user/login HTTP/1.1
+Content-Type: application/json
+# Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImVhMzJkNmQxLTYyNGYtNGYxNy1iMWYzLTg4YjFhNDhiOWI5YSIsIm5hbWUiOiJhZG1pbiIsImVtYWlsIjoiYWRtaW5AbG9jYWwubG9jYWwiLCJpYXQiOjE3MDgxNTk5MjMsImV4cCI6MTcwODQ1OTkyM30.LvYVziUt-0-uf4AtZIOxZYEanVKwEcytcZ4pwufr-Gs
+
+{
+  "email": "Lane53@local.local",
+  "password": "123456"
+}
+
+###

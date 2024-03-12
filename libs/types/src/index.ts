@@ -22,3 +22,6 @@ export * from './lib/order-type.enum';
 export * from './lib/order-payment-method.enum';
 
 export * from './lib/request-personal-training-status.enum';
+
+export * from './lib/base-entity.interface';
+export * from './lib/base-repository.interface';
