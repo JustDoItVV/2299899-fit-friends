@@ -5,9 +5,9 @@ export async function getJwtOptions(
   configService: ConfigService
 ): Promise<JwtModuleOptions> {
   return {
-    secret: configService.get<string>('jwt.accessTokenSecret'),
+    secret: configService.get<string>('app.accessTokenSecret'),
     signOptions: {
-      expiresIn: configService.get<string>('jwt.accessTokenExpiresIn'),
+      expiresIn: configService.get<string>('app.accessTokenExpiresIn'),
       algorithm: 'HS256',
     },
   };

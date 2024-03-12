@@ -61,4 +61,6 @@ export enum UserErrorMessage {
   PasswordRequired = 'Password required',
   PasswordWrong = 'Wrong password',
   NotFound = 'User with this email not found',
+  OnlyAnonymous = 'Forbidden. Allowed only for unauthorized',
+  TokenCreationError = 'Token creation error',
 }

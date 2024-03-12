@@ -19,6 +19,7 @@
       "@2299899-fit-friends/consts": ["libs/consts/src/index.ts"],
       "@2299899-fit-friends/core": ["libs/core/src/index.ts"],
       "@2299899-fit-friends/dtos": ["libs/dtos/src/index.ts"],
+      "@2299899-fit-friends/helpers": ["libs/helpers/src/index.ts"],
       "@2299899-fit-friends/logger": ["libs/logger/src/index.ts"],
       "@2299899-fit-friends/models": ["libs/models/src/index.ts"],
       "@2299899-fit-friends/types": ["libs/types/src/index.ts"]
