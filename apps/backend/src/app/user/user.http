@@ -4,8 +4,26 @@ Content-Type: application/json
 # Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIyYTg5ZDViNi04MzkxLTQ1YmItYjczOC0yZDQ3MDg4ZGFmMDQiLCJuYW1lIjoiTWlzcyBDaHJpc3R5IEJydWVuLVN0YW50b24gTUQiLCJlbWFpbCI6IkxhbmU1M0Bsb2NhbC5sb2NhbCIsImlhdCI6MTcxMDI0ODA5MywiZXhwIjoxNzEwMjQ4OTkzfQ.A3ILwH3S70mW6HuFj0CSqeomRDV_lzk_oJ0AWrNar0g
 
 {
-  "email": "Lane53@local.local",
+  "email": "Joshuah11@local.local",
   "password": "123456"
 }
+
+###
+
+# Check user token
+POST http://localhost:3001/api/user/check HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIyYTg5ZDViNi04MzkxLTQ1YmItYjczOC0yZDQ3MDg4ZGFmMDQiLCJuYW1lIjoiTWlzcyBDaHJpc3R5IEJydWVuLVN0YW50b24gTUQiLCJlbWFpbCI6IkxhbmU1M0Bsb2NhbC5sb2NhbCIsImlhdCI6MTcxMDI1MDYwOSwiZXhwIjoxNzEwMjUxNTA5fQ.ZJSRBI4wkRmm-JCoVbh6mFYjC6SbjXGw90y8dIZv8dU
+
+###
+
+# Get new JWT pair via refreshToken
+POST http://localhost:3001/api/user/refresh HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIyYTg5ZDViNi04MzkxLTQ1YmItYjczOC0yZDQ3MDg4ZGFmMDQiLCJuYW1lIjoiTWlzcyBDaHJpc3R5IEJydWVuLVN0YW50b24gTUQiLCJlbWFpbCI6IkxhbmU1M0Bsb2NhbC5sb2NhbCIsInRva2VuSWQiOiJkMTFhZWJhOS1iMGNlLTRkM2EtODY1Yy00OGE4OGMxZDM3ZjQiLCJpYXQiOjE3MTAyNTA3NTAsImV4cCI6MTcxMDg1NTU1MH0.jkROu1cPEZZIsdGUwpV8vNlLF7P1Uuu-TOV0_sPaQvM
+
+###
+
+# Destroy refreshToken
+DELETE http://localhost:3001/api/user/refresh HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIwZWU1ZDJiNy1mNGRmLTQxYjctYjE2OC0xYzNlZjNkYjRjMzgiLCJuYW1lIjoiV2lsbGllIFNtaXRoIiwiZW1haWwiOiJKb3NodWFoMTFAbG9jYWwubG9jYWwiLCJ0b2tlbklkIjoiZWFiMzczZjQtMDQ0Ny00MWE4LTk0NDctMDM3ODI0MTRkYjMxIiwiaWF0IjoxNzEwMjU0MzE3LCJleHAiOjE3MTA4NTkxMTd9.yZwd915UUTof0LYGsMDGFn9Thh_Npn4wT0t9WcY_30w
 
 ###

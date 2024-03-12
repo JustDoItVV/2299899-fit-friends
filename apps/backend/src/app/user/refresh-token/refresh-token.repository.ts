@@ -34,9 +34,11 @@ export class RefreshTokenRepository extends BasePostgresRepository<
 
   public async deleteByTokenId(tokenId: string): Promise<void> {
     const document = await this.findByTokenId(tokenId);
-    await this.clientService.refreshToken.delete({
-      where: { id: document.id },
-    });
+    if (document) {
+      await this.clientService.refreshToken.delete({
+        where: { id: document.id },
+      });
+    }
   }
 
   public async deleteExpired() {

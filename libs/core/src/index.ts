@@ -6,5 +6,8 @@ export * from './lib/backend/exceptions/only-anonymous.exception';
 export * from './lib/backend/strategies/jwt-access.strategy';
 
 export * from './lib/backend/decorators/user-param.decorator';
+export * from './lib/backend/decorators/token.decorator';
 
 export * from './lib/backend/guards/only-anonymous.guard';
+export * from './lib/backend/guards/jwt-auth.guard';
+export * from './lib/backend/guards/jwt-refresh.guard';

@@ -77,4 +77,9 @@ export class UserService {
 
     return document;
   }
+
+  public async deleteRefreshToken(token: string) {
+    const tokenData = await this.jwtService.decode(token);
+    await this.refreshTokenService.deleteByTokenId(tokenData.tokenId);
+  }
 }
