@@ -315,7 +315,7 @@ export class GenerateCommand implements CliCommand {
 
     console.info(
       chalk.green(
-        `Databse filled with ${mockRecordsCount} records for each model`
+        `Database filled with ${mockRecordsCount} records for each model`
       )
     );
   }

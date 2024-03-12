@@ -74,17 +74,6 @@ model Training {
   @@map("trainings")
 }
 
-model RefreshToken {
-  id        String   @id @default(uuid())
-  tokenId   String   @map("token_id")
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId    String   @map("user_id")
-  createdAt DateTime @default(now()) @map("created_at")
-  expiresIn DateTime @map("expires_in")
-
-  @@map("refresh_tokens")
-}
-
 model Review {
   id         String   @id @default(uuid())
   user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -147,4 +136,15 @@ model Balance {
   updatedAt   DateTime @updatedAt @map("updated_at")
 
   @@map("balances")
+}
+
+model RefreshToken {
+  id        String   @id @default(uuid())
+  tokenId   String   @map("token_id")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String   @map("user_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  expiresIn DateTime @map("expires_in")
+
+  @@map("refresh_tokens")
 }
