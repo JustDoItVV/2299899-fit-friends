@@ -58,8 +58,8 @@ export class UserController {
 
   @Patch(':id')
   @UseGuards(JwtAuthGuard)
-  public async updateUser(@Param('id') id: string, @Body() dto: UpdateUserDto) {
-    const updatedUser = await this.userService.update(id, dto);
+  public async updateUser(@Param('id') id: string, @Body() dto: UpdateUserDto, @UserParam() payload: TokenPayload) {
+    const updatedUser = await this.userService.update(payload, id, dto);
     return fillDto(UserRdo, updatedUser.toPOJO());
   }
 }

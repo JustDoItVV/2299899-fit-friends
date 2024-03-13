@@ -4,10 +4,10 @@ import { BackendConfig } from '@2299899-fit-friends/config';
 import { UserErrorMessage } from '@2299899-fit-friends/consts';
 import { CreateUserDto, LoginUserDto, UpdateUserDto } from '@2299899-fit-friends/dtos';
 import { createJWTPayload } from '@2299899-fit-friends/helpers';
-import { Token } from '@2299899-fit-friends/types';
+import { Token, TokenPayload } from '@2299899-fit-friends/types';
 import {
-    ConflictException, Inject, Injectable, InternalServerErrorException, NotFoundException,
-    UnauthorizedException
+    ConflictException, ForbiddenException, Inject, Injectable, InternalServerErrorException,
+    NotFoundException, UnauthorizedException
 } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
@@ -104,12 +104,15 @@ export class UserService {
     return document;
   }
 
-  public async update(id: string, dto: UpdateUserDto) {
-    console.log(dto);
+  public async update(payload: TokenPayload, id: string, dto: UpdateUserDto) {
     const user = await this.userRepository.findById(id);
 
     if (!user) {
       throw new NotFoundException(UserErrorMessage.NotFound);
+    }
+
+    if (user.id !== payload.userId) {
+      throw new ForbiddenException(UserErrorMessage.UserUpdateForbidden);
     }
 
     let hasChanges = false;

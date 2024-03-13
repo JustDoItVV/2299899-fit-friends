@@ -94,4 +94,5 @@ export enum UserErrorMessage {
   MeritsMaxLength = `Merits max length is ${MeritsLength.Max} symbols`,
   IsReadyToPersonalRequired = 'isReadyToPersonal flag required',
   UserExists = 'User with this email already exists',
+  UserUpdateForbidden = 'Update forbidden. User does not own this profile',
 }
