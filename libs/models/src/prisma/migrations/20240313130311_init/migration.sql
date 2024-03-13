@@ -6,7 +6,7 @@ CREATE TABLE "users" (
     "avatar" TEXT,
     "password_hash" TEXT NOT NULL,
     "gender" TEXT NOT NULL,
-    "birthdate" DATE NOT NULL,
+    "birthdate" DATE,
     "role" TEXT NOT NULL,
     "description" TEXT,
     "location" TEXT NOT NULL,

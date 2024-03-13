@@ -13,19 +13,19 @@ datasource db {
 }
 
 model User {
-  id             String   @id @default(uuid())
+  id             String    @id @default(uuid())
   name           String
-  email          String   @unique
+  email          String    @unique
   avatar         String?
-  passwordHash   String   @map("password_hash")
+  passwordHash   String    @map("password_hash")
   gender         String
-  birthdate      DateTime @db.Date
+  birthdate      DateTime? @db.Date
   role           String
   description    String?
   location       String
   pageBackground String
-  createdAt      DateTime @default(now()) @map("created_at")
-  updatedAt      DateTime @updatedAt @map("updated_at")
+  createdAt      DateTime  @default(now()) @map("created_at")
+  updatedAt      DateTime  @updatedAt @map("updated_at")
 
   trainingLevel String   @map("training_level")
   trainingType  String[] @map("training_type")

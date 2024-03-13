@@ -13,25 +13,25 @@ export class UserEntity implements User, BaseEntity<string, User> {
   public avatar: string | undefined;
   public passwordHash: string;
   public gender: UserGender;
-  public birthdate: Date | undefined;
+  public birthdate?: Date;
   public role: UserRole;
-  public description: string | undefined;
+  public description?: string;
   public location: string;
   public pageBackground: string;
   public trainingLevel: TrainingLevel;
   public trainingType: TrainingType[];
-  public trainingDuration: TrainingDuration | undefined;
-  public caloriesTarget: number | undefined;
-  public caloriesPerDay: number | undefined;
-  public isReadyToTraining: boolean | undefined;
-  public certificate: string | undefined;
-  public merits: string | undefined;
-  public isReadyToPersonal: boolean | undefined;
+  public trainingDuration?: TrainingDuration;
+  public caloriesTarget?: number;
+  public caloriesPerDay?: number;
+  public isReadyToTraining?: boolean;
+  public certificate?: string;
+  public merits?: string;
+  public isReadyToPersonal?: boolean;
   public accessToken?: string;
   public refreshToken?: string;
 
   public toPOJO(): User {
-    return {
+    const userPojo = {
       id: this.id,
       name: this.name,
       email: this.email,
@@ -45,16 +45,17 @@ export class UserEntity implements User, BaseEntity<string, User> {
       pageBackground: this.pageBackground,
       trainingLevel: this.trainingLevel,
       trainingType: this.trainingType,
-      trainingDuration: this.trainingDuration,
-      caloriesTarget: this.caloriesTarget,
-      caloriesPerDay: this.caloriesPerDay,
-      isReadyToTraining: this.isReadyToTraining,
-      certificate: this.certificate,
-      merits: this.merits,
-      isReadyToPersonal: this.isReadyToPersonal,
-      accessToken: this.accessToken,
-      refreshToken: this.refreshToken,
     };
+    Object.assign(userPojo, this.trainingDuration === null ? null : { trainingDuration: this.trainingDuration });
+    Object.assign(userPojo, this.caloriesTarget === null ? null : { caloriesTarget: this.caloriesTarget });
+    Object.assign(userPojo, this.caloriesPerDay === null ? null : { caloriesPerDay: this.caloriesPerDay });
+    Object.assign(userPojo, this.isReadyToTraining === null ? null : { isReadyToTraining: this.isReadyToTraining });
+    Object.assign(userPojo, this.certificate === null ? null : { certificate: this.certificate });
+    Object.assign(userPojo, this.merits === null ? null : { merits: this.merits });
+    Object.assign(userPojo, this.isReadyToPersonal === null ? null : { isReadyToPersonal: this.isReadyToPersonal });
+    Object.assign(userPojo, this.accessToken === null ? null : { accessToken: this.accessToken });
+    Object.assign(userPojo, this.refreshToken === null ? null : { refreshToken: this.refreshToken });
+    return userPojo;
   }
 
   public populate(data: User): void {

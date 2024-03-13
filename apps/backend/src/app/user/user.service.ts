@@ -50,6 +50,16 @@ export class UserService {
     }
   }
 
+  public async getUserById(id: string) {
+    const user = await this.userRepository.findById(id);
+
+    if (!user) {
+      throw new NotFoundException(UserErrorMessage.NotFound);
+    }
+
+    return user;
+  }
+
   public async getUserByEmail(email: string) {
     const user = await this.userRepository.findByEmail(email);
 

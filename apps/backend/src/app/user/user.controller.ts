@@ -4,7 +4,7 @@ import {
 import { CreateUserDto, LoggedUserRdo, LoginUserDto, UserRdo } from '@2299899-fit-friends/dtos';
 import { fillDto } from '@2299899-fit-friends/helpers';
 import { TokenPayload } from '@2299899-fit-friends/types';
-import { Body, Controller, Delete, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, UseGuards } from '@nestjs/common';
 
 import { UserEntity } from './user.entity';
 import { UserService } from './user.service';
@@ -43,8 +43,14 @@ export class UserController {
   @Post('register')
   @UseGuards(OnlyAnonymousGuard)
   public async create(@Body() dto: CreateUserDto) {
-    console.log(dto);
     const newUser = await this.userService.register(dto);
     return fillDto(UserRdo, newUser.toPOJO());
+  }
+
+  @Get(':id')
+  @UseGuards(JwtAuthGuard)
+  public async show(@Param('id') id: string) {
+    const user = await this.userService.getUserById(id);
+    return fillDto(UserRdo, user.toPOJO());
   }
 }
