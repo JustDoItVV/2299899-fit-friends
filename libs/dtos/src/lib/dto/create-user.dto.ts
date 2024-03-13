@@ -1,12 +1,13 @@
 import {
-    ArrayMaxSize, IsArray, IsBoolean, IsDate, IsEmail, IsEnum, IsIn, IsNotEmpty, IsNumber,
-    IsOptional, IsString, Matches, Max, MaxLength, Min, MinLength, ValidateIf
+    ArrayMaxSize, IsArray, IsBoolean, IsDateString, IsEmail, IsEnum, IsIn, IsNotEmpty, IsNumber,
+    IsOptional, IsString, Matches, Max, MaxLength, Min, MinLength, Validate, ValidateIf
 } from 'class-validator';
 
 import {
     CaloriesPerDayLimit, CaloriesTargetLimit, MeritsLength, METRO_STATIONS, NameLength,
     PasswordLength, TRAINING_TYPE_LIMIT, UserDescriptionLength, UserErrorMessage
 } from '@2299899-fit-friends/consts';
+import { ArrayMinLengthByUserRole } from '@2299899-fit-friends/core';
 import {
     TrainingDuration, TrainingLevel, TrainingType, UserGender, UserRole
 } from '@2299899-fit-friends/types';
@@ -34,7 +35,7 @@ export class CreateUserDto {
   @IsNotEmpty({ message: UserErrorMessage.GenderRequired })
   public gender: UserGender;
 
-  @IsDate({ message: UserErrorMessage.BirthdateNotValid })
+  @IsDateString({}, { message: UserErrorMessage.BirthdateNotValid })
   @IsOptional()
   public birthdate?: Date;
 
@@ -57,6 +58,7 @@ export class CreateUserDto {
   @IsNotEmpty({ message: UserErrorMessage.TrainingLevelRequired })
   public trainingLevel: TrainingLevel;
 
+  @Validate(ArrayMinLengthByUserRole)
   @IsEnum(TrainingType, { each: true })
   @ArrayMaxSize(TRAINING_TYPE_LIMIT, { message: UserErrorMessage.TrainingTypeMaxSize })
   @IsArray({ message: UserErrorMessage.TariningTypeMustBeArray })
