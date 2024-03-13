@@ -2,15 +2,12 @@ import { randomUUID } from 'node:crypto';
 
 import { BackendConfig } from '@2299899-fit-friends/config';
 import { UserErrorMessage } from '@2299899-fit-friends/consts';
-import { LoginUserDto } from '@2299899-fit-friends/dtos';
+import { CreateUserDto, LoginUserDto } from '@2299899-fit-friends/dtos';
 import { createJWTPayload } from '@2299899-fit-friends/helpers';
 import { Token } from '@2299899-fit-friends/types';
 import {
-  Inject,
-  Injectable,
-  InternalServerErrorException,
-  NotFoundException,
-  UnauthorizedException,
+    ConflictException, Inject, Injectable, InternalServerErrorException, NotFoundException,
+    UnauthorizedException
 } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
@@ -81,5 +78,19 @@ export class UserService {
   public async deleteRefreshToken(token: string) {
     const tokenData = await this.jwtService.decode(token);
     await this.refreshTokenService.deleteByTokenId(tokenData.tokenId);
+  }
+
+  public async register(dto: CreateUserDto) {
+    const { email, password } = dto;
+    const existedUser = await this.userRepository.findByEmail(email);
+
+    if (existedUser) {
+      throw new ConflictException(UserErrorMessage.UserExists);
+    }
+
+    const entity = UserEntity.fromDto(dto);
+    await entity.setPassword(password)
+    const document = await this.userRepository.save(entity);
+    return document;
   }
 }

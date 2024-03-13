@@ -1,12 +1,7 @@
 import { BasePostgresRepository } from '@2299899-fit-friends/core';
 import { PrismaClientService } from '@2299899-fit-friends/models';
 import {
-  TrainingDuration,
-  TrainingLevel,
-  TrainingType,
-  User,
-  UserGender,
-  UserRole,
+    TrainingDuration, TrainingLevel, TrainingType, User, UserGender, UserRole
 } from '@2299899-fit-friends/types';
 import { Injectable } from '@nestjs/common';
 
@@ -18,29 +13,38 @@ export class UserRepository extends BasePostgresRepository<UserEntity, User> {
     super(clientService, UserEntity.fromObject);
   }
 
+  public async save(entity: UserEntity): Promise<UserEntity> {
+    const pojoEntity = entity.toPOJO();
+    const document = await this.clientService.user.create({ data: {  ...pojoEntity, pageBackground: '' } });
+    entity.id = document.id;
+    return entity;
+  }
+
   public async findById(id: string): Promise<UserEntity | null> {
     const document = await this.clientService.user.findFirst({ where: { id } });
-    return this.createEntityFromDocument({
-      ...document,
-      gender: document.gender as UserGender,
-      role: document.role as UserRole,
-      trainingLevel: document.trainingLevel as TrainingLevel,
-      trainingType: document.trainingType as TrainingType[],
-      trainingDuration: document.trainingDuration as TrainingDuration,
-    });
+    return document
+      ? this.createEntityFromDocument({
+        ...document,
+        gender: document.gender as UserGender,
+        role: document.role as UserRole,
+        trainingLevel: document.trainingLevel as TrainingLevel,
+        trainingType: document.trainingType as TrainingType[],
+        trainingDuration: document.trainingDuration as TrainingDuration,
+      })
+      : null;
   }
 
   public async findByEmail(email: string): Promise<UserEntity | null> {
-    const document = await this.clientService.user.findFirst({
-      where: { email },
-    });
-    return this.createEntityFromDocument({
-      ...document,
-      gender: document.gender as UserGender,
-      role: document.role as UserRole,
-      trainingLevel: document.trainingLevel as TrainingLevel,
-      trainingType: document.trainingType as TrainingType[],
-      trainingDuration: document.trainingDuration as TrainingDuration,
-    });
+    const document = await this.clientService.user.findFirst({ where: { email } });
+    return document
+      ? this.createEntityFromDocument({
+        ...document,
+        gender: document.gender as UserGender,
+        role: document.role as UserRole,
+        trainingLevel: document.trainingLevel as TrainingLevel,
+        trainingType: document.trainingType as TrainingType[],
+        trainingDuration: document.trainingDuration as TrainingDuration,
+      })
+      : null;
   }
 }

@@ -1,11 +1,7 @@
 import {
-  JwtAuthGuard,
-  JwtRefreshGuard,
-  OnlyAnonymousGuard,
-  Token,
-  UserParam,
+    JwtAuthGuard, JwtRefreshGuard, OnlyAnonymousGuard, Token, UserParam
 } from '@2299899-fit-friends/core';
-import { LoggedUserRdo, LoginUserDto } from '@2299899-fit-friends/dtos';
+import { CreateUserDto, LoggedUserRdo, LoginUserDto, UserRdo } from '@2299899-fit-friends/dtos';
 import { fillDto } from '@2299899-fit-friends/helpers';
 import { TokenPayload } from '@2299899-fit-friends/types';
 import { Body, Controller, Delete, Post, UseGuards } from '@nestjs/common';
@@ -42,5 +38,13 @@ export class UserController {
   @UseGuards(JwtRefreshGuard)
   public async destroyRefreshToken(@Token() token: string) {
     await this.userService.deleteRefreshToken(token);
+  }
+
+  @Post('register')
+  @UseGuards(OnlyAnonymousGuard)
+  public async create(@Body() dto: CreateUserDto) {
+    console.log(dto);
+    const newUser = await this.userService.register(dto);
+    return fillDto(UserRdo, newUser.toPOJO());
   }
 }

@@ -1,14 +1,9 @@
 import { compare, genSalt, hash } from 'bcrypt';
 
 import { SALT_ROUNDS } from '@2299899-fit-friends/consts';
+import { CreateUserDto } from '@2299899-fit-friends/dtos';
 import {
-  BaseEntity,
-  TrainingDuration,
-  TrainingLevel,
-  TrainingType,
-  User,
-  UserGender,
-  UserRole,
+    BaseEntity, TrainingDuration, TrainingLevel, TrainingType, User, UserGender, UserRole
 } from '@2299899-fit-friends/types';
 
 export class UserEntity implements User, BaseEntity<string, User> {
@@ -34,10 +29,6 @@ export class UserEntity implements User, BaseEntity<string, User> {
   public isReadyToPersonal: boolean | undefined;
   public accessToken?: string;
   public refreshToken?: string;
-
-  constructor(user: User) {
-    this.populate(user);
-  }
 
   public toPOJO(): User {
     return {
@@ -102,6 +93,28 @@ export class UserEntity implements User, BaseEntity<string, User> {
   }
 
   static fromObject(data: User): UserEntity {
-    return new UserEntity(data);
+    const entity = new UserEntity;
+    entity.populate(data);
+    return entity;
+  }
+
+  static fromDto(dto: CreateUserDto): UserEntity {
+    const entity = new UserEntity();
+    entity.name = dto.name;
+    entity.email = dto.email;
+    entity.gender = dto.gender;
+    entity.birthdate = dto.birthdate;
+    entity.role = dto.role;
+    entity.description = dto.description;
+    entity.location = dto.location;
+    entity.trainingLevel = dto.trainingLevel;
+    entity.trainingType = dto.trainingType;
+    entity.trainingDuration = dto.role === UserRole.User ? dto.trainingDuration : undefined;
+    entity.caloriesTarget = dto.role === UserRole.User ? dto.caloriesTarget : undefined;
+    entity.caloriesPerDay = dto.role === UserRole.User ? dto.caloriesPerDay : undefined;
+    entity.isReadyToTraining = dto.role === UserRole.User ? dto.isReadyToTraining : undefined;
+    entity.merits = dto.role === UserRole.Trainer ? dto.merits : undefined;
+    entity.isReadyToPersonal = dto.role === UserRole.Trainer ? dto.isReadyToPersonal : undefined;
+    return entity;
   }
 }
