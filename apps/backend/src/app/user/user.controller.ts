@@ -1,10 +1,12 @@
 import {
     JwtAuthGuard, JwtRefreshGuard, OnlyAnonymousGuard, Token, UserParam
 } from '@2299899-fit-friends/core';
-import { CreateUserDto, LoggedUserRdo, LoginUserDto, UserRdo } from '@2299899-fit-friends/dtos';
+import {
+    CreateUserDto, LoggedUserRdo, LoginUserDto, UpdateUserDto, UserRdo
+} from '@2299899-fit-friends/dtos';
 import { fillDto } from '@2299899-fit-friends/helpers';
 import { TokenPayload } from '@2299899-fit-friends/types';
-import { Body, Controller, Delete, Get, Param, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
 
 import { UserEntity } from './user.entity';
 import { UserService } from './user.service';
@@ -49,8 +51,15 @@ export class UserController {
 
   @Get(':id')
   @UseGuards(JwtAuthGuard)
-  public async show(@Param('id') id: string) {
+  public async getUser(@Param('id') id: string) {
     const user = await this.userService.getUserById(id);
     return fillDto(UserRdo, user.toPOJO());
+  }
+
+  @Patch(':id')
+  @UseGuards(JwtAuthGuard)
+  public async updateUser(@Param('id') id: string, @Body() dto: UpdateUserDto) {
+    const updatedUser = await this.userService.update(id, dto);
+    return fillDto(UserRdo, updatedUser.toPOJO());
   }
 }

@@ -2,7 +2,7 @@ import { randomUUID } from 'node:crypto';
 
 import { BackendConfig } from '@2299899-fit-friends/config';
 import { UserErrorMessage } from '@2299899-fit-friends/consts';
-import { CreateUserDto, LoginUserDto } from '@2299899-fit-friends/dtos';
+import { CreateUserDto, LoginUserDto, UpdateUserDto } from '@2299899-fit-friends/dtos';
 import { createJWTPayload } from '@2299899-fit-friends/helpers';
 import { Token } from '@2299899-fit-friends/types';
 import {
@@ -102,5 +102,29 @@ export class UserService {
     await entity.setPassword(password)
     const document = await this.userRepository.save(entity);
     return document;
+  }
+
+  public async update(id: string, dto: UpdateUserDto) {
+    console.log(dto);
+    const user = await this.userRepository.findById(id);
+
+    if (!user) {
+      throw new NotFoundException(UserErrorMessage.NotFound);
+    }
+
+    let hasChanges = false;
+
+    for (const [key, value] of Object.entries(dto)) {
+      if (value !== undefined && user[key] !== value) {
+        user[key] = value;
+        hasChanges = true;
+      }
+    }
+
+    if (!hasChanges) {
+      return user;
+    }
+
+    return await this.userRepository.update(id, user);
   }
 }
