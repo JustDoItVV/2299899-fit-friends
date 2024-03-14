@@ -12,8 +12,8 @@ export class UserDataTrasformationPipe implements PipeTransform<Record<string, s
       ...value,
       caloriesTarget: caloriesTarget ? caloriesTarget : value.caloriesTarget,
       caloriesPerDay: caloriesPerDay ? caloriesPerDay : value.caloriesPerDay,
-      isReadyToTraining: isReadyToTraining ? isReadyToTraining : value.isReadyToTraining,
-      isReadyToPersonal: isReadyToPersonal ? isReadyToPersonal : value.isReadyToPersonal,
+      isReadyToTraining: isReadyToTraining,
+      isReadyToPersonal: isReadyToPersonal,
     };
   }
 }

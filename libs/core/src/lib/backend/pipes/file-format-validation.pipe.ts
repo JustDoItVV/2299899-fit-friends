@@ -1,11 +1,10 @@
 import 'multer';
 
+import { UserFilesPayload } from '@2299899-fit-friends/types';
 import { Injectable, PipeTransform, UnsupportedMediaTypeException } from '@nestjs/common';
 
-type FilesObject = Record<string, Express.Multer.File[]>
-
 @Injectable()
-export class FileFormatValidationPipe implements PipeTransform<FilesObject, FilesObject> {
+export class FileFormatValidationPipe implements PipeTransform<UserFilesPayload, UserFilesPayload> {
   public allowedFormats: Record<string, string>;
   public message: string;
 
@@ -14,7 +13,7 @@ export class FileFormatValidationPipe implements PipeTransform<FilesObject, File
     this.message = message;
   }
 
-  transform(value: FilesObject): FilesObject {
+  transform(value: UserFilesPayload): UserFilesPayload {
     for (const key of Object.keys(value)) {
       value[key].map((file: Express.Multer.File) => {
         if (file) {

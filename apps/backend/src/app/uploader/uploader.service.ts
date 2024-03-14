@@ -9,9 +9,7 @@ import { join } from 'node:path';
 
 import { BackendConfig } from '@2299899-fit-friends/config';
 import { CommonError } from '@2299899-fit-friends/consts';
-import {
-    Inject, Injectable, InternalServerErrorException, NotFoundException
-} from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 
 @Injectable()
@@ -55,11 +53,7 @@ export class UploaderService {
     const filepath = join(this.config.uploadDirectory, relativeFilepath);
 
     if (existsSync(filepath)) {
-      unlink(filepath, (error) => {
-        if (error) {
-          throw new InternalServerErrorException(error.message);
-        }
-      });
+      unlink(filepath, (error) => error);
     }
   }
 }

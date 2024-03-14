@@ -4,7 +4,7 @@ import { BackendConfig } from '@2299899-fit-friends/config';
 import { UserErrorMessage } from '@2299899-fit-friends/consts';
 import { CreateUserDto, LoginUserDto, UpdateUserDto } from '@2299899-fit-friends/dtos';
 import { createJWTPayload } from '@2299899-fit-friends/helpers';
-import { Token, TokenPayload } from '@2299899-fit-friends/types';
+import { Token, TokenPayload, UserFilesPayload } from '@2299899-fit-friends/types';
 import {
     ConflictException, ForbiddenException, Inject, Injectable, InternalServerErrorException,
     NotFoundException, UnauthorizedException
@@ -92,7 +92,7 @@ export class UserService {
     await this.refreshTokenService.deleteByTokenId(tokenData.tokenId);
   }
 
-  public async register(dto: CreateUserDto, files: { avatar?: Express.Multer.File[], pageBackground: Express.Multer.File[] }) {
+  public async register(dto: CreateUserDto, files: UserFilesPayload) {
     const { email, password } = dto;
     const existedUser = await this.userRepository.findByEmail(email);
 
@@ -115,7 +115,7 @@ export class UserService {
     return document;
   }
 
-  public async update(payload: TokenPayload, id: string, dto: UpdateUserDto) {
+  public async update(payload: TokenPayload, id: string, dto: UpdateUserDto, files: UserFilesPayload) {
     const user = await this.userRepository.findById(id);
 
     if (!user) {
@@ -132,6 +132,22 @@ export class UserService {
       if (value !== undefined && user[key] !== value) {
         user[key] = value;
         hasChanges = true;
+      }
+
+      if (files.avatar && files.avatar.length > 0) {
+        if (user.avatar) {
+          await this.uploaderService.deleteFile(user.avatar);
+        }
+        const avatarPath = await this.uploaderService.saveFile(files.avatar[0]);
+        user.avatar = avatarPath;
+      }
+
+      if (files.pageBackground && files.pageBackground.length > 0) {
+        if (user.pageBackground) {
+          await this.uploaderService.deleteFile(user.pageBackground);
+        }
+        const pageBackgroundPath = await this.uploaderService.saveFile(files.pageBackground[0]);
+        user.pageBackground = pageBackgroundPath;
       }
     }
 
