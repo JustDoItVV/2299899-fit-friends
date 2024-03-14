@@ -103,13 +103,17 @@ export class UserService {
     const entity = UserEntity.fromDto(dto);
     await entity.setPassword(password)
 
-    if (files.avatar && files.avatar.length > 0) {
-      const avatarPath = await this.uploaderService.saveFile(files.avatar[0]);
-      entity.avatar = avatarPath;
+    for (const key of Object.keys(files)) {
+      if (files[key] && files[key].length > 0) {
+        const path = await this.uploaderService.saveFile(files[key][0]);
+        entity[key] = path;
+      }
     }
 
     const pageBackgroundPath = await this.uploaderService.saveFile(files.pageBackground[0]);
     entity.pageBackground = pageBackgroundPath;
+
+
 
     const document = await this.userRepository.save(entity);
     return document;
@@ -158,13 +162,18 @@ export class UserService {
     return await this.userRepository.update(id, user);
   }
 
-  public async getUserAvatar(id: string) {
+  public async getAvatar(id: string) {
     const user = await this.getUserById(id);
-    return await this.uploaderService.getFile(user.avatar);
+    return await this.uploaderService.getImageUrl(user.avatar);
   }
 
-  public async getUserPageBackground(id: string) {
+  public async getPageBackground(id: string) {
     const user = await this.getUserById(id);
-    return await this.uploaderService.getFile(user.pageBackground);
+    return await this.uploaderService.getImageUrl(user.pageBackground);
+  }
+
+  public async getCertificate(id: string) {
+    const user = await this.getUserById(id);
+    return await this.uploaderService.getFile(user.certificate);
   }
 }

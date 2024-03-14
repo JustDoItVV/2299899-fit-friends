@@ -5,11 +5,11 @@ import { Injectable, PipeTransform, UnsupportedMediaTypeException } from '@nestj
 
 @Injectable()
 export class FileFormatValidationPipe implements PipeTransform<UserFilesPayload, UserFilesPayload> {
-  public allowedFormats: Record<string, string>;
+  public rules: Record<string, Record<string, string>>;
   public message: string;
 
-  constructor(allowedFormats: Record<string, string>, message: string) {
-    this.allowedFormats = allowedFormats;
+  constructor(rules: Record<string, Record<string, string>>, message: string) {
+    this.rules = rules;
     this.message = message;
   }
 
@@ -20,8 +20,8 @@ export class FileFormatValidationPipe implements PipeTransform<UserFilesPayload,
           const { originalname, mimetype } = file;
           const fileExtention = originalname.split('.').at(-1);
 
-          const isValidFormatCondition1 = Object.keys(this.allowedFormats).includes(fileExtention);
-          const isValidFormatCondition2 = this.allowedFormats[fileExtention] === mimetype;
+          const isValidFormatCondition1 = Object.keys(this.rules[key]).includes(fileExtention);
+          const isValidFormatCondition2 = this.rules[key][fileExtention] === mimetype;
 
           if (!isValidFormatCondition1 || !isValidFormatCondition2) {
             throw new UnsupportedMediaTypeException(this.message);

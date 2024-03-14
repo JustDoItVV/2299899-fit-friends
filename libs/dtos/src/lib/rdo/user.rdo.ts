@@ -33,6 +33,9 @@ export class UserRdo {
   public location: string;
 
   @Expose()
+  public pageBackground: string;
+
+  @Expose()
   public trainingLevel: TrainingLevel;
 
   @Expose()
@@ -51,11 +54,11 @@ export class UserRdo {
   public isReadyToTraining?: boolean;
 
   @Expose()
+  public certificate?: string;
+
+  @Expose()
   public merits?: string;
 
   @Expose()
   public isReadyToPersonal?: boolean;
-
-  @Expose()
-  public pageBackground: string;
 }

@@ -1,6 +1,8 @@
 import 'multer';
 
-import { AllowedImageFormat, UserErrorMessage } from '@2299899-fit-friends/consts';
+import {
+    AllowedCertificateFormat, AllowedImageFormat, UserErrorMessage
+} from '@2299899-fit-friends/consts';
 import {
     FileFormatValidationPipe, JwtAuthGuard, JwtRefreshGuard, OnlyAnonymousGuard, Token,
     UserDataTrasformationPipe, UserParam
@@ -11,7 +13,8 @@ import {
 import { fillDto } from '@2299899-fit-friends/helpers';
 import { TokenPayload, UserFilesPayload } from '@2299899-fit-friends/types';
 import {
-    Body, Controller, Delete, Get, Param, Patch, Post, UploadedFiles, UseGuards, UseInterceptors
+    Body, Controller, Delete, Get, Header, Param, Patch, Post, UploadedFiles, UseGuards,
+    UseInterceptors
 } from '@nestjs/common';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 
@@ -53,11 +56,16 @@ export class UserController {
   @UseInterceptors(FileFieldsInterceptor([
     { name: 'avatar', maxCount: 1 },
     { name: 'pageBackground', maxCount: 1 },
+    { name: 'certificate', maxCount: 1 },
   ]))
   @UseGuards(OnlyAnonymousGuard)
   public async create(
     @Body(new UserDataTrasformationPipe()) dto: CreateUserDto,
-    @UploadedFiles(new FileFormatValidationPipe(AllowedImageFormat, UserErrorMessage.ImageFormatForbidden))
+    @UploadedFiles(new FileFormatValidationPipe({
+      avatar: AllowedImageFormat,
+      pageBackground: AllowedImageFormat,
+      certificate: AllowedCertificateFormat,
+    }, UserErrorMessage.ImageFormatForbidden))
     files: UserFilesPayload
   ) {
     const newUser = await this.userService.register(dto, files);
@@ -75,13 +83,18 @@ export class UserController {
   @UseInterceptors(FileFieldsInterceptor([
     { name: 'avatar', maxCount: 1 },
     { name: 'pageBackground', maxCount: 1 },
+    { name: 'certificate', maxCount: 1 },
   ]))
   @UseGuards(JwtAuthGuard)
   public async updateUser(
     @Param('id') id: string,
     @Body(new UserDataTrasformationPipe()) dto: UpdateUserDto,
     @UserParam() payload: TokenPayload,
-    @UploadedFiles(new FileFormatValidationPipe(AllowedImageFormat, UserErrorMessage.ImageFormatForbidden))
+    @UploadedFiles(new FileFormatValidationPipe({
+      avatar: AllowedImageFormat,
+      pageBackground: AllowedImageFormat,
+      certificate: AllowedCertificateFormat,
+    }, UserErrorMessage.ImageFormatForbidden))
     files: UserFilesPayload
   ) {
     const updatedUser = await this.userService.update(payload, id, dto, files);
@@ -90,13 +103,20 @@ export class UserController {
 
   @Get(':id/avatar')
   @UseGuards(JwtAuthGuard)
-  public async getUserAvatar(@Param('id') id: string) {
-    return await this.userService.getUserAvatar(id);
+  public async getAvatar(@Param('id') id: string) {
+    return await this.userService.getAvatar(id);
   }
 
   @Get(':id/page-background')
   @UseGuards(JwtAuthGuard)
-  public async getUserpageBackground(@Param('id') id: string) {
-    return await this.userService.getUserPageBackground(id);
+  public async getPageBackground(@Param('id') id: string) {
+    return await this.userService.getPageBackground(id);
+  }
+
+  @Get(':id/certificates')
+  @Header('Content-disposition', 'attachment; filename=certificate.pdf')
+  @UseGuards(JwtAuthGuard)
+  public async getCertificate(@Param('id') id: string) {
+    return await this.userService.getCertificate(id);
   }
 }
