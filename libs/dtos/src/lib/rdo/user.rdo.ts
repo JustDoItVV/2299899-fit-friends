@@ -15,6 +15,9 @@ export class UserRdo {
   public email: string;
 
   @Expose()
+  public avatar?: string;
+
+  @Expose()
   public gender: UserGender;
 
   @Expose()
@@ -53,4 +56,6 @@ export class UserRdo {
   @Expose()
   public isReadyToPersonal?: boolean;
 
+  @Expose()
+  public pageBackground: string;
 }

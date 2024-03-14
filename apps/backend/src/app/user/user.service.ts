@@ -12,6 +12,7 @@ import {
 import { ConfigType } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 
+import { UploaderService } from '../uploader/uploader.service';
 import { RefreshTokenService } from './refresh-token/refresh-token.service';
 import { UserEntity } from './user.entity';
 import { UserRepository } from './user.repository';
@@ -23,7 +24,8 @@ export class UserService {
     private readonly refreshTokenService: RefreshTokenService,
     private readonly jwtService: JwtService,
     @Inject(BackendConfig.KEY)
-    private readonly config: ConfigType<typeof BackendConfig>
+    private readonly config: ConfigType<typeof BackendConfig>,
+    private readonly uploaderService: UploaderService,
   ) {}
 
   public async createUserToken(user: UserEntity): Promise<Token> {
@@ -90,7 +92,7 @@ export class UserService {
     await this.refreshTokenService.deleteByTokenId(tokenData.tokenId);
   }
 
-  public async register(dto: CreateUserDto) {
+  public async register(dto: CreateUserDto, files: { avatar?: Express.Multer.File[], pageBackground: Express.Multer.File[] }) {
     const { email, password } = dto;
     const existedUser = await this.userRepository.findByEmail(email);
 
@@ -100,6 +102,15 @@ export class UserService {
 
     const entity = UserEntity.fromDto(dto);
     await entity.setPassword(password)
+
+    if (files.avatar && files.avatar.length > 0) {
+      const avatarPath = await this.uploaderService.saveFile(files.avatar[0]);
+      entity.avatar = avatarPath;
+    }
+
+    const pageBackgroundPath = await this.uploaderService.saveFile(files.pageBackground[0]);
+    entity.pageBackground = pageBackgroundPath;
+
     const document = await this.userRepository.save(entity);
     return document;
   }
@@ -129,5 +140,15 @@ export class UserService {
     }
 
     return await this.userRepository.update(id, user);
+  }
+
+  public async getUserAvatar(id: string) {
+    const user = await this.getUserById(id);
+    return await this.uploaderService.getFile(user.avatar);
+  }
+
+  public async getUserPageBackground(id: string) {
+    const user = await this.getUserById(id);
+    return await this.uploaderService.getFile(user.pageBackground);
   }
 }

@@ -55,6 +55,8 @@ export enum MeritsLength {
 }
 
 export enum UserErrorMessage {
+  Nan = 'Must be a number',
+  NotBoolString = 'Must be "true" or "false" string',
   NotString = 'Must be a string',
   EmailRequired = 'Email required',
   EmailNotValid = 'Email not valid',
@@ -95,4 +97,15 @@ export enum UserErrorMessage {
   IsReadyToPersonalRequired = 'isReadyToPersonal flag required',
   UserExists = 'User with this email already exists',
   UserUpdateForbidden = 'Update forbidden. User does not own this profile',
+  ImageFormatForbidden = 'Image format forbidden',
+  CertificateFormatForbidden = 'Certificate format forbidden',
+}
+
+export enum AllowedImageFormat {
+  jpg = 'image/jpg',
+  png = 'image/png',
+}
+
+export enum AllowedCertificateFormat {
+  pdf = 'application/pdf',
 }

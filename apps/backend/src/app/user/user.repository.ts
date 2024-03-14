@@ -15,7 +15,7 @@ export class UserRepository extends BasePostgresRepository<UserEntity, User> {
 
   public async save(entity: UserEntity): Promise<UserEntity> {
     const pojoEntity = entity.toPOJO();
-    const document = await this.clientService.user.create({ data: {  ...pojoEntity, pageBackground: '' } });
+    const document = await this.clientService.user.create({ data: pojoEntity });
     entity.id = document.id;
     return entity;
   }

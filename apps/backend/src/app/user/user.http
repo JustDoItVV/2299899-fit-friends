@@ -30,25 +30,80 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIwZWU1Z
 
 # Create a new user, role User
 POST http://localhost:3001/api/user/register HTTP/1.1
-Content-Type: application/json
+Content-Type: multipart/form-data; boundary=boundary
 # Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImVhMzJkNmQxLTYyNGYtNGYxNy1iMWYzLTg4YjFhNDhiOWI5YSIsIm5hbWUiOiJhZG1pbiIsImVtYWlsIjoiYWRtaW5AbG9jYWwubG9jYWwiLCJpYXQiOjE3MDgxNTk5MjMsImV4cCI6MTcwODQ1OTkyM30.LvYVziUt-0-uf4AtZIOxZYEanVKwEcytcZ4pwufr-Gs
 
-{
-  "name": "StathamUser",
-  "email": "statham-user@local.local",
-  "password": "123456",
-  "gender": "мужской",
-  "birthdate": "1967-07-26T12:00:00.000Z",
-  "role": "пользователь",
-  "description": "British actor",
-  "location": "Спортивная",
-  "trainingLevel": "профессионал",
-  "trainingType": ["бокс", "кроссфит", "стрейчинг"],
-  "trainingDuration": "80-100 мин",
-  "caloriesTarget": 1000,
-  "caloriesPerDay": 1000,
-  "isReadyToTraining": true
-}
+# --boundary
+# Content-Disposition: form-data; name="avatar"; filename="photo-1.png"
+# Content-Type: image/png
+
+# < ../../../../frontend/public/img/content/avatars/users/photo-1.png
+--boundary
+Content-Disposition: form-data; name="pageBackground"; filename="training-1.jpg"
+Content-Type: image/jpg
+
+< ../../../../frontend/public/img/content/user-card-coach/training-1.jpg
+--boundary
+Content-Disposition: form-data; name="name"
+
+StathamUser
+--boundary
+Content-Disposition: form-data; name="email"
+
+statham-user9@local.local
+--boundary
+Content-Disposition: form-data; name="password"
+
+123456
+--boundary
+Content-Disposition: form-data; name="gender"
+
+мужской
+--boundary
+Content-Disposition: form-data; name="birthdate"
+
+1967-07-26T12:00:00.000Z
+--boundary
+Content-Disposition: form-data; name="role"
+
+пользователь
+--boundary
+Content-Disposition: form-data; name="description"
+
+British actor
+--boundary
+Content-Disposition: form-data; name="location"
+
+Спортивная
+--boundary
+Content-Disposition: form-data; name="trainingLevel"
+
+профессионал
+--boundary
+Content-Disposition: form-data; name="trainingType"
+
+бокс
+--boundary
+Content-Disposition: form-data; name="trainingType"
+
+кроссфит
+--boundary
+Content-Disposition: form-data; name="trainingDuration"
+
+80-100 мин
+--boundary
+Content-Disposition: form-data; name="caloriesTarget"
+
+1000
+--boundary
+Content-Disposition: form-data; name="caloriesPerDay"
+
+1000
+--boundary
+Content-Disposition: form-data; name="isReadyToTraining"
+
+true
+--boundary--
 
 ###
 
@@ -91,5 +146,17 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI3YWM4Z
   "trainingType": ["бокс", "стрейчинг", "кроссфит"],
   "isReadyToTraining": false
 }
+
+###
+
+# Get user avatar image
+GET http://localhost:3001/api/user/9b2b2172-c6a4-4ec8-a23e-3f466c6ba385/avatar HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI3YWM4ZWZhNi0yYjI5LTQxYzQtOTRkMS0zZDMxYTBiMDY5Y2UiLCJuYW1lIjoiU3RhdGhhbUJJRyIsImVtYWlsIjoic3RhdGhhbS11c2VyQGxvY2FsLmxvY2FsIiwiaWF0IjoxNzEwNDIwMDA1LCJleHAiOjE3MTA0MjA5MDV9.jpOi8jl10H6tqf-wW6puUR7IIW5-21JGVUnYxQGPBiA
+
+###
+
+# Get user pageBackground image
+GET http://localhost:3001/api/user/9b2b2172-c6a4-4ec8-a23e-3f466c6ba385/page-background HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI3YWM4ZWZhNi0yYjI5LTQxYzQtOTRkMS0zZDMxYTBiMDY5Y2UiLCJuYW1lIjoiU3RhdGhhbUJJRyIsImVtYWlsIjoic3RhdGhhbS11c2VyQGxvY2FsLmxvY2FsIiwiaWF0IjoxNzEwNDIxMDA2LCJleHAiOjE3MTA0MjE5MDZ9.QqlQPMrRWJmtSc-oemzBGKMRnJBUvu28qwjTr_e7ogY
 
 ###

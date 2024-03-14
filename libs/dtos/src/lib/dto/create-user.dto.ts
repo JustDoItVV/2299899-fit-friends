@@ -7,7 +7,9 @@ import {
     CaloriesPerDayLimit, CaloriesTargetLimit, MeritsLength, METRO_STATIONS, NameLength,
     PasswordLength, TRAINING_TYPE_LIMIT, UserDescriptionLength, UserErrorMessage
 } from '@2299899-fit-friends/consts';
-import { ArrayMinLengthByUserRole } from '@2299899-fit-friends/core';
+import {
+    ArrayMinLengthByUserRole, TransformToBool, TransformToInt
+} from '@2299899-fit-friends/core';
 import {
     TrainingDuration, TrainingLevel, TrainingType, UserGender, UserRole
 } from '@2299899-fit-friends/types';
@@ -73,17 +75,21 @@ export class CreateUserDto {
   @Max(CaloriesTargetLimit.Max, { message: UserErrorMessage.CaloriesTargetMax })
   @Min(CaloriesTargetLimit.Min, { message: UserErrorMessage.CaloriesTargetMin })
   @IsNumber()
+  @TransformToInt(UserErrorMessage.Nan)
   @IsNotEmpty({ message: UserErrorMessage.CaloriesTargetRequired })
   @ValidateIf((object) => object.role === UserRole.User)
   public caloriesTarget: number;
 
   @Max(CaloriesPerDayLimit.Max, { message: UserErrorMessage.CaloriesPerDayMax })
   @Min(CaloriesPerDayLimit.Min, { message: UserErrorMessage.CaloriesPerDayMin })
+  @IsNumber()
+  @TransformToInt(UserErrorMessage.Nan)
   @IsNotEmpty({ message: UserErrorMessage.CaloriesPerDayRequired })
   @ValidateIf((object) => object.role === UserRole.User)
   public caloriesPerDay: number;
 
   @IsBoolean()
+  @TransformToBool(UserErrorMessage.NotBoolString)
   @IsNotEmpty({ message: UserErrorMessage.IsReadyToTrainingRequired })
   @ValidateIf((object) => object.role === UserRole.User)
   public isReadyToTraining: boolean;
@@ -96,6 +102,7 @@ export class CreateUserDto {
   public merits?: string;
 
   @IsBoolean()
+  @TransformToBool(UserErrorMessage.NotBoolString)
   @IsNotEmpty({ message: UserErrorMessage.IsReadyToPersonalRequired })
   @ValidateIf((object) => object.role === UserRole.Trainer)
   public isReadyToPersonal: boolean;

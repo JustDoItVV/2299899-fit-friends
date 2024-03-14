@@ -1,13 +1,11 @@
-import {
-  BackendConfigModule,
-  getJwtOptions,
-} from '@2299899-fit-friends/config';
+import { BackendConfigModule, getJwtOptions } from '@2299899-fit-friends/config';
 import { JwtAccessStrategy } from '@2299899-fit-friends/core';
 import { PrismaClientModule } from '@2299899-fit-friends/models';
 import { Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 
+import { UploaderModule } from '../uploader/uploader.module';
 import { JwtRefreshStrategy } from './refresh-token/jwt-refresh.strategy';
 import { RefreshTokenModule } from './refresh-token/refresh-token.module';
 import { UserController } from './user.controller';
@@ -23,6 +21,7 @@ import { UserService } from './user.service';
       useFactory: getJwtOptions,
     }),
     BackendConfigModule,
+    UploaderModule,
   ],
   controllers: [UserController],
   providers: [
