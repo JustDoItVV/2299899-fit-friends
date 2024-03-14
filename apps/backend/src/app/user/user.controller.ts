@@ -1,10 +1,10 @@
 import 'multer';
 
 import {
-    AllowedCertificateFormat, AllowedImageFormat, UserErrorMessage
+    AllowedCertificateFormat, AllowedImageFormat, AVATAR_SIZE_LIMIT, UserErrorMessage
 } from '@2299899-fit-friends/consts';
 import {
-    FileFormatValidationPipe, JwtAuthGuard, JwtRefreshGuard, OnlyAnonymousGuard, Token,
+    FilesValidationPipe, JwtAuthGuard, JwtRefreshGuard, OnlyAnonymousGuard, Token,
     UserDataTrasformationPipe, UserParam
 } from '@2299899-fit-friends/core';
 import {
@@ -61,10 +61,10 @@ export class UserController {
   @UseGuards(OnlyAnonymousGuard)
   public async create(
     @Body(new UserDataTrasformationPipe()) dto: CreateUserDto,
-    @UploadedFiles(new FileFormatValidationPipe({
-      avatar: AllowedImageFormat,
-      pageBackground: AllowedImageFormat,
-      certificate: AllowedCertificateFormat,
+    @UploadedFiles(new FilesValidationPipe({
+      avatar: { size: AVATAR_SIZE_LIMIT, formats: AllowedImageFormat },
+      pageBackground: { formats: AllowedImageFormat },
+      certificate: { formats: AllowedCertificateFormat },
     }, UserErrorMessage.ImageFormatForbidden))
     files: UserFilesPayload
   ) {
@@ -90,10 +90,10 @@ export class UserController {
     @Param('id') id: string,
     @Body(new UserDataTrasformationPipe()) dto: UpdateUserDto,
     @UserParam() payload: TokenPayload,
-    @UploadedFiles(new FileFormatValidationPipe({
-      avatar: AllowedImageFormat,
-      pageBackground: AllowedImageFormat,
-      certificate: AllowedCertificateFormat,
+    @UploadedFiles(new FilesValidationPipe({
+      avatar: { size: AVATAR_SIZE_LIMIT, formats: AllowedImageFormat },
+      pageBackground: { formats: AllowedImageFormat },
+      certificate: { formats: AllowedCertificateFormat },
     }, UserErrorMessage.ImageFormatForbidden))
     files: UserFilesPayload
   ) {

@@ -16,5 +16,5 @@ export * from './lib/backend/guards/jwt-refresh.guard';
 
 export * from './lib/backend/validators/array-min-length-by-user-role.validator';
 
-export * from './lib/backend/pipes/file-format-validation.pipe';
+export * from './lib/backend/pipes/files-validation.pipe';
 export * from './lib/backend/pipes/user-data-transformation.pipe';
