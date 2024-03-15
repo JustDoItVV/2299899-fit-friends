@@ -1,10 +1,10 @@
 # Login user by email and password
 POST http://localhost:3001/api/user/login HTTP/1.1
 Content-Type: application/json
-# Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIyYTg5ZDViNi04MzkxLTQ1YmItYjczOC0yZDQ3MDg4ZGFmMDQiLCJuYW1lIjoiTWlzcyBDaHJpc3R5IEJydWVuLVN0YW50b24gTUQiLCJlbWFpbCI6IkxhbmU1M0Bsb2NhbC5sb2NhbCIsImlhdCI6MTcxMDI0ODA5MywiZXhwIjoxNzEwMjQ4OTkzfQ.A3ILwH3S70mW6HuFj0CSqeomRDV_lzk_oJ0AWrNar0g
+# Authorization: Bearer
 
 {
-  "email": "Joshuah11@local.local",
+  "email": "statham-user1@local.local",
   "password": "123456"
 }
 
@@ -12,18 +12,261 @@ Content-Type: application/json
 
 # Check user token
 POST http://localhost:3001/api/user/check HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIyYTg5ZDViNi04MzkxLTQ1YmItYjczOC0yZDQ3MDg4ZGFmMDQiLCJuYW1lIjoiTWlzcyBDaHJpc3R5IEJydWVuLVN0YW50b24gTUQiLCJlbWFpbCI6IkxhbmU1M0Bsb2NhbC5sb2NhbCIsImlhdCI6MTcxMDI1MDYwOSwiZXhwIjoxNzEwMjUxNTA5fQ.ZJSRBI4wkRmm-JCoVbh6mFYjC6SbjXGw90y8dIZv8dU
+Authorization: Bearer
 
 ###
 
 # Get new JWT pair via refreshToken
 POST http://localhost:3001/api/user/refresh HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIyYTg5ZDViNi04MzkxLTQ1YmItYjczOC0yZDQ3MDg4ZGFmMDQiLCJuYW1lIjoiTWlzcyBDaHJpc3R5IEJydWVuLVN0YW50b24gTUQiLCJlbWFpbCI6IkxhbmU1M0Bsb2NhbC5sb2NhbCIsInRva2VuSWQiOiJkMTFhZWJhOS1iMGNlLTRkM2EtODY1Yy00OGE4OGMxZDM3ZjQiLCJpYXQiOjE3MTAyNTA3NTAsImV4cCI6MTcxMDg1NTU1MH0.jkROu1cPEZZIsdGUwpV8vNlLF7P1Uuu-TOV0_sPaQvM
+Authorization: Bearer
 
 ###
 
 # Destroy refreshToken
 DELETE http://localhost:3001/api/user/refresh HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIwZWU1ZDJiNy1mNGRmLTQxYjctYjE2OC0xYzNlZjNkYjRjMzgiLCJuYW1lIjoiV2lsbGllIFNtaXRoIiwiZW1haWwiOiJKb3NodWFoMTFAbG9jYWwubG9jYWwiLCJ0b2tlbklkIjoiZWFiMzczZjQtMDQ0Ny00MWE4LTk0NDctMDM3ODI0MTRkYjMxIiwiaWF0IjoxNzEwMjU0MzE3LCJleHAiOjE3MTA4NTkxMTd9.yZwd915UUTof0LYGsMDGFn9Thh_Npn4wT0t9WcY_30w
+Authorization: Bearer
+
+###
+
+# Create a new user, role User
+POST http://localhost:3001/api/user/register HTTP/1.1
+Content-Type: multipart/form-data; boundary=boundary
+# Authorization: Bearer
+
+# --boundary
+# Content-Disposition: form-data; name="avatar"; filename="photo-1.png"
+# Content-Type: image/png
+
+# < ../../../../frontend/public/img/content/avatars/users/photo-1.png
+--boundary
+Content-Disposition: form-data; name="pageBackground"; filename="training-1.jpg"
+Content-Type: image/jpg
+
+< ../../../../frontend/public/img/content/user-card-coach/training-1.jpg
+--boundary
+Content-Disposition: form-data; name="name"
+
+StathamUser
+--boundary
+Content-Disposition: form-data; name="email"
+
+statham-user1@local.local
+--boundary
+Content-Disposition: form-data; name="password"
+
+123456
+--boundary
+Content-Disposition: form-data; name="gender"
+
+мужской
+--boundary
+Content-Disposition: form-data; name="birthdate"
+
+1967-07-26T12:00:00.000Z
+--boundary
+Content-Disposition: form-data; name="role"
+
+пользователь
+--boundary
+Content-Disposition: form-data; name="description"
+
+British actor
+--boundary
+Content-Disposition: form-data; name="location"
+
+Спортивная
+--boundary
+Content-Disposition: form-data; name="trainingLevel"
+
+профессионал
+--boundary
+Content-Disposition: form-data; name="trainingType"
+
+бокс
+--boundary
+Content-Disposition: form-data; name="trainingType"
+
+кроссфит
+--boundary
+Content-Disposition: form-data; name="trainingDuration"
+
+80-100 мин
+--boundary
+Content-Disposition: form-data; name="caloriesTarget"
+
+1000
+--boundary
+Content-Disposition: form-data; name="caloriesPerDay"
+
+1000
+--boundary
+Content-Disposition: form-data; name="isReadyToTraining"
+
+true
+--boundary--
+
+###
+
+# Create a new user, role Trainer
+POST http://localhost:3001/api/user/register HTTP/1.1
+Content-Type: multipart/form-data; boundary=boundary
+# Authorization: Bearer
+
+--boundary
+Content-Disposition: form-data; name="avatar"; filename="photo-1.png"
+Content-Type: image/png
+
+< ../../../../frontend/public/img/content/avatars/users/photo-1.png
+--boundary
+Content-Disposition: form-data; name="pageBackground"; filename="training-1.jpg"
+Content-Type: image/jpg
+
+< ../../../../frontend/public/img/content/user-card-coach/training-1.jpg
+--boundary
+Content-Disposition: form-data; name="certificate"; filename="certificate-1.pdf"
+Content-Type: application/pdf
+
+< ../../../../frontend/public/img/content/certificates-and-diplomas/certificate-1.pdf
+# --boundary
+# Content-Disposition: form-data; name="video"; filename="video-1.mp4"
+# Content-Type: video/mp4
+
+# < ../../../../frontend/public/img/content/training-video/video-1.mp4
+--boundary
+Content-Disposition: form-data; name="name"
+
+StathamTrainer
+--boundary
+Content-Disposition: form-data; name="email"
+
+statham-trainer3@local.local
+--boundary
+Content-Disposition: form-data; name="password"
+
+123456
+--boundary
+Content-Disposition: form-data; name="gender"
+
+мужской
+--boundary
+Content-Disposition: form-data; name="birthdate"
+
+1967-07-26T12:00:00.000Z
+--boundary
+Content-Disposition: form-data; name="role"
+
+тренер
+--boundary
+Content-Disposition: form-data; name="description"
+
+British actor
+--boundary
+Content-Disposition: form-data; name="location"
+
+Спортивная
+--boundary
+Content-Disposition: form-data; name="trainingLevel"
+
+профессионал
+--boundary
+Content-Disposition: form-data; name="trainingType"
+
+бокс
+--boundary
+Content-Disposition: form-data; name="trainingType"
+
+кроссфит
+--boundary
+Content-Disposition: form-data; name="trainingType"
+
+бег
+--boundary
+Content-Disposition: form-data; name="merits"
+
+British actor
+--boundary
+Content-Disposition: form-data; name="isReadyToPersonal"
+
+true
+--boundary--
+
+###
+
+# Get user info by id
+GET http://localhost:3001/api/user/306333dd-af96-4cdd-abc3-760ec0a38d7f HTTP/1.1
+Authorization: Bearer
+
+###
+
+# Update user
+PATCH http://localhost:3001/api/user/97c5f260-b964-47d3-9d50-ecd4abba67d2 HTTP/1.1
+Content-Type: multipart/form-data; boundary=boundary
+Authorization: Bearer
+
+--boundary
+Content-Disposition: form-data; name="avatar"; filename="photo-2.png"
+Content-Type: image/png
+
+< ../../../../frontend/public/img/content/avatars/users/photo-2.png
+--boundary
+Content-Disposition: form-data; name="pageBackground"; filename="training-2.jpg"
+Content-Type: image/jpg
+
+< ../../../../frontend/public/img/content/user-card-coach/training-2.jpg
+--boundary
+Content-Disposition: form-data; name="name"
+
+StathamUserBIG
+--boundary
+Content-Disposition: form-data; name="description"
+
+Famous british actor
+--boundary
+Content-Disposition: form-data; name="trainingType"
+
+бег
+--boundary
+Content-Disposition: form-data; name="trainingType"
+
+бокс
+--boundary
+Content-Disposition: form-data; name="trainingType"
+
+кроссфит
+--boundary
+Content-Disposition: form-data; name="isReadyToTraining"
+
+false
+--boundary--
+
+###
+
+# Get user avatar image
+GET http://localhost:3001/api/user/9b2b2172-c6a4-4ec8-a23e-3f466c6ba385/avatar HTTP/1.1
+Authorization: Bearer
+
+###
+
+# Get user pageBackground image
+GET http://localhost:3001/api/user/9b2b2172-c6a4-4ec8-a23e-3f466c6ba385/page-background HTTP/1.1
+Authorization: Bearer
+
+###
+
+# Get user avatar image
+GET http://localhost:3001/api/user/c5d3a830-ea05-4ab4-b163-7c9dae52c9a3/certificates HTTP/1.1
+Authorization: Bearer
+
+###
+
+# Get all users with pagination
+GET http://localhost:3001/api/user HTTP/1.1
+Authorization: Bearer
+
+###
+
+# Get all users with pagination with filters
+GET http://localhost:3001/api/user?limit=3&level=профессионал&specialization=кроссфит&sortDirection=desc&sortOption=role HTTP/1.1
+Authorization: Bearer
 
 ###

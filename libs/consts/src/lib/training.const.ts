@@ -3,10 +3,10 @@ export enum TitleLength {
   Max = 15,
 }
 
-export const TrainingBackgroundPictureAllowedExtensions = {
-  jpg: 'image/jpg',
-  png: 'image/png',
-} as const;
+export enum TrainingBackgroundPictureAllowedExtensions {
+  jpg = 'image/jpg',
+  png = 'image/png',
+}
 
 export enum PriceLimit {
   Min = 0,
@@ -18,10 +18,10 @@ export enum TrainingDescriptionLimit {
   Max = 140,
 }
 
-export const TrainingVideoAllowedExtensions = {
-  mov: 'video/quicktime',
-  avi: 'video/x-msvideo',
-  mp4: 'video/mp4',
-} as const;
+export enum TrainingVideoAllowedExtensions {
+  mov = 'video/quicktime',
+  avi = 'video/x-msvideo',
+  mp4 = 'video/mp4',
+}
 
 export const TRAINING_DEFAULT_RATING = 0;
