@@ -258,3 +258,15 @@ GET http://localhost:3001/api/user/c5d3a830-ea05-4ab4-b163-7c9dae52c9a3/certific
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI5N2M1ZjI2MC1iOTY0LTQ3ZDMtOWQ1MC1lY2Q0YWJiYTY3ZDIiLCJuYW1lIjoiU3RhdGhhbVVzZXJCSUciLCJlbWFpbCI6InN0YXRoYW0tdXNlcjlAbG9jYWwubG9jYWwiLCJpYXQiOjE3MTA0MjY1OTcsImV4cCI6MTcxMDQyNzQ5N30.Aw-mpQW--YqJSmVKtZ1wF28xEdEA7HIAfK4X5Hg7GGI
 
 ###
+
+# Get all users with pagination
+GET http://localhost:3001/api/user HTTP/1.1
+# Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImJiNGQ2MzE1LTIzODgtNDBjYS05ZDBhLTJmMDE1ZDIzMTVhYyIsIm5hbWUiOiJhZG1pbiIsImVtYWlsIjoiYWRtaW5AbG9jYWwubG9jYWwiLCJpYXQiOjE3MDc4MTExMjcsImV4cCI6MTcwODExMTEyN30._U3gQYUCT2SD0LnBmLv-MwL6mdKEt_O2h_jxQay8EDc
+
+###
+
+# Get all users with pagination with filters
+GET http://localhost:3001/api/user?limit=3&level=профессионал&specialization=кроссфит&sortDirection=desc&sortOption=role HTTP/1.1
+# Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImJiNGQ2MzE1LTIzODgtNDBjYS05ZDBhLTJmMDE1ZDIzMTVhYyIsIm5hbWUiOiJhZG1pbiIsImVtYWlsIjoiYWRtaW5AbG9jYWwubG9jYWwiLCJpYXQiOjE3MDc4MTExMjcsImV4cCI6MTcwODExMTEyN30._U3gQYUCT2SD0LnBmLv-MwL6mdKEt_O2h_jxQay8EDc
+
+###

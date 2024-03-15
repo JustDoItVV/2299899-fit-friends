@@ -7,3 +7,8 @@ export const SALT_ROUNDS = 10;
 export enum CommonError {
   FileNotFound = 'File not found',
 }
+
+export enum DefaultPagination {
+  Limit = 50,
+  Page = 1,
+}

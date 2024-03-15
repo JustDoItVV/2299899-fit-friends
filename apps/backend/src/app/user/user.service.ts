@@ -2,9 +2,11 @@ import { randomUUID } from 'node:crypto';
 
 import { BackendConfig } from '@2299899-fit-friends/config';
 import { UserErrorMessage } from '@2299899-fit-friends/consts';
-import { CreateUserDto, LoginUserDto, UpdateUserDto } from '@2299899-fit-friends/dtos';
-import { createJWTPayload } from '@2299899-fit-friends/helpers';
-import { Token, TokenPayload, UserFilesPayload } from '@2299899-fit-friends/types';
+import {
+    CreateUserDto, LoginUserDto, UpdateUserDto, UserPaginationQuery, UserRdo
+} from '@2299899-fit-friends/dtos';
+import { createJWTPayload, fillDto } from '@2299899-fit-friends/helpers';
+import { Pagination, Token, TokenPayload, UserFilesPayload } from '@2299899-fit-friends/types';
 import {
     ConflictException, ForbiddenException, Inject, Injectable, InternalServerErrorException,
     NotFoundException, UnauthorizedException
@@ -70,6 +72,15 @@ export class UserService {
     }
 
     return user;
+  }
+
+  public async getUsersByQuery(query: UserPaginationQuery): Promise<Pagination<UserRdo>> {
+    const pagination = await this.userRepository.find(query);
+    const paginationResult = {
+      ...pagination,
+      entities: pagination.entities.map((entity) => fillDto(UserRdo, entity.toPOJO())),
+    };
+    return paginationResult;
   }
 
   public async verifyUser(dto: LoginUserDto) {

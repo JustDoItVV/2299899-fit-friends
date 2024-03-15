@@ -31,3 +31,8 @@ export * from './lib/token.interface';
 export * from './lib/token-payload.interface';
 export * from './lib/refresh-token-payload.interface';
 export * from './lib/refresh-token.interface';
+
+export * from './lib/pagination.interface';
+export * from './lib/sort-option.enum';
+export * from './lib/sort-direction.enum';
+export * from './lib/user-sort-option.type';

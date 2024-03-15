@@ -8,13 +8,14 @@ import {
     UserDataTrasformationPipe, UserParam
 } from '@2299899-fit-friends/core';
 import {
-    CreateUserDto, LoggedUserRdo, LoginUserDto, UpdateUserDto, UserRdo
+    CreateUserDto, LoggedUserRdo, LoginUserDto, PaginationRdo, UpdateUserDto, UserPaginationQuery,
+    UserRdo
 } from '@2299899-fit-friends/dtos';
 import { fillDto } from '@2299899-fit-friends/helpers';
 import { TokenPayload, UserFilesPayload } from '@2299899-fit-friends/types';
 import {
-    Body, Controller, Delete, Get, Header, Param, Patch, Post, UploadedFiles, UseGuards,
-    UseInterceptors
+    Body, Controller, Delete, Get, Header, Param, Patch, Post, Query, UploadedFiles, UseGuards,
+    UseInterceptors, UsePipes, ValidationPipe
 } from '@nestjs/common';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 
@@ -24,6 +25,14 @@ import { UserService } from './user.service';
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
+
+  @Get('/')
+  @UsePipes(new ValidationPipe({ transform: true, transformOptions: { enableImplicitConversion: true } }))
+  @UseGuards(JwtAuthGuard)
+  public async show(@Query() query: UserPaginationQuery) {
+    const result = await this.userService.getUsersByQuery(query);
+    return fillDto(PaginationRdo<UserRdo>, result);
+  }
 
   @Post('login')
   @UseGuards(OnlyAnonymousGuard)
