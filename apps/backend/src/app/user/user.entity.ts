@@ -29,6 +29,7 @@ export class UserEntity implements User, BaseEntity<string, User> {
   public isReadyToPersonal?: boolean;
   public accessToken?: string;
   public refreshToken?: string;
+  public createdAt?: Date;
 
   public toPOJO(): User {
     const userPojo = {
@@ -55,6 +56,7 @@ export class UserEntity implements User, BaseEntity<string, User> {
     Object.assign(userPojo, this.isReadyToPersonal === null ? null : { isReadyToPersonal: this.isReadyToPersonal });
     Object.assign(userPojo, this.accessToken === null ? null : { accessToken: this.accessToken });
     Object.assign(userPojo, this.refreshToken === null ? null : { refreshToken: this.refreshToken });
+    Object.assign(userPojo, this.createdAt === null ? null : { createdAt: this.createdAt });
     return userPojo;
   }
 
@@ -81,6 +83,7 @@ export class UserEntity implements User, BaseEntity<string, User> {
     this.isReadyToPersonal = data.isReadyToPersonal;
     this.accessToken = data.accessToken ?? undefined;
     this.refreshToken = data.refreshToken ?? undefined;
+    this.createdAt = data.createdAt ?? undefined;
   }
 
   public async setPassword(password: string): Promise<UserEntity> {

@@ -27,4 +27,5 @@ export interface User {
   isReadyToPersonal?: boolean;
   accessToken?: string;
   refreshToken?: string;
+  createdAt?: Date;
 }

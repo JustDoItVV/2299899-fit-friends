@@ -2,14 +2,17 @@ import {
     ValidationArguments, ValidatorConstraint, ValidatorConstraintInterface
 } from 'class-validator';
 
-import { TRAINING_TYPE_LIMIT } from '@2299899-fit-friends/consts';
+import { TRAINING_TYPE_LIMIT, UserErrorMessage } from '@2299899-fit-friends/consts';
 import { UserRole } from '@2299899-fit-friends/types';
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 
 @Injectable()
 @ValidatorConstraint({ name: 'ArrayMinLengthByUserRole', async: false })
 export class ArrayMinLengthByUserRole implements ValidatorConstraintInterface {
   validate(array: string[], validationArguments: ValidationArguments) {
+    if (!array) {
+      throw new BadRequestException(UserErrorMessage.TrainingTypeRequired);
+    }
     const min = validationArguments.object['role'] === UserRole.Trainer ? TRAINING_TYPE_LIMIT : 0;
     return array.length >= min;
   }

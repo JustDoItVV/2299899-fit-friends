@@ -1,7 +1,7 @@
 # Login user by email and password
 POST http://localhost:3001/api/user/login HTTP/1.1
 Content-Type: application/json
-# Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIyYTg5ZDViNi04MzkxLTQ1YmItYjczOC0yZDQ3MDg4ZGFmMDQiLCJuYW1lIjoiTWlzcyBDaHJpc3R5IEJydWVuLVN0YW50b24gTUQiLCJlbWFpbCI6IkxhbmU1M0Bsb2NhbC5sb2NhbCIsImlhdCI6MTcxMDI0ODA5MywiZXhwIjoxNzEwMjQ4OTkzfQ.A3ILwH3S70mW6HuFj0CSqeomRDV_lzk_oJ0AWrNar0g
+# Authorization: Bearer
 
 {
   "email": "statham-user1@local.local",
@@ -12,26 +12,26 @@ Content-Type: application/json
 
 # Check user token
 POST http://localhost:3001/api/user/check HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIyYTg5ZDViNi04MzkxLTQ1YmItYjczOC0yZDQ3MDg4ZGFmMDQiLCJuYW1lIjoiTWlzcyBDaHJpc3R5IEJydWVuLVN0YW50b24gTUQiLCJlbWFpbCI6IkxhbmU1M0Bsb2NhbC5sb2NhbCIsImlhdCI6MTcxMDI1MDYwOSwiZXhwIjoxNzEwMjUxNTA5fQ.ZJSRBI4wkRmm-JCoVbh6mFYjC6SbjXGw90y8dIZv8dU
+Authorization: Bearer
 
 ###
 
 # Get new JWT pair via refreshToken
 POST http://localhost:3001/api/user/refresh HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIyYTg5ZDViNi04MzkxLTQ1YmItYjczOC0yZDQ3MDg4ZGFmMDQiLCJuYW1lIjoiTWlzcyBDaHJpc3R5IEJydWVuLVN0YW50b24gTUQiLCJlbWFpbCI6IkxhbmU1M0Bsb2NhbC5sb2NhbCIsInRva2VuSWQiOiJkMTFhZWJhOS1iMGNlLTRkM2EtODY1Yy00OGE4OGMxZDM3ZjQiLCJpYXQiOjE3MTAyNTA3NTAsImV4cCI6MTcxMDg1NTU1MH0.jkROu1cPEZZIsdGUwpV8vNlLF7P1Uuu-TOV0_sPaQvM
+Authorization: Bearer
 
 ###
 
 # Destroy refreshToken
 DELETE http://localhost:3001/api/user/refresh HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIwZWU1ZDJiNy1mNGRmLTQxYjctYjE2OC0xYzNlZjNkYjRjMzgiLCJuYW1lIjoiV2lsbGllIFNtaXRoIiwiZW1haWwiOiJKb3NodWFoMTFAbG9jYWwubG9jYWwiLCJ0b2tlbklkIjoiZWFiMzczZjQtMDQ0Ny00MWE4LTk0NDctMDM3ODI0MTRkYjMxIiwiaWF0IjoxNzEwMjU0MzE3LCJleHAiOjE3MTA4NTkxMTd9.yZwd915UUTof0LYGsMDGFn9Thh_Npn4wT0t9WcY_30w
+Authorization: Bearer
 
 ###
 
 # Create a new user, role User
 POST http://localhost:3001/api/user/register HTTP/1.1
 Content-Type: multipart/form-data; boundary=boundary
-# Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImVhMzJkNmQxLTYyNGYtNGYxNy1iMWYzLTg4YjFhNDhiOWI5YSIsIm5hbWUiOiJhZG1pbiIsImVtYWlsIjoiYWRtaW5AbG9jYWwubG9jYWwiLCJpYXQiOjE3MDgxNTk5MjMsImV4cCI6MTcwODQ1OTkyM30.LvYVziUt-0-uf4AtZIOxZYEanVKwEcytcZ4pwufr-Gs
+# Authorization: Bearer
 
 # --boundary
 # Content-Disposition: form-data; name="avatar"; filename="photo-1.png"
@@ -110,7 +110,7 @@ true
 # Create a new user, role Trainer
 POST http://localhost:3001/api/user/register HTTP/1.1
 Content-Type: multipart/form-data; boundary=boundary
-# Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImVhMzJkNmQxLTYyNGYtNGYxNy1iMWYzLTg4YjFhNDhiOWI5YSIsIm5hbWUiOiJhZG1pbiIsImVtYWlsIjoiYWRtaW5AbG9jYWwubG9jYWwiLCJpYXQiOjE3MDgxNTk5MjMsImV4cCI6MTcwODQ1OTkyM30.LvYVziUt-0-uf4AtZIOxZYEanVKwEcytcZ4pwufr-Gs
+# Authorization: Bearer
 
 --boundary
 Content-Disposition: form-data; name="avatar"; filename="photo-1.png"
@@ -193,15 +193,15 @@ true
 ###
 
 # Get user info by id
-GET http://localhost:3001/api/user/c5d3a830-ea05-4ab4-b163-7c9dae52c9a3 HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI5N2M1ZjI2MC1iOTY0LTQ3ZDMtOWQ1MC1lY2Q0YWJiYTY3ZDIiLCJuYW1lIjoiU3RhdGhhbVVzZXJCSUciLCJlbWFpbCI6InN0YXRoYW0tdXNlcjlAbG9jYWwubG9jYWwiLCJpYXQiOjE3MTA0MjU2NjMsImV4cCI6MTcxMDQyNjU2M30.Arc3JqUlAraze128ZbNF5WmYHGMrj-A2XxIZWQCV8F0
+GET http://localhost:3001/api/user/306333dd-af96-4cdd-abc3-760ec0a38d7f HTTP/1.1
+Authorization: Bearer
 
 ###
 
 # Update user
 PATCH http://localhost:3001/api/user/97c5f260-b964-47d3-9d50-ecd4abba67d2 HTTP/1.1
 Content-Type: multipart/form-data; boundary=boundary
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI5N2M1ZjI2MC1iOTY0LTQ3ZDMtOWQ1MC1lY2Q0YWJiYTY3ZDIiLCJuYW1lIjoiU3RhdGhhbVVzZXIiLCJlbWFpbCI6InN0YXRoYW0tdXNlcjlAbG9jYWwubG9jYWwiLCJpYXQiOjE3MTA0MjM2ODQsImV4cCI6MTcxMDQyNDU4NH0.VlT3V03wDH15D3m330Z8jrx_ir1tnBB5Pc6ZnVFnjAY
+Authorization: Bearer
 
 --boundary
 Content-Disposition: form-data; name="avatar"; filename="photo-2.png"
@@ -243,30 +243,30 @@ false
 
 # Get user avatar image
 GET http://localhost:3001/api/user/9b2b2172-c6a4-4ec8-a23e-3f466c6ba385/avatar HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI5N2M1ZjI2MC1iOTY0LTQ3ZDMtOWQ1MC1lY2Q0YWJiYTY3ZDIiLCJuYW1lIjoiU3RhdGhhbVVzZXJCSUciLCJlbWFpbCI6InN0YXRoYW0tdXNlcjlAbG9jYWwubG9jYWwiLCJpYXQiOjE3MTA0MjY1OTcsImV4cCI6MTcxMDQyNzQ5N30.Aw-mpQW--YqJSmVKtZ1wF28xEdEA7HIAfK4X5Hg7GGI
+Authorization: Bearer
 
 ###
 
 # Get user pageBackground image
 GET http://localhost:3001/api/user/9b2b2172-c6a4-4ec8-a23e-3f466c6ba385/page-background HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI5N2M1ZjI2MC1iOTY0LTQ3ZDMtOWQ1MC1lY2Q0YWJiYTY3ZDIiLCJuYW1lIjoiU3RhdGhhbVVzZXJCSUciLCJlbWFpbCI6InN0YXRoYW0tdXNlcjlAbG9jYWwubG9jYWwiLCJpYXQiOjE3MTA0MjY1OTcsImV4cCI6MTcxMDQyNzQ5N30.Aw-mpQW--YqJSmVKtZ1wF28xEdEA7HIAfK4X5Hg7GGI
+Authorization: Bearer
 
 ###
 
 # Get user avatar image
 GET http://localhost:3001/api/user/c5d3a830-ea05-4ab4-b163-7c9dae52c9a3/certificates HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI5N2M1ZjI2MC1iOTY0LTQ3ZDMtOWQ1MC1lY2Q0YWJiYTY3ZDIiLCJuYW1lIjoiU3RhdGhhbVVzZXJCSUciLCJlbWFpbCI6InN0YXRoYW0tdXNlcjlAbG9jYWwubG9jYWwiLCJpYXQiOjE3MTA0MjY1OTcsImV4cCI6MTcxMDQyNzQ5N30.Aw-mpQW--YqJSmVKtZ1wF28xEdEA7HIAfK4X5Hg7GGI
+Authorization: Bearer
 
 ###
 
 # Get all users with pagination
 GET http://localhost:3001/api/user HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIzMDYzMzNkZC1hZjk2LTRjZGQtYWJjMy03NjBlYzBhMzhkN2YiLCJuYW1lIjoiU3RhdGhhbVVzZXIiLCJlbWFpbCI6InN0YXRoYW0tdXNlcjFAbG9jYWwubG9jYWwiLCJyb2xlIjoi0L_QvtC70YzQt9C-0LLQsNGC0LXQu9GMIiwiaWF0IjoxNzEwNDk2Mjk0LCJleHAiOjE3MTA0OTcxOTR9.03DeS-DM1hlltDPvBTPe3LoffMYXugEz7zNvtlmW4ho
+Authorization: Bearer
 
 ###
 
 # Get all users with pagination with filters
 GET http://localhost:3001/api/user?limit=3&level=профессионал&specialization=кроссфит&sortDirection=desc&sortOption=role HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIzMDYzMzNkZC1hZjk2LTRjZGQtYWJjMy03NjBlYzBhMzhkN2YiLCJuYW1lIjoiU3RhdGhhbVVzZXIiLCJlbWFpbCI6InN0YXRoYW0tdXNlcjFAbG9jYWwubG9jYWwiLCJyb2xlIjoi0L_QvtC70YzQt9C-0LLQsNGC0LXQu9GMIiwiaWF0IjoxNzEwNDk2Mjk0LCJleHAiOjE3MTA0OTcxOTR9.03DeS-DM1hlltDPvBTPe3LoffMYXugEz7zNvtlmW4ho
+Authorization: Bearer
 
 ###

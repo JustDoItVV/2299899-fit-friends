@@ -9,6 +9,7 @@ export * from './lib/backend/decorators/user-param.decorator';
 export * from './lib/backend/decorators/token.decorator';
 export * from './lib/backend/decorators/transform-to-int.decorator';
 export * from './lib/backend/decorators/transform-to-bool.decorator';
+export * from './lib/backend/decorators/transform-to-array.decorator';
 
 export * from './lib/backend/guards/only-anonymous.guard';
 export * from './lib/backend/guards/jwt-auth.guard';
@@ -19,3 +20,5 @@ export * from './lib/backend/validators/array-min-length-by-user-role.validator'
 
 export * from './lib/backend/pipes/files-validation.pipe';
 export * from './lib/backend/pipes/user-data-transformation.pipe';
+
+export * from './lib/backend/interceptors/logging-errors.interceptor';

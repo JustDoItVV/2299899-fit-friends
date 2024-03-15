@@ -104,6 +104,8 @@ export class UserService {
   }
 
   public async register(dto: CreateUserDto, files: UserFilesPayload) {
+    console.log(dto);
+    console.log(files);
     const { email, password } = dto;
     const existedUser = await this.userRepository.findByEmail(email);
 
@@ -123,8 +125,6 @@ export class UserService {
 
     const pageBackgroundPath = await this.uploaderService.saveFile(files.pageBackground[0]);
     entity.pageBackground = pageBackgroundPath;
-
-
 
     const document = await this.userRepository.save(entity);
     return document;

@@ -4,7 +4,7 @@ export enum NameLength {
 }
 
 export const AvatarAllowedExtensions = {
-  jpg: 'image/jpg',
+  jpg: 'image/jpeg',
   png: 'image/png',
 } as const;
 
@@ -29,7 +29,7 @@ export const METRO_STATIONS = [
 ];
 
 export const UserBackgroundImageAllowedExtensions = {
-  jpg: 'image/jpg',
+  jpg: 'image/jpeg',
   png: 'image/png',
 } as const;
 
@@ -81,6 +81,7 @@ export enum UserErrorMessage {
   DescriptionMaxLength = `Description max length is ${UserDescriptionLength.Max} symbols`,
   LocationRequired = 'Location by metro station is required',
   TrainingLevelRequired = 'Training level required',
+  TrainingTypeRequired = 'Training type required',
   TariningTypeMustBeArray = 'Training type must be an array',
   TrainingTypeMaxSize = `Training type array max size is ${TRAINING_TYPE_LIMIT}`,
   TrainingTypeMinSize = `Training type array min size is ${TRAINING_TYPE_LIMIT}`,
@@ -99,13 +100,32 @@ export enum UserErrorMessage {
   UserUpdateForbidden = 'Update forbidden. User does not own this profile',
   ImageFormatForbidden = 'Image format forbidden',
   CertificateFormatForbidden = 'Certificate format forbidden',
+  PageBackgroundRequired = 'Pagebackground files required',
 }
 
 export enum AllowedImageFormat {
-  jpg = 'image/jpg',
+  jpg = 'image/jpeg',
   png = 'image/png',
 }
 
 export enum AllowedCertificateFormat {
   pdf = 'application/pdf',
+}
+
+export enum ApiUserMessage {
+  Unauthorized = 'Пользователь не авторизован',
+  Authorized = 'Пользователь авторизован',
+  NotFound = 'Пользователь не найден',
+  LoginWrong = 'Неверный логин',
+  PasswordWrong = 'Неверный пароль',
+  ValidationError = 'Ошибка валидации данных',
+  UserOrFileNotFound = 'Пользователь или файл не найден',
+  Catalog = 'Каталог пользователей',
+  Card = 'Карточка пользователя',
+  TokenNew = 'Новая пара токенов',
+  TokenRevoked = 'Токен отозван',
+  Registered = 'Пользователь успешно зарегистрирован',
+  EmailExists = 'Пользователь с таким email уже существует',
+  FileImageUrl = 'Изображение в виде data url',
+  FileCertificate = 'Файл сертификата пользователя',
 }

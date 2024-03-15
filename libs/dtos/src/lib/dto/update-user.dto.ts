@@ -13,8 +13,10 @@ import {
 import {
     TrainingDuration, TrainingLevel, TrainingType, UserGender, UserRole
 } from '@2299899-fit-friends/types';
+import { ApiPropertyOptional } from '@nestjs/swagger';
 
 export class UpdateUserDto {
+  @ApiPropertyOptional({ description: 'Имя, одно слово, только английские и русские буквы', example: 'Иван', pattern: '/^[a-zа-я]+$/gui' })
   @MaxLength(NameLength.Max, { message: UserErrorMessage.NameMaxLength })
   @MinLength(NameLength.Min, { message: UserErrorMessage.NameMinLength })
   @Matches(/^[a-zа-я]+$/gui, { message: UserErrorMessage.NameWrongPattern })
@@ -31,29 +33,35 @@ export class UpdateUserDto {
   @IsEmpty({ message: UserErrorMessage.RoleUpdateForbidden })
   public role: string;
 
+  @ApiPropertyOptional({ description: 'Пол', example: UserGender.Male, enum: UserGender })
   @IsEnum(UserGender)
   @IsString({ message: UserErrorMessage.NotString })
   @IsOptional()
   public gender: UserGender;
 
+  @ApiPropertyOptional({ description: 'Дата рождения, строка в формате ISO', example: '1967-07-26T12:00:00.000Z' })
   @IsDateString({}, { message: UserErrorMessage.BirthdateNotValid })
   @IsOptional()
   public birthdate?: Date;
 
+  @ApiPropertyOptional({ description: 'Описание, текст с общей информацией о пользователе', example: 'Описание', minLength: UserDescriptionLength.Min, maxLength: UserDescriptionLength.Max })
   @MaxLength(UserDescriptionLength.Max, { message: UserErrorMessage.DescriptionMaxLength })
   @MinLength(UserDescriptionLength.Min, { message: UserErrorMessage.DescriptionMinLength })
   @IsString({ message: UserErrorMessage.NotString })
   @IsOptional()
   public description?: string;
 
+  @ApiPropertyOptional({ description: 'Локация, станция метро', example: METRO_STATIONS[0], enum: METRO_STATIONS })
   @IsIn(METRO_STATIONS)
   @IsOptional()
   public location?: string;
 
+  @ApiPropertyOptional({ description: 'Уровень физической подготовки', enum: TrainingLevel, example: TrainingLevel.Amateur })
   @IsEnum(TrainingLevel)
   @IsOptional()
   public trainingLevel?: TrainingLevel;
 
+  @ApiPropertyOptional({ description: 'Тип тренировок', minItems: 0, maxItems: 3, enum: TrainingType, example: [TrainingType.Box, TrainingType.Crossfit] })
   @Validate(ArrayMinLengthByUserRole)
   @IsEnum(TrainingType, { each: true })
   @ArrayMaxSize(TRAINING_TYPE_LIMIT, { message: UserErrorMessage.TrainingTypeMaxSize })
@@ -61,6 +69,7 @@ export class UpdateUserDto {
   @IsOptional()
   public trainingType?: TrainingType[];
 
+  @ApiPropertyOptional({ description: `Только для роли "${UserRole.User}": Время на тренировку"`, enum: TrainingDuration, example: TrainingDuration.Eighty })
   @IsEnum(TrainingDuration)
   @IsString({ message: UserErrorMessage.NotString })
   @IsNotEmpty({ message: UserErrorMessage.TrainingDurationRequired })
@@ -68,6 +77,7 @@ export class UpdateUserDto {
   @IsOptional()
   public trainingDuration?: TrainingDuration;
 
+  @ApiPropertyOptional({ description: `Только для роли "${UserRole.User}": Количество калорий для сброса"`, minimum: CaloriesTargetLimit.Min, maximum: CaloriesTargetLimit.Max, example: CaloriesTargetLimit.Max })
   @Max(CaloriesTargetLimit.Max, { message: UserErrorMessage.CaloriesTargetMax })
   @Min(CaloriesTargetLimit.Min, { message: UserErrorMessage.CaloriesTargetMin })
   @TransformToInt(UserErrorMessage.Nan)
@@ -76,6 +86,7 @@ export class UpdateUserDto {
   @IsOptional()
   public caloriesTarget?: number;
 
+  @ApiPropertyOptional({ description: `Только для роли "${UserRole.User}": Количество калорий для траты в день"`, minimum: CaloriesPerDayLimit.Min, maximum: CaloriesPerDayLimit.Max, example: CaloriesPerDayLimit.Max })
   @Max(CaloriesPerDayLimit.Max, { message: UserErrorMessage.CaloriesPerDayMax })
   @Min(CaloriesPerDayLimit.Min, { message: UserErrorMessage.CaloriesPerDayMin })
   @TransformToInt(UserErrorMessage.Nan)
@@ -84,12 +95,14 @@ export class UpdateUserDto {
   @IsOptional()
   public caloriesPerDay?: number;
 
+  @ApiPropertyOptional({ description: `Только для роли "${UserRole.User}": Флаг готовности пользователя к приглашениям на тренировку"`, enum: ['true', 'false'] })
   @TransformToBool(UserErrorMessage.NotBoolString)
   @IsNotEmpty({ message: UserErrorMessage.IsReadyToTrainingRequired })
   @ValidateIf((object) => object.role === UserRole.User)
   @IsOptional()
   public isReadyToTraining?: boolean;
 
+  @ApiPropertyOptional({ description: `Только для роли "${UserRole.Trainer}": Текст с описание заслуг тренера`, minLength: MeritsLength.Min, maxLength: MeritsLength.Max, example: 'Большие заслуги' })
   @MaxLength(MeritsLength.Max, { message: UserErrorMessage.MeritsMaxLength })
   @MinLength(MeritsLength.Min, { message: UserErrorMessage.MeritsMinLength })
   @IsString({ message: UserErrorMessage.NotString })
@@ -97,6 +110,7 @@ export class UpdateUserDto {
   @ValidateIf((object) => object.role === UserRole.Trainer)
   public merits?: string;
 
+  @ApiPropertyOptional({ description: `Только для роли "${UserRole.Trainer}": Флаг готовности проводить индивидуальные тренировки"`, enum: ['true', 'false'] })
   @TransformToBool(UserErrorMessage.NotBoolString)
   @IsNotEmpty({ message: UserErrorMessage.IsReadyToPersonalRequired })
   @ValidateIf((object) => object.role === UserRole.Trainer)

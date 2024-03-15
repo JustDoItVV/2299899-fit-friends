@@ -1,7 +1,8 @@
 import 'multer';
 
 import {
-    AllowedCertificateFormat, AllowedImageFormat, AVATAR_SIZE_LIMIT, UserErrorMessage
+    AllowedCertificateFormat, AllowedImageFormat, ApiUserMessage, AVATAR_SIZE_LIMIT,
+    UserErrorMessage
 } from '@2299899-fit-friends/consts';
 import {
     FilesValidationPipe, JwtAuthGuard, JwtRefreshGuard, OnlyAnonymousGuard, Token,
@@ -14,18 +15,24 @@ import {
 import { fillDto } from '@2299899-fit-friends/helpers';
 import { TokenPayload, UserFilesPayload, UserRole } from '@2299899-fit-friends/types';
 import {
-    Body, Controller, Delete, Get, Header, Param, Patch, Post, Query, UploadedFiles, UseGuards,
-    UseInterceptors, UsePipes, ValidationPipe
+    Body, Controller, Delete, Get, Header, HttpCode, HttpStatus, Param, Patch, Post, Query,
+    UploadedFiles, UseGuards, UseInterceptors, UsePipes, ValidationPipe
 } from '@nestjs/common';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
+import { ApiBearerAuth, ApiConsumes, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { UserEntity } from './user.entity';
 import { UserService } from './user.service';
 
+@ApiTags('users')
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
+  @ApiBearerAuth()
+  @ApiResponse({ status: HttpStatus.OK, description: ApiUserMessage.Catalog, type: PaginationRdo<UserRdo> })
+  @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: ApiUserMessage.Unauthorized })
+  @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: ApiUserMessage.ValidationError })
   @Get('/')
   @UsePipes(new ValidationPipe({ transform: true, transformOptions: { enableImplicitConversion: true } }))
   @UseGuards(JwtAuthGuard, new UserRolesGuard([UserRole.User]))
@@ -34,6 +41,10 @@ export class UserController {
     return fillDto(PaginationRdo<UserRdo>, result);
   }
 
+  @ApiResponse({ status: HttpStatus.CREATED, description: ApiUserMessage.Authorized, type: LoggedUserRdo })
+  @ApiResponse({ status: HttpStatus.NOT_FOUND, description: ApiUserMessage.NotFound })
+  @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: ApiUserMessage.LoginWrong })
+  @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: ApiUserMessage.PasswordWrong })
   @Post('login')
   @UseGuards(OnlyAnonymousGuard)
   public async login(@Body() dto: LoginUserDto) {
@@ -42,12 +53,18 @@ export class UserController {
     return fillDto(LoggedUserRdo, { ...userEntity.toPOJO(), ...userToken });
   }
 
+  @ApiBearerAuth()
+  @ApiResponse({ status: HttpStatus.CREATED, description: ApiUserMessage.Authorized, type: LoggedUserRdo })
+  @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: ApiUserMessage.Unauthorized })
   @Post('check')
   @UseGuards(JwtAuthGuard)
   public async checkToken(@UserParam() payload: TokenPayload) {
     return fillDto(LoggedUserRdo, { ...payload, id: payload.userId });
   }
 
+  @ApiBearerAuth()
+  @ApiResponse({ status: HttpStatus.CREATED, description: ApiUserMessage.TokenNew, type: LoggedUserRdo })
+  @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: ApiUserMessage.Unauthorized })
   @Post('refresh')
   @UseGuards(JwtRefreshGuard)
   public async refreshToken(@UserParam() user: UserEntity) {
@@ -55,6 +72,10 @@ export class UserController {
     return fillDto(LoggedUserRdo, { ...user.toPOJO(), ...tokenPayload });
   }
 
+  @ApiBearerAuth()
+  @ApiResponse({ status: HttpStatus.NO_CONTENT, description: ApiUserMessage.TokenRevoked })
+  @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: ApiUserMessage.Unauthorized })
+  @HttpCode(204)
   @Delete('refresh')
   @UseGuards(JwtRefreshGuard)
   public async destroyRefreshToken(@Token() token: string) {
@@ -62,6 +83,10 @@ export class UserController {
   }
 
   @Post('register')
+  @ApiConsumes('multipart/form-data')
+  @ApiResponse({ status: HttpStatus.CREATED , description: ApiUserMessage.Registered, type: UserRdo })
+  @ApiResponse({ status: HttpStatus.CONFLICT , description: ApiUserMessage.EmailExists })
+  @ApiResponse({ status: HttpStatus.BAD_REQUEST , description: ApiUserMessage.ValidationError })
   @UseInterceptors(FileFieldsInterceptor([
     { name: 'avatar', maxCount: 1 },
     { name: 'pageBackground', maxCount: 1 },
@@ -81,6 +106,10 @@ export class UserController {
     return fillDto(UserRdo, newUser.toPOJO());
   }
 
+  @ApiBearerAuth()
+  @ApiResponse({ status: HttpStatus.OK , description: ApiUserMessage.Card, type: UserRdo })
+  @ApiResponse({ status: HttpStatus.NOT_FOUND , description: ApiUserMessage.NotFound })
+  @ApiResponse({ status: HttpStatus.UNAUTHORIZED , description: ApiUserMessage.Unauthorized })
   @Get(':id')
   @UseGuards(JwtAuthGuard)
   public async getUser(@Param('id') id: string) {
@@ -88,6 +117,11 @@ export class UserController {
     return fillDto(UserRdo, user.toPOJO());
   }
 
+  @ApiBearerAuth()
+  @ApiResponse({ status: HttpStatus.CREATED , description: ApiUserMessage.Card, type: UserRdo })
+  @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: ApiUserMessage.ValidationError })
+  @ApiResponse({ status: HttpStatus.NOT_FOUND , description: ApiUserMessage.NotFound })
+  @ApiResponse({ status: HttpStatus.UNAUTHORIZED , description: ApiUserMessage.Unauthorized })
   @Patch(':id')
   @UseInterceptors(FileFieldsInterceptor([
     { name: 'avatar', maxCount: 1 },
@@ -110,18 +144,30 @@ export class UserController {
     return fillDto(UserRdo, updatedUser.toPOJO());
   }
 
+  @ApiBearerAuth()
+  @ApiResponse({ status: HttpStatus.OK , description: ApiUserMessage.FileImageUrl })
+  @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: ApiUserMessage.Unauthorized })
+  @ApiResponse({ status: HttpStatus.NOT_FOUND , description: ApiUserMessage.UserOrFileNotFound })
   @Get(':id/avatar')
   @UseGuards(JwtAuthGuard)
   public async getAvatar(@Param('id') id: string) {
     return await this.userService.getAvatar(id);
   }
 
+  @ApiBearerAuth()
+  @ApiResponse({ status: HttpStatus.OK , description: ApiUserMessage.FileImageUrl })
+  @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: ApiUserMessage.Unauthorized })
+  @ApiResponse({ status: HttpStatus.NOT_FOUND , description: ApiUserMessage.UserOrFileNotFound })
   @Get(':id/page-background')
   @UseGuards(JwtAuthGuard)
   public async getPageBackground(@Param('id') id: string) {
     return await this.userService.getPageBackground(id);
   }
 
+  @ApiBearerAuth()
+  @ApiResponse({ status: HttpStatus.OK , description: ApiUserMessage.FileCertificate })
+  @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: ApiUserMessage.Unauthorized })
+  @ApiResponse({ status: HttpStatus.NOT_FOUND , description: ApiUserMessage.UserOrFileNotFound })
   @Get(':id/certificates')
   @Header('Content-disposition', 'attachment; filename=certificate.pdf')
   @UseGuards(JwtAuthGuard)
