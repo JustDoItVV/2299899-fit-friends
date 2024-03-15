@@ -101,6 +101,7 @@ export enum UserErrorMessage {
   ImageFormatForbidden = 'Image format forbidden',
   CertificateFormatForbidden = 'Certificate format forbidden',
   PageBackgroundRequired = 'Pagebackground files required',
+  NoFileUploaded = 'No file was uploaded',
 }
 
 export enum AllowedImageFormat {

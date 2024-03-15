@@ -175,6 +175,11 @@ export class UserService {
 
   public async getAvatar(id: string) {
     const user = await this.getUserById(id);
+
+    if (!user.avatar) {
+      throw new NotFoundException(UserErrorMessage.NoFileUploaded);
+    }
+
     return await this.uploaderService.getImageUrl(user.avatar);
   }
 
@@ -185,6 +190,11 @@ export class UserService {
 
   public async getCertificate(id: string) {
     const user = await this.getUserById(id);
+
+    if (!user.certificate) {
+      throw new NotFoundException(UserErrorMessage.NoFileUploaded);
+    }
+
     return await this.uploaderService.getFile(user.certificate);
   }
 }
