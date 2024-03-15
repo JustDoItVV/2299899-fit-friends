@@ -8,7 +8,7 @@ import {
     TRAINING_TYPE_LIMIT, UserDescriptionLength, UserErrorMessage
 } from '@2299899-fit-friends/consts';
 import {
-    ArrayMinLengthByUserRole, TransformToBool, TransformToInt
+    ArrayMinLengthByUserRole, TransformToArray, TransformToBool, TransformToInt
 } from '@2299899-fit-friends/core';
 import {
     TrainingDuration, TrainingLevel, TrainingType, UserGender, UserRole
@@ -33,6 +33,9 @@ export class UpdateUserDto {
   @IsEmpty({ message: UserErrorMessage.RoleUpdateForbidden })
   public role: string;
 
+  @ApiPropertyOptional({ name: 'avatar', type: 'file', properties: { file: { type: 'string', format: 'binary' } }, required: false })
+  public avatar: Express.Multer.File;
+
   @ApiPropertyOptional({ description: 'Пол', example: UserGender.Male, enum: UserGender })
   @IsEnum(UserGender)
   @IsString({ message: UserErrorMessage.NotString })
@@ -56,6 +59,9 @@ export class UpdateUserDto {
   @IsOptional()
   public location?: string;
 
+  @ApiPropertyOptional({ name: 'pageBackground', type: 'file', properties: { file: { type: 'string', format: 'binary' } }, required: false })
+  public pageBackground?: Express.Multer.File;
+
   @ApiPropertyOptional({ description: 'Уровень физической подготовки', enum: TrainingLevel, example: TrainingLevel.Amateur })
   @IsEnum(TrainingLevel)
   @IsOptional()
@@ -66,6 +72,7 @@ export class UpdateUserDto {
   @IsEnum(TrainingType, { each: true })
   @ArrayMaxSize(TRAINING_TYPE_LIMIT, { message: UserErrorMessage.TrainingTypeMaxSize })
   @IsArray({ message: UserErrorMessage.TariningTypeMustBeArray })
+  @TransformToArray()
   @IsOptional()
   public trainingType?: TrainingType[];
 
@@ -101,6 +108,9 @@ export class UpdateUserDto {
   @ValidateIf((object) => object.role === UserRole.User)
   @IsOptional()
   public isReadyToTraining?: boolean;
+
+  @ApiPropertyOptional({ name: 'certificate', type: 'file', properties: { file: { type: 'string', format: 'binary' } }, required: false })
+  public certificate?: Express.Multer.File;
 
   @ApiPropertyOptional({ description: `Только для роли "${UserRole.Trainer}": Текст с описание заслуг тренера`, minLength: MeritsLength.Min, maxLength: MeritsLength.Max, example: 'Большие заслуги' })
   @MaxLength(MeritsLength.Max, { message: UserErrorMessage.MeritsMaxLength })

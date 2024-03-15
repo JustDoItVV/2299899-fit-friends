@@ -7,7 +7,10 @@ export class UserDataTrasformationPipe implements PipeTransform<Record<string, s
     const caloriesPerDay = parseInt(value.caloriesPerDay, 10);
     const isReadyToTraining = value.isReadyToTraining === 'true';
     const isReadyToPersonal = value.isReadyToPersonal === 'true';
-    const trainingType = value.trainingType ? value.trainingType.split(',') : [];
+    let trainingType: unknown = value.trainingType;
+    if (trainingType instanceof String) {
+      trainingType = trainingType ? value.trainingType.split(',') : [];
+    }
 
     return {
       ...value,

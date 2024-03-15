@@ -123,6 +123,7 @@ export class UserController {
   @ApiResponse({ status: HttpStatus.NOT_FOUND , description: ApiUserMessage.NotFound })
   @ApiResponse({ status: HttpStatus.UNAUTHORIZED , description: ApiUserMessage.Unauthorized })
   @Patch(':id')
+  @ApiConsumes('multipart/form-data', 'application/json')
   @UseInterceptors(FileFieldsInterceptor([
     { name: 'avatar', maxCount: 1 },
     { name: 'pageBackground', maxCount: 1 },

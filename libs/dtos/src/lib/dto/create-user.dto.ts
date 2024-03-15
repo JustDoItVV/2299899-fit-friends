@@ -117,9 +117,7 @@ export class CreateUserDto {
   public isReadyToTraining: boolean;
 
   @ApiPropertyOptional({ name: 'certificate', type: 'file', properties: { file: { type: 'string', format: 'binary' } }, required: false })
-  @IsNotEmpty({ message: UserErrorMessage.PageBackgroundRequired })
-  @ValidateIf((object) => object.role === UserRole.Trainer)
-  public certificate: Express.Multer.File;
+  public certificate?: Express.Multer.File;
 
   @ApiPropertyOptional({ description: `Только для роли "${UserRole.Trainer}": Текст с описание заслуг тренера`, minLength: MeritsLength.Min, maxLength: MeritsLength.Max, example: 'Большие заслуги' })
   @MaxLength(MeritsLength.Max, { message: UserErrorMessage.MeritsMaxLength })

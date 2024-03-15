@@ -19,22 +19,24 @@ export class FilesValidationPipe implements PipeTransform<UserFilesPayload, User
   }
 
   transform(value: UserFilesPayload): UserFilesPayload {
-    for (const key of Object.keys(value)) {
-      value[key].map((file: Express.Multer.File) => {
-        if (file) {
-          const { originalname, mimetype, size } = file;
-          const fileExtention = originalname.split('.').at(-1);
+    if (value) {
+      for (const key of Object.keys(value)) {
+        value[key].map((file: Express.Multer.File) => {
+          if (file) {
+            const { originalname, mimetype, size } = file;
+            const fileExtention = originalname.split('.').at(-1);
 
-          const isValidSize = this.rules[key].size ? size <= this.rules[key].size : true;
+            const isValidSize = this.rules[key].size ? size <= this.rules[key].size : true;
 
-          const isValidFormatCondition1 = this.rules[key].formats ? Object.keys(this.rules[key].formats).includes(fileExtention) : true;
-          const isValidFormatCondition2 = this.rules[key].formats ? this.rules[key].formats[fileExtention] === mimetype : true;
+            const isValidFormatCondition1 = this.rules[key].formats ? Object.keys(this.rules[key].formats).includes(fileExtention) : true;
+            const isValidFormatCondition2 = this.rules[key].formats ? this.rules[key].formats[fileExtention] === mimetype : true;
 
-          if (!isValidSize || !isValidFormatCondition1 || !isValidFormatCondition2) {
-            throw new UnsupportedMediaTypeException(this.message);
+            if (!isValidSize || !isValidFormatCondition1 || !isValidFormatCondition2) {
+              throw new UnsupportedMediaTypeException(this.message);
+            }
           }
-        }
-      });
+        });
+      }
     }
 
     return value;

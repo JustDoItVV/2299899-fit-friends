@@ -22,6 +22,10 @@ export class UserRepository extends BasePostgresRepository<UserEntity, User> {
   }
 
   private calculatePage(totalCount: number, limit: number): number {
+    if (totalCount === 0) {
+      return 1;
+    }
+
     return Math.ceil(totalCount / limit);
   }
 

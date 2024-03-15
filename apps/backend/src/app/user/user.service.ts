@@ -104,8 +104,6 @@ export class UserService {
   }
 
   public async register(dto: CreateUserDto, files: UserFilesPayload) {
-    console.log(dto);
-    console.log(files);
     const { email, password } = dto;
     const existedUser = await this.userRepository.findByEmail(email);
 
@@ -149,20 +147,22 @@ export class UserService {
         hasChanges = true;
       }
 
-      if (files.avatar && files.avatar.length > 0) {
-        if (user.avatar) {
-          await this.uploaderService.deleteFile(user.avatar);
+      if (files) {
+        if (files.avatar && files.avatar.length > 0) {
+          if (user.avatar) {
+            await this.uploaderService.deleteFile(user.avatar);
+          }
+          const avatarPath = await this.uploaderService.saveFile(files.avatar[0]);
+          user.avatar = avatarPath;
         }
-        const avatarPath = await this.uploaderService.saveFile(files.avatar[0]);
-        user.avatar = avatarPath;
-      }
 
-      if (files.pageBackground && files.pageBackground.length > 0) {
-        if (user.pageBackground) {
-          await this.uploaderService.deleteFile(user.pageBackground);
+        if (files.pageBackground && files.pageBackground.length > 0) {
+          if (user.pageBackground) {
+            await this.uploaderService.deleteFile(user.pageBackground);
+          }
+          const pageBackgroundPath = await this.uploaderService.saveFile(files.pageBackground[0]);
+          user.pageBackground = pageBackgroundPath;
         }
-        const pageBackgroundPath = await this.uploaderService.saveFile(files.pageBackground[0]);
-        user.pageBackground = pageBackgroundPath;
       }
     }
 
