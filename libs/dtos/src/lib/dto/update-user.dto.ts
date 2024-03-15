@@ -16,7 +16,7 @@ import {
 import { ApiPropertyOptional } from '@nestjs/swagger';
 
 export class UpdateUserDto {
-  @ApiPropertyOptional({ description: 'Имя, одно слово, только английские и русские буквы', example: 'Иван', pattern: '/^[a-zа-я]+$/gui' })
+  @ApiPropertyOptional({ description: 'Имя, одно слово, только английские и русские буквы' })
   @MaxLength(NameLength.Max, { message: UserErrorMessage.NameMaxLength })
   @MinLength(NameLength.Min, { message: UserErrorMessage.NameMinLength })
   @Matches(/^[a-zа-я]+$/gui, { message: UserErrorMessage.NameWrongPattern })
@@ -36,25 +36,25 @@ export class UpdateUserDto {
   @ApiPropertyOptional({ name: 'avatar', type: 'file', properties: { file: { type: 'string', format: 'binary' } }, required: false })
   public avatar: Express.Multer.File;
 
-  @ApiPropertyOptional({ description: 'Пол', example: UserGender.Male, enum: UserGender })
+  @ApiPropertyOptional({ description: 'Пол', enum: UserGender })
   @IsEnum(UserGender)
   @IsString({ message: UserErrorMessage.NotString })
   @IsOptional()
   public gender: UserGender;
 
-  @ApiPropertyOptional({ description: 'Дата рождения, строка в формате ISO', example: '1967-07-26T12:00:00.000Z' })
+  @ApiPropertyOptional({ description: 'Дата рождения, строка в формате ISO' })
   @IsDateString({}, { message: UserErrorMessage.BirthdateNotValid })
   @IsOptional()
   public birthdate?: Date;
 
-  @ApiPropertyOptional({ description: 'Описание, текст с общей информацией о пользователе', example: 'Описание', minLength: UserDescriptionLength.Min, maxLength: UserDescriptionLength.Max })
+  @ApiPropertyOptional({ description: 'Описание, текст с общей информацией о пользователе', minLength: UserDescriptionLength.Min, maxLength: UserDescriptionLength.Max })
   @MaxLength(UserDescriptionLength.Max, { message: UserErrorMessage.DescriptionMaxLength })
   @MinLength(UserDescriptionLength.Min, { message: UserErrorMessage.DescriptionMinLength })
   @IsString({ message: UserErrorMessage.NotString })
   @IsOptional()
   public description?: string;
 
-  @ApiPropertyOptional({ description: 'Локация, станция метро', example: METRO_STATIONS[0], enum: METRO_STATIONS })
+  @ApiPropertyOptional({ description: 'Локация, станция метро', enum: METRO_STATIONS })
   @IsIn(METRO_STATIONS)
   @IsOptional()
   public location?: string;
@@ -62,12 +62,12 @@ export class UpdateUserDto {
   @ApiPropertyOptional({ name: 'pageBackground', type: 'file', properties: { file: { type: 'string', format: 'binary' } }, required: false })
   public pageBackground?: Express.Multer.File;
 
-  @ApiPropertyOptional({ description: 'Уровень физической подготовки', enum: TrainingLevel, example: TrainingLevel.Amateur })
+  @ApiPropertyOptional({ description: 'Уровень физической подготовки', enum: TrainingLevel })
   @IsEnum(TrainingLevel)
   @IsOptional()
   public trainingLevel?: TrainingLevel;
 
-  @ApiPropertyOptional({ description: 'Тип тренировок', minItems: 0, maxItems: 3, enum: TrainingType, example: [TrainingType.Box, TrainingType.Crossfit] })
+  @ApiPropertyOptional({ description: 'Тип тренировок', minItems: 0, maxItems: 3, type: Array<TrainingType> })
   @Validate(ArrayMinLengthByUserRole)
   @IsEnum(TrainingType, { each: true })
   @ArrayMaxSize(TRAINING_TYPE_LIMIT, { message: UserErrorMessage.TrainingTypeMaxSize })
@@ -76,7 +76,7 @@ export class UpdateUserDto {
   @IsOptional()
   public trainingType?: TrainingType[];
 
-  @ApiPropertyOptional({ description: `Только для роли "${UserRole.User}": Время на тренировку"`, enum: TrainingDuration, example: TrainingDuration.Eighty })
+  @ApiPropertyOptional({ description: `Только для роли "${UserRole.User}": Время на тренировку"`, enum: TrainingDuration })
   @IsEnum(TrainingDuration)
   @IsString({ message: UserErrorMessage.NotString })
   @IsNotEmpty({ message: UserErrorMessage.TrainingDurationRequired })
@@ -84,7 +84,7 @@ export class UpdateUserDto {
   @IsOptional()
   public trainingDuration?: TrainingDuration;
 
-  @ApiPropertyOptional({ description: `Только для роли "${UserRole.User}": Количество калорий для сброса"`, minimum: CaloriesTargetLimit.Min, maximum: CaloriesTargetLimit.Max, example: CaloriesTargetLimit.Max })
+  @ApiPropertyOptional({ description: `Только для роли "${UserRole.User}": Количество калорий для сброса"`, minimum: CaloriesTargetLimit.Min, maximum: CaloriesTargetLimit.Max })
   @Max(CaloriesTargetLimit.Max, { message: UserErrorMessage.CaloriesTargetMax })
   @Min(CaloriesTargetLimit.Min, { message: UserErrorMessage.CaloriesTargetMin })
   @TransformToInt(UserErrorMessage.Nan)
@@ -93,7 +93,7 @@ export class UpdateUserDto {
   @IsOptional()
   public caloriesTarget?: number;
 
-  @ApiPropertyOptional({ description: `Только для роли "${UserRole.User}": Количество калорий для траты в день"`, minimum: CaloriesPerDayLimit.Min, maximum: CaloriesPerDayLimit.Max, example: CaloriesPerDayLimit.Max })
+  @ApiPropertyOptional({ description: `Только для роли "${UserRole.User}": Количество калорий для траты в день"`, minimum: CaloriesPerDayLimit.Min, maximum: CaloriesPerDayLimit.Max })
   @Max(CaloriesPerDayLimit.Max, { message: UserErrorMessage.CaloriesPerDayMax })
   @Min(CaloriesPerDayLimit.Min, { message: UserErrorMessage.CaloriesPerDayMin })
   @TransformToInt(UserErrorMessage.Nan)
@@ -112,7 +112,7 @@ export class UpdateUserDto {
   @ApiPropertyOptional({ name: 'certificate', type: 'file', properties: { file: { type: 'string', format: 'binary' } }, required: false })
   public certificate?: Express.Multer.File;
 
-  @ApiPropertyOptional({ description: `Только для роли "${UserRole.Trainer}": Текст с описание заслуг тренера`, minLength: MeritsLength.Min, maxLength: MeritsLength.Max, example: 'Большие заслуги' })
+  @ApiPropertyOptional({ description: `Только для роли "${UserRole.Trainer}": Текст с описание заслуг тренера`, minLength: MeritsLength.Min, maxLength: MeritsLength.Max })
   @MaxLength(MeritsLength.Max, { message: UserErrorMessage.MeritsMaxLength })
   @MinLength(MeritsLength.Min, { message: UserErrorMessage.MeritsMinLength })
   @IsString({ message: UserErrorMessage.NotString })
