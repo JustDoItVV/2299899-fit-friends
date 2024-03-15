@@ -13,6 +13,7 @@ export * from './lib/backend/decorators/transform-to-bool.decorator';
 export * from './lib/backend/guards/only-anonymous.guard';
 export * from './lib/backend/guards/jwt-auth.guard';
 export * from './lib/backend/guards/jwt-refresh.guard';
+export * from './lib/backend/guards/user-roles.guard';
 
 export * from './lib/backend/validators/array-min-length-by-user-role.validator';
 

@@ -5,14 +5,14 @@ import {
 } from '@2299899-fit-friends/consts';
 import {
     FilesValidationPipe, JwtAuthGuard, JwtRefreshGuard, OnlyAnonymousGuard, Token,
-    UserDataTrasformationPipe, UserParam
+    UserDataTrasformationPipe, UserParam, UserRolesGuard
 } from '@2299899-fit-friends/core';
 import {
     CreateUserDto, LoggedUserRdo, LoginUserDto, PaginationRdo, UpdateUserDto, UserPaginationQuery,
     UserRdo
 } from '@2299899-fit-friends/dtos';
 import { fillDto } from '@2299899-fit-friends/helpers';
-import { TokenPayload, UserFilesPayload } from '@2299899-fit-friends/types';
+import { TokenPayload, UserFilesPayload, UserRole } from '@2299899-fit-friends/types';
 import {
     Body, Controller, Delete, Get, Header, Param, Patch, Post, Query, UploadedFiles, UseGuards,
     UseInterceptors, UsePipes, ValidationPipe
@@ -28,7 +28,7 @@ export class UserController {
 
   @Get('/')
   @UsePipes(new ValidationPipe({ transform: true, transformOptions: { enableImplicitConversion: true } }))
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, new UserRolesGuard([UserRole.User]))
   public async show(@Query() query: UserPaginationQuery) {
     const result = await this.userService.getUsersByQuery(query);
     return fillDto(PaginationRdo<UserRdo>, result);
