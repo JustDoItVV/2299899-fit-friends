@@ -18,5 +18,9 @@ import { TrainingService } from './training.service';
     TrainingRepository,
     TrainingService,
   ],
+  exports: [
+    TrainingRepository,
+    TrainingService,
+  ],
 })
 export class TrainingModule {}

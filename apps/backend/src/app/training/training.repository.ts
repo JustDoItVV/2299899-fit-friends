@@ -33,17 +33,13 @@ export class TrainingRepository extends BasePostgresRepository<TrainingEntity, T
 
   public async save(entity: TrainingEntity): Promise<TrainingEntity> {
     const pojoEntity = entity.toPOJO();
-    delete pojoEntity.rating;
     const document = await this.clientService.training.create({ data: pojoEntity });
     entity.id = document.id;
     return entity;
   }
 
   public async find(query: TrainingPaginationQuery, userId: string): Promise<Pagination<TrainingEntity>> {
-    console.log(query);
-    console.log(userId);
     let limit = query.limit;
-
     if (query.limit < 1){
       limit = 1;
     } else if (query.limit > DefaultPagination.Limit) {
@@ -72,7 +68,6 @@ export class TrainingRepository extends BasePostgresRepository<TrainingEntity, T
     const documentsCount = await this.getTrainingsCount(where);
     const totalPages = this.calculatePage(documentsCount, limit);
     let currentPage = query.page;
-
     if (query.page < 1) {
       currentPage = 1;
     } else if (query.page > totalPages) {

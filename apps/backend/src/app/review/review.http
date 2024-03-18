@@ -1,0 +1,16 @@
+# Create new review
+POST http://localhost:3001/api/review/06cba56f-4490-4794-997a-177fb64c97d5 HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIxZWQwZjAyMi1mN2UyLTRkY2UtYjQ3ZS02Yjg2YjA1ZjRiZTQiLCJuYW1lIjoiTXIuIENhbWVyb24gTGl0dGVsIiwiZW1haWwiOiJOZXd0b24yMEBsb2NhbC5sb2NhbCIsInJvbGUiOiLQv9C-0LvRjNC30L7QstCw0YLQtdC70YwiLCJpYXQiOjE3MTA3NzY2MzQsImV4cCI6MTcxMDc3NzUzNH0.timxZTM4yS1pCH11iErsELcIVG5fvP952ZnZ9eC4U8s
+Content-Type: application/json
+
+{
+  "rating": 5,
+  "text": "not bad very long description at least 100 symbols again not bad very long description at least 100 symbols"
+}
+###
+
+# Get
+GET http://localhost:3001/api/review/06cba56f-4490-4794-997a-177fb64c97d5 HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIxZWQwZjAyMi1mN2UyLTRkY2UtYjQ3ZS02Yjg2YjA1ZjRiZTQiLCJuYW1lIjoiTXIuIENhbWVyb24gTGl0dGVsIiwiZW1haWwiOiJOZXd0b24yMEBsb2NhbC5sb2NhbCIsInJvbGUiOiLQv9C-0LvRjNC30L7QstCw0YLQtdC70YwiLCJpYXQiOjE3MTA3NzY2MzQsImV4cCI6MTcxMDc3NzUzNH0.timxZTM4yS1pCH11iErsELcIVG5fvP952ZnZ9eC4U8s
+
+###
