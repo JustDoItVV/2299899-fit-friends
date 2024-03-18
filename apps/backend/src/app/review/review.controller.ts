@@ -10,13 +10,13 @@ import {
 
 import { ReviewService } from './review.service';
 
-@Controller('review')
+@Controller('training/:trainingId/reviews')
 export class ReviewController {
   constructor(
     private readonly reviewService: ReviewService,
   ) {}
 
-  @Post(':trainingId')
+  @Post('/')
   @UsePipes(new ValidationPipe({ transform: true, transformOptions: { enableImplicitConversion: true } }))
   @UseGuards(JwtAuthGuard, new UserRolesGuard([UserRole.User]))
   public async create(
@@ -28,7 +28,7 @@ export class ReviewController {
     return fillDto(ReviewRdo, newReview.toPOJO());
   }
 
-  @Get(':trainingId')
+  @Get('/')
   @UsePipes(new ValidationPipe({ transform: true, transformOptions: { enableImplicitConversion: true } }))
   @UseGuards(JwtAuthGuard)
   public async show(
