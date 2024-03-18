@@ -1,3 +1,4 @@
+import { TrainingAuditory } from './training-auditory.enum';
 import { TrainingDuration } from './training-duration.enum';
 import { TrainingLevel } from './training-level.enum';
 import { TrainingType } from './training-type.enum';
@@ -12,7 +13,7 @@ export interface Training {
   price: number;
   calories: number;
   description: string;
-  gender: string;
+  gender: TrainingAuditory;
   video: string;
   rating?: number;
   userId: string;

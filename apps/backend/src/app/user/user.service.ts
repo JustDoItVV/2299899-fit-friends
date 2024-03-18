@@ -121,9 +121,6 @@ export class UserService {
       }
     }
 
-    const pageBackgroundPath = await this.uploaderService.saveFile(files.pageBackground[0]);
-    entity.pageBackground = pageBackgroundPath;
-
     const document = await this.userRepository.save(entity);
     return document;
   }

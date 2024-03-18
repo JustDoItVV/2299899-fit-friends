@@ -1,0 +1,54 @@
+# Create a new user, role User
+POST http://localhost:3001/api/training HTTP/1.1
+Content-Type: multipart/form-data; boundary=boundary
+Authorization: Bearer
+
+--boundary
+Content-Disposition: form-data; name="backgroundPicture"; filename="photo-1.png"
+Content-Type: image/png
+
+< ../../../../frontend/public/img/content/avatars/users/photo-1.png
+--boundary
+Content-Disposition: form-data; name="video"; filename="video-1.mp4"
+Content-Type: video/mp4
+
+< ../../../../frontend/public/img/content/training-video/video-1.mp4
+--boundary
+Content-Disposition: form-data; name="title"
+
+Title 1
+--boundary
+Content-Disposition: form-data; name="level"
+
+любитель
+--boundary
+Content-Disposition: form-data; name="type"
+
+бег
+--boundary
+Content-Disposition: form-data; name="duration"
+
+30-50 мин
+--boundary
+Content-Disposition: form-data; name="price"
+
+1111
+--boundary
+Content-Disposition: form-data; name="calories"
+
+1111
+--boundary
+Content-Disposition: form-data; name="description"
+
+Training description 1
+--boundary
+Content-Disposition: form-data; name="gender"
+
+для всех
+--boundary
+Content-Disposition: form-data; name="isSpecialOffer"
+
+true
+--boundary--
+
+###

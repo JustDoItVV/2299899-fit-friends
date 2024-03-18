@@ -42,7 +42,7 @@ export class RefreshTokenRepository extends BasePostgresRepository<
   }
 
   public async deleteExpired() {
-    await this.client.refreshToken.deleteMany({
+    await this.clientService.refreshToken.deleteMany({
       where: { expiresIn: { lt: new Date() } },
     });
   }
