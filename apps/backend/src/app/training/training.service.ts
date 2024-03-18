@@ -1,6 +1,9 @@
 import { TrainingErrorMessage } from '@2299899-fit-friends/consts';
-import { CreateTrainingDto, UpdateTrainingDto } from '@2299899-fit-friends/dtos';
-import { TokenPayload, TrainingFilesPayload } from '@2299899-fit-friends/types';
+import {
+    CreateTrainingDto, TrainingPaginationQuery, TrainingRdo, UpdateTrainingDto
+} from '@2299899-fit-friends/dtos';
+import { fillDto } from '@2299899-fit-friends/helpers';
+import { Pagination, TokenPayload, TrainingFilesPayload } from '@2299899-fit-friends/types';
 import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 
 import { UploaderService } from '../uploader/uploader.service';
@@ -36,6 +39,15 @@ export class TrainingService {
     }
 
     return document;
+  }
+
+  public async getByQuery(query: TrainingPaginationQuery, userId: string): Promise<Pagination<TrainingRdo>> {
+    const pagination = await this.trainingRepository.find(query, userId);
+    const paginationResult = {
+      ...pagination,
+      entities: pagination.entities.map((entity) => fillDto(TrainingRdo, entity.toPOJO())),
+    };
+    return paginationResult;
   }
 
   public async update(payload: TokenPayload, id: string, dto: UpdateTrainingDto, files: TrainingFilesPayload) {

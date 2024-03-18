@@ -86,3 +86,15 @@ Content-Disposition: form-data; name="calories"
 --boundary--
 
 ###
+
+# Get trainings catalog of current user with role Trainer
+GET http://localhost:3001/api/training HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIzYmU2YmNiZS04NTY2LTRkMzUtOWNhOS00M2NjMjFlZTZlZjkiLCJuYW1lIjoiUGFtIEJyZWtrZSIsImVtYWlsIjoiSmF5bWUuS296ZXkyM0Bsb2NhbC5sb2NhbCIsInJvbGUiOiLRgtGA0LXQvdC10YAiLCJpYXQiOjE3MTA3NjM3MjEsImV4cCI6MTcxMDc2NDYyMX0.x2qrUAMrFCbpfIQ71P2LrMLNJ-dS7CD4BOhgW1Nz9dw
+
+###
+
+# Get trainings catalog of current user with role Trainer with filters
+GET http://localhost:3001/api/training?limit=3&price=1000&price=2000 HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIzYmU2YmNiZS04NTY2LTRkMzUtOWNhOS00M2NjMjFlZTZlZjkiLCJuYW1lIjoiUGFtIEJyZWtrZSIsImVtYWlsIjoiSmF5bWUuS296ZXkyM0Bsb2NhbC5sb2NhbCIsInJvbGUiOiLRgtGA0LXQvdC10YAiLCJpYXQiOjE3MTA3NjM3MjEsImV4cCI6MTcxMDc2NDYyMX0.x2qrUAMrFCbpfIQ71P2LrMLNJ-dS7CD4BOhgW1Nz9dw
+
+###

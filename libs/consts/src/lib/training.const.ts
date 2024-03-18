@@ -32,6 +32,7 @@ export enum TrainingCaloriesLimit {
 }
 
 export enum TrainingErrorMessage {
+  Nan = 'must be a number',
   NotInt = 'must be integer',
   NotString = 'must be string',
   NotFound = 'Trainin not found',

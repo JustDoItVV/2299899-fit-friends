@@ -4,11 +4,14 @@ import {
 import {
     FilesValidationPipe, JwtAuthGuard, TrainingDataTrasformationPipe, UserParam, UserRolesGuard
 } from '@2299899-fit-friends/core';
-import { CreateTrainingDto, TrainingRdo, UpdateTrainingDto } from '@2299899-fit-friends/dtos';
+import {
+    CreateTrainingDto, PaginationRdo, TrainingPaginationQuery, TrainingRdo, UpdateTrainingDto
+} from '@2299899-fit-friends/dtos';
 import { fillDto } from '@2299899-fit-friends/helpers';
 import { TokenPayload, TrainingFilesPayload, UserRole } from '@2299899-fit-friends/types';
 import {
-    Body, Controller, Get, Param, Patch, Post, UploadedFiles, UseGuards, UseInterceptors
+    Body, Controller, Get, Param, Patch, Post, Query, UploadedFiles, UseGuards, UseInterceptors,
+    UsePipes, ValidationPipe
 } from '@nestjs/common';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 
@@ -36,6 +39,14 @@ export class TrainingController {
   ) {
     const newTraining = await this.trainingService.create(dto, payload.userId, files);
     return fillDto(TrainingRdo, newTraining.toPOJO());
+  }
+
+  @Get('/')
+  @UsePipes(new ValidationPipe({ transform: true, transformOptions: { enableImplicitConversion: true } }))
+  @UseGuards(JwtAuthGuard, new UserRolesGuard([UserRole.Trainer]))
+  public async showMyTrainings(@UserParam() payload: TokenPayload, @Query() query: TrainingPaginationQuery) {
+    const result = await this.trainingService.getByQuery(query, payload.userId);
+    return fillDto(PaginationRdo<TrainingRdo>, result);
   }
 
   @Get(':id')
