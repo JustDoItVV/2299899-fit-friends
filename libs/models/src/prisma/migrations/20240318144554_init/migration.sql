@@ -39,6 +39,7 @@ CREATE TABLE "trainings" (
     "description" TEXT NOT NULL,
     "gender" TEXT NOT NULL,
     "video" TEXT NOT NULL,
+    "rating" DOUBLE PRECISION NOT NULL,
     "user_id" TEXT NOT NULL,
     "is_special_offer" BOOLEAN NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,

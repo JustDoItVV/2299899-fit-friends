@@ -2,42 +2,16 @@ import { genSalt, hash } from 'bcrypt';
 import chalk from 'chalk';
 
 import {
-  CaloriesPerDayLimit,
-  CaloriesTargetLimit,
-  METRO_STATIONS,
-  MOCK_EMAIL_OPTIONS,
-  MOCK_PASSWORD,
-  OrderAmountLimit,
-  PriceLimit,
-  RatingLimit,
-  SALT_ROUNDS,
-  TRAINING_TYPE_LIMIT,
+    CaloriesPerDayLimit, CaloriesTargetLimit, METRO_STATIONS, MOCK_EMAIL_OPTIONS, MOCK_PASSWORD,
+    OrderAmountLimit, PriceLimit, RatingLimit, SALT_ROUNDS, TRAINING_TYPE_LIMIT
 } from '@2299899-fit-friends/consts';
 import {
-  Balance,
-  CliCommand,
-  Notification,
-  Order,
-  OrderPaymentMethod,
-  OrderType,
-  RequestPersonalTraining,
-  RequestPersonalTrainingStatus,
-  Review,
-  Training,
-  TrainingAuditory,
-  TrainingDuration,
-  TrainingLevel,
-  TrainingType,
-  User,
-  UserGender,
-  UserRole,
+    Balance, CliCommand, Notification, Order, OrderPaymentMethod, OrderType,
+    RequestPersonalTraining, RequestPersonalTrainingStatus, Review, Training, TrainingAuditory,
+    TrainingDuration, TrainingLevel, TrainingType, User, UserGender, UserRole
 } from '@2299899-fit-friends/types';
 import { faker } from '@faker-js/faker';
-import {
-  PrismaClient,
-  Training as TrainingModel,
-  User as UserModel,
-} from '@prisma/client';
+import { PrismaClient, Training as TrainingModel, User as UserModel } from '@prisma/client';
 
 export class GenerateCommand implements CliCommand {
   private readonly name = '--generate';
@@ -53,57 +27,37 @@ export class GenerateCommand implements CliCommand {
         email: faker.internet.email(MOCK_EMAIL_OPTIONS),
         avatar: faker.image.avatar(),
         passwordHash: await hash(MOCK_PASSWORD, salt),
-        gender: faker.helpers.arrayElement(
-          Object.values(UserGender)
-        ) as UserGender,
+        gender: faker.helpers.arrayElement(Object.values(UserGender)) as UserGender,
         birthdate: faker.date.birthdate(),
         role,
         description: faker.person.bio(),
         location: faker.helpers.arrayElement(METRO_STATIONS),
         pageBackground: faker.image.url(),
-        trainingLevel: faker.helpers.arrayElement(
-          Object.values(TrainingLevel)
-        ) as TrainingLevel,
-        trainingType: faker.helpers.arrayElements(
-          Object.values(TrainingType),
-          TRAINING_TYPE_LIMIT
-        ) as TrainingType[],
+        trainingLevel: faker.helpers.arrayElement(Object.values(TrainingLevel)) as TrainingLevel,
+        trainingType: faker.helpers.arrayElements(Object.values(TrainingType), TRAINING_TYPE_LIMIT) as TrainingType[],
         trainingDuration:
           role == UserRole.User
-            ? (faker.helpers.arrayElement(
-                Object.values(TrainingDuration)
-              ) as TrainingDuration)
+            ? (faker.helpers.arrayElement(Object.values(TrainingDuration)) as TrainingDuration)
             : TrainingDuration.Eighty,
         caloriesTarget:
           role == UserRole.User
-            ? faker.number.int({
-                min: CaloriesTargetLimit.Min,
-                max: CaloriesTargetLimit.Max,
-              })
+            ? faker.number.int({ min: CaloriesTargetLimit.Min, max: CaloriesTargetLimit.Max })
             : CaloriesTargetLimit.Min,
         caloriesPerDay:
           role == UserRole.User
-            ? faker.number.int({
-                min: CaloriesPerDayLimit.Min,
-                max: CaloriesPerDayLimit.Max,
-              })
+            ? faker.number.int({ min: CaloriesPerDayLimit.Min, max: CaloriesPerDayLimit.Max })
             : CaloriesPerDayLimit.Min,
-        isReadyToTraining:
-          role == UserRole.User ? faker.datatype.boolean() : false,
+        isReadyToTraining: role == UserRole.User ? faker.datatype.boolean() : false,
         certificate: role == UserRole.Trainer ? faker.image.url() : '',
         merits: faker.person.bio(),
-        isReadyToPersonal:
-          role == UserRole.Trainer ? faker.datatype.boolean() : false,
+        isReadyToPersonal: role == UserRole.Trainer ? faker.datatype.boolean() : false,
       });
     }
 
     return mockUsers;
   }
 
-  private generateMockTrainings(
-    mockUsers: UserModel[],
-    count: number
-  ): Training[] {
+  private generateMockTrainings(mockUsers: UserModel[], count: number): Training[] {
     const mockTrainings: Training[] = [];
     const trainers = mockUsers.filter((user) => user.role == UserRole.Trainer);
 
@@ -112,25 +66,15 @@ export class GenerateCommand implements CliCommand {
       mockTrainings.push({
         title: faker.commerce.productName(),
         backgroundPicture: faker.image.url(),
-        level: faker.helpers.arrayElement(
-          Object.values(TrainingLevel)
-        ) as TrainingLevel,
-        type: faker.helpers.arrayElement(
-          Object.values(TrainingType)
-        ) as TrainingType,
-        duration: faker.helpers.arrayElement(
-          Object.values(TrainingDuration)
-        ) as TrainingDuration,
+        level: faker.helpers.arrayElement(Object.values(TrainingLevel)) as TrainingLevel,
+        type: faker.helpers.arrayElement(Object.values(TrainingType)) as TrainingType,
+        duration: faker.helpers.arrayElement(Object.values(TrainingDuration)) as TrainingDuration,
         price: faker.number.int({ min: PriceLimit.Min, max: PriceLimit.Max }),
-        calories: faker.number.int({
-          min: CaloriesTargetLimit.Min,
-          max: CaloriesTargetLimit.Max,
-        }),
+        calories: faker.number.int({ min: CaloriesTargetLimit.Min, max: CaloriesTargetLimit.Max }),
         description: faker.commerce.productDescription(),
-        gender: faker.helpers.arrayElement(
-          Object.values(TrainingAuditory)
-        ) as TrainingAuditory,
+        gender: faker.helpers.arrayElement(Object.values(TrainingAuditory)) as TrainingAuditory,
         video: faker.image.url(),
+        rating: 0,
         userId: user.id,
         isSpecialOffer: faker.datatype.boolean(),
       });
@@ -139,52 +83,34 @@ export class GenerateCommand implements CliCommand {
     return mockTrainings;
   }
 
-  private generateMockReviews(
-    users: UserModel[],
-    trainings: TrainingModel[],
-    count: number
-  ): Review[] {
+  private generateMockReviews(users: UserModel[], trainings: TrainingModel[], count: number): Review[] {
     const mockReviews: Review[] = [];
     for (let i = 0; i < count; i++) {
       mockReviews.push({
         userId: faker.helpers.arrayElement(users).id,
         trainingId: faker.helpers.arrayElement(trainings).id,
-        rating: faker.number.int({
-          min: RatingLimit.Min,
-          max: RatingLimit.Max,
-        }),
+        rating: faker.number.int({ min: RatingLimit.Min, max: RatingLimit.Max }),
         text: faker.commerce.productDescription(),
       });
     }
     return mockReviews;
   }
 
-  private generateMockOrders(
-    trainings: TrainingModel[],
-    count: number
-  ): Order[] {
+  private generateMockOrders(trainings: TrainingModel[], count: number): Order[] {
     const mockOrders: Order[] = [];
     for (let i = 0; i < count; i++) {
       mockOrders.push({
         type: OrderType.Subscription,
         trainingId: faker.helpers.arrayElement(trainings).id,
         price: faker.number.int({ min: PriceLimit.Min, max: PriceLimit.Max }),
-        amount: faker.number.int({
-          min: OrderAmountLimit.Min,
-          max: OrderAmountLimit.Max,
-        }),
-        paymentMethod: faker.helpers.arrayElement(
-          Object.values(OrderPaymentMethod)
-        ),
+        amount: faker.number.int({ min: OrderAmountLimit.Min, max: OrderAmountLimit.Max }),
+        paymentMethod: faker.helpers.arrayElement(Object.values(OrderPaymentMethod)),
       });
     }
     return mockOrders;
   }
 
-  private generateMockRequestPersonalTraining(
-    users: UserModel[],
-    count: number
-  ): RequestPersonalTraining[] {
+  private generateMockRequestPersonalTraining(users: UserModel[], count: number): RequestPersonalTraining[] {
     const mockRequests: RequestPersonalTraining[] = [];
     for (let i = 0; i < count; i++) {
       let author = null;
@@ -207,18 +133,13 @@ export class GenerateCommand implements CliCommand {
       mockRequests.push({
         authorId: author.id,
         targetId: target.id,
-        status: faker.helpers.arrayElement(
-          Object.values(RequestPersonalTrainingStatus)
-        ),
+        status: faker.helpers.arrayElement(Object.values(RequestPersonalTrainingStatus)),
       });
     }
     return mockRequests;
   }
 
-  private generateMockNotifications(
-    users: UserModel[],
-    count: number
-  ): Notification[] {
+  private generateMockNotifications(users: UserModel[], count: number): Notification[] {
     const mockNotifications: Notification[] = [];
     for (let i = 0; i < count; i++) {
       mockNotifications.push({
@@ -230,11 +151,7 @@ export class GenerateCommand implements CliCommand {
     return mockNotifications;
   }
 
-  private generateMockBalances(
-    users: UserModel[],
-    trainings: TrainingModel[],
-    count: number
-  ): Balance[] {
+  private generateMockBalances(users: UserModel[], trainings: TrainingModel[], count: number): Balance[] {
     const mockBalances: Balance[] = [];
     for (let i = 0; i < count; i++) {
       mockBalances.push({
@@ -246,78 +163,56 @@ export class GenerateCommand implements CliCommand {
     return mockBalances;
   }
 
-  private async seedDb(
-    prismaClient: PrismaClient,
-    mockRecordsCount: number
-  ): Promise<void> {
+  private async seedDb(prismaClient: PrismaClient, mockRecordsCount: number): Promise<void> {
     const mockUsers = await this.generateMockUsers(mockRecordsCount);
     const userDocuments = await Promise.all(
       mockUsers.map((user) => prismaClient.user.create({ data: user }))
     );
 
-    const mockTrainings = this.generateMockTrainings(
-      userDocuments,
-      mockRecordsCount
-    );
+    const mockTrainings = this.generateMockTrainings(userDocuments, mockRecordsCount);
     const trainingDocuments = await Promise.all(
-      mockTrainings.map((training) =>
-        prismaClient.training.create({ data: training })
-      )
+      mockTrainings.map((training) => prismaClient.training.create({ data: training }))
     );
 
-    const mockReviews = this.generateMockReviews(
-      userDocuments,
-      trainingDocuments,
-      mockRecordsCount
-    );
-    await Promise.all(
-      mockReviews.map((review) => prismaClient.review.create({ data: review }))
-    );
+    const mockReviews = this.generateMockReviews(userDocuments, trainingDocuments, mockRecordsCount);
+    for (const review of mockReviews) {
+      const training = await prismaClient.training.findFirst({ where: { id: review.trainingId } });
+        const oldRating = training.rating;
+        let updatedRating: number;
 
-    const mockOrders = this.generateMockOrders(
-      trainingDocuments,
-      mockRecordsCount
-    );
+        if (!oldRating) {
+          updatedRating = review.rating;
+        } else {
+          const existedReviewsCount = await prismaClient.review.count({ where: { trainingId: review.trainingId } });
+          updatedRating = (oldRating * existedReviewsCount + review.rating) / (existedReviewsCount + 1);
+        }
+        training.rating = updatedRating;
+
+        await prismaClient.training.update({ where: { id: review.trainingId }, data: training })
+        await prismaClient.review.create({ data: review });
+    }
+
+    const mockOrders = this.generateMockOrders(trainingDocuments, mockRecordsCount);
     await Promise.all(
       mockOrders.map((order) => prismaClient.order.create({ data: order }))
     );
 
-    const mockRequests = this.generateMockRequestPersonalTraining(
-      userDocuments,
-      mockRecordsCount
-    );
+    const mockRequests = this.generateMockRequestPersonalTraining(userDocuments, mockRecordsCount);
     await Promise.all(
-      mockRequests.map((request) =>
-        prismaClient.requestPersonalTraining.create({ data: request })
-      )
+      mockRequests.map((request) => prismaClient.requestPersonalTraining.create({ data: request }))
     );
 
-    const mockNotifications = this.generateMockNotifications(
-      userDocuments,
-      mockRecordsCount
-    );
+    const mockNotifications = this.generateMockNotifications(userDocuments, mockRecordsCount);
     await Promise.all(
-      mockNotifications.map((notification) =>
-        prismaClient.notification.create({ data: notification })
-      )
+      mockNotifications.map((notification) => prismaClient.notification.create({ data: notification }))
     );
 
-    const mockBalances = this.generateMockBalances(
-      userDocuments,
-      trainingDocuments,
-      mockRecordsCount
-    );
+    const mockBalances = this.generateMockBalances(userDocuments, trainingDocuments, mockRecordsCount);
     await Promise.all(
-      mockBalances.map((balance) =>
-        prismaClient.balance.create({ data: balance })
-      )
+      mockBalances.map((balance) => prismaClient.balance.create({ data: balance }))
     );
 
-    console.info(
-      chalk.green(
-        `Database filled with ${mockRecordsCount} records for each model`
-      )
-    );
+    console.info(chalk.green(`Database filled with ${mockRecordsCount} records for each model`));
   }
 
   public getName(): string {

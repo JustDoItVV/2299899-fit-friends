@@ -62,6 +62,7 @@ model Training {
   description       String
   gender            String
   video             String
+  rating            Float
   user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId            String   @map("user_id")
   isSpecialOffer    Boolean  @map("is_special_offer")
