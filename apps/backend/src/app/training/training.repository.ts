@@ -35,4 +35,22 @@ export class TrainingRepository extends BasePostgresRepository<TrainingEntity, T
       })
       : null;
   }
+
+  public async update(id: string, entity: TrainingEntity): Promise<TrainingEntity> {
+    const pojoEntity = entity.toPOJO();
+    const updatedDocument = await this.clientService.training.update({
+      where: { id },
+      data: {
+        ...pojoEntity,
+      },
+    });
+
+    return this.createEntityFromDocument({
+      ...updatedDocument,
+      level: updatedDocument.level as TrainingLevel,
+      type: updatedDocument.type as TrainingType,
+      duration: updatedDocument.duration as TrainingDuration,
+      gender: updatedDocument.gender as TrainingAuditory,
+    });
+  }
 }
