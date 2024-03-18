@@ -7,7 +7,9 @@ import {
 import { CreateTrainingDto, TrainingRdo } from '@2299899-fit-friends/dtos';
 import { fillDto } from '@2299899-fit-friends/helpers';
 import { TokenPayload, TrainingFilesPayload, UserRole } from '@2299899-fit-friends/types';
-import { Body, Controller, Post, UploadedFiles, UseGuards, UseInterceptors } from '@nestjs/common';
+import {
+    Body, Controller, Get, Param, Post, UploadedFiles, UseGuards, UseInterceptors
+} from '@nestjs/common';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 
 import { TrainingService } from './training.service';
@@ -30,10 +32,16 @@ export class TrainingController {
     @UploadedFiles(new FilesValidationPipe({
       backgroundPicture: { formats: TrainingBackgroundPictureAllowedExtensions },
       video: { formats: TrainingVideoAllowedExtensions },
-    }, TrainingErrorMessage.FileFormatForbidden))
-    files: TrainingFilesPayload
+    }, TrainingErrorMessage.FileFormatForbidden)) files: TrainingFilesPayload,
   ) {
     const newTraining = await this.trainingService.create(dto, payload.userId, files);
     return fillDto(TrainingRdo, newTraining.toPOJO());
+  }
+
+  @Get(':id')
+  @UseGuards(JwtAuthGuard)
+  public async getById(@Param('id') id: string) {
+    const training = await this.trainingService.getById(id);
+    return fillDto(TrainingRdo, training.toPOJO());
   }
 }

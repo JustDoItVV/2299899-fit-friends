@@ -1,6 +1,8 @@
 import { BasePostgresRepository } from '@2299899-fit-friends/core';
 import { PrismaClientService } from '@2299899-fit-friends/models';
-import { Training } from '@2299899-fit-friends/types';
+import {
+    Training, TrainingAuditory, TrainingDuration, TrainingLevel, TrainingType
+} from '@2299899-fit-friends/types';
 import { Injectable } from '@nestjs/common';
 
 import { TrainingEntity } from './training.entity';
@@ -19,5 +21,18 @@ export class TrainingRepository extends BasePostgresRepository<TrainingEntity, T
     const document = await this.clientService.training.create({ data: pojoEntity });
     entity.id = document.id;
     return entity;
+  }
+
+  public async findById(id: string): Promise<TrainingEntity | null> {
+    const document = await this.clientService.training.findFirst({ where: { id } });
+    return document
+      ? this.createEntityFromDocument({
+        ...document,
+        level: document.level as TrainingLevel,
+        type: document.type as TrainingType,
+        duration: document.duration as TrainingDuration,
+        gender: document.gender as TrainingAuditory,
+      })
+      : null;
   }
 }

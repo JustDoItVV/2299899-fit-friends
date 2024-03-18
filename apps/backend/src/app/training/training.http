@@ -52,3 +52,11 @@ true
 --boundary--
 
 ###
+
+###
+
+# Get training info by id
+GET http://localhost:3001/api/training/6683be97-5884-4428-bd27-6f2483573429 HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIzYmU2YmNiZS04NTY2LTRkMzUtOWNhOS00M2NjMjFlZTZlZjkiLCJuYW1lIjoiUGFtIEJyZWtrZSIsImVtYWlsIjoiSmF5bWUuS296ZXkyM0Bsb2NhbC5sb2NhbCIsInJvbGUiOiLRgtGA0LXQvdC10YAiLCJpYXQiOjE3MTA3NTkwOTIsImV4cCI6MTcxMDc1OTk5Mn0.xpz_DwcbfOU6F_97G_tqtuFS_fpOs-EOql0wMOEoFd8
+
+###

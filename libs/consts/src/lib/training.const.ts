@@ -34,6 +34,7 @@ export enum TrainingCaloriesLimit {
 export enum TrainingErrorMessage {
   NotInt = 'must be integer',
   NotString = 'must be string',
+  NotFound = 'Trainin not found',
   TitleRequired = 'Title required',
   TitleMinLength = `Title min length is ${TitleLength.Min} symbols`,
   TitleMaxLength = `Title max length is ${TitleLength.Max} symbols`,
