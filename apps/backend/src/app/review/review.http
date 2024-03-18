@@ -1,6 +1,6 @@
 # Create new review
 POST http://localhost:3001/api/training/06cba56f-4490-4794-997a-177fb64c97d5/reviews HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIxZWQwZjAyMi1mN2UyLTRkY2UtYjQ3ZS02Yjg2YjA1ZjRiZTQiLCJuYW1lIjoiTXIuIENhbWVyb24gTGl0dGVsIiwiZW1haWwiOiJOZXd0b24yMEBsb2NhbC5sb2NhbCIsInJvbGUiOiLQv9C-0LvRjNC30L7QstCw0YLQtdC70YwiLCJpYXQiOjE3MTA3Nzc0NTgsImV4cCI6MTcxMDc3ODM1OH0.ZhD3eyl0k5dJWZud9pPO4OPZnrj-a-B8dvyJaTsXKos
+Authorization: Bearer
 Content-Type: application/json
 
 {
@@ -11,6 +11,6 @@ Content-Type: application/json
 
 # Get
 GET http://localhost:3001/api/training/06cba56f-4490-4794-997a-177fb64c97d5/reviews HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIxZWQwZjAyMi1mN2UyLTRkY2UtYjQ3ZS02Yjg2YjA1ZjRiZTQiLCJuYW1lIjoiTXIuIENhbWVyb24gTGl0dGVsIiwiZW1haWwiOiJOZXd0b24yMEBsb2NhbC5sb2NhbCIsInJvbGUiOiLQv9C-0LvRjNC30L7QstCw0YLQtdC70YwiLCJpYXQiOjE3MTA3Nzc0NTgsImV4cCI6MTcxMDc3ODM1OH0.ZhD3eyl0k5dJWZud9pPO4OPZnrj-a-B8dvyJaTsXKos
+Authorization: Bearer
 
 ###

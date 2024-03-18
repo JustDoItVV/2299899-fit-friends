@@ -16,8 +16,7 @@ export class TrainingPaginationQuery extends PaginationQuery {
   public calories: [number, number] = [TrainingCaloriesLimit.Min, TrainingCaloriesLimit.Max];
 
   @TransformToInt(TrainingErrorMessage.Nan)
-  @IsOptional()
-  public rating?: number;
+  public rating = 0;
 
   @IsEnum(TrainingDuration, { each: true })
   @IsOptional()

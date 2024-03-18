@@ -50,7 +50,7 @@ export class TrainingRepository extends BasePostgresRepository<TrainingEntity, T
     where.price = { gte: query.price[0], lte: query.price[1] };
     where.calories = { gte: query.calories[0], lte: query.calories[1] };
     where.userId = userId;
-    // Todo filter by rating
+    where.rating = { gte: query.rating };
 
     if (query.duration) {
       if (Array.isArray(query.duration)) {
