@@ -1,5 +1,6 @@
 import {
-    TrainingBackgroundPictureAllowedExtensions, TrainingErrorMessage, TrainingVideoAllowedExtensions
+    ApiUserMessage, TrainingBackgroundPictureAllowedExtensions, TrainingErrorMessage,
+    TrainingVideoAllowedExtensions
 } from '@2299899-fit-friends/consts';
 import {
     FilesValidationPipe, JwtAuthGuard, TrainingDataTrasformationPipe, UserParam, UserRolesGuard
@@ -10,14 +11,15 @@ import {
 import { fillDto } from '@2299899-fit-friends/helpers';
 import { TokenPayload, TrainingFilesPayload, UserRole } from '@2299899-fit-friends/types';
 import {
-    Body, Controller, Get, Param, Patch, Post, Query, UploadedFiles, UseGuards, UseInterceptors,
-    UsePipes, ValidationPipe
+    Body, Controller, Get, HttpStatus, Param, Patch, Post, Query, UploadedFiles, UseGuards,
+    UseInterceptors, UsePipes, ValidationPipe
 } from '@nestjs/common';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { TrainingService } from './training.service';
 
+@ApiBearerAuth()
 @Controller('training')
 export class TrainingController {
   constructor(
@@ -25,6 +27,10 @@ export class TrainingController {
   ) {}
 
   @ApiTags('Account/Trainer')
+  @ApiResponse({ status: HttpStatus.CREATED, type: TrainingRdo })
+  @ApiResponse({ status: HttpStatus.BAD_REQUEST })
+  @ApiResponse({ status: HttpStatus.UNSUPPORTED_MEDIA_TYPE })
+  @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: ApiUserMessage.Unauthorized })
   @Post('')
   @UseInterceptors(FileFieldsInterceptor([
     { name: 'backgroundPicture', maxCount: 1 },
@@ -44,6 +50,9 @@ export class TrainingController {
   }
 
   @ApiTags('Trainings catalog')
+  @ApiResponse({ status: HttpStatus.OK, type: PaginationRdo<TrainingRdo> })
+  @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: ApiUserMessage.Unauthorized })
+  @ApiResponse({ status: HttpStatus.BAD_REQUEST })
   @Get('')
   @UsePipes(new ValidationPipe({ transform: true, transformOptions: { enableImplicitConversion: true } }))
   @UseGuards(JwtAuthGuard)
@@ -53,6 +62,9 @@ export class TrainingController {
   }
 
   @ApiTags('Account/Trainer')
+  @ApiResponse({ status: HttpStatus.OK, type: TrainingRdo })
+  @ApiResponse({ status: HttpStatus.NOT_FOUND })
+  @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: ApiUserMessage.Unauthorized })
   @Get(':id')
   @UseGuards(JwtAuthGuard)
   public async getById(@Param('id') id: string) {
@@ -61,6 +73,10 @@ export class TrainingController {
   }
 
   @ApiTags('Account/Trainer')
+  @ApiResponse({ status: HttpStatus.OK, type: PaginationRdo<TrainingRdo> })
+  @ApiResponse({ status: HttpStatus.NOT_FOUND })
+  @ApiResponse({ status: HttpStatus.BAD_REQUEST })
+  @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: ApiUserMessage.Unauthorized })
   @Patch(':id')
   @UseInterceptors(FileFieldsInterceptor([
     { name: 'backgroundPicture', maxCount: 1 },

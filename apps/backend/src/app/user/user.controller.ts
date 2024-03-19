@@ -87,6 +87,7 @@ export class UserController {
   @ApiResponse({ status: HttpStatus.CREATED , description: ApiUserMessage.Registered, type: UserRdo })
   @ApiResponse({ status: HttpStatus.CONFLICT , description: ApiUserMessage.EmailExists })
   @ApiResponse({ status: HttpStatus.BAD_REQUEST , description: ApiUserMessage.ValidationError })
+  @ApiResponse({ status: HttpStatus.UNSUPPORTED_MEDIA_TYPE })
   @UseInterceptors(FileFieldsInterceptor([
     { name: 'avatar', maxCount: 1 },
     { name: 'pageBackground', maxCount: 1 },
