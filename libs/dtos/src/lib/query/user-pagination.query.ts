@@ -15,7 +15,7 @@ export class UserPaginationQuery extends PaginationQuery {
   @IsOptional()
   public location?: string;
 
-  @ApiPropertyOptional({ description: 'Тип тренировок', type: Array<string>, minItems: 0, maxItems: 3 })
+  @ApiPropertyOptional({ description: 'Тип тренировок', type: Array })
   @IsEnum(TrainingType, { each: true })
   @IsOptional()
   public specialization?: TrainingType | TrainingType[];

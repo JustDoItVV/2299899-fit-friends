@@ -36,7 +36,7 @@ export enum TrainingErrorMessage {
   Nan = 'must be a number',
   NotInt = 'must be integer',
   NotString = 'must be string',
-  NotFound = 'Trainin not found',
+  NotFound = 'Training not found',
   UpdateForbidden = 'Update forbidden, user does not own this training',
   TitleRequired = 'Title required',
   TitleMinLength = `Title min length is ${TitleLength.Min} symbols`,

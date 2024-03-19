@@ -11,11 +11,14 @@ import {
 import { fillDto } from '@2299899-fit-friends/helpers';
 import { TokenPayload, TrainingFilesPayload, UserRole } from '@2299899-fit-friends/types';
 import {
-    Body, Controller, Get, HttpStatus, Param, Patch, Post, Query, UploadedFiles, UseGuards,
-    UseInterceptors, UsePipes, ValidationPipe
+    Body, Controller, Get, Param, Patch, Post, Query, UploadedFiles, UseGuards, UseInterceptors,
+    UsePipes, ValidationPipe
 } from '@nestjs/common';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
-import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+    ApiBadRequestResponse, ApiBearerAuth, ApiConsumes, ApiCreatedResponse, ApiNotFoundResponse,
+    ApiOkResponse, ApiOperation, ApiTags, ApiUnauthorizedResponse, ApiUnsupportedMediaTypeResponse
+} from '@nestjs/swagger';
 
 import { TrainingService } from './training.service';
 
@@ -27,10 +30,12 @@ export class TrainingController {
   ) {}
 
   @ApiTags('Account/Trainer')
-  @ApiResponse({ status: HttpStatus.CREATED, type: TrainingRdo })
-  @ApiResponse({ status: HttpStatus.BAD_REQUEST })
-  @ApiResponse({ status: HttpStatus.UNSUPPORTED_MEDIA_TYPE })
-  @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: ApiUserMessage.Unauthorized })
+  @ApiOperation({ summary: 'Создание тренировки' })
+  @ApiConsumes('multipart/form-data')
+  @ApiCreatedResponse({ description: 'Тренировка успешно создана', type: TrainingRdo })
+  @ApiBadRequestResponse({ description: 'Ошибка валидации данных' })
+  @ApiUnsupportedMediaTypeResponse({ description: 'Неподдерживаемый тип файлов' })
+  @ApiUnauthorizedResponse({ description: ApiUserMessage.Unauthorized })
   @Post('')
   @UseInterceptors(FileFieldsInterceptor([
     { name: 'backgroundPicture', maxCount: 1 },
@@ -50,9 +55,10 @@ export class TrainingController {
   }
 
   @ApiTags('Trainings catalog')
-  @ApiResponse({ status: HttpStatus.OK, type: PaginationRdo<TrainingRdo> })
-  @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: ApiUserMessage.Unauthorized })
-  @ApiResponse({ status: HttpStatus.BAD_REQUEST })
+  @ApiOperation({ summary: 'Каталог тренировок' })
+  @ApiOkResponse({ description: 'Каталог тренировок с пагинацией', type: PaginationRdo<TrainingRdo> })
+  @ApiBadRequestResponse({ description: 'Ошибка валидации данных' })
+  @ApiUnauthorizedResponse({ description: ApiUserMessage.Unauthorized })
   @Get('')
   @UsePipes(new ValidationPipe({ transform: true, transformOptions: { enableImplicitConversion: true } }))
   @UseGuards(JwtAuthGuard)
@@ -62,9 +68,10 @@ export class TrainingController {
   }
 
   @ApiTags('Account/Trainer')
-  @ApiResponse({ status: HttpStatus.OK, type: TrainingRdo })
-  @ApiResponse({ status: HttpStatus.NOT_FOUND })
-  @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: ApiUserMessage.Unauthorized })
+  @ApiOperation({ summary: 'Детальная информация о тренировке' })
+  @ApiOkResponse({ description: 'Детальная информация о тренировке', type: TrainingRdo })
+  @ApiNotFoundResponse({ description: 'Тренировка не найдена' })
+  @ApiUnauthorizedResponse({ description: ApiUserMessage.Unauthorized })
   @Get(':id')
   @UseGuards(JwtAuthGuard)
   public async getById(@Param('id') id: string) {
@@ -73,10 +80,12 @@ export class TrainingController {
   }
 
   @ApiTags('Account/Trainer')
-  @ApiResponse({ status: HttpStatus.OK, type: PaginationRdo<TrainingRdo> })
-  @ApiResponse({ status: HttpStatus.NOT_FOUND })
-  @ApiResponse({ status: HttpStatus.BAD_REQUEST })
-  @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: ApiUserMessage.Unauthorized })
+  @ApiOperation({ summary: 'Редактирование тренировки' })
+  @ApiConsumes('multipart/form-data', 'application/json')
+  @ApiOkResponse({ description: 'Детальная информация обновленной тренировки', type: TrainingRdo })
+  @ApiNotFoundResponse({ description: 'Тренировка не найдена' })
+  @ApiBadRequestResponse({ description: 'Ошибка валидации данных' })
+  @ApiUnauthorizedResponse({ description: ApiUserMessage.Unauthorized })
   @Patch(':id')
   @UseInterceptors(FileFieldsInterceptor([
     { name: 'backgroundPicture', maxCount: 1 },
