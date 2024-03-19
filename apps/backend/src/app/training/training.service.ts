@@ -41,7 +41,7 @@ export class TrainingService {
     return document;
   }
 
-  public async getByQuery(query: TrainingPaginationQuery, userId: string): Promise<Pagination<TrainingRdo>> {
+  public async getByQuery(query: TrainingPaginationQuery, userId?: string): Promise<Pagination<TrainingRdo>> {
     const pagination = await this.trainingRepository.find(query, userId);
     const paginationResult = {
       ...pagination,

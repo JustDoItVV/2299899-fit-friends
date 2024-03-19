@@ -38,7 +38,7 @@ export class TrainingRepository extends BasePostgresRepository<TrainingEntity, T
     return entity;
   }
 
-  public async find(query: TrainingPaginationQuery, userId: string): Promise<Pagination<TrainingEntity>> {
+  public async find(query: TrainingPaginationQuery, userId?: string): Promise<Pagination<TrainingEntity>> {
     let limit = query.limit;
     if (query.limit < 1){
       limit = 1;
@@ -49,14 +49,23 @@ export class TrainingRepository extends BasePostgresRepository<TrainingEntity, T
     const where: Prisma.TrainingWhereInput = {};
     where.price = { gte: query.price[0], lte: query.price[1] };
     where.calories = { gte: query.calories[0], lte: query.calories[1] };
-    where.userId = userId;
     where.rating = { gte: query.rating };
+    if (userId) {
+      where.userId = userId;
+    }
 
     if (query.duration) {
       if (Array.isArray(query.duration)) {
         where.duration = { in: query.duration };
       } else {
         where.duration = query.duration;
+      }
+    }
+    if (query.type) {
+      if (Array.isArray(query.type)) {
+        where.type = { in: query.type };
+      } else {
+        where.type = query.type;
       }
     }
 

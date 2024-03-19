@@ -4,7 +4,7 @@ import {
     PriceLimit, TrainingCaloriesLimit, TrainingErrorMessage
 } from '@2299899-fit-friends/consts';
 import { TransformToInt } from '@2299899-fit-friends/core';
-import { TrainingDuration } from '@2299899-fit-friends/types';
+import { TrainingDuration, TrainingType } from '@2299899-fit-friends/types';
 
 import { PaginationQuery } from './pagination.query';
 
@@ -21,4 +21,8 @@ export class TrainingPaginationQuery extends PaginationQuery {
   @IsEnum(TrainingDuration, { each: true })
   @IsOptional()
   public duration?: TrainingDuration | TrainingDuration[];
+
+  @IsEnum(TrainingType, { each: true })
+  @IsOptional()
+  public type?: TrainingType | TrainingType[];
 }

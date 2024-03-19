@@ -23,13 +23,13 @@ export class TrainingController {
     private readonly trainingService: TrainingService,
   ) {}
 
-  @Post('/')
+  @Post('')
   @UseInterceptors(FileFieldsInterceptor([
     { name: 'backgroundPicture', maxCount: 1 },
     { name: 'video', maxCount: 1 },
   ]))
   @UseGuards(JwtAuthGuard, new UserRolesGuard([UserRole.Trainer]))
-  public async create(
+  public async createTraining(
     @Body(new TrainingDataTrasformationPipe()) dto: CreateTrainingDto,
     @UserParam() payload: TokenPayload,
     @UploadedFiles(new FilesValidationPipe({
@@ -41,11 +41,11 @@ export class TrainingController {
     return fillDto(TrainingRdo, newTraining.toPOJO());
   }
 
-  @Get('/')
+  @Get('')
   @UsePipes(new ValidationPipe({ transform: true, transformOptions: { enableImplicitConversion: true } }))
-  @UseGuards(JwtAuthGuard, new UserRolesGuard([UserRole.Trainer]))
-  public async showMyTrainings(@UserParam() payload: TokenPayload, @Query() query: TrainingPaginationQuery) {
-    const result = await this.trainingService.getByQuery(query, payload.userId);
+  @UseGuards(JwtAuthGuard)
+  public async showMyTrainings(@Query() query: TrainingPaginationQuery) {
+    const result = await this.trainingService.getByQuery(query);
     return fillDto(PaginationRdo<TrainingRdo>, result);
   }
 
@@ -61,7 +61,7 @@ export class TrainingController {
     { name: 'backgroundPicture', maxCount: 1 },
     { name: 'video', maxCount: 1 },
   ]))
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, new UserRolesGuard([UserRole.Trainer]))
   public async update(
     @Param('id') id: string,
     @Body(new TrainingDataTrasformationPipe()) dto: UpdateTrainingDto,
