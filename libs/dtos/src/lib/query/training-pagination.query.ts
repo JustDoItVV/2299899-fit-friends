@@ -1,7 +1,7 @@
 import { IsEnum, IsOptional } from 'class-validator';
 
 import {
-    PriceLimit, TrainingCaloriesLimit, TrainingErrorMessage
+    PriceLimit, RatingLimit, TrainingCaloriesLimit, TrainingErrorMessage
 } from '@2299899-fit-friends/consts';
 import { TransformToInt } from '@2299899-fit-friends/core';
 import { TrainingDuration, TrainingType } from '@2299899-fit-friends/types';
@@ -20,7 +20,7 @@ export class TrainingPaginationQuery extends PaginationQuery {
 
   @ApiPropertyOptional({ description: 'Фильтр по диапазону рейтингов', type: Array })
   @TransformToInt(TrainingErrorMessage.Nan)
-  public rating = 0;
+  public rating: [number, number] = [0, RatingLimit.Max];
 
   @ApiPropertyOptional({ description: 'Фильтр по продолжительности', type: Array })
   @IsEnum(TrainingDuration, { each: true })

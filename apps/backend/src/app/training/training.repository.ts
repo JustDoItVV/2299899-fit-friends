@@ -49,7 +49,8 @@ export class TrainingRepository extends BasePostgresRepository<TrainingEntity, T
     const where: Prisma.TrainingWhereInput = {};
     where.price = { gte: query.price[0], lte: query.price[1] };
     where.calories = { gte: query.calories[0], lte: query.calories[1] };
-    where.rating = { gte: query.rating };
+    where.rating = { gte: query.rating[0], lte: query.rating[1] };
+
     if (userId) {
       where.userId = userId;
     }
