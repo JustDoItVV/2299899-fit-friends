@@ -1,0 +1,11 @@
+# Get trainings catalog
+GET http://localhost:3001/api/training HTTP/1.1
+Authorization: Bearer
+
+###
+
+# Get trainings catalog with filters
+GET http://localhost:3001/api/training?limit=3&price=2000&price=1889161061&rating=4&duration=10-30%20мин HTTP/1.1
+Authorization: Bearer
+
+###

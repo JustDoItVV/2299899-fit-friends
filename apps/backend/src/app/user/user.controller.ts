@@ -19,20 +19,26 @@ import {
     UploadedFiles, UseGuards, UseInterceptors, UsePipes, ValidationPipe
 } from '@nestjs/common';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
-import { ApiBearerAuth, ApiConsumes, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+    ApiBadRequestResponse, ApiBearerAuth, ApiConflictResponse, ApiConsumes, ApiCreatedResponse,
+    ApiForbiddenResponse, ApiNoContentResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation,
+    ApiTags, ApiUnauthorizedResponse, ApiUnsupportedMediaTypeResponse
+} from '@nestjs/swagger';
 
 import { UserEntity } from './user.entity';
 import { UserService } from './user.service';
 
-@ApiTags('users')
+@ApiTags('Users')
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @ApiBearerAuth()
-  @ApiResponse({ status: HttpStatus.OK, description: ApiUserMessage.Catalog, type: PaginationRdo<UserRdo> })
-  @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: ApiUserMessage.Unauthorized })
-  @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: ApiUserMessage.ValidationError })
+  @ApiOperation({ summary: 'Каталог пользователей' })
+  @ApiOkResponse({ description: ApiUserMessage.Catalog, type: PaginationRdo<UserRdo> })
+  @ApiBadRequestResponse({ description: ApiUserMessage.ValidationError })
+  @ApiForbiddenResponse({ description: `Запрещено кроме пользователя с ролью ${UserRole.User}` })
+  @ApiUnauthorizedResponse({ description: ApiUserMessage.Unauthorized })
   @Get('/')
   @UsePipes(new ValidationPipe({ transform: true, transformOptions: { enableImplicitConversion: true } }))
   @UseGuards(JwtAuthGuard, new UserRolesGuard([UserRole.User]))
@@ -41,10 +47,12 @@ export class UserController {
     return fillDto(PaginationRdo<UserRdo>, result);
   }
 
-  @ApiResponse({ status: HttpStatus.CREATED, description: ApiUserMessage.Authorized, type: LoggedUserRdo })
-  @ApiResponse({ status: HttpStatus.NOT_FOUND, description: ApiUserMessage.NotFound })
-  @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: ApiUserMessage.LoginWrong })
-  @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: ApiUserMessage.PasswordWrong })
+  @ApiOperation({ summary: 'Вход в систему' })
+  @ApiCreatedResponse({ description: ApiUserMessage.Authorized, type: LoggedUserRdo })
+  @ApiBadRequestResponse({ description: ApiUserMessage.LoginWrong })
+  @ApiUnauthorizedResponse({ description: ApiUserMessage.PasswordWrong })
+  @ApiNotFoundResponse({ description: ApiUserMessage.NotFound })
+  @ApiForbiddenResponse({ description: 'Запрещено для авторизованных пользователей' })
   @Post('login')
   @UseGuards(OnlyAnonymousGuard)
   public async login(@Body() dto: LoginUserDto) {
@@ -54,8 +62,9 @@ export class UserController {
   }
 
   @ApiBearerAuth()
-  @ApiResponse({ status: HttpStatus.CREATED, description: ApiUserMessage.Authorized, type: LoggedUserRdo })
-  @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: ApiUserMessage.Unauthorized })
+  @ApiOperation({ summary: 'Проверка токена' })
+  @ApiCreatedResponse({ description: ApiUserMessage.Authorized, type: LoggedUserRdo })
+  @ApiUnauthorizedResponse({ description: ApiUserMessage.Unauthorized })
   @Post('check')
   @UseGuards(JwtAuthGuard)
   public async checkToken(@UserParam() payload: TokenPayload) {
@@ -63,8 +72,9 @@ export class UserController {
   }
 
   @ApiBearerAuth()
-  @ApiResponse({ status: HttpStatus.CREATED, description: ApiUserMessage.TokenNew, type: LoggedUserRdo })
-  @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: ApiUserMessage.Unauthorized })
+  @ApiOperation({ summary: 'Получение новой пары токенов' })
+  @ApiCreatedResponse({ description: ApiUserMessage.TokenNew, type: LoggedUserRdo })
+  @ApiUnauthorizedResponse({ description: ApiUserMessage.Unauthorized })
   @Post('refresh')
   @UseGuards(JwtRefreshGuard)
   public async refreshToken(@UserParam() user: UserEntity) {
@@ -73,20 +83,24 @@ export class UserController {
   }
 
   @ApiBearerAuth()
-  @ApiResponse({ status: HttpStatus.NO_CONTENT, description: ApiUserMessage.TokenRevoked })
-  @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: ApiUserMessage.Unauthorized })
-  @HttpCode(204)
+  @ApiOperation({ summary: 'Отзыв токена' })
+  @ApiNoContentResponse({ description: ApiUserMessage.TokenRevoked })
+  @ApiUnauthorizedResponse({ description: ApiUserMessage.Unauthorized })
+  @HttpCode(HttpStatus.NO_CONTENT)
   @Delete('refresh')
   @UseGuards(JwtRefreshGuard)
   public async destroyRefreshToken(@Token() token: string) {
     await this.userService.deleteRefreshToken(token);
   }
 
-  @Post('register')
+  @ApiOperation({ summary: 'Регистрация пользователя' })
   @ApiConsumes('multipart/form-data')
-  @ApiResponse({ status: HttpStatus.CREATED , description: ApiUserMessage.Registered, type: UserRdo })
-  @ApiResponse({ status: HttpStatus.CONFLICT , description: ApiUserMessage.EmailExists })
-  @ApiResponse({ status: HttpStatus.BAD_REQUEST , description: ApiUserMessage.ValidationError })
+  @ApiCreatedResponse({ description: ApiUserMessage.Registered, type: UserRdo })
+  @ApiConflictResponse({ description: ApiUserMessage.EmailExists })
+  @ApiBadRequestResponse({ description: ApiUserMessage.ValidationError })
+  @ApiUnsupportedMediaTypeResponse({ description: 'неподдерживаемый тип файлов' })
+  @ApiForbiddenResponse({ description: 'Запрещено для авторизованных пользователей' })
+  @Post('register')
   @UseInterceptors(FileFieldsInterceptor([
     { name: 'avatar', maxCount: 1 },
     { name: 'pageBackground', maxCount: 1 },
@@ -107,9 +121,10 @@ export class UserController {
   }
 
   @ApiBearerAuth()
-  @ApiResponse({ status: HttpStatus.OK , description: ApiUserMessage.Card, type: UserRdo })
-  @ApiResponse({ status: HttpStatus.NOT_FOUND , description: ApiUserMessage.NotFound })
-  @ApiResponse({ status: HttpStatus.UNAUTHORIZED , description: ApiUserMessage.Unauthorized })
+  @ApiOperation({ summary: 'Детальная информация о пользователе (Карточка пользователя)' })
+  @ApiOkResponse({ description: ApiUserMessage.Card, type: UserRdo })
+  @ApiNotFoundResponse({ description: ApiUserMessage.NotFound })
+  @ApiUnauthorizedResponse({ description: ApiUserMessage.Unauthorized })
   @Get(':id')
   @UseGuards(JwtAuthGuard)
   public async getUser(@Param('id') id: string) {
@@ -118,10 +133,11 @@ export class UserController {
   }
 
   @ApiBearerAuth()
-  @ApiResponse({ status: HttpStatus.CREATED , description: ApiUserMessage.Card, type: UserRdo })
-  @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: ApiUserMessage.ValidationError })
-  @ApiResponse({ status: HttpStatus.NOT_FOUND , description: ApiUserMessage.NotFound })
-  @ApiResponse({ status: HttpStatus.UNAUTHORIZED , description: ApiUserMessage.Unauthorized })
+  @ApiOperation({ summary: 'Редактирование информации о пользователе' })
+  @ApiCreatedResponse({ description: ApiUserMessage.Card, type: UserRdo })
+  @ApiBadRequestResponse({ description: ApiUserMessage.ValidationError })
+  @ApiNotFoundResponse({ description: ApiUserMessage.NotFound })
+  @ApiUnauthorizedResponse({ description: ApiUserMessage.Unauthorized })
   @Patch(':id')
   @ApiConsumes('multipart/form-data', 'application/json')
   @UseInterceptors(FileFieldsInterceptor([
@@ -146,9 +162,10 @@ export class UserController {
   }
 
   @ApiBearerAuth()
-  @ApiResponse({ status: HttpStatus.OK , description: ApiUserMessage.FileImageUrl })
-  @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: ApiUserMessage.Unauthorized })
-  @ApiResponse({ status: HttpStatus.NOT_FOUND , description: ApiUserMessage.UserOrFileNotFound })
+  @ApiOperation({ summary: 'Получение файла аватара пользователя' })
+  @ApiOkResponse({ description: ApiUserMessage.FileImageUrl })
+  @ApiNotFoundResponse({ description: ApiUserMessage.UserOrFileNotFound })
+  @ApiUnauthorizedResponse({ description: ApiUserMessage.Unauthorized })
   @Get(':id/avatar')
   @UseGuards(JwtAuthGuard)
   public async getAvatar(@Param('id') id: string) {
@@ -156,9 +173,10 @@ export class UserController {
   }
 
   @ApiBearerAuth()
-  @ApiResponse({ status: HttpStatus.OK , description: ApiUserMessage.FileImageUrl })
-  @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: ApiUserMessage.Unauthorized })
-  @ApiResponse({ status: HttpStatus.NOT_FOUND , description: ApiUserMessage.UserOrFileNotFound })
+  @ApiOperation({ summary: 'Получение файла фоновой картинки карточки пользователя' })
+  @ApiOkResponse({ description: ApiUserMessage.FileImageUrl })
+  @ApiNotFoundResponse({ description: ApiUserMessage.UserOrFileNotFound })
+  @ApiUnauthorizedResponse({ description: ApiUserMessage.Unauthorized })
   @Get(':id/page-background')
   @UseGuards(JwtAuthGuard)
   public async getPageBackground(@Param('id') id: string) {
@@ -166,9 +184,10 @@ export class UserController {
   }
 
   @ApiBearerAuth()
-  @ApiResponse({ status: HttpStatus.OK , description: ApiUserMessage.FileCertificate })
-  @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: ApiUserMessage.Unauthorized })
-  @ApiResponse({ status: HttpStatus.NOT_FOUND , description: ApiUserMessage.UserOrFileNotFound })
+  @ApiOperation({ summary: 'Получение файла сертификата пользователя' })
+  @ApiOkResponse({ description: ApiUserMessage.FileCertificate })
+  @ApiNotFoundResponse({ description: ApiUserMessage.UserOrFileNotFound })
+  @ApiUnauthorizedResponse({ description: ApiUserMessage.Unauthorized })
   @Get(':id/certificates')
   @Header('Content-disposition', 'attachment; filename=certificate.pdf')
   @UseGuards(JwtAuthGuard)

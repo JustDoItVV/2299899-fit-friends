@@ -18,6 +18,7 @@ export * from './lib/training-auditory.enum';
 export * from './lib/training-duration.enum';
 export * from './lib/training-level.enum';
 export * from './lib/training-type.enum';
+export * from './lib/training-files-payload.interface';
 
 export * from './lib/order-type.enum';
 export * from './lib/order-payment-method.enum';
@@ -36,3 +37,4 @@ export * from './lib/pagination.interface';
 export * from './lib/sort-option.enum';
 export * from './lib/sort-direction.enum';
 export * from './lib/user-sort-option.type';
+export * from './lib/order-sort-option.type';

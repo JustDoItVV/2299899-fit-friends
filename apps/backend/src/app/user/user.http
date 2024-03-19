@@ -40,7 +40,7 @@ Content-Type: multipart/form-data; boundary=boundary
 # < ../../../../frontend/public/img/content/avatars/users/photo-1.png
 --boundary
 Content-Disposition: form-data; name="pageBackground"; filename="training-1.jpg"
-Content-Type: image/jpg
+Content-Type: image/jpeg
 
 < ../../../../frontend/public/img/content/user-card-coach/training-1.jpg
 --boundary
@@ -119,7 +119,7 @@ Content-Type: image/png
 < ../../../../frontend/public/img/content/avatars/users/photo-1.png
 --boundary
 Content-Disposition: form-data; name="pageBackground"; filename="training-1.jpg"
-Content-Type: image/jpg
+Content-Type: image/jpeg
 
 < ../../../../frontend/public/img/content/user-card-coach/training-1.jpg
 --boundary
@@ -210,7 +210,7 @@ Content-Type: image/png
 < ../../../../frontend/public/img/content/avatars/users/photo-2.png
 --boundary
 Content-Disposition: form-data; name="pageBackground"; filename="training-2.jpg"
-Content-Type: image/jpg
+Content-Type: image/jpeg
 
 < ../../../../frontend/public/img/content/user-card-coach/training-2.jpg
 --boundary

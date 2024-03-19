@@ -2,10 +2,7 @@ import { NOT_IMPLEMENTED_ERROR } from '@2299899-fit-friends/consts';
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { PrismaClientService } from '@2299899-fit-friends/models';
 import {
-  BaseEntity,
-  BaseRepository,
-  DefaultPojoType,
-  EntityIdType,
+    BaseEntity, BaseRepository, DefaultPojoType, EntityIdType
 } from '@2299899-fit-friends/types';
 
 export abstract class BasePostgresRepository<
@@ -14,7 +11,7 @@ export abstract class BasePostgresRepository<
 > implements BaseRepository<EntityType, DocumentType>
 {
   constructor(
-    protected readonly client: PrismaClientService,
+    protected readonly clientService: PrismaClientService,
     private readonly createEntity: (document: DocumentType) => EntityType
   ) {}
 

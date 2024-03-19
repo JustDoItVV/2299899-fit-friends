@@ -13,6 +13,10 @@ export function TransformToArray() {
       throw new BadRequestException(UserErrorMessage.TrainingTypeRequired);
     }
 
+    if (Array.isArray(data.value)) {
+      return data.value;
+    }
+
     return parseValue(data.value);
   });
 }
