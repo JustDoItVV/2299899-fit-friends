@@ -7,9 +7,11 @@ import { TokenPayload, UserRole } from '@2299899-fit-friends/types';
 import {
     Body, Controller, Get, Param, Post, Query, UseGuards, UsePipes, ValidationPipe
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 
 import { ReviewService } from './review.service';
 
+@ApiTags('Reviews')
 @Controller('training/:trainingId/reviews')
 export class ReviewController {
   constructor(

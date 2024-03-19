@@ -2,15 +2,19 @@ import { Module } from '@nestjs/common';
 
 import { TrainingModule } from '../training/training.module';
 import { AccountTrainerController } from './account-trainer.controller';
-import { AccountUserController } from './account-user.controller';
+import { AccountTrainerService } from './account-trainer.service';
+import { OrderModule } from './order/order.module';
 
 @Module({
   imports: [
     TrainingModule,
+    OrderModule,
   ],
   controllers: [
     AccountTrainerController,
-    AccountUserController,
+  ],
+  providers: [
+    AccountTrainerService,
   ],
 })
-export class AccountModule {}
+export class AccountTrainerModule {}

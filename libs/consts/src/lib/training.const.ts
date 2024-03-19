@@ -10,6 +10,7 @@ export enum TrainingBackgroundPictureAllowedExtensions {
 
 export enum PriceLimit {
   Min = 0,
+  MockMax = 10000,
   Max = 2147483647,
 }
 

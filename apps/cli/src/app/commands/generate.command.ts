@@ -69,7 +69,7 @@ export class GenerateCommand implements CliCommand {
         level: faker.helpers.arrayElement(Object.values(TrainingLevel)) as TrainingLevel,
         type: faker.helpers.arrayElement(Object.values(TrainingType)) as TrainingType,
         duration: faker.helpers.arrayElement(Object.values(TrainingDuration)) as TrainingDuration,
-        price: faker.number.int({ min: PriceLimit.Min, max: PriceLimit.Max }),
+        price: faker.number.int({ min: PriceLimit.Min, max: PriceLimit.MockMax }),
         calories: faker.number.int({ min: CaloriesTargetLimit.Min, max: CaloriesTargetLimit.Max }),
         description: faker.commerce.productDescription(),
         gender: faker.helpers.arrayElement(Object.values(TrainingAuditory)) as TrainingAuditory,
@@ -99,10 +99,12 @@ export class GenerateCommand implements CliCommand {
   private generateMockOrders(trainings: TrainingModel[], count: number): Order[] {
     const mockOrders: Order[] = [];
     for (let i = 0; i < count; i++) {
+      const trainingId = faker.helpers.arrayElement(trainings).id;
+      const training = trainings.find((training) => training.id === trainingId);
       mockOrders.push({
         type: OrderType.Subscription,
-        trainingId: faker.helpers.arrayElement(trainings).id,
-        price: faker.number.int({ min: PriceLimit.Min, max: PriceLimit.Max }),
+        trainingId,
+        price: training.price,
         amount: faker.number.int({ min: OrderAmountLimit.Min, max: OrderAmountLimit.Max }),
         paymentMethod: faker.helpers.arrayElement(Object.values(OrderPaymentMethod)),
       });

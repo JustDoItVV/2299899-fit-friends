@@ -14,6 +14,7 @@ import {
     UsePipes, ValidationPipe
 } from '@nestjs/common';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
+import { ApiTags } from '@nestjs/swagger';
 
 import { TrainingService } from './training.service';
 
@@ -23,6 +24,7 @@ export class TrainingController {
     private readonly trainingService: TrainingService,
   ) {}
 
+  @ApiTags('Account/Trainer')
   @Post('')
   @UseInterceptors(FileFieldsInterceptor([
     { name: 'backgroundPicture', maxCount: 1 },
@@ -41,6 +43,7 @@ export class TrainingController {
     return fillDto(TrainingRdo, newTraining.toPOJO());
   }
 
+  @ApiTags('Trainings catalog')
   @Get('')
   @UsePipes(new ValidationPipe({ transform: true, transformOptions: { enableImplicitConversion: true } }))
   @UseGuards(JwtAuthGuard)
@@ -49,6 +52,7 @@ export class TrainingController {
     return fillDto(PaginationRdo<TrainingRdo>, result);
   }
 
+  @ApiTags('Account/Trainer')
   @Get(':id')
   @UseGuards(JwtAuthGuard)
   public async getById(@Param('id') id: string) {
@@ -56,6 +60,7 @@ export class TrainingController {
     return fillDto(TrainingRdo, training.toPOJO());
   }
 
+  @ApiTags('Account/Trainer')
   @Patch(':id')
   @UseInterceptors(FileFieldsInterceptor([
     { name: 'backgroundPicture', maxCount: 1 },

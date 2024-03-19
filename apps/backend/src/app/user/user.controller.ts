@@ -24,7 +24,7 @@ import { ApiBearerAuth, ApiConsumes, ApiResponse, ApiTags } from '@nestjs/swagge
 import { UserEntity } from './user.entity';
 import { UserService } from './user.service';
 
-@ApiTags('users')
+@ApiTags('Users')
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
