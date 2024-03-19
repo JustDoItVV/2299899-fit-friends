@@ -9,7 +9,7 @@ import { createJWTPayload, fillDto } from '@2299899-fit-friends/helpers';
 import { Pagination, Token, TokenPayload, UserFilesPayload } from '@2299899-fit-friends/types';
 import {
     ConflictException, ForbiddenException, Inject, Injectable, InternalServerErrorException,
-    NotFoundException, UnauthorizedException
+    NotFoundException, StreamableFile, UnauthorizedException
 } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
@@ -170,7 +170,7 @@ export class UserService {
     return await this.userRepository.update(id, user);
   }
 
-  public async getAvatar(id: string) {
+  public async getAvatar(id: string): Promise<string> {
     const user = await this.getUserById(id);
 
     if (!user.avatar) {
@@ -180,12 +180,12 @@ export class UserService {
     return await this.uploaderService.getImageUrl(user.avatar);
   }
 
-  public async getPageBackground(id: string) {
+  public async getPageBackground(id: string): Promise<string> {
     const user = await this.getUserById(id);
     return await this.uploaderService.getImageUrl(user.pageBackground);
   }
 
-  public async getCertificate(id: string) {
+  public async getCertificate(id: string): Promise<StreamableFile> {
     const user = await this.getUserById(id);
 
     if (!user.certificate) {

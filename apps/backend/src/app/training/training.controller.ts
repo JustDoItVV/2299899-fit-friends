@@ -11,8 +11,8 @@ import {
 import { fillDto } from '@2299899-fit-friends/helpers';
 import { TokenPayload, TrainingFilesPayload, UserRole } from '@2299899-fit-friends/types';
 import {
-    Body, Controller, Get, Param, Patch, Post, Query, UploadedFiles, UseGuards, UseInterceptors,
-    UsePipes, ValidationPipe
+    Body, Controller, Get, Header, Param, Patch, Post, Query, UploadedFiles, UseGuards,
+    UseInterceptors, UsePipes, ValidationPipe
 } from '@nestjs/common';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import {
@@ -105,5 +105,28 @@ export class TrainingController {
   ) {
     const updatedTraining = await this.trainingService.update(payload, id, dto, files);
     return fillDto(TrainingRdo, updatedTraining.toPOJO());
+  }
+
+  @ApiTags('Account/Trainer')
+  @ApiOperation({ summary: 'Получение файла фоновой картинки тренировки' })
+  @ApiOkResponse({ description: 'Файл фоновой картинки тренировки в виде data url', type: TrainingRdo })
+  @ApiNotFoundResponse({ description: 'Тренировка или файл не найдены' })
+  @ApiUnauthorizedResponse({ description: ApiUserMessage.Unauthorized })
+  @Get(':id/backgroundPicture')
+  @UseGuards(JwtAuthGuard)
+  public async getBackgroundPicture(@Param('id') id: string) {
+    return await this.trainingService.getBackgroundPicture(id);
+  }
+
+  @ApiTags('Account/Trainer')
+  @ApiOperation({ summary: 'Получение файла видео тренировки' })
+  @ApiOkResponse({ description: 'Файл видео тренировки', type: TrainingRdo })
+  @ApiNotFoundResponse({ description: 'Тренировка или файл не найдены' })
+  @ApiUnauthorizedResponse({ description: ApiUserMessage.Unauthorized })
+  @Get(':id/video')
+  @Header('Content-disposition', 'attachment; filename=video.mp4')
+  @UseGuards(JwtAuthGuard)
+  public async getVideo(@Param('id') id: string) {
+    return await this.trainingService.getVideo(id);
   }
 }

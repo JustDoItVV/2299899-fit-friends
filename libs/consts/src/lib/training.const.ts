@@ -59,4 +59,5 @@ export enum TrainingErrorMessage {
   IsSpecialOfferRequired = 'IsSpecialOffer flag required',
   IsSpecialOfferBool = 'IsSpecialOffer must be boolean',
   FileFormatForbidden = 'File format forbidden',
+  NoFileUploaded = 'No file uploaded',
 }

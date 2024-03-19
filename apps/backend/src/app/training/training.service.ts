@@ -4,7 +4,7 @@ import {
 } from '@2299899-fit-friends/dtos';
 import { fillDto } from '@2299899-fit-friends/helpers';
 import { Pagination, TokenPayload, TrainingFilesPayload } from '@2299899-fit-friends/types';
-import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
+import { ForbiddenException, Injectable, NotFoundException, StreamableFile } from '@nestjs/common';
 
 import { UploaderService } from '../uploader/uploader.service';
 import { TrainingEntity } from './training.entity';
@@ -95,4 +95,23 @@ export class TrainingService {
     return await this.trainingRepository.update(id, training);
   }
 
+  public async getBackgroundPicture(id: string): Promise<string> {
+    const training = await this.getById(id);
+
+    if (!training.backgroundPicture) {
+      throw new NotFoundException(TrainingErrorMessage.NoFileUploaded);
+    }
+
+    return await this.uploaderService.getImageUrl(training.backgroundPicture);
+  }
+
+  public async getVideo(id: string): Promise<StreamableFile> {
+    const training = await this.getById(id);
+
+    if (!training.video) {
+      throw new NotFoundException(TrainingErrorMessage.NoFileUploaded);
+    }
+
+    return await this.uploaderService.getFile(training.video);
+  }
 }
