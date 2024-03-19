@@ -6,9 +6,12 @@ import {
 import { fillDto } from '@2299899-fit-friends/helpers';
 import { TokenPayload, UserRole } from '@2299899-fit-friends/types';
 import {
-    Body, Controller, Get, HttpStatus, Param, Post, Query, UseGuards, UsePipes, ValidationPipe
+    Body, Controller, Get, Param, Post, Query, UseGuards, UsePipes, ValidationPipe
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+    ApiBadRequestResponse, ApiBearerAuth, ApiCreatedResponse, ApiForbiddenResponse,
+    ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiTags, ApiUnauthorizedResponse
+} from '@nestjs/swagger';
 
 import { ReviewService } from './review.service';
 
@@ -20,10 +23,12 @@ export class ReviewController {
     private readonly reviewService: ReviewService,
   ) {}
 
-  @ApiResponse({ status: HttpStatus.CREATED, type: ReviewRdo })
-  @ApiResponse({ status: HttpStatus.NOT_FOUND })
-  @ApiResponse({ status: HttpStatus.BAD_REQUEST })
-  @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: ApiUserMessage.Unauthorized })
+  @ApiOperation({ summary: 'Создание отзыва к тренировке' })
+  @ApiCreatedResponse({ description: 'Отзыв создан', type: ReviewRdo })
+  @ApiNotFoundResponse({ description: 'Тренировка не найдена' })
+  @ApiBadRequestResponse({ description: 'Ошибка валидации данных' })
+  @ApiForbiddenResponse({ description: `Создание запрещено кроме пользователя с ролью ${UserRole.User}` })
+  @ApiUnauthorizedResponse({ description: ApiUserMessage.Unauthorized })
   @Post('/')
   @UsePipes(new ValidationPipe({ transform: true, transformOptions: { enableImplicitConversion: true } }))
   @UseGuards(JwtAuthGuard, new UserRolesGuard([UserRole.User]))
@@ -36,9 +41,10 @@ export class ReviewController {
     return fillDto(ReviewRdo, newReview.toPOJO());
   }
 
-  @ApiResponse({ status: HttpStatus.OK, type: PaginationRdo<ReviewRdo> })
-  @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: ApiUserMessage.Unauthorized })
-  @ApiResponse({ status: HttpStatus.BAD_REQUEST })
+  @ApiOperation({ summary: 'Список отзывов к тренировке' })
+  @ApiOkResponse({ description: 'Список отзывов к тренировке', type: PaginationRdo<ReviewRdo> })
+  @ApiBadRequestResponse({ description: 'Ошибка валидации данных' })
+  @ApiUnauthorizedResponse({ description: ApiUserMessage.Unauthorized })
   @Get('/')
   @UsePipes(new ValidationPipe({ transform: true, transformOptions: { enableImplicitConversion: true } }))
   @UseGuards(JwtAuthGuard)

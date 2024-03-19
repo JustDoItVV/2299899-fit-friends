@@ -16,8 +16,9 @@ import {
 } from '@nestjs/common';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import {
-    ApiBadRequestResponse, ApiBearerAuth, ApiConsumes, ApiCreatedResponse, ApiNotFoundResponse,
-    ApiOkResponse, ApiOperation, ApiTags, ApiUnauthorizedResponse, ApiUnsupportedMediaTypeResponse
+    ApiBadRequestResponse, ApiBearerAuth, ApiConsumes, ApiCreatedResponse, ApiForbiddenResponse,
+    ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiTags, ApiUnauthorizedResponse,
+    ApiUnsupportedMediaTypeResponse
 } from '@nestjs/swagger';
 
 import { TrainingService } from './training.service';
@@ -35,6 +36,7 @@ export class TrainingController {
   @ApiCreatedResponse({ description: 'Тренировка успешно создана', type: TrainingRdo })
   @ApiBadRequestResponse({ description: 'Ошибка валидации данных' })
   @ApiUnsupportedMediaTypeResponse({ description: 'Неподдерживаемый тип файлов' })
+  @ApiForbiddenResponse({ description: `Создание запрещено кроме пользователя с ролью ${UserRole.Trainer}` })
   @ApiUnauthorizedResponse({ description: ApiUserMessage.Unauthorized })
   @Post('')
   @UseInterceptors(FileFieldsInterceptor([
