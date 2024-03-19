@@ -1,6 +1,6 @@
 import { DefaultPagination } from '@2299899-fit-friends/consts';
 import { BasePostgresRepository } from '@2299899-fit-friends/core';
-import { UserPaginationQuery } from '@2299899-fit-friends/dtos';
+import { PaginationQuery, UserPaginationQuery } from '@2299899-fit-friends/dtos';
 import { PrismaClientService } from '@2299899-fit-friends/models';
 import {
     Pagination, SortOption, TrainingDuration, TrainingLevel, TrainingType, User, UserGender,
@@ -118,6 +118,50 @@ export class UserRepository extends BasePostgresRepository<UserEntity, User> {
         trainingDuration: document.trainingDuration as TrainingDuration,
       })
       : null;
+  }
+
+  public async findFriends(query: PaginationQuery, userId: string): Promise<Pagination<UserEntity>> {
+    let limit = query.limit;
+    if (query.limit < 1){
+      limit = 1;
+    } else if (query.limit > DefaultPagination.Limit) {
+      limit = DefaultPagination.Limit;
+    }
+
+    const where: Prisma.UserWhereInput = {};
+    where.friends = { has: userId };
+
+    const orderBy: Prisma.UserOrderByWithRelationAndSearchRelevanceInput = {};
+    if (query.sortOption === SortOption.CreatedAt) {
+      orderBy.createdAt = query.sortDirection;
+    }
+
+    const documentsCount = await this.getUsersCount(where);
+    const totalPages = this.calculatePage(documentsCount, limit);
+    let currentPage = query.page;
+    if (query.page < 1) {
+      currentPage = 1;
+    } else if (query.page > totalPages) {
+      currentPage = totalPages;
+    }
+
+    const skip = (currentPage - 1) * limit;
+    const documents = await this.clientService.user.findMany({ where, orderBy, skip, take: limit });
+
+    return {
+      entities: documents.map((document) => this.createEntityFromDocument({
+        ...document,
+        gender: document.gender as UserGender,
+        role: document.role as UserRole,
+        trainingLevel: document.trainingLevel as TrainingLevel,
+        trainingType: document.trainingType as TrainingType[],
+        trainingDuration: document.trainingDuration as TrainingDuration,
+      })),
+      currentPage,
+      totalPages,
+      itemsPerPage: limit,
+      totalItems: documentsCount,
+    };
   }
 
   public async update(id: string, entity: UserEntity): Promise<UserEntity> {

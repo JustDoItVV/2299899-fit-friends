@@ -39,6 +39,8 @@ model User {
   merits            String?
   isReadyToPersonal Boolean? @map("is_ready_to_personal")
 
+  friends String[]
+
   refreshTokens                 RefreshToken[]
   trainings                     Training[]
   requestsPersonalTriningAuthor RequestPersonalTraining[] @relation("Author")

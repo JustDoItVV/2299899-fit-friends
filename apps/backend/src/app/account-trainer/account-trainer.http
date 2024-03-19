@@ -102,3 +102,9 @@ GET http://localhost:3001/api/account/trainer/orders HTTP/1.1
 Authorization: Bearer
 
 ###
+
+# Get Trainer's friends
+GET http://localhost:3001/api/account/trainer/friends HTTP/1.1
+Authorization: Bearer
+
+###

@@ -22,6 +22,7 @@ CREATE TABLE "users" (
     "certificate" TEXT,
     "merits" TEXT,
     "is_ready_to_personal" BOOLEAN,
+    "friends" TEXT[],
 
     CONSTRAINT "users_pkey" PRIMARY KEY ("id")
 );

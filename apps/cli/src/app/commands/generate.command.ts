@@ -51,6 +51,7 @@ export class GenerateCommand implements CliCommand {
         certificate: role == UserRole.Trainer ? faker.image.url() : '',
         merits: faker.person.bio(),
         isReadyToPersonal: role == UserRole.Trainer ? faker.datatype.boolean() : false,
+        friends: [],
       });
     }
 
