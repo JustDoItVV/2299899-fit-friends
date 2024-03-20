@@ -1,0 +1,5 @@
+# Get user's notifications
+GET http://localhost:3001/api/notification HTTP/1.1
+Authorization: Bearer
+
+###

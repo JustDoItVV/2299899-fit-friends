@@ -16,3 +16,4 @@ export * from './lib/rdo/pagination.rdo';
 export * from './lib/rdo/training.rdo';
 export * from './lib/rdo/review.rdo';
 export * from './lib/rdo/order.rdo';
+export * from './lib/rdo/notification.rdo';

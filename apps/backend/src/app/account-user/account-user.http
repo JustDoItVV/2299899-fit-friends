@@ -1,0 +1,17 @@
+# Get User's friends list
+GET http://localhost:3001/api/account/user/friends HTTP/1.1
+Authorization: Bearer
+
+###
+
+# Add user to friends
+POST http://localhost:3001/api/user/2d8209ee-f7de-49c4-8d1e-f857e392b69b/friend HTTP/1.1
+Authorization: Bearer
+
+###
+
+# Remove user from friends
+DELETE http://localhost:3001/api/user/2d8209ee-f7de-49c4-8d1e-f857e392b69b/friend HTTP/1.1
+Authorization: Bearer
+
+###
