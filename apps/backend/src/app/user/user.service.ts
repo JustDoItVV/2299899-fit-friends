@@ -209,8 +209,38 @@ export class UserService {
     if (user.friends.includes(friendId)) {
       throw new ConflictException(UserErrorMessage.InFriendsAlready);
     }
+
     user.friends.push(friendId);
     friend.friends.push(userId);
+    await this.userRepository.update(userId, user);
+    await this.userRepository.update(friendId, friend);
+
+    const query = new PaginationQuery();
+    const pagination = await this.userRepository.findFriends(query, userId);
+    const paginationResult = {
+      ...pagination,
+      entities: pagination.entities.map((entity) => fillDto(UserRdo, entity.toPOJO())),
+    };
+    return paginationResult;
+  }
+
+  public async removeFromFriends(userId: string, friendId: string): Promise<Pagination<UserRdo>> {
+    if (userId === friendId) {
+      throw new BadRequestException(UserErrorMessage.UserSelfFriend);
+    }
+
+    const friend = await this.getUserById(friendId);
+    if (!friend) {
+      throw new NotFoundException(UserErrorMessage.NotFound);
+    }
+
+    const user = await this.getUserById(userId);
+    if (!user.friends.includes(friendId)) {
+      throw new ConflictException(UserErrorMessage.NotInFriends);
+    }
+
+    user.friends.splice(user.friends.indexOf(friendId), 1);
+    friend.friends.splice(friend.friends.indexOf(userId), 1);
     await this.userRepository.update(userId, user);
     await this.userRepository.update(friendId, friend);
 

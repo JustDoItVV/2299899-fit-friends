@@ -104,7 +104,7 @@ export enum UserErrorMessage {
   NoFileUploaded = 'No file was uploaded',
   InFriendsAlready = 'User already in friends',
   NotInFriends = 'User not in friends',
-  UserSelfFriend = 'User cannot add himself to friends',
+  UserSelfFriend = 'User cannot add or remove himself to or from friends',
 }
 
 export enum AllowedImageFormat {

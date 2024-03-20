@@ -204,4 +204,23 @@ export class UserController {
     const result = await this.userService.addToFriends(payload.userId, friendId);
     return fillDto(PaginationRdo<UserRdo>, result);
   }
+
+  @ApiTags('Account/User')
+  @ApiOperation({ summary: 'Удалить из друзей' })
+  @ApiOkResponse({ description: 'Пользователь успешно удален из друзей' })
+  @ApiConflictResponse({ description: 'Пользователь не в друзьях' })
+  @ApiNotFoundResponse({ description: ApiUserMessage.NotFound })
+  @ApiBadRequestResponse({ description: 'Пользователь не может удалить самого себя из друзей' })
+  @ApiForbiddenResponse({ description: `Запрещено кроме пользователей с ролью "${UserRole.User}"` })
+  @ApiUnauthorizedResponse({ description: ApiUserMessage.Unauthorized })
+  @HttpCode(HttpStatus.OK)
+  @Delete(':id/friend')
+  @UseGuards(JwtAuthGuard, new UserRolesGuard([UserRole.User]))
+  public async removeFromFriends(
+    @Param('id') friendId: string,
+    @UserParam() payload: TokenPayload,
+  ) {
+    const result = await this.userService.removeFromFriends(payload.userId, friendId);
+    return fillDto(PaginationRdo<UserRdo>, result);
+  }
 }
