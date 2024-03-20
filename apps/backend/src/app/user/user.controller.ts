@@ -28,12 +28,12 @@ import {
 import { UserEntity } from './user.entity';
 import { UserService } from './user.service';
 
+@ApiBearerAuth()
 @ApiTags('Users')
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @ApiBearerAuth()
   @ApiOperation({ summary: 'Каталог пользователей' })
   @ApiOkResponse({ description: ApiUserMessage.Catalog, type: PaginationRdo<UserRdo> })
   @ApiBadRequestResponse({ description: ApiUserMessage.ValidationError })
@@ -61,7 +61,6 @@ export class UserController {
     return fillDto(LoggedUserRdo, { ...userEntity.toPOJO(), ...userToken });
   }
 
-  @ApiBearerAuth()
   @ApiOperation({ summary: 'Проверка токена' })
   @ApiCreatedResponse({ description: ApiUserMessage.Authorized, type: LoggedUserRdo })
   @ApiUnauthorizedResponse({ description: ApiUserMessage.Unauthorized })
@@ -71,7 +70,6 @@ export class UserController {
     return fillDto(LoggedUserRdo, { ...payload, id: payload.userId });
   }
 
-  @ApiBearerAuth()
   @ApiOperation({ summary: 'Получение новой пары токенов' })
   @ApiCreatedResponse({ description: ApiUserMessage.TokenNew, type: LoggedUserRdo })
   @ApiUnauthorizedResponse({ description: ApiUserMessage.Unauthorized })
@@ -82,7 +80,6 @@ export class UserController {
     return fillDto(LoggedUserRdo, { ...user.toPOJO(), ...tokenPayload });
   }
 
-  @ApiBearerAuth()
   @ApiOperation({ summary: 'Отзыв токена' })
   @ApiNoContentResponse({ description: ApiUserMessage.TokenRevoked })
   @ApiUnauthorizedResponse({ description: ApiUserMessage.Unauthorized })
@@ -120,7 +117,6 @@ export class UserController {
     return fillDto(UserRdo, newUser.toPOJO());
   }
 
-  @ApiBearerAuth()
   @ApiOperation({ summary: 'Детальная информация о пользователе (Карточка пользователя)' })
   @ApiOkResponse({ description: ApiUserMessage.Card, type: UserRdo })
   @ApiNotFoundResponse({ description: ApiUserMessage.NotFound })
@@ -132,7 +128,6 @@ export class UserController {
     return fillDto(UserRdo, user.toPOJO());
   }
 
-  @ApiBearerAuth()
   @ApiOperation({ summary: 'Редактирование информации о пользователе' })
   @ApiCreatedResponse({ description: ApiUserMessage.Card, type: UserRdo })
   @ApiBadRequestResponse({ description: ApiUserMessage.ValidationError })
@@ -161,7 +156,6 @@ export class UserController {
     return fillDto(UserRdo, updatedUser.toPOJO());
   }
 
-  @ApiBearerAuth()
   @ApiOperation({ summary: 'Получение файла аватара пользователя' })
   @ApiOkResponse({ description: ApiUserMessage.FileImageUrl })
   @ApiNotFoundResponse({ description: ApiUserMessage.UserOrFileNotFound })
@@ -172,7 +166,6 @@ export class UserController {
     return await this.userService.getAvatar(id);
   }
 
-  @ApiBearerAuth()
   @ApiOperation({ summary: 'Получение файла фоновой картинки карточки пользователя' })
   @ApiOkResponse({ description: ApiUserMessage.FileImageUrl })
   @ApiNotFoundResponse({ description: ApiUserMessage.UserOrFileNotFound })
@@ -183,7 +176,6 @@ export class UserController {
     return await this.userService.getPageBackground(id);
   }
 
-  @ApiBearerAuth()
   @ApiOperation({ summary: 'Получение файла сертификата пользователя' })
   @ApiOkResponse({ description: ApiUserMessage.FileCertificate })
   @ApiNotFoundResponse({ description: ApiUserMessage.UserOrFileNotFound })
@@ -193,5 +185,23 @@ export class UserController {
   @UseGuards(JwtAuthGuard)
   public async getCertificate(@Param('id') id: string) {
     return await this.userService.getCertificate(id);
+  }
+
+  @ApiTags('Account/User')
+  @ApiOperation({ summary: 'Добавить в друзья' })
+  @ApiCreatedResponse({ description: 'Пользователь успешно добавлен в друзья' })
+  @ApiConflictResponse({ description: 'Пользователь уже в друзьях' })
+  @ApiNotFoundResponse({ description: ApiUserMessage.NotFound })
+  @ApiBadRequestResponse({ description: 'Пользователь не может добавить самого себя в друзья' })
+  @ApiForbiddenResponse({ description: `Запрещено кроме пользователей с ролью "${UserRole.User}"` })
+  @ApiUnauthorizedResponse({ description: ApiUserMessage.Unauthorized })
+  @Post(':id/friend')
+  @UseGuards(JwtAuthGuard, new UserRolesGuard([UserRole.User]))
+  public async addToFriends(
+    @Param('id') friendId: string,
+    @UserParam() payload: TokenPayload,
+  ) {
+    const result = await this.userService.addToFriends(payload.userId, friendId);
+    return fillDto(PaginationRdo<UserRdo>, result);
   }
 }

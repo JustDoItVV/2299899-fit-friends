@@ -3,13 +3,13 @@ import { randomUUID } from 'node:crypto';
 import { BackendConfig } from '@2299899-fit-friends/config';
 import { UserErrorMessage } from '@2299899-fit-friends/consts';
 import {
-    CreateUserDto, LoginUserDto, UpdateUserDto, UserPaginationQuery, UserRdo
+    CreateUserDto, LoginUserDto, PaginationQuery, UpdateUserDto, UserPaginationQuery, UserRdo
 } from '@2299899-fit-friends/dtos';
 import { createJWTPayload, fillDto } from '@2299899-fit-friends/helpers';
 import { Pagination, Token, TokenPayload, UserFilesPayload } from '@2299899-fit-friends/types';
 import {
-    ConflictException, ForbiddenException, Inject, Injectable, InternalServerErrorException,
-    NotFoundException, StreamableFile, UnauthorizedException
+    BadRequestException, ConflictException, ForbiddenException, Inject, Injectable,
+    InternalServerErrorException, NotFoundException, StreamableFile, UnauthorizedException
 } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
@@ -193,5 +193,33 @@ export class UserService {
     }
 
     return await this.uploaderService.getFile(user.certificate);
+  }
+
+  public async addToFriends(userId: string, friendId: string): Promise<Pagination<UserRdo>> {
+    if (userId === friendId) {
+      throw new BadRequestException(UserErrorMessage.UserSelfFriend);
+    }
+
+    const friend = await this.getUserById(friendId);
+    if (!friend) {
+      throw new NotFoundException(UserErrorMessage.NotFound);
+    }
+
+    const user = await this.getUserById(userId);
+    if (user.friends.includes(friendId)) {
+      throw new ConflictException(UserErrorMessage.InFriendsAlready);
+    }
+    user.friends.push(friendId);
+    friend.friends.push(userId);
+    await this.userRepository.update(userId, user);
+    await this.userRepository.update(friendId, friend);
+
+    const query = new PaginationQuery();
+    const pagination = await this.userRepository.findFriends(query, userId);
+    const paginationResult = {
+      ...pagination,
+      entities: pagination.entities.map((entity) => fillDto(UserRdo, entity.toPOJO())),
+    };
+    return paginationResult;
   }
 }

@@ -66,7 +66,7 @@ export enum UserErrorMessage {
   PasswordMaxLength = `Password max length is ${PasswordLength.Max} symbols`,
   PasswordWrong = 'Wrong password',
   PasswordUpdateForbidden = 'Password updating forbidden',
-  NotFound = 'User with this email not found',
+  NotFound = 'User not found',
   OnlyAnonymous = 'Forbidden. Allowed only for unauthorized',
   TokenCreationError = 'Token creation error',
   NameRequired = 'User\'s name required',
@@ -102,6 +102,9 @@ export enum UserErrorMessage {
   CertificateFormatForbidden = 'Certificate format forbidden',
   PageBackgroundRequired = 'Pagebackground files required',
   NoFileUploaded = 'No file was uploaded',
+  InFriendsAlready = 'User already in friends',
+  NotInFriends = 'User not in friends',
+  UserSelfFriend = 'User cannot add himself to friends',
 }
 
 export enum AllowedImageFormat {

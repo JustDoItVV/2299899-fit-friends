@@ -8,8 +8,8 @@ import { fillDto } from '@2299899-fit-friends/helpers';
 import { TokenPayload, UserRole } from '@2299899-fit-friends/types';
 import { Controller, Get, Query, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import {
-    ApiBadRequestResponse, ApiBearerAuth, ApiOkResponse, ApiOperation, ApiTags,
-    ApiUnauthorizedResponse
+    ApiBadRequestResponse, ApiBearerAuth, ApiForbiddenResponse, ApiOkResponse, ApiOperation,
+    ApiTags, ApiUnauthorizedResponse
 } from '@nestjs/swagger';
 
 import { TrainingService } from '../training/training.service';
@@ -17,8 +17,8 @@ import { AccountTrainerService } from './account-trainer.service';
 
 @ApiBearerAuth()
 @ApiTags('Account/Trainer')
-@Controller('account/trainer')
 @UseGuards(JwtAuthGuard, new UserRolesGuard([UserRole.Trainer]))
+@Controller('account/trainer')
 export class AccountTrainerController {
   constructor(
     private readonly trainingService: TrainingService,
@@ -28,6 +28,7 @@ export class AccountTrainerController {
   @ApiOperation({ summary: 'Список тренировок Тренера' })
   @ApiOkResponse({ description: 'Список тренировок Тренера', type: PaginationRdo<TrainingRdo> })
   @ApiBadRequestResponse({ description: 'Ошибка валидации данных' })
+  @ApiForbiddenResponse({ description: `Запрещено кроме пользователей с ролью "${UserRole.Trainer}"` })
   @ApiUnauthorizedResponse({ description: ApiUserMessage.Unauthorized })
   @Get('')
   @UsePipes(new ValidationPipe({ transform: true, transformOptions: { enableImplicitConversion: true } }))
@@ -42,6 +43,7 @@ export class AccountTrainerController {
   @ApiOperation({ summary: 'Список заказов Тренера' })
   @ApiOkResponse({ description: 'Список заказов Тренера', type: PaginationRdo<OrderRdo> })
   @ApiBadRequestResponse({ description: 'Ошибка валидации данных' })
+  @ApiForbiddenResponse({ description: `Запрещено кроме пользователей с ролью "${UserRole.Trainer}"` })
   @ApiUnauthorizedResponse({ description: ApiUserMessage.Unauthorized })
   @Get('orders')
   @UsePipes(new ValidationPipe({ transform: true, transformOptions: { enableImplicitConversion: true } }))
@@ -56,6 +58,7 @@ export class AccountTrainerController {
   @ApiOperation({ summary: 'Список друзей Тренера' })
   @ApiOkResponse({ description: 'Список друзей Тренера', type: PaginationRdo<UserRdo> })
   @ApiBadRequestResponse({ description: 'Ошибка валидации данных' })
+  @ApiForbiddenResponse({ description: `Запрещено кроме пользователей с ролью "${UserRole.Trainer}"` })
   @ApiUnauthorizedResponse({ description: ApiUserMessage.Unauthorized })
   @Get('friends')
   @UsePipes(new ValidationPipe({ transform: true, transformOptions: { enableImplicitConversion: true } }))
