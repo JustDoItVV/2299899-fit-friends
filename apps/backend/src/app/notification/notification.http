@@ -3,3 +3,9 @@ GET http://localhost:3001/api/notification HTTP/1.1
 Authorization: Bearer
 
 ###
+
+# Delete user's notification
+DELETE  http://localhost:3001/api/notification/3bad72c2-e092-4a3d-b384-dca7618b7ee7 HTTP/1.1
+Authorization: Bearer
+
+###

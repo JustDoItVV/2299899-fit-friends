@@ -2,9 +2,10 @@ import { ApiUserMessage } from '@2299899-fit-friends/consts';
 import { JwtAuthGuard, UserParam } from '@2299899-fit-friends/core';
 import { NotificationRdo } from '@2299899-fit-friends/dtos';
 import { TokenPayload } from '@2299899-fit-friends/types';
-import { Controller, Get, UseGuards } from '@nestjs/common';
+import { Controller, Delete, Get, HttpCode, HttpStatus, Param, UseGuards } from '@nestjs/common';
 import {
-    ApiBearerAuth, ApiOkResponse, ApiOperation, ApiTags, ApiUnauthorizedResponse
+    ApiBearerAuth, ApiForbiddenResponse, ApiNoContentResponse, ApiNotFoundResponse, ApiOkResponse,
+    ApiOperation, ApiTags, ApiUnauthorizedResponse
 } from '@nestjs/swagger';
 
 import { NotificationService } from './notification.service';
@@ -22,5 +23,20 @@ export class NotificationController {
   @UseGuards(JwtAuthGuard)
   public async show(@UserParam() payload: TokenPayload) {
     return await this.notificationService.getUsersNotifications(payload.userId);
+  }
+
+  @ApiOperation({ summary: 'Удалить оповещение' })
+  @ApiNoContentResponse({ description: 'Оповещение удалено' })
+  @ApiForbiddenResponse({ description: 'Удаление запрещено, уведомление не принадлежить пользователю' })
+  @ApiNotFoundResponse({ description: 'Оповещение не найдено' })
+  @ApiUnauthorizedResponse({ description: ApiUserMessage.Unauthorized })
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @Delete(':id')
+  @UseGuards(JwtAuthGuard)
+  public async delete(
+    @Param('id') id: string,
+    @UserParam() payload: TokenPayload,
+  ) {
+    return await this.notificationService.delete(id, payload.userId);
   }
 }
