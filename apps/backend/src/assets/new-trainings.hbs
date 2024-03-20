@@ -1,0 +1,10 @@
+<h1>Привет, {{userName}}!</h1>
+<h2>Уведомления о новых тренировках тренера {{trainerName}}:</h2>
+<ul>
+  {{#each notifications}}
+  <li>
+    <p>{{text}}</p>
+    <span>{{createdAt}}</span>
+  </li>
+  {{/each}}
+</ul>

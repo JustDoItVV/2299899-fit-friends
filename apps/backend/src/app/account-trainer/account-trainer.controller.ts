@@ -16,7 +16,7 @@ import { TrainingService } from '../training/training.service';
 import { AccountTrainerService } from './account-trainer.service';
 
 @ApiBearerAuth()
-@ApiTags('Account/Trainer')
+@ApiTags('Личный кабинет тренера')
 @UseGuards(JwtAuthGuard, new UserRolesGuard([UserRole.Trainer]))
 @Controller('account/trainer')
 export class AccountTrainerController {

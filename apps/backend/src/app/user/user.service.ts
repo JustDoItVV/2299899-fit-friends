@@ -6,7 +6,9 @@ import {
     CreateUserDto, LoginUserDto, PaginationQuery, UpdateUserDto, UserPaginationQuery, UserRdo
 } from '@2299899-fit-friends/dtos';
 import { createJWTPayload, fillDto } from '@2299899-fit-friends/helpers';
-import { Pagination, Token, TokenPayload, UserFilesPayload } from '@2299899-fit-friends/types';
+import {
+    Pagination, Token, TokenPayload, UserFilesPayload, UserRole
+} from '@2299899-fit-friends/types';
 import {
     BadRequestException, ConflictException, ForbiddenException, Inject, Injectable,
     InternalServerErrorException, NotFoundException, StreamableFile, UnauthorizedException
@@ -251,5 +253,56 @@ export class UserService {
       entities: pagination.entities.map((entity) => fillDto(UserRdo, entity.toPOJO())),
     };
     return paginationResult;
+  }
+
+  public async subscribe(userId: string, targetId: string): Promise<void> {
+    if (userId === targetId) {
+      throw new BadRequestException(UserErrorMessage.UserSelfSubscriber);
+    }
+
+    const targetUser = await this.getUserById(targetId);
+    if (!targetUser) {
+      throw new NotFoundException(UserErrorMessage.NotFound);
+    }
+
+    if (targetUser.role !== UserRole.Trainer) {
+      throw new ForbiddenException(UserErrorMessage.SubscribeForbidden)
+    }
+
+    const user = await this.getUserById(userId);
+    if (user.emailSubscribtions.includes(targetId)) {
+      throw new ConflictException(UserErrorMessage.InSubscribtionsAlready);
+    }
+
+    user.emailSubscribtions.push(targetId);
+    user.emailLastDate = new Date();
+    targetUser.subscribers.push(userId);
+    await this.userRepository.update(userId, user);
+    await this.userRepository.update(targetId, targetUser);
+  }
+
+  public async unsubscribe(userId: string, targetId: string): Promise<void> {
+    if (userId === targetId) {
+      throw new BadRequestException(UserErrorMessage.UserSelfUnsubscriber);
+    }
+
+    const targetUser = await this.getUserById(targetId);
+    if (!targetUser) {
+      throw new NotFoundException(UserErrorMessage.NotFound);
+    }
+
+    if (targetUser.role !== UserRole.Trainer) {
+      throw new ForbiddenException(UserErrorMessage.SubscribeForbidden)
+    }
+
+    const user = await this.getUserById(userId);
+    if (!user.emailSubscribtions.includes(targetId)) {
+      throw new ConflictException(UserErrorMessage.NotInSubscribtions);
+    }
+
+    user.emailSubscribtions.splice(user.emailSubscribtions.indexOf(targetId), 1);
+    targetUser.subscribers.splice(targetUser.subscribers.indexOf(userId), 1);
+    await this.userRepository.update(userId, user);
+    await this.userRepository.update(targetId, targetUser);
   }
 }

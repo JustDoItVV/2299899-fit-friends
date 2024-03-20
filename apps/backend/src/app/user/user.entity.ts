@@ -31,6 +31,9 @@ export class UserEntity implements User, BaseEntity<string, User> {
   public refreshToken?: string;
   public createdAt?: Date;
   public friends: string[] = [];
+  public subscribers: string[] = [];
+  public emailSubscribtions: string[] = [];
+  public emailLastDate: Date;
 
   public toPOJO(): User {
     const userPojo = {
@@ -48,6 +51,9 @@ export class UserEntity implements User, BaseEntity<string, User> {
       trainingLevel: this.trainingLevel,
       trainingType: this.trainingType,
       friends: this.friends,
+      subscribers: this.subscribers,
+      emailSubscribtions: this.emailSubscribtions,
+      emailLastDate: this.emailLastDate,
     };
     Object.assign(userPojo, this.trainingDuration === null ? null : { trainingDuration: this.trainingDuration });
     Object.assign(userPojo, this.caloriesTarget === null ? null : { caloriesTarget: this.caloriesTarget });
@@ -87,6 +93,10 @@ export class UserEntity implements User, BaseEntity<string, User> {
     this.refreshToken = data.refreshToken ?? undefined;
     this.createdAt = data.createdAt ?? undefined;
     this.friends = data.friends;
+    this.subscribers = data.subscribers;
+    this.emailSubscribtions = data.emailSubscribtions;
+    this.emailLastDate = data.emailLastDate;
+
   }
 
   public async setPassword(password: string): Promise<UserEntity> {

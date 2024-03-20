@@ -39,15 +39,20 @@ model User {
   merits            String?
   isReadyToPersonal Boolean? @map("is_ready_to_personal")
 
-  friends String[]
+  friends            String[] @default([])
+  subscribers        String[] @default([])
+  emailSubscribtions String[] @default([]) @map("email_subscriptions")
+  emailLastDate      DateTime @default(now()) @map("email_last_date")
 
-  refreshTokens                 RefreshToken[]
-  trainings                     Training[]
-  requestsPersonalTriningAuthor RequestPersonalTraining[] @relation("Author")
-  requestsPersonalTriningTarget RequestPersonalTraining[] @relation("Target")
-  Review                        Review[]
-  Notification                  Notification[]
-  Balance                       Balance[]
+  refreshTokens                  RefreshToken[]
+  trainings                      Training[]
+  requestsPersonalTrainingAuthor RequestPersonalTraining[] @relation("Author")
+  requestsPersonalTrainingTarget RequestPersonalTraining[] @relation("Target")
+  Review                         Review[]
+  Notification                   Notification[]
+  Balance                        Balance[]
+  mailNotificationAuthor         MailNotification[]        @relation("Author")
+  mailNotificationTarget         MailNotification[]        @relation("Target")
 
   @@map("users")
 }
@@ -119,7 +124,6 @@ model RequestPersonalTraining {
 
 model Notification {
   id        String   @id @default(uuid())
-  sentDate  DateTime @map("sent_date")
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String   @map("user_id")
   text      String
@@ -127,6 +131,19 @@ model Notification {
   updatedAt DateTime @updatedAt @map("updated_at")
 
   @@map("notifications")
+}
+
+model MailNotification {
+  id        String   @id @default(uuid())
+  author    User     @relation("Author", fields: [authorId], references: [id], onDelete: Cascade)
+  authorId  String   @map("author_id")
+  target    User     @relation("Target", fields: [targetId], references: [id], onDelete: Cascade)
+  targetId  String   @map("target_id")
+  text      String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("mail_notifications")
 }
 
 model Balance {

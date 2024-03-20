@@ -30,7 +30,7 @@ export class TrainingController {
     private readonly trainingService: TrainingService,
   ) {}
 
-  @ApiTags('Account/Trainer')
+  @ApiTags('Личный кабинет тренера')
   @ApiOperation({ summary: 'Создание тренировки' })
   @ApiConsumes('multipart/form-data')
   @ApiCreatedResponse({ description: 'Тренировка успешно создана', type: TrainingRdo })
@@ -56,7 +56,7 @@ export class TrainingController {
     return fillDto(TrainingRdo, newTraining.toPOJO());
   }
 
-  @ApiTags('Trainings catalog')
+  @ApiTags('Каталог тренировок')
   @ApiOperation({ summary: 'Каталог тренировок' })
   @ApiOkResponse({ description: 'Каталог тренировок с пагинацией', type: PaginationRdo<TrainingRdo> })
   @ApiBadRequestResponse({ description: 'Ошибка валидации данных' })
@@ -69,7 +69,7 @@ export class TrainingController {
     return fillDto(PaginationRdo<TrainingRdo>, result);
   }
 
-  @ApiTags('Account/Trainer')
+  @ApiTags('Личный кабинет тренера')
   @ApiOperation({ summary: 'Детальная информация о тренировке' })
   @ApiOkResponse({ description: 'Детальная информация о тренировке', type: TrainingRdo })
   @ApiNotFoundResponse({ description: 'Тренировка не найдена' })
@@ -81,7 +81,7 @@ export class TrainingController {
     return fillDto(TrainingRdo, training.toPOJO());
   }
 
-  @ApiTags('Account/Trainer')
+  @ApiTags('Личный кабинет тренера')
   @ApiOperation({ summary: 'Редактирование тренировки' })
   @ApiConsumes('multipart/form-data', 'application/json')
   @ApiOkResponse({ description: 'Детальная информация обновленной тренировки', type: TrainingRdo })
@@ -107,7 +107,7 @@ export class TrainingController {
     return fillDto(TrainingRdo, updatedTraining.toPOJO());
   }
 
-  @ApiTags('Account/Trainer')
+  @ApiTags('Личный кабинет тренера')
   @ApiOperation({ summary: 'Получение файла фоновой картинки тренировки' })
   @ApiOkResponse({ description: 'Файл фоновой картинки тренировки в виде data url', type: TrainingRdo })
   @ApiNotFoundResponse({ description: 'Тренировка или файл не найдены' })
@@ -118,7 +118,7 @@ export class TrainingController {
     return await this.trainingService.getBackgroundPicture(id);
   }
 
-  @ApiTags('Account/Trainer')
+  @ApiTags('Личный кабинет тренера')
   @ApiOperation({ summary: 'Получение файла видео тренировки' })
   @ApiOkResponse({ description: 'Файл видео тренировки', type: TrainingRdo })
   @ApiNotFoundResponse({ description: 'Тренировка или файл не найдены' })

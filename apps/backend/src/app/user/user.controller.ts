@@ -33,7 +33,7 @@ import { UserService } from './user.service';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @ApiTags('Users')
+  @ApiTags('Пользователи')
   @ApiOperation({ summary: 'Каталог пользователей' })
   @ApiOkResponse({ description: ApiUserMessage.Catalog, type: PaginationRdo<UserRdo> })
   @ApiBadRequestResponse({ description: ApiUserMessage.ValidationError })
@@ -47,7 +47,7 @@ export class UserController {
     return fillDto(PaginationRdo<UserRdo>, result);
   }
 
-  @ApiTags('Users')
+  @ApiTags('Пользователи')
   @ApiOperation({ summary: 'Вход в систему' })
   @ApiCreatedResponse({ description: ApiUserMessage.Authorized, type: LoggedUserRdo })
   @ApiBadRequestResponse({ description: ApiUserMessage.LoginWrong })
@@ -62,7 +62,7 @@ export class UserController {
     return fillDto(LoggedUserRdo, { ...userEntity.toPOJO(), ...userToken });
   }
 
-  @ApiTags('Users')
+  @ApiTags('Пользователи')
   @ApiOperation({ summary: 'Проверка токена' })
   @ApiCreatedResponse({ description: ApiUserMessage.Authorized, type: LoggedUserRdo })
   @ApiUnauthorizedResponse({ description: ApiUserMessage.Unauthorized })
@@ -72,7 +72,7 @@ export class UserController {
     return fillDto(LoggedUserRdo, { ...payload, id: payload.userId });
   }
 
-  @ApiTags('Users')
+  @ApiTags('Пользователи')
   @ApiOperation({ summary: 'Получение новой пары токенов' })
   @ApiCreatedResponse({ description: ApiUserMessage.TokenNew, type: LoggedUserRdo })
   @ApiUnauthorizedResponse({ description: ApiUserMessage.Unauthorized })
@@ -83,7 +83,7 @@ export class UserController {
     return fillDto(LoggedUserRdo, { ...user.toPOJO(), ...tokenPayload });
   }
 
-  @ApiTags('Users')
+  @ApiTags('Пользователи')
   @ApiOperation({ summary: 'Отзыв токена' })
   @ApiNoContentResponse({ description: ApiUserMessage.TokenRevoked })
   @ApiUnauthorizedResponse({ description: ApiUserMessage.Unauthorized })
@@ -94,7 +94,7 @@ export class UserController {
     await this.userService.deleteRefreshToken(token);
   }
 
-  @ApiTags('Users')
+  @ApiTags('Пользователи')
   @ApiOperation({ summary: 'Регистрация пользователя' })
   @ApiConsumes('multipart/form-data')
   @ApiCreatedResponse({ description: ApiUserMessage.Registered, type: UserRdo })
@@ -122,7 +122,7 @@ export class UserController {
     return fillDto(UserRdo, newUser.toPOJO());
   }
 
-  @ApiTags('Users')
+  @ApiTags('Пользователи')
   @ApiOperation({ summary: 'Детальная информация о пользователе (Карточка пользователя)' })
   @ApiOkResponse({ description: ApiUserMessage.Card, type: UserRdo })
   @ApiNotFoundResponse({ description: ApiUserMessage.NotFound })
@@ -134,7 +134,7 @@ export class UserController {
     return fillDto(UserRdo, user.toPOJO());
   }
 
-  @ApiTags('Users')
+  @ApiTags('Пользователи')
   @ApiOperation({ summary: 'Редактирование информации о пользователе' })
   @ApiCreatedResponse({ description: ApiUserMessage.Card, type: UserRdo })
   @ApiBadRequestResponse({ description: ApiUserMessage.ValidationError })
@@ -163,7 +163,7 @@ export class UserController {
     return fillDto(UserRdo, updatedUser.toPOJO());
   }
 
-  @ApiTags('Users')
+  @ApiTags('Пользователи')
   @ApiOperation({ summary: 'Получение файла аватара пользователя' })
   @ApiOkResponse({ description: ApiUserMessage.FileImageUrl })
   @ApiNotFoundResponse({ description: ApiUserMessage.UserOrFileNotFound })
@@ -174,7 +174,7 @@ export class UserController {
     return await this.userService.getAvatar(id);
   }
 
-  @ApiTags('Users')
+  @ApiTags('Пользователи')
   @ApiOperation({ summary: 'Получение файла фоновой картинки карточки пользователя' })
   @ApiOkResponse({ description: ApiUserMessage.FileImageUrl })
   @ApiNotFoundResponse({ description: ApiUserMessage.UserOrFileNotFound })
@@ -185,7 +185,7 @@ export class UserController {
     return await this.userService.getPageBackground(id);
   }
 
-  @ApiTags('Users')
+  @ApiTags('Пользователи')
   @ApiOperation({ summary: 'Получение файла сертификата пользователя' })
   @ApiOkResponse({ description: ApiUserMessage.FileCertificate })
   @ApiNotFoundResponse({ description: ApiUserMessage.UserOrFileNotFound })
@@ -197,7 +197,7 @@ export class UserController {
     return await this.userService.getCertificate(id);
   }
 
-  @ApiTags('Account/User')
+  @ApiTags('Личный кабинет пользователя')
   @ApiOperation({ summary: 'Добавить в друзья' })
   @ApiCreatedResponse({ description: 'Пользователь успешно добавлен в друзья' })
   @ApiConflictResponse({ description: 'Пользователь уже в друзьях' })
@@ -215,7 +215,7 @@ export class UserController {
     return fillDto(PaginationRdo<UserRdo>, result);
   }
 
-  @ApiTags('Account/User')
+  @ApiTags('Личный кабинет пользователя')
   @ApiOperation({ summary: 'Удалить из друзей' })
   @ApiOkResponse({ description: 'Пользователь успешно удален из друзей' })
   @ApiConflictResponse({ description: 'Пользователь не в друзьях' })
@@ -232,5 +232,39 @@ export class UserController {
   ) {
     const result = await this.userService.removeFromFriends(payload.userId, friendId);
     return fillDto(PaginationRdo<UserRdo>, result);
+  }
+
+  @ApiTags('Личный кабинет пользователя')
+  @ApiOperation({ summary: 'Подписаться на уведомления о новых тренировках по email' })
+  @ApiOkResponse({ description: 'Успешно подписан на уведомлений' })
+  @ApiConflictResponse({ description: 'Пользователь уже добавлен в подписки' })
+  @ApiForbiddenResponse({ description: 'Нельзя подписаться на обычного пользователя' })
+  @ApiNotFoundResponse({ description: ApiUserMessage.NotFound })
+  @ApiBadRequestResponse({ description: 'Пользователь не может подписаться на самого себя' })
+  @ApiUnauthorizedResponse({ description: ApiUserMessage.Unauthorized })
+  @Post(':id/subscribe')
+  @UseGuards(JwtAuthGuard)
+  public async subscribe(
+    @Param('id') targetId: string,
+    @UserParam() payload: TokenPayload,
+  ) {
+    return await this.userService.subscribe(payload.userId, targetId);
+  }
+
+  @ApiTags('Личный кабинет пользователя')
+  @ApiOperation({ summary: 'Отписаться от уведомлений о новых тренировках по email' })
+  @ApiOkResponse({ description: 'Успешно отписан от уведомлений' })
+  @ApiConflictResponse({ description: 'Пользователь отсуствует в подписках' })
+  @ApiForbiddenResponse({ description: 'Нельзя отписаться от обычного пользователя' })
+  @ApiNotFoundResponse({ description: ApiUserMessage.NotFound })
+  @ApiBadRequestResponse({ description: 'Пользователь не может отписаться от самого себя' })
+  @ApiUnauthorizedResponse({ description: ApiUserMessage.Unauthorized })
+  @Delete(':id/subscribe')
+  @UseGuards(JwtAuthGuard)
+  public async unsubscribe(
+    @Param('id') targetId: string,
+    @UserParam() payload: TokenPayload,
+  ) {
+    return await this.userService.unsubscribe(payload.userId, targetId);
   }
 }

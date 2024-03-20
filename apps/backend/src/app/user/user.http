@@ -270,3 +270,27 @@ GET http://localhost:3001/api/user?limit=3&level=профессионал&specia
 Authorization: Bearer
 
 ###
+
+# Add user to friends
+POST http://localhost:3001/api/user/2d8209ee-f7de-49c4-8d1e-f857e392b69b/friend HTTP/1.1
+Authorization: Bearer
+
+###
+
+# Remove user from friends
+DELETE http://localhost:3001/api/user/2d8209ee-f7de-49c4-8d1e-f857e392b69b/friend HTTP/1.1
+Authorization: Bearer
+
+###
+
+# Subscribe to Trainer
+POST http://localhost:3001/api/user/9b2b2172-c6a4-4ec8-a23e-3f466c6ba385/subscribe HTTP/1.1
+Authorization: Bearer
+
+###
+
+# Unsubscribe from Trainer
+POST http://localhost:3001/api/user/9b2b2172-c6a4-4ec8-a23e-3f466c6ba385/subscribe HTTP/1.1
+Authorization: Bearer
+
+###

@@ -105,6 +105,11 @@ export enum UserErrorMessage {
   InFriendsAlready = 'User already in friends',
   NotInFriends = 'User not in friends',
   UserSelfFriend = 'User cannot add or remove himself to or from friends',
+  UserSelfSubscriber = 'User cannot subscribe to himself',
+  UserSelfUnsubscriber = 'User cannot unsubscribe from himself',
+  InSubscribtionsAlready = 'User already in subscribtions',
+  NotInSubscribtions = 'User not in subscribtions',
+  SubscribeForbidden = 'User is not trainer',
 }
 
 export enum AllowedImageFormat {

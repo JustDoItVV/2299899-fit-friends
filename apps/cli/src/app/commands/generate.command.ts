@@ -51,7 +51,6 @@ export class GenerateCommand implements CliCommand {
         certificate: role == UserRole.Trainer ? faker.image.url() : '',
         merits: faker.person.bio(),
         isReadyToPersonal: role == UserRole.Trainer ? faker.datatype.boolean() : false,
-        friends: [],
       });
     }
 
@@ -146,7 +145,6 @@ export class GenerateCommand implements CliCommand {
     const mockNotifications: Notification[] = [];
     for (let i = 0; i < count; i++) {
       mockNotifications.push({
-        sentDate: faker.date.recent(),
         userId: faker.helpers.arrayElement(users).id,
         text: faker.commerce.productDescription(),
       });
