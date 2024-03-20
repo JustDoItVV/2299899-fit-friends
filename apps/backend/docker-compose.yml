@@ -37,6 +37,14 @@ services:
     networks:
       - fit_friends
 
+  fit_friends_fakesmtp:
+    image: gessnerfl/fake-smtp-server:2.2.1
+    container_name: fit_friends_fakesmtp
+    hostname: fit_friends_fakesmtp
+    ports:
+      - ${FAKE_SMTP_SERVER_PORT_1}:8025
+      - ${FAKE_SMTP_SERVER_PORT_2}:8080
+
 volumes:
   fit_friends_postgres:
 
