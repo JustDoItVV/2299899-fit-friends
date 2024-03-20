@@ -29,11 +29,11 @@ import { UserEntity } from './user.entity';
 import { UserService } from './user.service';
 
 @ApiBearerAuth()
-@ApiTags('Users')
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
+  @ApiTags('Users')
   @ApiOperation({ summary: 'Каталог пользователей' })
   @ApiOkResponse({ description: ApiUserMessage.Catalog, type: PaginationRdo<UserRdo> })
   @ApiBadRequestResponse({ description: ApiUserMessage.ValidationError })
@@ -47,6 +47,7 @@ export class UserController {
     return fillDto(PaginationRdo<UserRdo>, result);
   }
 
+  @ApiTags('Users')
   @ApiOperation({ summary: 'Вход в систему' })
   @ApiCreatedResponse({ description: ApiUserMessage.Authorized, type: LoggedUserRdo })
   @ApiBadRequestResponse({ description: ApiUserMessage.LoginWrong })
@@ -61,6 +62,7 @@ export class UserController {
     return fillDto(LoggedUserRdo, { ...userEntity.toPOJO(), ...userToken });
   }
 
+  @ApiTags('Users')
   @ApiOperation({ summary: 'Проверка токена' })
   @ApiCreatedResponse({ description: ApiUserMessage.Authorized, type: LoggedUserRdo })
   @ApiUnauthorizedResponse({ description: ApiUserMessage.Unauthorized })
@@ -70,6 +72,7 @@ export class UserController {
     return fillDto(LoggedUserRdo, { ...payload, id: payload.userId });
   }
 
+  @ApiTags('Users')
   @ApiOperation({ summary: 'Получение новой пары токенов' })
   @ApiCreatedResponse({ description: ApiUserMessage.TokenNew, type: LoggedUserRdo })
   @ApiUnauthorizedResponse({ description: ApiUserMessage.Unauthorized })
@@ -80,6 +83,7 @@ export class UserController {
     return fillDto(LoggedUserRdo, { ...user.toPOJO(), ...tokenPayload });
   }
 
+  @ApiTags('Users')
   @ApiOperation({ summary: 'Отзыв токена' })
   @ApiNoContentResponse({ description: ApiUserMessage.TokenRevoked })
   @ApiUnauthorizedResponse({ description: ApiUserMessage.Unauthorized })
@@ -90,6 +94,7 @@ export class UserController {
     await this.userService.deleteRefreshToken(token);
   }
 
+  @ApiTags('Users')
   @ApiOperation({ summary: 'Регистрация пользователя' })
   @ApiConsumes('multipart/form-data')
   @ApiCreatedResponse({ description: ApiUserMessage.Registered, type: UserRdo })
@@ -117,6 +122,7 @@ export class UserController {
     return fillDto(UserRdo, newUser.toPOJO());
   }
 
+  @ApiTags('Users')
   @ApiOperation({ summary: 'Детальная информация о пользователе (Карточка пользователя)' })
   @ApiOkResponse({ description: ApiUserMessage.Card, type: UserRdo })
   @ApiNotFoundResponse({ description: ApiUserMessage.NotFound })
@@ -128,6 +134,7 @@ export class UserController {
     return fillDto(UserRdo, user.toPOJO());
   }
 
+  @ApiTags('Users')
   @ApiOperation({ summary: 'Редактирование информации о пользователе' })
   @ApiCreatedResponse({ description: ApiUserMessage.Card, type: UserRdo })
   @ApiBadRequestResponse({ description: ApiUserMessage.ValidationError })
@@ -156,6 +163,7 @@ export class UserController {
     return fillDto(UserRdo, updatedUser.toPOJO());
   }
 
+  @ApiTags('Users')
   @ApiOperation({ summary: 'Получение файла аватара пользователя' })
   @ApiOkResponse({ description: ApiUserMessage.FileImageUrl })
   @ApiNotFoundResponse({ description: ApiUserMessage.UserOrFileNotFound })
@@ -166,6 +174,7 @@ export class UserController {
     return await this.userService.getAvatar(id);
   }
 
+  @ApiTags('Users')
   @ApiOperation({ summary: 'Получение файла фоновой картинки карточки пользователя' })
   @ApiOkResponse({ description: ApiUserMessage.FileImageUrl })
   @ApiNotFoundResponse({ description: ApiUserMessage.UserOrFileNotFound })
@@ -176,6 +185,7 @@ export class UserController {
     return await this.userService.getPageBackground(id);
   }
 
+  @ApiTags('Users')
   @ApiOperation({ summary: 'Получение файла сертификата пользователя' })
   @ApiOkResponse({ description: ApiUserMessage.FileCertificate })
   @ApiNotFoundResponse({ description: ApiUserMessage.UserOrFileNotFound })
