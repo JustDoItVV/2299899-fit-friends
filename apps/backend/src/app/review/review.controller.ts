@@ -16,7 +16,7 @@ import {
 import { ReviewService } from './review.service';
 
 @ApiBearerAuth()
-@ApiTags('Reviews')
+@ApiTags('Отзывы')
 @Controller('training/:id/reviews')
 export class ReviewController {
   constructor(

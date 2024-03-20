@@ -11,20 +11,21 @@ import {
 import { NotificationService } from './notification.service';
 
 @ApiBearerAuth()
-@ApiTags('Оповещения')
+@UseGuards(JwtAuthGuard)
 @Controller('notification')
 export class NotificationController {
   constructor(private readonly notificationService: NotificationService) {}
 
+  @ApiTags('Оповещения')
   @ApiOperation({ summary: 'Список оповещений' })
   @ApiOkResponse({ description: 'Список оповещений', type: NotificationRdo, isArray: true })
   @ApiUnauthorizedResponse({ description: ApiUserMessage.Unauthorized })
   @Get('')
-  @UseGuards(JwtAuthGuard)
   public async show(@UserParam() payload: TokenPayload) {
     return await this.notificationService.getUsersNotifications(payload.userId);
   }
 
+  @ApiTags('Оповещения')
   @ApiOperation({ summary: 'Удалить оповещение' })
   @ApiNoContentResponse({ description: 'Оповещение удалено' })
   @ApiForbiddenResponse({ description: 'Удаление запрещено, уведомление не принадлежить пользователю' })
@@ -32,7 +33,6 @@ export class NotificationController {
   @ApiUnauthorizedResponse({ description: ApiUserMessage.Unauthorized })
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':id')
-  @UseGuards(JwtAuthGuard)
   public async delete(
     @Param('id') id: string,
     @UserParam() payload: TokenPayload,

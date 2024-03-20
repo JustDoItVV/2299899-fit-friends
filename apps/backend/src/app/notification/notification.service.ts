@@ -1,8 +1,10 @@
 import { NotificationErrorMessage, NOTIFICATIONS_LIMIT } from '@2299899-fit-friends/consts';
 import { NotificationRdo, PaginationQuery } from '@2299899-fit-friends/dtos';
 import { fillDto } from '@2299899-fit-friends/helpers';
+import { Pagination } from '@2299899-fit-friends/types';
 import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 
+import { NotificationEntity } from './notification.entity';
 import { NotificationRepository } from './notification.repository';
 
 @Injectable()
@@ -14,7 +16,7 @@ export class NotificationService {
   public async getUsersNotifications(userId: string): Promise<NotificationRdo[]> {
     const query = new PaginationQuery();
     query.limit = NOTIFICATIONS_LIMIT;
-    const pagination = await this.notificationRepository.find(query, userId);
+    const pagination = await this.notificationRepository.find(query, userId) as Pagination<NotificationEntity>;
     return pagination.entities.map((entity) => fillDto(NotificationRdo, entity.toPOJO()));
   }
 
