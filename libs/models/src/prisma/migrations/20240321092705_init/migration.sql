@@ -117,7 +117,7 @@ CREATE TABLE "balances" (
     "id" TEXT NOT NULL,
     "user_id" TEXT NOT NULL,
     "training_id" TEXT NOT NULL,
-    "isAvailable" BOOLEAN NOT NULL,
+    "available" INTEGER NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
 

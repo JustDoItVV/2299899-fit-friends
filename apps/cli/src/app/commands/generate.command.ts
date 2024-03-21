@@ -2,8 +2,8 @@ import { genSalt, hash } from 'bcrypt';
 import chalk from 'chalk';
 
 import {
-    CaloriesPerDayLimit, CaloriesTargetLimit, METRO_STATIONS, MOCK_EMAIL_OPTIONS, MOCK_PASSWORD,
-    OrderAmountLimit, PriceLimit, RatingLimit, SALT_ROUNDS, TRAINING_TYPE_LIMIT
+    BalanceAvailable, CaloriesPerDayLimit, CaloriesTargetLimit, METRO_STATIONS, MOCK_EMAIL_OPTIONS,
+    MOCK_PASSWORD, OrderAmountLimit, PriceLimit, RatingLimit, SALT_ROUNDS, TRAINING_TYPE_LIMIT
 } from '@2299899-fit-friends/consts';
 import {
     Balance, CliCommand, Notification, Order, OrderPaymentMethod, OrderType,
@@ -158,7 +158,7 @@ export class GenerateCommand implements CliCommand {
       mockBalances.push({
         userId: faker.helpers.arrayElement(users).id,
         trainingId: faker.helpers.arrayElement(trainings).id,
-        isAvailable: faker.datatype.boolean(),
+        available: faker.number.int({ min: BalanceAvailable.Min, max: BalanceAvailable.Max }),
       });
     }
     return mockBalances;

@@ -147,14 +147,14 @@ model MailNotification {
 }
 
 model Balance {
-  id          String   @id @default(uuid())
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId      String   @map("user_id")
-  training    Training @relation(fields: [trainingId], references: [id], onDelete: Cascade)
-  trainingId  String   @map("training_id")
-  isAvailable Boolean
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @updatedAt @map("updated_at")
+  id         String   @id @default(uuid())
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId     String   @map("user_id")
+  training   Training @relation(fields: [trainingId], references: [id], onDelete: Cascade)
+  trainingId String   @map("training_id")
+  available  Int
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
 
   @@map("balances")
 }

@@ -4,6 +4,7 @@ export * from './lib/dto/update-user.dto';
 export * from './lib/dto/create-training.dto';
 export * from './lib/dto/update-training.dto';
 export * from './lib/dto/create-review.dto'
+export * from './lib/dto/update-balance.dto';
 
 export * from './lib/query/pagination.query';
 export * from './lib/query/user-pagination.query';
@@ -17,3 +18,4 @@ export * from './lib/rdo/training.rdo';
 export * from './lib/rdo/review.rdo';
 export * from './lib/rdo/order.rdo';
 export * from './lib/rdo/notification.rdo';
+export * from './lib/rdo/balance.rdo';

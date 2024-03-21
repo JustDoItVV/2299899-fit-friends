@@ -4,6 +4,24 @@ Authorization: Bearer
 
 ###
 
+# Get User's balance
+GET http://localhost:3001/api/account/user/balance HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIyMDBmNTk5Ny0zYTZiLTQ1MjAtOWFiYy0zZjg4MmI5OWE4OTMiLCJuYW1lIjoiR3JhY2UgTGFyc29uIiwiZW1haWwiOiJDYXRoYXJpbmUyM0Bsb2NhbC5sb2NhbCIsInJvbGUiOiLQv9C-0LvRjNC30L7QstCw0YLQtdC70YwiLCJpYXQiOjE3MTEwMTc4NTQsImV4cCI6MTcxMTAxODc1NH0.kPRW-NOyXM8n9RqjgS2e0ftvO3PsY-TkxCvMKtssZTU
+
+###
+
+# Update User's balance record
+PATCH  http://localhost:3001/api/account/user/balance HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIyMDBmNTk5Ny0zYTZiLTQ1MjAtOWFiYy0zZjg4MmI5OWE4OTMiLCJuYW1lIjoiR3JhY2UgTGFyc29uIiwiZW1haWwiOiJDYXRoYXJpbmUyM0Bsb2NhbC5sb2NhbCIsInJvbGUiOiLQv9C-0LvRjNC30L7QstCw0YLQtdC70YwiLCJpYXQiOjE3MTEwMTc4NTQsImV4cCI6MTcxMTAxODc1NH0.kPRW-NOyXM8n9RqjgS2e0ftvO3PsY-TkxCvMKtssZTU
+
+{
+  "trainingId": "fbfbb653-9fbf-4f63-b105-37705ab9a488",
+  "available": 8
+}
+
+###
+
 # Send notifications about new trainings
 POST http://localhost:3001/api/account/user/send-new-trainings-mail HTTP/1.1
 Authorization: Bearer

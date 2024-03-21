@@ -5,3 +5,4 @@ export * from './lib/training.const';
 export * from './lib/review.const';
 export * from './lib/order.const';
 export * from './lib/notification.consts';
+export * from './lib/balance.const';
