@@ -16,8 +16,8 @@ import {
 import { ReviewService } from './review.service';
 
 @ApiBearerAuth()
-@ApiTags('Reviews')
-@Controller('training/:trainingId/reviews')
+@ApiTags('Отзывы')
+@Controller('training/:id/reviews')
 export class ReviewController {
   constructor(
     private readonly reviewService: ReviewService,
@@ -29,11 +29,11 @@ export class ReviewController {
   @ApiBadRequestResponse({ description: 'Ошибка валидации данных' })
   @ApiForbiddenResponse({ description: `Создание запрещено кроме пользователя с ролью ${UserRole.User}` })
   @ApiUnauthorizedResponse({ description: ApiUserMessage.Unauthorized })
-  @Post('/')
+  @Post('')
   @UsePipes(new ValidationPipe({ transform: true, transformOptions: { enableImplicitConversion: true } }))
   @UseGuards(JwtAuthGuard, new UserRolesGuard([UserRole.User]))
   public async create(
-    @Param('trainingId') trainingId: string,
+    @Param('id') trainingId: string,
     @Body() dto: CreateReviewDto,
     @UserParam() payload: TokenPayload,
   ) {
@@ -45,11 +45,11 @@ export class ReviewController {
   @ApiOkResponse({ description: 'Список отзывов к тренировке', type: PaginationRdo<ReviewRdo> })
   @ApiBadRequestResponse({ description: 'Ошибка валидации данных' })
   @ApiUnauthorizedResponse({ description: ApiUserMessage.Unauthorized })
-  @Get('/')
+  @Get('')
   @UsePipes(new ValidationPipe({ transform: true, transformOptions: { enableImplicitConversion: true } }))
   @UseGuards(JwtAuthGuard)
   public async show(
-    @Param('trainingId') trainingId: string,
+    @Param('id') trainingId: string,
     @Query() query: PaginationQuery,
   ) {
     const result = await this.reviewService.getByQuery(query, trainingId);

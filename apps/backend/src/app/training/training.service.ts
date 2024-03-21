@@ -6,7 +6,10 @@ import { fillDto } from '@2299899-fit-friends/helpers';
 import { Pagination, TokenPayload, TrainingFilesPayload } from '@2299899-fit-friends/types';
 import { ForbiddenException, Injectable, NotFoundException, StreamableFile } from '@nestjs/common';
 
+import { MailNotificataionEntity } from '../mail-notification/mail-notification.entity';
+import { MailNotificationRepository } from '../mail-notification/mail-notification.repository';
 import { UploaderService } from '../uploader/uploader.service';
+import { UserRepository } from '../user/user.repository';
 import { TrainingEntity } from './training.entity';
 import { TrainingRepository } from './training.repository';
 
@@ -15,6 +18,8 @@ export class TrainingService {
   constructor(
     private readonly trainingRepository: TrainingRepository,
     private readonly uploaderService: UploaderService,
+    private readonly mailNotificationRepository: MailNotificationRepository,
+    private readonly userRepository: UserRepository,
   ) {}
 
   public async create(dto: CreateTrainingDto, userId: string, files: TrainingFilesPayload): Promise<TrainingEntity> {
@@ -28,6 +33,17 @@ export class TrainingService {
     }
 
     const document = await this.trainingRepository.save(entity);
+
+    const trainer = await this.userRepository.findById(userId);
+    await Promise.all(trainer.subscribers.map((subscriber) => {
+      const mailNotificationEntity = MailNotificataionEntity.fromObject({
+        authorId: trainer.id,
+        targetId: subscriber,
+        text: `Новая тренировка "${document.title}"`,
+      });
+      return this.mailNotificationRepository.save(mailNotificationEntity);
+    }))
+
     return document;
   }
 

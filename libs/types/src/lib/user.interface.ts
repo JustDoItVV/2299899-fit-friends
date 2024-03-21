@@ -28,5 +28,8 @@ export interface User {
   accessToken?: string;
   refreshToken?: string;
   createdAt?: Date;
-  friends: string[];
+  friends?: string[];
+  subscribers?: string[];
+  emailSubscribtions?: string[];
+  emailLastDate?: Date;
 }

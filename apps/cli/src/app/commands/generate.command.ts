@@ -2,8 +2,8 @@ import { genSalt, hash } from 'bcrypt';
 import chalk from 'chalk';
 
 import {
-    CaloriesPerDayLimit, CaloriesTargetLimit, METRO_STATIONS, MOCK_EMAIL_OPTIONS, MOCK_PASSWORD,
-    OrderAmountLimit, PriceLimit, RatingLimit, SALT_ROUNDS, TRAINING_TYPE_LIMIT
+    BalanceAvailable, CaloriesPerDayLimit, CaloriesTargetLimit, METRO_STATIONS, MOCK_EMAIL_OPTIONS,
+    MOCK_PASSWORD, OrderAmountLimit, PriceLimit, RatingLimit, SALT_ROUNDS, TRAINING_TYPE_LIMIT
 } from '@2299899-fit-friends/consts';
 import {
     Balance, CliCommand, Notification, Order, OrderPaymentMethod, OrderType,
@@ -51,7 +51,6 @@ export class GenerateCommand implements CliCommand {
         certificate: role == UserRole.Trainer ? faker.image.url() : '',
         merits: faker.person.bio(),
         isReadyToPersonal: role == UserRole.Trainer ? faker.datatype.boolean() : false,
-        friends: [],
       });
     }
 
@@ -146,7 +145,6 @@ export class GenerateCommand implements CliCommand {
     const mockNotifications: Notification[] = [];
     for (let i = 0; i < count; i++) {
       mockNotifications.push({
-        sentDate: faker.date.recent(),
         userId: faker.helpers.arrayElement(users).id,
         text: faker.commerce.productDescription(),
       });
@@ -160,7 +158,7 @@ export class GenerateCommand implements CliCommand {
       mockBalances.push({
         userId: faker.helpers.arrayElement(users).id,
         trainingId: faker.helpers.arrayElement(trainings).id,
-        isAvailable: faker.datatype.boolean(),
+        available: faker.number.int({ min: BalanceAvailable.Min, max: BalanceAvailable.Max }),
       });
     }
     return mockBalances;

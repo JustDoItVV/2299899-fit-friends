@@ -19,10 +19,10 @@ export class LoggingErrorsInterceptor implements NestInterceptor {
                 this.loggerService.error(message)
               );
             } else {
-              this.loggerService.error(error.message);
+              this.loggerService.error(error['response']['message']);
             }
-          } catch (error) {
-            this.loggerService.error(error);
+          } catch {
+            this.loggerService.error(error.message);
           }
         },
       })

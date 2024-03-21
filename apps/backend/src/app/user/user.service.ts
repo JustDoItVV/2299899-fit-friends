@@ -3,17 +3,20 @@ import { randomUUID } from 'node:crypto';
 import { BackendConfig } from '@2299899-fit-friends/config';
 import { UserErrorMessage } from '@2299899-fit-friends/consts';
 import {
-    CreateUserDto, LoginUserDto, UpdateUserDto, UserPaginationQuery, UserRdo
+    CreateUserDto, LoginUserDto, PaginationQuery, UpdateUserDto, UserPaginationQuery, UserRdo
 } from '@2299899-fit-friends/dtos';
 import { createJWTPayload, fillDto } from '@2299899-fit-friends/helpers';
-import { Pagination, Token, TokenPayload, UserFilesPayload } from '@2299899-fit-friends/types';
 import {
-    ConflictException, ForbiddenException, Inject, Injectable, InternalServerErrorException,
-    NotFoundException, StreamableFile, UnauthorizedException
+    Pagination, Token, TokenPayload, UserFilesPayload, UserGender, UserRole
+} from '@2299899-fit-friends/types';
+import {
+    BadRequestException, ConflictException, ForbiddenException, Inject, Injectable,
+    InternalServerErrorException, NotFoundException, StreamableFile, UnauthorizedException
 } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 
+import { NotificationService } from '../notification/notification.service';
 import { UploaderService } from '../uploader/uploader.service';
 import { RefreshTokenService } from './refresh-token/refresh-token.service';
 import { UserEntity } from './user.entity';
@@ -28,6 +31,7 @@ export class UserService {
     @Inject(BackendConfig.KEY)
     private readonly config: ConfigType<typeof BackendConfig>,
     private readonly uploaderService: UploaderService,
+    private readonly notificationService: NotificationService,
   ) {}
 
   public async createUserToken(user: UserEntity): Promise<Token> {
@@ -193,5 +197,116 @@ export class UserService {
     }
 
     return await this.uploaderService.getFile(user.certificate);
+  }
+
+  public async addToFriends(userId: string, friendId: string): Promise<Pagination<UserRdo>> {
+    if (userId === friendId) {
+      throw new BadRequestException(UserErrorMessage.UserSelfFriend);
+    }
+
+    const friend = await this.getUserById(friendId);
+    if (!friend) {
+      throw new NotFoundException(UserErrorMessage.NotFound);
+    }
+
+    const user = await this.getUserById(userId);
+    if (user.friends.includes(friendId)) {
+      throw new ConflictException(UserErrorMessage.InFriendsAlready);
+    }
+
+    user.friends.push(friendId);
+    friend.friends.push(userId);
+    await this.userRepository.update(userId, user);
+    await this.userRepository.update(friendId, friend);
+
+    await this.notificationService.createNotification(friendId, `${user.name} добавил${user.gender === UserGender.Female ? 'а' : ''} Вас в друзья`);
+
+    const query = new PaginationQuery();
+    const pagination = await this.userRepository.findFriends(query, userId);
+    const paginationResult = {
+      ...pagination,
+      entities: pagination.entities.map((entity) => fillDto(UserRdo, entity.toPOJO())),
+    };
+    return paginationResult;
+  }
+
+  public async removeFromFriends(userId: string, friendId: string): Promise<Pagination<UserRdo>> {
+    if (userId === friendId) {
+      throw new BadRequestException(UserErrorMessage.UserSelfFriend);
+    }
+
+    const friend = await this.getUserById(friendId);
+    if (!friend) {
+      throw new NotFoundException(UserErrorMessage.NotFound);
+    }
+
+    const user = await this.getUserById(userId);
+    if (!user.friends.includes(friendId)) {
+      throw new ConflictException(UserErrorMessage.NotInFriends);
+    }
+
+    user.friends.splice(user.friends.indexOf(friendId), 1);
+    friend.friends.splice(friend.friends.indexOf(userId), 1);
+    await this.userRepository.update(userId, user);
+    await this.userRepository.update(friendId, friend);
+
+    const query = new PaginationQuery();
+    const pagination = await this.userRepository.findFriends(query, userId);
+    const paginationResult = {
+      ...pagination,
+      entities: pagination.entities.map((entity) => fillDto(UserRdo, entity.toPOJO())),
+    };
+    return paginationResult;
+  }
+
+  public async subscribe(userId: string, targetId: string): Promise<void> {
+    if (userId === targetId) {
+      throw new BadRequestException(UserErrorMessage.UserSelfSubscriber);
+    }
+
+    const targetUser = await this.getUserById(targetId);
+    if (!targetUser) {
+      throw new NotFoundException(UserErrorMessage.NotFound);
+    }
+
+    if (targetUser.role !== UserRole.Trainer) {
+      throw new ForbiddenException(UserErrorMessage.SubscribeForbidden)
+    }
+
+    const user = await this.getUserById(userId);
+    if (user.emailSubscribtions.includes(targetId)) {
+      throw new ConflictException(UserErrorMessage.InSubscribtionsAlready);
+    }
+
+    user.emailSubscribtions.push(targetId);
+    user.emailLastDate = new Date();
+    targetUser.subscribers.push(userId);
+    await this.userRepository.update(userId, user);
+    await this.userRepository.update(targetId, targetUser);
+  }
+
+  public async unsubscribe(userId: string, targetId: string): Promise<void> {
+    if (userId === targetId) {
+      throw new BadRequestException(UserErrorMessage.UserSelfUnsubscriber);
+    }
+
+    const targetUser = await this.getUserById(targetId);
+    if (!targetUser) {
+      throw new NotFoundException(UserErrorMessage.NotFound);
+    }
+
+    if (targetUser.role !== UserRole.Trainer) {
+      throw new ForbiddenException(UserErrorMessage.SubscribeForbidden)
+    }
+
+    const user = await this.getUserById(userId);
+    if (!user.emailSubscribtions.includes(targetId)) {
+      throw new ConflictException(UserErrorMessage.NotInSubscribtions);
+    }
+
+    user.emailSubscribtions.splice(user.emailSubscribtions.indexOf(targetId), 1);
+    targetUser.subscribers.splice(targetUser.subscribers.indexOf(userId), 1);
+    await this.userRepository.update(userId, user);
+    await this.userRepository.update(targetId, targetUser);
   }
 }

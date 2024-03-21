@@ -1,0 +1,29 @@
+# Get User's friends list
+GET http://localhost:3001/api/account/user/friends HTTP/1.1
+Authorization: Bearer
+
+###
+
+# Get User's balance
+GET http://localhost:3001/api/account/user/balance HTTP/1.1
+Authorization: Bearer
+
+###
+
+# Update User's balance record
+PATCH  http://localhost:3001/api/account/user/balance HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer
+
+{
+  "trainingId": "fbfbb653-9fbf-4f63-b105-37705ab9a488",
+  "available": 8
+}
+
+###
+
+# Send notifications about new trainings
+POST http://localhost:3001/api/account/user/send-new-trainings-mail HTTP/1.1
+Authorization: Bearer
+
+###

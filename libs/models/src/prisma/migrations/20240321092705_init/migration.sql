@@ -22,7 +22,10 @@ CREATE TABLE "users" (
     "certificate" TEXT,
     "merits" TEXT,
     "is_ready_to_personal" BOOLEAN,
-    "friends" TEXT[],
+    "friends" TEXT[] DEFAULT ARRAY[]::TEXT[],
+    "subscribers" TEXT[] DEFAULT ARRAY[]::TEXT[],
+    "email_subscriptions" TEXT[] DEFAULT ARRAY[]::TEXT[],
+    "email_last_date" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "users_pkey" PRIMARY KEY ("id")
 );
@@ -89,7 +92,6 @@ CREATE TABLE "requests_personal_training" (
 -- CreateTable
 CREATE TABLE "notifications" (
     "id" TEXT NOT NULL,
-    "sent_date" TIMESTAMP(3) NOT NULL,
     "user_id" TEXT NOT NULL,
     "text" TEXT NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -99,11 +101,23 @@ CREATE TABLE "notifications" (
 );
 
 -- CreateTable
+CREATE TABLE "mail_notifications" (
+    "id" TEXT NOT NULL,
+    "author_id" TEXT NOT NULL,
+    "target_id" TEXT NOT NULL,
+    "text" TEXT NOT NULL,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "mail_notifications_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "balances" (
     "id" TEXT NOT NULL,
     "user_id" TEXT NOT NULL,
     "training_id" TEXT NOT NULL,
-    "isAvailable" BOOLEAN NOT NULL,
+    "available" INTEGER NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
 
@@ -144,6 +158,12 @@ ALTER TABLE "requests_personal_training" ADD CONSTRAINT "requests_personal_train
 
 -- AddForeignKey
 ALTER TABLE "notifications" ADD CONSTRAINT "notifications_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "mail_notifications" ADD CONSTRAINT "mail_notifications_author_id_fkey" FOREIGN KEY ("author_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "mail_notifications" ADD CONSTRAINT "mail_notifications_target_id_fkey" FOREIGN KEY ("target_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "balances" ADD CONSTRAINT "balances_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
