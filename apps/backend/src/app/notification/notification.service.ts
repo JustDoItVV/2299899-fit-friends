@@ -13,6 +13,12 @@ export class NotificationService {
     private readonly notificationRepository: NotificationRepository,
   ) {}
 
+  public async createNotification(userId: string, text: string): Promise<NotificationEntity> {
+    const notificationEntity = new NotificationEntity();
+    notificationEntity.populate({ userId, text });
+    return await this.notificationRepository.save(notificationEntity);
+  }
+
   public async getUsersNotifications(userId: string): Promise<NotificationRdo[]> {
     const query = new PaginationQuery();
     query.limit = NOTIFICATIONS_LIMIT;

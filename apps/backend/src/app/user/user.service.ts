@@ -7,7 +7,7 @@ import {
 } from '@2299899-fit-friends/dtos';
 import { createJWTPayload, fillDto } from '@2299899-fit-friends/helpers';
 import {
-    Pagination, Token, TokenPayload, UserFilesPayload, UserRole
+    Pagination, Token, TokenPayload, UserFilesPayload, UserGender, UserRole
 } from '@2299899-fit-friends/types';
 import {
     BadRequestException, ConflictException, ForbiddenException, Inject, Injectable,
@@ -16,6 +16,7 @@ import {
 import { ConfigType } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 
+import { NotificationService } from '../notification/notification.service';
 import { UploaderService } from '../uploader/uploader.service';
 import { RefreshTokenService } from './refresh-token/refresh-token.service';
 import { UserEntity } from './user.entity';
@@ -30,6 +31,7 @@ export class UserService {
     @Inject(BackendConfig.KEY)
     private readonly config: ConfigType<typeof BackendConfig>,
     private readonly uploaderService: UploaderService,
+    private readonly notificationService: NotificationService,
   ) {}
 
   public async createUserToken(user: UserEntity): Promise<Token> {
@@ -216,6 +218,8 @@ export class UserService {
     friend.friends.push(userId);
     await this.userRepository.update(userId, user);
     await this.userRepository.update(friendId, friend);
+
+    await this.notificationService.createNotification(friendId, `${user.name} добавил${user.gender === UserGender.Female ? 'а' : ''} Вас в друзья`);
 
     const query = new PaginationQuery();
     const pagination = await this.userRepository.findFriends(query, userId);
