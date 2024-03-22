@@ -6,9 +6,9 @@ import {
     MOCK_PASSWORD, OrderAmountLimit, PriceLimit, RatingLimit, SALT_ROUNDS, TRAINING_TYPE_LIMIT
 } from '@2299899-fit-friends/consts';
 import {
-    Balance, CliCommand, Notification, Order, OrderPaymentMethod, OrderType,
-    RequestPersonalTraining, RequestPersonalTrainingStatus, Review, Training, TrainingAuditory,
-    TrainingDuration, TrainingLevel, TrainingType, User, UserGender, UserRole
+    Balance, CliCommand, Notification, Order, OrderPaymentMethod, OrderType, Review, Training,
+    TrainingAuditory, TrainingDuration, TrainingLevel, TrainingRequest, TrainingRequestStatus,
+    TrainingType, User, UserGender, UserRole
 } from '@2299899-fit-friends/types';
 import { faker } from '@faker-js/faker';
 import { PrismaClient, Training as TrainingModel, User as UserModel } from '@prisma/client';
@@ -112,8 +112,8 @@ export class GenerateCommand implements CliCommand {
     return mockOrders;
   }
 
-  private generateMockRequestPersonalTraining(users: UserModel[], count: number): RequestPersonalTraining[] {
-    const mockRequests: RequestPersonalTraining[] = [];
+  private generateMockTrainingRequests(users: UserModel[], count: number): TrainingRequest[] {
+    const mockRequests: TrainingRequest[] = [];
     for (let i = 0; i < count; i++) {
       let author = null;
       let target = null;
@@ -135,7 +135,7 @@ export class GenerateCommand implements CliCommand {
       mockRequests.push({
         authorId: author.id,
         targetId: target.id,
-        status: faker.helpers.arrayElement(Object.values(RequestPersonalTrainingStatus)),
+        status: faker.helpers.arrayElement(Object.values(TrainingRequestStatus)),
       });
     }
     return mockRequests;
@@ -198,9 +198,9 @@ export class GenerateCommand implements CliCommand {
       mockOrders.map((order) => prismaClient.order.create({ data: order }))
     );
 
-    const mockRequests = this.generateMockRequestPersonalTraining(userDocuments, mockRecordsCount);
+    const mockRequests = this.generateMockTrainingRequests(userDocuments, mockRecordsCount);
     await Promise.all(
-      mockRequests.map((request) => prismaClient.requestPersonalTraining.create({ data: request }))
+      mockRequests.map((request) => prismaClient.trainingRequest.create({ data: request }))
     );
 
     const mockNotifications = this.generateMockNotifications(userDocuments, mockRecordsCount);

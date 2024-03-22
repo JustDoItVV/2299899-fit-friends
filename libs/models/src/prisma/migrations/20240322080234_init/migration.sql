@@ -78,7 +78,7 @@ CREATE TABLE "orders" (
 );
 
 -- CreateTable
-CREATE TABLE "requests_personal_training" (
+CREATE TABLE "training_requests" (
     "id" TEXT NOT NULL,
     "author_id" TEXT NOT NULL,
     "target_id" TEXT NOT NULL,
@@ -86,7 +86,7 @@ CREATE TABLE "requests_personal_training" (
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "requests_personal_training_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "training_requests_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -151,10 +151,10 @@ ALTER TABLE "reviews" ADD CONSTRAINT "reviews_training_id_fkey" FOREIGN KEY ("tr
 ALTER TABLE "orders" ADD CONSTRAINT "orders_training_id_fkey" FOREIGN KEY ("training_id") REFERENCES "trainings"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "requests_personal_training" ADD CONSTRAINT "requests_personal_training_author_id_fkey" FOREIGN KEY ("author_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "training_requests" ADD CONSTRAINT "training_requests_author_id_fkey" FOREIGN KEY ("author_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "requests_personal_training" ADD CONSTRAINT "requests_personal_training_target_id_fkey" FOREIGN KEY ("target_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "training_requests" ADD CONSTRAINT "training_requests_target_id_fkey" FOREIGN KEY ("target_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "notifications" ADD CONSTRAINT "notifications_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
