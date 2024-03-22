@@ -6,6 +6,7 @@ import { AccountUserModule } from './account-user/account-user.module';
 import { MailNotificationModule } from './mail-notification/mail-notification.module';
 import { NotificationModule } from './notification/notification.module';
 import { ReviewModule } from './review/review.module';
+import { TrainingRequestModule } from './training-request/training-request.module';
 import { TrainingModule } from './training/training.module';
 import { UserModule } from './user/user.module';
 
@@ -19,6 +20,7 @@ import { UserModule } from './user/user.module';
     AccountUserModule,
     NotificationModule,
     MailNotificationModule,
+    TrainingRequestModule,
   ],
 })
 export class AppModule {}

@@ -5,7 +5,7 @@ export * from './lib/cli-parsed-command.type';
 export * from './lib/balance.interface';
 export * from './lib/notification.interface';
 export * from './lib/order.interface';
-export * from './lib/request-personal-training.interface';
+export * from './lib/training-request.interface';
 export * from './lib/review.interface';
 export * from './lib/training.interface';
 export * from './lib/user.interface';
@@ -23,7 +23,7 @@ export * from './lib/training-files-payload.interface';
 export * from './lib/order-type.enum';
 export * from './lib/order-payment-method.enum';
 
-export * from './lib/request-personal-training-status.enum';
+export * from './lib/training-request-status.enum';
 
 export * from './lib/base-entity.interface';
 export * from './lib/base-repository.interface';
