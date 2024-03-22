@@ -1,12 +1,16 @@
 import { ApiUserMessage } from '@2299899-fit-friends/consts';
 import { JwtAuthGuard, UserParam, UserRolesGuard } from '@2299899-fit-friends/core';
-import { CreateTrainingRequestDto, TrainingRequestRdo } from '@2299899-fit-friends/dtos';
+import {
+    CreateTrainingRequestDto, PaginationQuery, PaginationRdo, TrainingRequestRdo
+} from '@2299899-fit-friends/dtos';
 import { fillDto } from '@2299899-fit-friends/helpers';
 import { TokenPayload, UserRole } from '@2299899-fit-friends/types';
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
 import {
-    ApiBadRequestResponse, ApiBearerAuth, ApiCreatedResponse, ApiForbiddenResponse, ApiOperation,
-    ApiTags, ApiUnauthorizedResponse
+    Body, Controller, Get, Post, Query, UseGuards, UsePipes, ValidationPipe
+} from '@nestjs/common';
+import {
+    ApiBadRequestResponse, ApiBearerAuth, ApiCreatedResponse, ApiForbiddenResponse, ApiOkResponse,
+    ApiOperation, ApiTags, ApiUnauthorizedResponse
 } from '@nestjs/swagger';
 
 import { TrainingRequestService } from './training-request.service';
@@ -33,5 +37,19 @@ export class TrainingRequestController {
   ) {
     const newRequest = await this.trainingRequestService.create(dto, payload.userId);
     return fillDto(TrainingRequestRdo, newRequest.toPOJO());
+  }
+
+  @ApiOperation({ summary: 'Список запросов на тренировки' })
+  @ApiOkResponse({ description: 'Список запросов на тренировки', type: PaginationRdo<TrainingRequestRdo> })
+  @ApiBadRequestResponse({ description: 'Ошибка валидации данных' })
+  @ApiUnauthorizedResponse({ description: ApiUserMessage.Unauthorized })
+  @Get('')
+  @UsePipes(new ValidationPipe({ transform: true, transformOptions: { enableImplicitConversion: true } }))
+  public async show(
+    @Query() query: PaginationQuery,
+    @UserParam() payload: TokenPayload,
+  ) {
+    const result = await this.trainingRequestService.getByQuery(query, payload.userId);
+    return fillDto(PaginationRdo<TrainingRequestRdo>, result);
   }
 }

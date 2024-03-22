@@ -1,5 +1,8 @@
-import { CreateTrainingRequestDto } from '@2299899-fit-friends/dtos';
-import { UserGender, UserRole } from '@2299899-fit-friends/types';
+import {
+    CreateTrainingRequestDto, PaginationQuery, TrainingRequestRdo
+} from '@2299899-fit-friends/dtos';
+import { fillDto } from '@2299899-fit-friends/helpers';
+import { Pagination, UserGender, UserRole } from '@2299899-fit-friends/types';
 import { Injectable } from '@nestjs/common';
 
 import { NotificationService } from '../notification/notification.service';
@@ -31,5 +34,14 @@ export class TrainingRequestService {
     } тренировку`);
 
     return entity;
+  }
+
+  public async getByQuery(query: PaginationQuery, userId: string): Promise<Pagination<TrainingRequestRdo>> {
+    const pagination = await this.trainingRequestRepository.find(query, userId);
+    const paginationResult = {
+      ...pagination,
+      entities: pagination.entities.map((entity) => fillDto(TrainingRequestRdo, entity.toPOJO())),
+    };
+    return paginationResult;
   }
 }
