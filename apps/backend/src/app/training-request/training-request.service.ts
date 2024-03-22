@@ -1,9 +1,10 @@
+import { TrainingRequestErrorMessage } from '@2299899-fit-friends/consts';
 import {
-    CreateTrainingRequestDto, PaginationQuery, TrainingRequestRdo
+    CreateTrainingRequestDto, PaginationQuery, TrainingRequestRdo, UpdateTrainingRequestDto
 } from '@2299899-fit-friends/dtos';
 import { fillDto } from '@2299899-fit-friends/helpers';
 import { Pagination, UserGender, UserRole } from '@2299899-fit-friends/types';
-import { Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 
 import { NotificationService } from '../notification/notification.service';
 import { UserService } from '../user/user.service';
@@ -43,5 +44,29 @@ export class TrainingRequestService {
       entities: pagination.entities.map((entity) => fillDto(TrainingRequestRdo, entity.toPOJO())),
     };
     return paginationResult;
+  }
+
+  public async update(id: string, dto: UpdateTrainingRequestDto, userId: string) {
+    const trainingRequest = await this.trainingRequestRepository.findById(id);
+
+    if (!trainingRequest) {
+      throw new NotFoundException(TrainingRequestErrorMessage.NotFound);
+    }
+
+    if (trainingRequest.targetId !== userId) {
+      throw new ForbiddenException(TrainingRequestErrorMessage.UpdateForbidden);
+    }
+
+    let hasChanges = false;
+    if (dto.status !== undefined && trainingRequest.status !== dto.status) {
+      trainingRequest.status = dto.status;
+      hasChanges = true;
+    }
+
+    if (!hasChanges) {
+      return trainingRequest;
+    }
+
+    return await this.trainingRequestRepository.update(id, trainingRequest);
   }
 }

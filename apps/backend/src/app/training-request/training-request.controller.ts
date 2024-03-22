@@ -1,12 +1,13 @@
 import { ApiUserMessage } from '@2299899-fit-friends/consts';
 import { JwtAuthGuard, UserParam, UserRolesGuard } from '@2299899-fit-friends/core';
 import {
-    CreateTrainingRequestDto, PaginationQuery, PaginationRdo, TrainingRequestRdo
+    CreateTrainingRequestDto, PaginationQuery, PaginationRdo, TrainingRequestRdo,
+    UpdateTrainingRequestDto
 } from '@2299899-fit-friends/dtos';
 import { fillDto } from '@2299899-fit-friends/helpers';
 import { TokenPayload, UserRole } from '@2299899-fit-friends/types';
 import {
-    Body, Controller, Get, Post, Query, UseGuards, UsePipes, ValidationPipe
+    Body, Controller, Get, Param, Patch, Post, Query, UseGuards, UsePipes, ValidationPipe
 } from '@nestjs/common';
 import {
     ApiBadRequestResponse, ApiBearerAuth, ApiCreatedResponse, ApiForbiddenResponse, ApiOkResponse,
@@ -51,5 +52,19 @@ export class TrainingRequestController {
   ) {
     const result = await this.trainingRequestService.getByQuery(query, payload.userId);
     return fillDto(PaginationRdo<TrainingRequestRdo>, result);
+  }
+
+  @ApiOperation({ summary: 'Изменение статуса заявки' })
+  @ApiOkResponse({ description: 'Статус заявки успешно обновлен' })
+  @ApiBadRequestResponse({ description: 'Ошибка валидации данных' })
+  @ApiUnauthorizedResponse({ description: ApiUserMessage.Unauthorized })
+  @Patch(':id')
+  public async update(
+    @Param('id') id: string,
+    @Body() dto: UpdateTrainingRequestDto,
+    @UserParam() payload: TokenPayload,
+  ) {
+    const updatedRequest = await this.trainingRequestService.update(id, dto, payload.userId);
+    return fillDto(TrainingRequestRdo, updatedRequest.toPOJO());
   }
 }

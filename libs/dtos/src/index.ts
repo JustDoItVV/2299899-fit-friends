@@ -6,6 +6,7 @@ export * from './lib/dto/update-training.dto';
 export * from './lib/dto/create-review.dto'
 export * from './lib/dto/update-balance.dto';
 export * from './lib/dto/create-raining-request.dto';
+export * from './lib/dto/update-training-request.dto';
 
 export * from './lib/query/pagination.query';
 export * from './lib/query/user-pagination.query';
