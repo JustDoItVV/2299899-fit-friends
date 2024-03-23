@@ -49,20 +49,13 @@ npm run cli -- --generate 10 postgresql://admin:123456@localhost:5432/fit_friend
 npm run backend
 ```
 
-Терминал 2:
-
-```
-npm run frontend
-```
-
 ### 8. Ручное тестирование
 
-- ## Ручное тестирование rest api сервиса `Backend` доступно с помощь .http файлов:
-  -
-  -
-- Интерфейс FakeSMPTServer для контроля отправки почты: [http://localhost:1083/](http://localhost:1083/)
-- Frontend: [http://localhost:3000/](http://localhost:3000/)
 - Интерактивная OpenAPI спецификация: [http://localhost:3001/spec/](http://localhost:3001/spec/)
+- Интерфейс FakeSMPTServer для контроля отправки почты: [http://localhost:1083/](http://localhost:1083/)
+- .http файлы:
+  -
+  -
 
 ## Сценарии
 
