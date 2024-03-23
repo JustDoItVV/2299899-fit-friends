@@ -1,16 +1,16 @@
 import 'multer';
 
 import {
-    AllowedCertificateFormat, AllowedImageFormat, ApiUserMessage, AVATAR_SIZE_LIMIT,
+    AllowedCertificateFormat, AllowedImageFormat, ApiTag, ApiUserMessage, AVATAR_SIZE_LIMIT,
     UserErrorMessage
 } from '@2299899-fit-friends/consts';
 import {
-    FilesValidationPipe, JwtAuthGuard, JwtRefreshGuard, OnlyAnonymousGuard, Token,
-    UserDataTrasformationPipe, UserParam, UserRolesGuard
+    FilesValidationPipe, JwtAuthGuard, JwtRefreshGuard, OnlyAnonymousGuard, Token, UserParam,
+    UserRolesGuard
 } from '@2299899-fit-friends/core';
 import {
-    CreateUserDto, LoggedUserRdo, LoginUserDto, PaginationRdo, UpdateUserDto, UserPaginationQuery,
-    UserRdo
+    ApiOkResponsePaginated, CreateUserDto, LoggedUserRdo, LoginUserDto, PaginationRdo,
+    UpdateUserDto, UserPaginationQuery, UserRdo
 } from '@2299899-fit-friends/dtos';
 import { fillDto } from '@2299899-fit-friends/helpers';
 import { TokenPayload, UserFilesPayload, UserRole } from '@2299899-fit-friends/types';
@@ -33,11 +33,11 @@ import { UserService } from './user.service';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @ApiTags('Пользователи')
+  @ApiTags(ApiTag.Users)
   @ApiOperation({ summary: 'Каталог пользователей' })
-  @ApiOkResponse({ description: ApiUserMessage.Catalog, type: PaginationRdo<UserRdo> })
+  @ApiOkResponsePaginated(UserRdo, ApiUserMessage.Catalog)
   @ApiBadRequestResponse({ description: ApiUserMessage.ValidationError })
-  @ApiForbiddenResponse({ description: `Запрещено кроме пользователя с ролью ${UserRole.User}` })
+  @ApiForbiddenResponse({ description: ApiUserMessage.ForbiddenExceptUser })
   @ApiUnauthorizedResponse({ description: ApiUserMessage.Unauthorized })
   @Get('/')
   @UsePipes(new ValidationPipe({ transform: true, transformOptions: { enableImplicitConversion: true } }))
@@ -47,13 +47,13 @@ export class UserController {
     return fillDto(PaginationRdo<UserRdo>, result);
   }
 
-  @ApiTags('Пользователи')
+  @ApiTags(ApiTag.Users)
   @ApiOperation({ summary: 'Вход в систему' })
   @ApiCreatedResponse({ description: ApiUserMessage.Authorized, type: LoggedUserRdo })
   @ApiBadRequestResponse({ description: ApiUserMessage.LoginWrong })
   @ApiUnauthorizedResponse({ description: ApiUserMessage.PasswordWrong })
   @ApiNotFoundResponse({ description: ApiUserMessage.NotFound })
-  @ApiForbiddenResponse({ description: 'Запрещено для авторизованных пользователей' })
+  @ApiForbiddenResponse({ description: ApiUserMessage.ForbiddenAuthorized })
   @Post('login')
   @UseGuards(OnlyAnonymousGuard)
   public async login(@Body() dto: LoginUserDto) {
@@ -62,7 +62,7 @@ export class UserController {
     return fillDto(LoggedUserRdo, { ...userEntity.toPOJO(), ...userToken });
   }
 
-  @ApiTags('Пользователи')
+  @ApiTags(ApiTag.Users)
   @ApiOperation({ summary: 'Проверка токена' })
   @ApiCreatedResponse({ description: ApiUserMessage.Authorized, type: LoggedUserRdo })
   @ApiUnauthorizedResponse({ description: ApiUserMessage.Unauthorized })
@@ -72,7 +72,7 @@ export class UserController {
     return fillDto(LoggedUserRdo, { ...payload, id: payload.userId });
   }
 
-  @ApiTags('Пользователи')
+  @ApiTags(ApiTag.Users)
   @ApiOperation({ summary: 'Получение новой пары токенов' })
   @ApiCreatedResponse({ description: ApiUserMessage.TokenNew, type: LoggedUserRdo })
   @ApiUnauthorizedResponse({ description: ApiUserMessage.Unauthorized })
@@ -83,7 +83,7 @@ export class UserController {
     return fillDto(LoggedUserRdo, { ...user.toPOJO(), ...tokenPayload });
   }
 
-  @ApiTags('Пользователи')
+  @ApiTags(ApiTag.Users)
   @ApiOperation({ summary: 'Отзыв токена' })
   @ApiNoContentResponse({ description: ApiUserMessage.TokenRevoked })
   @ApiUnauthorizedResponse({ description: ApiUserMessage.Unauthorized })
@@ -94,14 +94,14 @@ export class UserController {
     await this.userService.deleteRefreshToken(token);
   }
 
-  @ApiTags('Пользователи')
+  @ApiTags(ApiTag.Users)
   @ApiOperation({ summary: 'Регистрация пользователя' })
   @ApiConsumes('multipart/form-data')
   @ApiCreatedResponse({ description: ApiUserMessage.Registered, type: UserRdo })
   @ApiConflictResponse({ description: ApiUserMessage.EmailExists })
   @ApiBadRequestResponse({ description: ApiUserMessage.ValidationError })
-  @ApiUnsupportedMediaTypeResponse({ description: 'неподдерживаемый тип файлов' })
-  @ApiForbiddenResponse({ description: 'Запрещено для авторизованных пользователей' })
+  @ApiUnsupportedMediaTypeResponse({ description: ApiUserMessage.UnsupportedMediaFiles })
+  @ApiForbiddenResponse({ description: ApiUserMessage.ForbiddenAuthorized })
   @Post('register')
   @UseInterceptors(FileFieldsInterceptor([
     { name: 'avatar', maxCount: 1 },
@@ -110,7 +110,7 @@ export class UserController {
   ]))
   @UseGuards(OnlyAnonymousGuard)
   public async create(
-    @Body(new UserDataTrasformationPipe()) dto: CreateUserDto,
+    @Body() dto: CreateUserDto,
     @UploadedFiles(new FilesValidationPipe({
       avatar: { size: AVATAR_SIZE_LIMIT, formats: AllowedImageFormat },
       pageBackground: { formats: AllowedImageFormat },
@@ -122,7 +122,7 @@ export class UserController {
     return fillDto(UserRdo, newUser.toPOJO());
   }
 
-  @ApiTags('Пользователи')
+  @ApiTags(ApiTag.Users)
   @ApiOperation({ summary: 'Детальная информация о пользователе (Карточка пользователя)' })
   @ApiOkResponse({ description: ApiUserMessage.Card, type: UserRdo })
   @ApiNotFoundResponse({ description: ApiUserMessage.NotFound })
@@ -134,7 +134,7 @@ export class UserController {
     return fillDto(UserRdo, user.toPOJO());
   }
 
-  @ApiTags('Пользователи')
+  @ApiTags(ApiTag.Users)
   @ApiOperation({ summary: 'Редактирование информации о пользователе' })
   @ApiCreatedResponse({ description: ApiUserMessage.Card, type: UserRdo })
   @ApiBadRequestResponse({ description: ApiUserMessage.ValidationError })
@@ -150,7 +150,7 @@ export class UserController {
   @UseGuards(JwtAuthGuard)
   public async updateUser(
     @Param('id') id: string,
-    @Body(new UserDataTrasformationPipe()) dto: UpdateUserDto,
+    @Body() dto: UpdateUserDto,
     @UserParam() payload: TokenPayload,
     @UploadedFiles(new FilesValidationPipe({
       avatar: { size: AVATAR_SIZE_LIMIT, formats: AllowedImageFormat },
@@ -163,7 +163,7 @@ export class UserController {
     return fillDto(UserRdo, updatedUser.toPOJO());
   }
 
-  @ApiTags('Пользователи')
+  @ApiTags(ApiTag.Users)
   @ApiOperation({ summary: 'Получение файла аватара пользователя' })
   @ApiOkResponse({ description: ApiUserMessage.FileImageUrl })
   @ApiNotFoundResponse({ description: ApiUserMessage.UserOrFileNotFound })
@@ -174,7 +174,7 @@ export class UserController {
     return await this.userService.getAvatar(id);
   }
 
-  @ApiTags('Пользователи')
+  @ApiTags(ApiTag.Users)
   @ApiOperation({ summary: 'Получение файла фоновой картинки карточки пользователя' })
   @ApiOkResponse({ description: ApiUserMessage.FileImageUrl })
   @ApiNotFoundResponse({ description: ApiUserMessage.UserOrFileNotFound })
@@ -185,7 +185,7 @@ export class UserController {
     return await this.userService.getPageBackground(id);
   }
 
-  @ApiTags('Пользователи')
+  @ApiTags(ApiTag.Users)
   @ApiOperation({ summary: 'Получение файла сертификата пользователя' })
   @ApiOkResponse({ description: ApiUserMessage.FileCertificate })
   @ApiNotFoundResponse({ description: ApiUserMessage.UserOrFileNotFound })
@@ -197,14 +197,15 @@ export class UserController {
     return await this.userService.getCertificate(id);
   }
 
-  @ApiTags('Личный кабинет пользователя')
+  @ApiTags(ApiTag.AccountUser)
   @ApiOperation({ summary: 'Добавить в друзья' })
-  @ApiCreatedResponse({ description: 'Пользователь успешно добавлен в друзья' })
-  @ApiConflictResponse({ description: 'Пользователь уже в друзьях' })
+  @ApiOkResponsePaginated(UserRdo, ApiUserMessage.FriendAddSuccess)
+  @ApiConflictResponse({ description: ApiUserMessage.FriendAddAlready })
   @ApiNotFoundResponse({ description: ApiUserMessage.NotFound })
-  @ApiBadRequestResponse({ description: 'Пользователь не может добавить самого себя в друзья' })
-  @ApiForbiddenResponse({ description: `Запрещено кроме пользователей с ролью "${UserRole.User}"` })
+  @ApiBadRequestResponse({ description: ApiUserMessage.FriendAddDeleteSelf })
+  @ApiForbiddenResponse({ description: ApiUserMessage.ForbiddenExceptUser })
   @ApiUnauthorizedResponse({ description: ApiUserMessage.Unauthorized })
+  @HttpCode(HttpStatus.OK)
   @Post(':id/friend')
   @UseGuards(JwtAuthGuard, new UserRolesGuard([UserRole.User]))
   public async addToFriends(
@@ -215,13 +216,13 @@ export class UserController {
     return fillDto(PaginationRdo<UserRdo>, result);
   }
 
-  @ApiTags('Личный кабинет пользователя')
+  @ApiTags(ApiTag.AccountUser)
   @ApiOperation({ summary: 'Удалить из друзей' })
-  @ApiOkResponse({ description: 'Пользователь успешно удален из друзей' })
-  @ApiConflictResponse({ description: 'Пользователь не в друзьях' })
+  @ApiOkResponsePaginated(UserRdo, ApiUserMessage.FriendDeleteSuccess)
+  @ApiConflictResponse({ description: ApiUserMessage.FriendDeleteAlready })
   @ApiNotFoundResponse({ description: ApiUserMessage.NotFound })
-  @ApiBadRequestResponse({ description: 'Пользователь не может удалить самого себя из друзей' })
-  @ApiForbiddenResponse({ description: `Запрещено кроме пользователей с ролью "${UserRole.User}"` })
+  @ApiBadRequestResponse({ description: ApiUserMessage.FriendAddDeleteSelf })
+  @ApiForbiddenResponse({ description: ApiUserMessage.ForbiddenExceptUser })
   @ApiUnauthorizedResponse({ description: ApiUserMessage.Unauthorized })
   @HttpCode(HttpStatus.OK)
   @Delete(':id/friend')
@@ -234,14 +235,15 @@ export class UserController {
     return fillDto(PaginationRdo<UserRdo>, result);
   }
 
-  @ApiTags('Личный кабинет пользователя')
+  @ApiTags(ApiTag.AccountUser)
   @ApiOperation({ summary: 'Подписаться на уведомления о новых тренировках по email' })
-  @ApiOkResponse({ description: 'Успешно подписан на уведомлений' })
-  @ApiConflictResponse({ description: 'Пользователь уже добавлен в подписки' })
-  @ApiForbiddenResponse({ description: 'Нельзя подписаться на обычного пользователя' })
+  @ApiOkResponse({ description: ApiUserMessage.SubscribeAddSuccess })
+  @ApiConflictResponse({ description: ApiUserMessage.SubscribeAddAlready })
+  @ApiForbiddenResponse({ description: ApiUserMessage.ForbiddenSubscribe })
   @ApiNotFoundResponse({ description: ApiUserMessage.NotFound })
-  @ApiBadRequestResponse({ description: 'Пользователь не может подписаться на самого себя' })
+  @ApiBadRequestResponse({ description: ApiUserMessage.SubscribeAddDeleteSelf })
   @ApiUnauthorizedResponse({ description: ApiUserMessage.Unauthorized })
+  @HttpCode(HttpStatus.OK)
   @Post(':id/subscribe')
   @UseGuards(JwtAuthGuard)
   public async subscribe(
@@ -251,14 +253,15 @@ export class UserController {
     return await this.userService.subscribe(payload.userId, targetId);
   }
 
-  @ApiTags('Личный кабинет пользователя')
+  @ApiTags(ApiTag.AccountUser)
   @ApiOperation({ summary: 'Отписаться от уведомлений о новых тренировках по email' })
-  @ApiOkResponse({ description: 'Успешно отписан от уведомлений' })
-  @ApiConflictResponse({ description: 'Пользователь отсуствует в подписках' })
-  @ApiForbiddenResponse({ description: 'Нельзя отписаться от обычного пользователя' })
+  @ApiOkResponse({ description: ApiUserMessage.SubscribeDeleteSuccess })
+  @ApiConflictResponse({ description: ApiUserMessage.SubscribeDeleteAlready })
+  @ApiForbiddenResponse({ description: ApiUserMessage.ForbiddenSubscribe })
   @ApiNotFoundResponse({ description: ApiUserMessage.NotFound })
-  @ApiBadRequestResponse({ description: 'Пользователь не может отписаться от самого себя' })
+  @ApiBadRequestResponse({ description: ApiUserMessage.SubscribeAddDeleteSelf })
   @ApiUnauthorizedResponse({ description: ApiUserMessage.Unauthorized })
+  @HttpCode(HttpStatus.OK)
   @Delete(':id/subscribe')
   @UseGuards(JwtAuthGuard)
   public async unsubscribe(

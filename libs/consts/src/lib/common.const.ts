@@ -12,3 +12,13 @@ export enum DefaultPagination {
   Limit = 50,
   Page = 1,
 }
+
+export enum ApiTag {
+  Users = 'Пользователи',
+  AccountTrainer = 'Личный кабинет тренера',
+  AccountUser = 'Личный кабинет пользователя',
+  Notifications = 'Оповещения',
+  TrainingRequests = 'Персональные тренировки/совместные тренировки',
+  TrainingCatalog = 'Каталог тренировок',
+  Reviews = 'Отзывы',
+}

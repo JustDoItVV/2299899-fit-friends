@@ -11,10 +11,7 @@ import { UserService } from '../user.service';
 import { RefreshTokenService } from './refresh-token.service';
 
 @Injectable()
-export class JwtRefreshStrategy extends PassportStrategy(
-  Strategy,
-  'jwt-refresh'
-) {
+export class JwtRefreshStrategy extends PassportStrategy(Strategy, 'jwt-refresh') {
   constructor(
     @Inject(BackendConfig.KEY)
     private readonly config: ConfigType<typeof BackendConfig>,

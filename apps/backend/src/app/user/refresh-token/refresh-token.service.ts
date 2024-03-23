@@ -28,9 +28,7 @@ export class RefreshTokenService {
   }
 
   public async isExists(tokenId: string): Promise<boolean> {
-    const refreshToken = await this.refreshTokenRepository.findByTokenId(
-      tokenId
-    );
+    const refreshToken = await this.refreshTokenRepository.findByTokenId(tokenId);
     return refreshToken !== null;
   }
 

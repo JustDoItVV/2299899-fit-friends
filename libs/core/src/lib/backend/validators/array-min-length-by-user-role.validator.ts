@@ -9,17 +9,18 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 @Injectable()
 @ValidatorConstraint({ name: 'ArrayMinLengthByUserRole', async: false })
 export class ArrayMinLengthByUserRole implements ValidatorConstraintInterface {
-  validate(array: string[], validationArguments: ValidationArguments) {
-    if (!array) {
+  validate(values: string[], validationArguments: ValidationArguments) {
+    if (!values) {
       throw new BadRequestException(UserErrorMessage.TrainingTypeRequired);
     }
+    const uniqueValues = [... new Set(values)];
     const min = validationArguments.object['role'] === UserRole.Trainer ? TRAINING_TYPE_LIMIT : 0;
-    return array.length >= min;
+    return uniqueValues.length >= min;
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   defaultMessage(validationArguments: ValidationArguments): string {
     const min = validationArguments.object['role'] === UserRole.Trainer ? TRAINING_TYPE_LIMIT : 0;
-    return `Array min length is ${min}`;
+    return `${validationArguments.property} unique values array min length is ${min}`;
   }
 }

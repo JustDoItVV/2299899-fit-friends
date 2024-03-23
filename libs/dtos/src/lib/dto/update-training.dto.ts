@@ -1,12 +1,11 @@
 import {
-    IsEnum, IsOptional, IsString, Max, MaxLength, Min, MinLength, ValidationArguments
+    IsBoolean, IsEnum, IsNotEmptyObject, IsNumber, IsOptional, IsString, Max, MaxLength, Min,
+    MinLength, ValidationArguments
 } from 'class-validator';
 
 import {
-    PriceLimit, TitleLength, TrainingBackgroundPictureAllowedExtensions, TrainingCaloriesLimit,
-    TrainingDescriptionLimit, TrainingErrorMessage, TrainingVideoAllowedExtensions
+    PriceLimit, TitleLength, TrainingCaloriesLimit, TrainingDescriptionLimit, TrainingErrorMessage
 } from '@2299899-fit-friends/consts';
-import { IsValidFile, TransformToBool, TransformToInt } from '@2299899-fit-friends/core';
 import {
     TrainingAuditory, TrainingDuration, TrainingLevel, TrainingType
 } from '@2299899-fit-friends/types';
@@ -27,7 +26,7 @@ export class UpdateTrainingDto {
     properties: { file: { type: 'string', format: 'binary' } },
     required: false
   })
-  @IsValidFile({ backgroundPicture: { formats: TrainingBackgroundPictureAllowedExtensions } })
+  @IsNotEmptyObject()
   @IsOptional()
   public backgroundPicture: Express.Multer.File;
 
@@ -49,14 +48,14 @@ export class UpdateTrainingDto {
   @ApiPropertyOptional({ description: 'Цена тренировки в рублях' })
   @Max(PriceLimit.Max, { message: TrainingErrorMessage.PriceMax })
   @Min(PriceLimit.Min, { message: TrainingErrorMessage.PriceMin })
-  @TransformToInt(TrainingErrorMessage.NotInt)
+  @IsNumber()
   @IsOptional()
   public price: number;
 
   @ApiPropertyOptional({ description: 'Количество калорий' })
   @Max(TrainingCaloriesLimit.Max, { message: TrainingErrorMessage.CaloriesMax })
   @Min(TrainingCaloriesLimit.Min, { message: TrainingErrorMessage.CaloriesMin })
-  @TransformToInt(TrainingErrorMessage.NotInt)
+  @IsNumber()
   @IsOptional()
   public calories: number;
 
@@ -79,12 +78,12 @@ export class UpdateTrainingDto {
     properties: { file: { type: 'string', format: 'binary' } },
     required: false,
   })
-  @IsValidFile({ video: { formats: TrainingVideoAllowedExtensions } })
+  @IsNotEmptyObject()
   @IsOptional()
   public video: Express.Multer.File;
 
   @ApiPropertyOptional({ description: 'Флаг специального предложения', type: String })
-  @TransformToBool(TrainingErrorMessage.IsSpecialOfferBool)
+  @IsBoolean()
   @IsOptional()
   public isSpecialOffer: boolean;
 }
