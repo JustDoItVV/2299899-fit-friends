@@ -37,7 +37,7 @@ export * from './lib/pagination.interface';
 export * from './lib/sort-option.enum';
 export * from './lib/sort-direction.enum';
 export * from './lib/user-sort-option.enum';
-export * from './lib/order-sort-option.type';
+export * from './lib/order-sort-option.enum';
 
 export * from './lib/mail-notification.interface';
 

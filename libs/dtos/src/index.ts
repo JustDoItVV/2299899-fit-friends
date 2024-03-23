@@ -5,7 +5,7 @@ export * from './lib/dto/create-training.dto';
 export * from './lib/dto/update-training.dto';
 export * from './lib/dto/create-review.dto'
 export * from './lib/dto/update-balance.dto';
-export * from './lib/dto/create-raining-request.dto';
+export * from './lib/dto/create-training-request.dto';
 export * from './lib/dto/update-training-request.dto';
 
 export * from './lib/query/pagination.query';
@@ -24,4 +24,5 @@ export * from './lib/rdo/balance.rdo';
 export * from './lib/rdo/training-request.rdo';
 
 export * from './lib/decorators/api-ok-response-paginated.decorator';
+export * from './lib/decorators/transform-array-int.decorator';
 export * from './lib/decorators/transform-to-array.decorator';

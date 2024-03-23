@@ -19,28 +19,17 @@ export class CreateTrainingDto {
   @IsNotEmpty({ message: TrainingErrorMessage.TitleRequired })
   public title: string;
 
-  @ApiProperty({
-    description: 'Файл фонового изображения страницы тренировки',
-    name: 'backgroundPicture',
-    type: 'file',
-    properties: { file: { type: 'string', format: 'binary' } },
-    required: true
-  })
-  @IsNotEmptyObject()
-  @IsOptional()
-  public backgroundPicture: Express.Multer.File;
-
-  @ApiProperty({ description: 'Уровень физической подготовки пользователя, на которого рассчитана тренировка', example: TrainingLevel.Amateur, type: String })
+  @ApiProperty({ description: 'Уровень физической подготовки пользователя, на которого рассчитана тренировка', example: TrainingLevel.Amateur, enum: TrainingLevel })
   @IsEnum(TrainingLevel)
   @IsNotEmpty()
   public level: TrainingLevel;
 
-  @ApiProperty({ description: 'Тип тренировки', example: TrainingType.Crossfit, type: String })
+  @ApiProperty({ description: 'Тип тренировки', example: TrainingType.Crossfit, enum: TrainingType })
   @IsEnum(TrainingType)
   @IsNotEmpty({ message: TrainingErrorMessage.TypeRequired })
   public type: TrainingType;
 
-  @ApiProperty({ description: 'Длительность тренировки', example: TrainingDuration.Eighty, type: String })
+  @ApiProperty({ description: 'Длительность тренировки', example: TrainingDuration.Eighty, enum: TrainingDuration })
   @IsEnum(TrainingDuration)
   @IsNotEmpty({ message: TrainingErrorMessage.DurationRequired })
   public duration: TrainingDuration;
@@ -66,7 +55,7 @@ export class CreateTrainingDto {
   @IsNotEmpty({ message: TrainingErrorMessage.DescriptionRequired })
   public description: string;
 
-  @ApiProperty({ description: 'Пол пользователя, для которого предназначена тренировка', example: TrainingAuditory.All, type: String })
+  @ApiProperty({ description: 'Пол пользователя, для которого предназначена тренировка', example: TrainingAuditory.All, enum: TrainingAuditory })
   @IsEnum(TrainingAuditory)
   @IsNotEmpty({ message: TrainingErrorMessage.GenderRequired })
   public gender: TrainingAuditory;
@@ -82,7 +71,7 @@ export class CreateTrainingDto {
   @IsOptional()
   public video: Express.Multer.File;
 
-  @ApiProperty({ description: 'Флаг специального предложения', example: 'false', type: String })
+  @ApiProperty({ description: 'Флаг специального предложения', example: true })
   @IsBoolean()
   @IsNotEmpty({ message: TrainingErrorMessage.IsSpecialOfferRequired })
   public isSpecialOffer: boolean;

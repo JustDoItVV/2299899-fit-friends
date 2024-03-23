@@ -24,7 +24,11 @@ export class UploaderService {
     return filename.split('.').at(-1);
   }
 
-  private getSubDirectoryUpload(): string {
+  public getUploadDirectory(): string {
+    return this.config.uploadDirectory;
+  }
+
+  public getSubDirectoryUpload(): string {
     const [year, month] = dayjs().format(this.DATE_FORMAT).split(' ');
     return join(year, month);
   }

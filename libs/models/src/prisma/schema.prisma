@@ -103,6 +103,7 @@ model Order {
   trainingId    String   @map("training_id")
   price         Int
   amount        Int
+  orderSum      Int      @map("order_sum")
   paymentMethod String   @map("payment_method")
   createdAt     DateTime @default(now()) @map("created_at")
 

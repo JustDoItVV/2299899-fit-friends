@@ -30,17 +30,17 @@ export class UpdateTrainingDto {
   @IsOptional()
   public backgroundPicture: Express.Multer.File;
 
-  @ApiPropertyOptional({ description: 'Уровень физической подготовки пользователя, на которого рассчитана тренировка', type: String })
+  @ApiPropertyOptional({ description: 'Уровень физической подготовки пользователя, на которого рассчитана тренировка', enum: TrainingLevel })
   @IsEnum(TrainingLevel)
   @IsOptional()
   public level: TrainingLevel;
 
-  @ApiPropertyOptional({ description: 'Тип тренировки', type: String })
+  @ApiPropertyOptional({ description: 'Тип тренировки', enum: TrainingType })
   @IsEnum(TrainingType)
   @IsOptional()
   public type: TrainingType;
 
-  @ApiPropertyOptional({ description: 'Длительность тренировки', type: String })
+  @ApiPropertyOptional({ description: 'Длительность тренировки', enum: TrainingDuration})
   @IsEnum(TrainingDuration)
   @IsOptional()
   public duration: TrainingDuration;
@@ -66,7 +66,7 @@ export class UpdateTrainingDto {
   @IsOptional()
   public description: string;
 
-  @ApiPropertyOptional({ description: 'Пол пользователя, для которого предназначена тренировка', type: String })
+  @ApiPropertyOptional({ description: 'Пол пользователя, для которого предназначена тренировка', enum: TrainingAuditory })
   @IsEnum(TrainingAuditory)
   @IsOptional()
   public gender: TrainingAuditory;
@@ -82,7 +82,7 @@ export class UpdateTrainingDto {
   @IsOptional()
   public video: Express.Multer.File;
 
-  @ApiPropertyOptional({ description: 'Флаг специального предложения', type: String })
+  @ApiPropertyOptional({ description: 'Флаг специального предложения' })
   @IsBoolean()
   @IsOptional()
   public isSpecialOffer: boolean;

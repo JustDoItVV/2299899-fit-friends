@@ -158,11 +158,14 @@ export class GenerateCommand implements CliCommand {
     for (let i = 0; i < count; i++) {
       const trainingId = faker.helpers.arrayElement(trainings).id;
       const training = trainings.find((training) => training.id === trainingId);
+      const amount = faker.number.int({ min: OrderAmountLimit.Min, max: OrderAmountLimit.Max });
+
       mockOrders.push({
         type: OrderType.Subscription,
         trainingId,
         price: training.price,
-        amount: faker.number.int({ min: OrderAmountLimit.Min, max: OrderAmountLimit.Max }),
+        amount,
+        orderSum: training.price * amount,
         paymentMethod: faker.helpers.arrayElement(Object.values(OrderPaymentMethod)),
       });
     }

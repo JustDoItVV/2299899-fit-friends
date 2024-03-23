@@ -1,22 +1,24 @@
-import { ApiUserMessage } from '@2299899-fit-friends/consts';
+import {
+    ApiAccountTrainerMessage, ApiTag, ApiTrainingMessage, ApiUserMessage
+} from '@2299899-fit-friends/consts';
 import { JwtAuthGuard, UserParam, UserRolesGuard } from '@2299899-fit-friends/core';
 import {
-    OrderPaginationQuery, OrderRdo, PaginationQuery, PaginationRdo, TrainingPaginationQuery,
-    TrainingRdo, UserRdo
+    ApiOkResponsePaginated, OrderPaginationQuery, OrderRdo, PaginationQuery, PaginationRdo,
+    TrainingPaginationQuery, TrainingRdo, UserRdo
 } from '@2299899-fit-friends/dtos';
 import { fillDto } from '@2299899-fit-friends/helpers';
 import { TokenPayload, UserRole } from '@2299899-fit-friends/types';
 import { Controller, Get, Query, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import {
-    ApiBadRequestResponse, ApiBearerAuth, ApiForbiddenResponse, ApiOkResponse, ApiOperation,
-    ApiTags, ApiUnauthorizedResponse
+    ApiBadRequestResponse, ApiBearerAuth, ApiForbiddenResponse, ApiOperation, ApiTags,
+    ApiUnauthorizedResponse
 } from '@nestjs/swagger';
 
 import { TrainingService } from '../training/training.service';
 import { AccountTrainerService } from './account-trainer.service';
 
 @ApiBearerAuth()
-@ApiTags('Личный кабинет тренера')
+@ApiTags(ApiTag.AccountTrainer)
 @UseGuards(JwtAuthGuard, new UserRolesGuard([UserRole.Trainer]))
 @Controller('account/trainer')
 export class AccountTrainerController {
@@ -26,9 +28,9 @@ export class AccountTrainerController {
   ) {}
 
   @ApiOperation({ summary: 'Список тренировок Тренера' })
-  @ApiOkResponse({ description: 'Список тренировок Тренера', type: PaginationRdo<TrainingRdo> })
-  @ApiBadRequestResponse({ description: 'Ошибка валидации данных' })
-  @ApiForbiddenResponse({ description: `Запрещено кроме пользователей с ролью "${UserRole.Trainer}"` })
+  @ApiOkResponsePaginated(TrainingRdo, ApiAccountTrainerMessage.Catalog)
+  @ApiBadRequestResponse({ description: ApiTrainingMessage.ValidationError })
+  @ApiForbiddenResponse({ description: ApiUserMessage.ForbiddenExceptTrainer })
   @ApiUnauthorizedResponse({ description: ApiUserMessage.Unauthorized })
   @Get('')
   @UsePipes(new ValidationPipe({ transform: true, transformOptions: { enableImplicitConversion: true } }))
@@ -41,9 +43,9 @@ export class AccountTrainerController {
   }
 
   @ApiOperation({ summary: 'Список заказов Тренера' })
-  @ApiOkResponse({ description: 'Список заказов Тренера', type: PaginationRdo<OrderRdo> })
-  @ApiBadRequestResponse({ description: 'Ошибка валидации данных' })
-  @ApiForbiddenResponse({ description: `Запрещено кроме пользователей с ролью "${UserRole.Trainer}"` })
+  @ApiOkResponsePaginated(OrderRdo, ApiAccountTrainerMessage.Orders)
+  @ApiBadRequestResponse({ description: ApiTrainingMessage.ValidationError })
+  @ApiForbiddenResponse({ description: ApiUserMessage.ForbiddenExceptTrainer })
   @ApiUnauthorizedResponse({ description: ApiUserMessage.Unauthorized })
   @Get('orders')
   @UsePipes(new ValidationPipe({ transform: true, transformOptions: { enableImplicitConversion: true } }))
@@ -56,9 +58,9 @@ export class AccountTrainerController {
   }
 
   @ApiOperation({ summary: 'Список друзей Тренера' })
-  @ApiOkResponse({ description: 'Список друзей Тренера', type: PaginationRdo<UserRdo> })
-  @ApiBadRequestResponse({ description: 'Ошибка валидации данных' })
-  @ApiForbiddenResponse({ description: `Запрещено кроме пользователей с ролью "${UserRole.Trainer}"` })
+  @ApiOkResponsePaginated(UserRdo, ApiAccountTrainerMessage.Friends)
+  @ApiBadRequestResponse({ description: ApiTrainingMessage.ValidationError })
+  @ApiForbiddenResponse({ description: ApiUserMessage.ForbiddenExceptTrainer })
   @ApiUnauthorizedResponse({ description: ApiUserMessage.Unauthorized })
   @Get('friends')
   @UsePipes(new ValidationPipe({ transform: true, transformOptions: { enableImplicitConversion: true } }))

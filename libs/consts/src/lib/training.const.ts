@@ -61,3 +61,22 @@ export enum TrainingErrorMessage {
   FileFormatForbidden = 'File format forbidden',
   NoFileUploaded = 'No file uploaded',
 }
+
+export enum ApiTrainingMessage {
+  ValidationError = 'Ошибка валидации данных',
+  CreateSuccess = 'Тренировка успешно создана',
+  UnsupportedFile = 'Неподдерживаемый тип файлов или размер фалов превышает допустимое значение',
+  Catalog = 'Каталог тренировок с пагинацией',
+  TrainingInfo = 'Детальная информация о тренировке',
+  NotFound = 'Тренировка не найдена',
+  UpdateSuccess = 'Детальная информация обновленной тренировки',
+  BackgroundPicture = 'Файл фоновой картинки тренировки в виде data url',
+  NotFoundFile = 'Тренировка или файл не найдены',
+  Video = 'Файл видео тренировки',
+}
+
+export enum ApiAccountTrainerMessage {
+  Catalog = 'Список тренировок Тренера',
+  Orders = 'Список заказов Тренера',
+  Friends = 'Список друзей Тренера',
+}

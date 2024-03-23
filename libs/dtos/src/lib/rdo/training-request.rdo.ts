@@ -18,7 +18,7 @@ export class TrainingRequestRdo {
 
   @ApiProperty({ description: 'Статус заявки', enum: TrainingRequestStatus })
   @Expose()
-  public status: string;
+  public status: TrainingRequestStatus;
 
   @ApiProperty({ description: 'Дата создания заявки' })
   @Expose()

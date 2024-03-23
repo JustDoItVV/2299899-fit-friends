@@ -27,7 +27,7 @@ export class FilesValidationPipe implements PipeTransform<UserFilesPayload, User
             const isValidFormatCondition2 = this.rules[key].formats ? this.rules[key].formats[fileExtention] === mimetype : true;
 
             if (!isValidSize || !isValidFormatCondition1 || !isValidFormatCondition2) {
-              throw new UnsupportedMediaTypeException(this.message);
+              throw new UnsupportedMediaTypeException(`${key} ${this.message}`);
             }
           }
         });

@@ -3,7 +3,7 @@ import { BasePostgresRepository } from '@2299899-fit-friends/core';
 import { OrderPaginationQuery } from '@2299899-fit-friends/dtos';
 import { PrismaClientService } from '@2299899-fit-friends/models';
 import {
-    Order, OrderPaymentMethod, OrderSortOption, OrderType, Pagination, SortOption, TrainingAuditory,
+    Order, OrderPaymentMethod, OrderSortOption, OrderType, Pagination, TrainingAuditory,
     TrainingDuration, TrainingLevel, TrainingType
 } from '@2299899-fit-friends/types';
 import { Injectable } from '@nestjs/common';
@@ -44,30 +44,15 @@ export class OrderRepository extends BasePostgresRepository<OrderEntity, Order> 
     if (userId) {
       where.training = { userId };
     }
-    // if (query.duration) {
-    //   if (Array.isArray(query.duration)) {
-    //     where.duration = { in: query.duration };
-    //   } else {
-    //     where.duration = query.duration;
-    //   }
-    // }
-    // if (query.type) {
-    //   if (Array.isArray(query.type)) {
-    //     where.type = { in: query.type };
-    //   } else {
-    //     where.type = query.type;
-    //   }
-    // }
 
     const orderBy: Prisma.OrderOrderByWithRelationAndSearchRelevanceInput = {};
-    if (query.sortOption === SortOption.CreatedAt) {
+    if (query.sortOption === OrderSortOption.CreatedAt) {
       orderBy.createdAt = query.sortDirection;
     } else if (query.sortOption === OrderSortOption.Amount) {
       orderBy.amount = query.sortDirection;
+    } else if (query.sortOption === OrderSortOption.OrderSum) {
+      orderBy.orderSum = query.sortDirection;
     }
-    // } else if (query.sortOption === OrderSortOption.EarnedSum) {
-    //   orderBy.earnedSum = query.sortDirection;
-    // }
 
     const documentsCount = await this.getOrdersCount(where);
     const totalPages = this.calculatePage(documentsCount, limit);
