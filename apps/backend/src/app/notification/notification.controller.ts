@@ -1,4 +1,4 @@
-import { ApiUserMessage } from '@2299899-fit-friends/consts';
+import { ApiNotificationMessage, ApiTag, ApiUserMessage } from '@2299899-fit-friends/consts';
 import { JwtAuthGuard, UserParam } from '@2299899-fit-friends/core';
 import { NotificationRdo } from '@2299899-fit-friends/dtos';
 import { TokenPayload } from '@2299899-fit-friends/types';
@@ -11,25 +11,24 @@ import {
 import { NotificationService } from './notification.service';
 
 @ApiBearerAuth()
+@ApiTags(ApiTag.Notifications)
 @UseGuards(JwtAuthGuard)
 @Controller('notification')
 export class NotificationController {
   constructor(private readonly notificationService: NotificationService) {}
 
-  @ApiTags('Оповещения')
   @ApiOperation({ summary: 'Список оповещений' })
-  @ApiOkResponse({ description: 'Список оповещений', type: NotificationRdo, isArray: true })
+  @ApiOkResponse({ description: ApiNotificationMessage.List, type: NotificationRdo, isArray: true })
   @ApiUnauthorizedResponse({ description: ApiUserMessage.Unauthorized })
   @Get('')
   public async show(@UserParam() payload: TokenPayload) {
     return await this.notificationService.getUsersNotifications(payload.userId);
   }
 
-  @ApiTags('Оповещения')
   @ApiOperation({ summary: 'Удалить оповещение' })
-  @ApiNoContentResponse({ description: 'Оповещение удалено' })
-  @ApiForbiddenResponse({ description: 'Удаление запрещено, уведомление не принадлежить пользователю' })
-  @ApiNotFoundResponse({ description: 'Оповещение не найдено' })
+  @ApiNoContentResponse({ description: ApiNotificationMessage.DeleteSuccess })
+  @ApiForbiddenResponse({ description: ApiNotificationMessage.DeleteForbidden })
+  @ApiNotFoundResponse({ description: ApiNotificationMessage.NotFound })
   @ApiUnauthorizedResponse({ description: ApiUserMessage.Unauthorized })
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':id')
