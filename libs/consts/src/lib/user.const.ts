@@ -153,3 +153,10 @@ export enum ApiUserMessage {
   SubscribeDeleteAlready = 'Пользователь не подписан на уведомления',
   ForbiddenSubscribe = 'Нельзя подписаться/отписаться на/от обычного пользователя',
 }
+
+export enum ApiAccountUserMessage {
+  FriendsList = 'Список друзей Пользователя',
+  Balance = 'Баланс пользователя',
+  BalanceUpdateSuccess = 'Баланс записи успешно обновлен',
+  SendNews = 'Рассылка уведомлений по email успешно запущена',
+}
