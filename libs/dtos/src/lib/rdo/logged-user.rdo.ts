@@ -3,23 +3,23 @@ import { Expose } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class LoggedUserRdo {
-  @ApiProperty()
+  @ApiProperty({ description: 'Идентификатор пользователя' })
   @Expose()
   public id: string;
 
-  @ApiProperty()
+  @ApiProperty({ description: 'Имя пользователя' })
   @Expose()
   public name: string;
 
-  @ApiProperty()
+  @ApiProperty({ description: 'Уникальный email пользователя' })
   @Expose()
   public email: string;
 
-  @ApiProperty()
+  @ApiProperty({ description: 'Access token' })
   @Expose()
   public accessToken: string;
 
-  @ApiProperty()
+  @ApiProperty({ description: 'Refresh token' })
   @Expose()
   public refreshToken: string;
 }

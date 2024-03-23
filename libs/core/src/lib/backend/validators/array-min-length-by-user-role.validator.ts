@@ -18,7 +18,6 @@ export class ArrayMinLengthByUserRole implements ValidatorConstraintInterface {
     return uniqueValues.length >= min;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   defaultMessage(validationArguments: ValidationArguments): string {
     const min = validationArguments.object['role'] === UserRole.Trainer ? TRAINING_TYPE_LIMIT : 0;
     return `${validationArguments.property} unique values array min length is ${min}`;

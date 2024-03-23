@@ -40,3 +40,5 @@ export * from './lib/user-sort-option.enum';
 export * from './lib/order-sort-option.type';
 
 export * from './lib/mail-notification.interface';
+
+export * from './lib/files-validation-rules.type';

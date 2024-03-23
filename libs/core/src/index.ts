@@ -16,6 +16,5 @@ export * from './lib/backend/guards/user-roles.guard';
 export * from './lib/backend/validators/array-min-length-by-user-role.validator';
 
 export * from './lib/backend/pipes/files-validation.pipe';
-export * from './lib/backend/pipes/training-data-transformation.pipe';
 
 export * from './lib/backend/interceptors/logging-errors.interceptor';

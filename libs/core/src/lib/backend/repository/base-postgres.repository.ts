@@ -15,9 +15,7 @@ export abstract class BasePostgresRepository<
     private readonly createEntity: (document: DocumentType) => EntityType
   ) {}
 
-  protected createEntityFromDocument(
-    document: DocumentType
-  ): EntityType | null {
+  protected createEntityFromDocument(document: DocumentType): EntityType | null {
     if (!document) {
       return null;
     }
@@ -32,10 +30,7 @@ export abstract class BasePostgresRepository<
     throw new Error(NOT_IMPLEMENTED_ERROR);
   }
 
-  public async update(
-    _id: EntityType['id'],
-    _entity: EntityType
-  ): Promise<EntityType> {
+  public async update(_id: EntityType['id'], _entity: EntityType): Promise<EntityType> {
     throw new Error(NOT_IMPLEMENTED_ERROR);
   }
 
