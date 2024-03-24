@@ -6,7 +6,7 @@
     "cli": "npx nx run cli:build && node dist/apps/cli/main.js",
     "backend": "npx nx serve backend",
     "frontend": "npx nx serve frontend",
-    "lint": "npx eslint apps/** libs/**"
+    "lint": "npx eslint"
   },
   "private": true,
   "dependencies": {
