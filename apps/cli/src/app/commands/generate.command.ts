@@ -8,7 +8,7 @@ import { join } from 'node:path';
 import { BackendConfig } from '@2299899-fit-friends/config';
 import {
     BalanceAvailable, CaloriesPerDayLimit, CaloriesTargetLimit, METRO_STATIONS, MOCK_EMAIL_OPTIONS,
-    MOCK_PASSWORD, OrderAmountLimit, PriceLimit, RatingLimit, SALT_ROUNDS, TRAINING_TYPE_LIMIT
+    OrderAmountLimit, PriceLimit, RatingLimit, SALT_ROUNDS, TRAINING_TYPE_LIMIT
 } from '@2299899-fit-friends/consts';
 import {
     Balance, CliCommand, Notification, Order, OrderPaymentMethod, OrderType, Review, Training,
@@ -65,7 +65,7 @@ export class GenerateCommand implements CliCommand {
         name: faker.person.fullName(),
         email: faker.internet.email(MOCK_EMAIL_OPTIONS),
         avatar,
-        passwordHash: await hash(MOCK_PASSWORD, salt),
+        passwordHash: await hash(this.config().mockPassword, salt),
         gender: faker.helpers.arrayElement(Object.values(UserGender)) as UserGender,
         birthdate: faker.date.birthdate(),
         role,
