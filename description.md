@@ -22,6 +22,7 @@ docker compose --file ./apps/backend/docker-compose.yml --env-file ./.env --proj
 
 ### 4. Подключить сервер в Postgres
 
+- После старта контейнера pgAdmin возможно потребуется подождать несколько секунд перед тем, как веб-интерфейс запустится
 - PGAdmin ([http://localhost:8081/browser/](http://localhost:8081/browser/)) -> ПКМ на Servers -> Register -> Server...
 - Вкладка General -> поле Name: POSTGRES_DB из env файла
 - Вкладка Connection -> поле Hostname/address: fit_friends_postgres (container_name из docker-compose.yml)
