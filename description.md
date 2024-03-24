@@ -54,8 +54,12 @@ npm run backend
 - Интерактивная OpenAPI спецификация: [http://localhost:3001/spec/](http://localhost:3001/spec/)
 - Интерфейс FakeSMPTServer для контроля отправки почты: [http://localhost:1083/](http://localhost:1083/)
 - .http файлы:
-  -
-  -
+  - [apps/backend/src/app/user/user.http](apps/backend/src/app/user/user.http) - пользователи
+  - [apps/backend/src/app/training/training.http](apps/backend/src/app/training/training.http) - тренировки, каталог тренировок, ЛК тренера
+  - [apps/backend/src/app/account-user/account-user.http](apps/backend/src/app/account-user/account-user.http) - ЛК пользователя
+  - [apps/backend/src/app/notification/notification.http](apps/backend/src/app/notification/notification.http) - Оповещения
+  - [apps/backend/src/app/training-request/training-request.http](apps/backend/src/app/training-request/training-request.http) - Персональные тренировки/совместные тренировки
+  - [apps/backend/src/app/review/review.http](apps/backend/src/app/review/review.http) - Отзывы
 
 ## Сценарии
 
