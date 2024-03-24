@@ -2,7 +2,6 @@ import { SortOption } from './sort-option.enum';
 
 export enum OrderSortOption {
   Amount = 'amount',
-  EarnedSum = 'earnedSum',
+  OrderSum = 'orderSum',
+  CreatedAt = SortOption.CreatedAt,
 }
-
-export type OrderSortOptionType = SortOption | OrderSortOption ;

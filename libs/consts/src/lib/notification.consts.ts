@@ -17,3 +17,10 @@ export enum EmailSubject {
 export enum EmailTemplate {
   NewTrainings = './new-trainings.hbs',
 }
+
+export enum ApiNotificationMessage {
+  List = 'Список оповещений',
+  DeleteSuccess = 'Оповещение удалено',
+  DeleteForbidden = 'Удаление запрещено, уведомление не принадлежить пользователю',
+  NotFound = 'Оповещение не найдено',
+}

@@ -7,6 +7,6 @@ export interface Order {
   trainingId: string;
   price: number;
   amount: number;
-  orderSum?: number;
+  orderSum: number;
   paymentMethod: OrderPaymentMethod;
 }

@@ -1,0 +1,27 @@
+# Create training request
+POST http://localhost:3001/api/training-request HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer
+
+{
+  "targetId": "3823ad12-9667-4953-bd60-d99de2da2d9e"
+}
+
+###
+
+# Get training requests list
+GET http://localhost:3001/api/training-request HTTP/1.1
+Authorization: Bearer
+
+###
+
+# Update training request status
+PATCH http://localhost:3001/api/training-request/016b4a00-5839-4009-b06b-1626c32bcb04 HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer
+
+{
+  "status": "принят"
+}
+
+###

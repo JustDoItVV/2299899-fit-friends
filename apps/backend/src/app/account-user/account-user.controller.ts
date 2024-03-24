@@ -1,22 +1,24 @@
-import { ApiUserMessage } from '@2299899-fit-friends/consts';
+import {
+    ApiAccountUserMessage, ApiTag, ApiTrainingMessage, ApiUserMessage
+} from '@2299899-fit-friends/consts';
 import { JwtAuthGuard, UserParam, UserRolesGuard } from '@2299899-fit-friends/core';
 import {
-    BalanceRdo, PaginationQuery, PaginationRdo, UpdateBalanceDto, UserRdo
+    ApiOkResponsePaginated, BalanceRdo, PaginationQuery, PaginationRdo, UpdateBalanceDto, UserRdo
 } from '@2299899-fit-friends/dtos';
 import { fillDto } from '@2299899-fit-friends/helpers';
 import { TokenPayload, UserRole } from '@2299899-fit-friends/types';
 import {
-    Body, Controller, Get, Patch, Post, Query, UseGuards, UsePipes, ValidationPipe
+    Body, Controller, Get, HttpCode, HttpStatus, Patch, Post, Query, UseGuards
 } from '@nestjs/common';
 import {
-    ApiBadRequestResponse, ApiBearerAuth, ApiCreatedResponse, ApiForbiddenResponse,
-    ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiTags, ApiUnauthorizedResponse
+    ApiBadRequestResponse, ApiBearerAuth, ApiForbiddenResponse, ApiNotFoundResponse, ApiOkResponse,
+    ApiOperation, ApiTags, ApiUnauthorizedResponse
 } from '@nestjs/swagger';
 
 import { AccountUserService } from './account-user.service';
 
 @ApiBearerAuth()
-@ApiTags('Личный кабинет пользователя')
+@ApiTags(ApiTag.AccountUser)
 @UseGuards(JwtAuthGuard, new UserRolesGuard([UserRole.User]))
 @Controller('account/user')
 export class AccountUserController {
@@ -25,12 +27,11 @@ export class AccountUserController {
   ) {}
 
   @ApiOperation({ summary: 'Список друзей Пользователя' })
-  @ApiOkResponse({ description: 'Список друзей Пользователя', type: PaginationRdo<UserRdo> })
-  @ApiBadRequestResponse({ description: 'Ошибка валидации данных' })
-  @ApiForbiddenResponse({ description: `Запрещено кроме пользователей с ролью "${UserRole.User}"` })
+  @ApiOkResponsePaginated(UserRdo, ApiAccountUserMessage.FriendsList)
+  @ApiBadRequestResponse({ description: ApiUserMessage.ValidationError })
+  @ApiForbiddenResponse({ description: ApiUserMessage.ForbiddenExceptUser })
   @ApiUnauthorizedResponse({ description: ApiUserMessage.Unauthorized })
   @Get('friends')
-  @UsePipes(new ValidationPipe({ transform: true, transformOptions: { enableImplicitConversion: true } }))
   public async showFriends(
     @UserParam() payload: TokenPayload,
     @Query() query: PaginationQuery,
@@ -40,10 +41,9 @@ export class AccountUserController {
   }
 
   @ApiOperation({ summary: 'Баланс пользователя' })
-  @ApiOkResponse({ description: 'Баланс пользователя', type: PaginationRdo<BalanceRdo> })
-  @ApiForbiddenResponse({ description: `Запрещено кроме пользователей с ролью "${UserRole.User}"` })
+  @ApiOkResponsePaginated(BalanceRdo, ApiAccountUserMessage.Balance)
+  @ApiForbiddenResponse({ description: ApiUserMessage.ForbiddenExceptUser })
   @ApiUnauthorizedResponse({ description: ApiUserMessage.Unauthorized })
-  @UsePipes(new ValidationPipe({ transform: true, transformOptions: { enableImplicitConversion: true } }))
   @Get('balance')
   public async showBalance(
     @UserParam() payload: TokenPayload,
@@ -54,12 +54,11 @@ export class AccountUserController {
   }
 
   @ApiOperation({ summary: 'Обновление баланса пользователя' })
-  @ApiCreatedResponse({ description: 'Баланс записи успешно обновлен', type: BalanceRdo })
-  @ApiNotFoundResponse({ description: 'Тренировка не найдена' })
-  @ApiBadRequestResponse({ description: 'Ошибка валидации данных' })
-  @ApiForbiddenResponse({ description: `Запрещено кроме пользователей с ролью "${UserRole.User}"` })
+  @ApiOkResponsePaginated(BalanceRdo, ApiAccountUserMessage.BalanceUpdateSuccess)
+  @ApiNotFoundResponse({ description: ApiTrainingMessage.NotFound })
+  @ApiBadRequestResponse({ description: ApiUserMessage.ValidationError })
+  @ApiForbiddenResponse({ description: ApiUserMessage.ForbiddenExceptUser })
   @ApiUnauthorizedResponse({ description: ApiUserMessage.Unauthorized })
-  @UsePipes(new ValidationPipe({ transform: true, transformOptions: { enableImplicitConversion: true } }))
   @Patch('balance')
   public async updateBalance(
     @Body() dto: UpdateBalanceDto,
@@ -71,8 +70,9 @@ export class AccountUserController {
   }
 
   @ApiOperation({ summary: 'Запустить рассылку уведомлений по email о новых тренировках в подписках' })
-  @ApiOkResponse({ description: 'Рассылка уведомлений по email успешно запущена' })
+  @ApiOkResponse({ description: ApiAccountUserMessage.SendNews })
   @ApiUnauthorizedResponse({ description: ApiUserMessage.Unauthorized })
+  @HttpCode(HttpStatus.OK)
   @Post('send-new-trainings-mail')
   public async sendNewTrainingsMailNotifications(@UserParam() payload: TokenPayload) {
     return await this.accountUserService.sendNewTrainingsMailNotifications(payload.userId);

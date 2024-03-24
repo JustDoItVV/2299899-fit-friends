@@ -1,12 +1,11 @@
 import {
-    IsEnum, IsOptional, IsString, Max, MaxLength, Min, MinLength, ValidationArguments
+    IsBoolean, IsEnum, IsNotEmptyObject, IsNumber, IsOptional, IsString, Max, MaxLength, Min,
+    MinLength, ValidationArguments
 } from 'class-validator';
 
 import {
-    PriceLimit, TitleLength, TrainingBackgroundPictureAllowedExtensions, TrainingCaloriesLimit,
-    TrainingDescriptionLimit, TrainingErrorMessage, TrainingVideoAllowedExtensions
+    PriceLimit, TitleLength, TrainingCaloriesLimit, TrainingDescriptionLimit, TrainingErrorMessage
 } from '@2299899-fit-friends/consts';
-import { IsValidFile, TransformToBool, TransformToInt } from '@2299899-fit-friends/core';
 import {
     TrainingAuditory, TrainingDuration, TrainingLevel, TrainingType
 } from '@2299899-fit-friends/types';
@@ -27,21 +26,21 @@ export class UpdateTrainingDto {
     properties: { file: { type: 'string', format: 'binary' } },
     required: false
   })
-  @IsValidFile({ backgroundPicture: { formats: TrainingBackgroundPictureAllowedExtensions } })
+  @IsNotEmptyObject()
   @IsOptional()
   public backgroundPicture: Express.Multer.File;
 
-  @ApiPropertyOptional({ description: 'Уровень физической подготовки пользователя, на которого рассчитана тренировка', type: String })
+  @ApiPropertyOptional({ description: 'Уровень физической подготовки пользователя, на которого рассчитана тренировка', enum: TrainingLevel })
   @IsEnum(TrainingLevel)
   @IsOptional()
   public level: TrainingLevel;
 
-  @ApiPropertyOptional({ description: 'Тип тренировки', type: String })
+  @ApiPropertyOptional({ description: 'Тип тренировки', enum: TrainingType })
   @IsEnum(TrainingType)
   @IsOptional()
   public type: TrainingType;
 
-  @ApiPropertyOptional({ description: 'Длительность тренировки', type: String })
+  @ApiPropertyOptional({ description: 'Длительность тренировки', enum: TrainingDuration})
   @IsEnum(TrainingDuration)
   @IsOptional()
   public duration: TrainingDuration;
@@ -49,14 +48,14 @@ export class UpdateTrainingDto {
   @ApiPropertyOptional({ description: 'Цена тренировки в рублях' })
   @Max(PriceLimit.Max, { message: TrainingErrorMessage.PriceMax })
   @Min(PriceLimit.Min, { message: TrainingErrorMessage.PriceMin })
-  @TransformToInt(TrainingErrorMessage.NotInt)
+  @IsNumber()
   @IsOptional()
   public price: number;
 
   @ApiPropertyOptional({ description: 'Количество калорий' })
   @Max(TrainingCaloriesLimit.Max, { message: TrainingErrorMessage.CaloriesMax })
   @Min(TrainingCaloriesLimit.Min, { message: TrainingErrorMessage.CaloriesMin })
-  @TransformToInt(TrainingErrorMessage.NotInt)
+  @IsNumber()
   @IsOptional()
   public calories: number;
 
@@ -67,7 +66,7 @@ export class UpdateTrainingDto {
   @IsOptional()
   public description: string;
 
-  @ApiPropertyOptional({ description: 'Пол пользователя, для которого предназначена тренировка', type: String })
+  @ApiPropertyOptional({ description: 'Пол пользователя, для которого предназначена тренировка', enum: TrainingAuditory })
   @IsEnum(TrainingAuditory)
   @IsOptional()
   public gender: TrainingAuditory;
@@ -79,12 +78,12 @@ export class UpdateTrainingDto {
     properties: { file: { type: 'string', format: 'binary' } },
     required: false,
   })
-  @IsValidFile({ video: { formats: TrainingVideoAllowedExtensions } })
+  @IsNotEmptyObject()
   @IsOptional()
   public video: Express.Multer.File;
 
-  @ApiPropertyOptional({ description: 'Флаг специального предложения', type: String })
-  @TransformToBool(TrainingErrorMessage.IsSpecialOfferBool)
+  @ApiPropertyOptional({ description: 'Флаг специального предложения' })
+  @IsBoolean()
   @IsOptional()
   public isSpecialOffer: boolean;
 }

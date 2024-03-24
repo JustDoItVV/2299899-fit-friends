@@ -1,9 +1,14 @@
 import { genSalt, hash } from 'bcrypt';
 import chalk from 'chalk';
+import { randomUUID } from 'crypto';
+import dayjs from 'dayjs';
+import { copyFileSync, existsSync, mkdirSync, readdirSync } from 'node:fs';
+import { join } from 'node:path';
 
+import { BackendConfig } from '@2299899-fit-friends/config';
 import {
     BalanceAvailable, CaloriesPerDayLimit, CaloriesTargetLimit, METRO_STATIONS, MOCK_EMAIL_OPTIONS,
-    MOCK_PASSWORD, OrderAmountLimit, PriceLimit, RatingLimit, SALT_ROUNDS, TRAINING_TYPE_LIMIT
+    OrderAmountLimit, PriceLimit, RatingLimit, SALT_ROUNDS, TRAINING_TYPE_LIMIT
 } from '@2299899-fit-friends/consts';
 import {
     Balance, CliCommand, Notification, Order, OrderPaymentMethod, OrderType, Review, Training,
@@ -15,24 +20,58 @@ import { PrismaClient, Training as TrainingModel, User as UserModel } from '@pri
 
 export class GenerateCommand implements CliCommand {
   private readonly name = '--generate';
+  private readonly config = BackendConfig;
+  private readonly DATE_FORMAT = 'YYYY MM';
+
+  private getSubDirectoryUpload(): string {
+    const [year, month] = dayjs().format(this.DATE_FORMAT).split(' ');
+    return join(year, month);
+  }
 
   private async generateMockUsers(count: number): Promise<User[]> {
     const salt = await genSalt(SALT_ROUNDS);
     const mockUsers: User[] = [];
+    const uploadDirectory = join(this.config().uploadDirectory, this.getSubDirectoryUpload());
+
+    if (!existsSync(uploadDirectory)) {
+      mkdirSync(uploadDirectory, { recursive: true });
+    }
 
     for (let i = 0; i < count; i++) {
       const role = i % 2 ? UserRole.Trainer : UserRole.User;
+
+      const mockAvatarDirectory = `apps/frontend/public/img/content/avatars/${role === UserRole.Trainer ? 'coaches' : 'users'}`;
+      const mockAvatarName = faker.helpers.arrayElement(readdirSync(mockAvatarDirectory));
+      const avatarName = `${randomUUID()}-${mockAvatarName}`;
+      copyFileSync(join(mockAvatarDirectory, mockAvatarName), join(uploadDirectory, avatarName));
+      const avatar = join(this.getSubDirectoryUpload(), avatarName);
+
+      const mockPageBackgroundDirectory = `apps/frontend/public/img/content/user-card-coach`;
+      const mockPageBackgroundName = faker.helpers.arrayElement(readdirSync(mockPageBackgroundDirectory));
+      const pageBackgroundName = `${randomUUID()}-${mockPageBackgroundName}`;
+      copyFileSync(join(mockPageBackgroundDirectory, mockPageBackgroundName), join(uploadDirectory, pageBackgroundName));
+      const pageBackground = join(this.getSubDirectoryUpload(), pageBackgroundName);
+
+      let certificate = '';
+      if (role === UserRole.Trainer) {
+        const mockCertificateDirectory = `apps/frontend/public/img/content/certificates-and-diplomas`;
+        const mockCertificateName = 'certificate-1.pdf';
+        const certificateName = `${randomUUID()}-${mockCertificateName}`;
+        copyFileSync(join(mockCertificateDirectory, mockCertificateName), join(uploadDirectory, certificateName));
+        certificate = join(this.getSubDirectoryUpload(), certificateName);
+      }
+
       mockUsers.push({
         name: faker.person.fullName(),
         email: faker.internet.email(MOCK_EMAIL_OPTIONS),
-        avatar: faker.image.avatar(),
-        passwordHash: await hash(MOCK_PASSWORD, salt),
+        avatar,
+        passwordHash: await hash(this.config().mockPassword, salt),
         gender: faker.helpers.arrayElement(Object.values(UserGender)) as UserGender,
         birthdate: faker.date.birthdate(),
         role,
         description: faker.person.bio(),
         location: faker.helpers.arrayElement(METRO_STATIONS),
-        pageBackground: faker.image.url(),
+        pageBackground,
         trainingLevel: faker.helpers.arrayElement(Object.values(TrainingLevel)) as TrainingLevel,
         trainingType: faker.helpers.arrayElements(Object.values(TrainingType), TRAINING_TYPE_LIMIT) as TrainingType[],
         trainingDuration:
@@ -48,7 +87,7 @@ export class GenerateCommand implements CliCommand {
             ? faker.number.int({ min: CaloriesPerDayLimit.Min, max: CaloriesPerDayLimit.Max })
             : CaloriesPerDayLimit.Min,
         isReadyToTraining: role == UserRole.User ? faker.datatype.boolean() : false,
-        certificate: role == UserRole.Trainer ? faker.image.url() : '',
+        certificate,
         merits: faker.person.bio(),
         isReadyToPersonal: role == UserRole.Trainer ? faker.datatype.boolean() : false,
       });
@@ -60,12 +99,30 @@ export class GenerateCommand implements CliCommand {
   private generateMockTrainings(mockUsers: UserModel[], count: number): Training[] {
     const mockTrainings: Training[] = [];
     const trainers = mockUsers.filter((user) => user.role == UserRole.Trainer);
+    const uploadDirectory = join(this.config().uploadDirectory, this.getSubDirectoryUpload());
+
+    if (!existsSync(uploadDirectory)) {
+      mkdirSync(uploadDirectory, { recursive: true });
+    }
 
     for (let i = 0; i < count; i++) {
       const user = faker.helpers.arrayElement(trainers);
+
+      const mockBackgroundPictureDirectory = `apps/frontend/public/img/content/user-card-coach`;
+      const mockBackgroundPictureName = faker.helpers.arrayElement(readdirSync(mockBackgroundPictureDirectory));
+      const backgroundPictureName = `${randomUUID()}-${mockBackgroundPictureName}`;
+      copyFileSync(join(mockBackgroundPictureDirectory, mockBackgroundPictureName), join(uploadDirectory, backgroundPictureName));
+      const backgroundPicture = join(this.getSubDirectoryUpload(), backgroundPictureName);
+
+      const mockVideoDirectory = `apps/frontend/public/img/content/training-video`;
+      const mockVideoName = faker.helpers.arrayElement(['video-1.mp4']);
+      const videoName = `${randomUUID()}-${mockVideoName}`;
+      copyFileSync(join(mockVideoDirectory, mockVideoName), join(uploadDirectory, videoName));
+      const video = join(this.getSubDirectoryUpload(), videoName);
+
       mockTrainings.push({
         title: faker.commerce.productName(),
-        backgroundPicture: faker.image.url(),
+        backgroundPicture,
         level: faker.helpers.arrayElement(Object.values(TrainingLevel)) as TrainingLevel,
         type: faker.helpers.arrayElement(Object.values(TrainingType)) as TrainingType,
         duration: faker.helpers.arrayElement(Object.values(TrainingDuration)) as TrainingDuration,
@@ -73,7 +130,7 @@ export class GenerateCommand implements CliCommand {
         calories: faker.number.int({ min: CaloriesTargetLimit.Min, max: CaloriesTargetLimit.Max }),
         description: faker.commerce.productDescription(),
         gender: faker.helpers.arrayElement(Object.values(TrainingAuditory)) as TrainingAuditory,
-        video: faker.image.url(),
+        video,
         rating: 0,
         userId: user.id,
         isSpecialOffer: faker.datatype.boolean(),
@@ -101,11 +158,14 @@ export class GenerateCommand implements CliCommand {
     for (let i = 0; i < count; i++) {
       const trainingId = faker.helpers.arrayElement(trainings).id;
       const training = trainings.find((training) => training.id === trainingId);
+      const amount = faker.number.int({ min: OrderAmountLimit.Min, max: OrderAmountLimit.Max });
+
       mockOrders.push({
         type: OrderType.Subscription,
         trainingId,
         price: training.price,
-        amount: faker.number.int({ min: OrderAmountLimit.Min, max: OrderAmountLimit.Max }),
+        amount,
+        orderSum: training.price * amount,
         paymentMethod: faker.helpers.arrayElement(Object.values(OrderPaymentMethod)),
       });
     }

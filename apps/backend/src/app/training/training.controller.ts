@@ -1,18 +1,19 @@
 import {
-    ApiUserMessage, TrainingBackgroundPictureAllowedExtensions, TrainingErrorMessage,
-    TrainingVideoAllowedExtensions
+    ApiTag, ApiTrainingMessage, ApiUserMessage, TrainingBackgroundPictureAllowedExtensions,
+    TrainingErrorMessage, TrainingVideoAllowedExtensions
 } from '@2299899-fit-friends/consts';
 import {
-    FilesValidationPipe, JwtAuthGuard, TrainingDataTrasformationPipe, UserParam, UserRolesGuard
+    FilesValidationPipe, JwtAuthGuard, UserParam, UserRolesGuard
 } from '@2299899-fit-friends/core';
 import {
-    CreateTrainingDto, PaginationRdo, TrainingPaginationQuery, TrainingRdo, UpdateTrainingDto
+    ApiOkResponsePaginated, CreateTrainingDto, PaginationRdo, TrainingPaginationQuery, TrainingRdo,
+    UpdateTrainingDto
 } from '@2299899-fit-friends/dtos';
 import { fillDto } from '@2299899-fit-friends/helpers';
 import { TokenPayload, TrainingFilesPayload, UserRole } from '@2299899-fit-friends/types';
 import {
     Body, Controller, Get, Header, Param, Patch, Post, Query, UploadedFiles, UseGuards,
-    UseInterceptors, UsePipes, ValidationPipe
+    UseInterceptors
 } from '@nestjs/common';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import {
@@ -24,28 +25,26 @@ import {
 import { TrainingService } from './training.service';
 
 @ApiBearerAuth()
+@UseGuards(JwtAuthGuard)
 @Controller('training')
 export class TrainingController {
   constructor(
     private readonly trainingService: TrainingService,
   ) {}
 
-  @ApiTags('Личный кабинет тренера')
+  @ApiTags(ApiTag.AccountTrainer)
   @ApiOperation({ summary: 'Создание тренировки' })
   @ApiConsumes('multipart/form-data')
-  @ApiCreatedResponse({ description: 'Тренировка успешно создана', type: TrainingRdo })
-  @ApiBadRequestResponse({ description: 'Ошибка валидации данных' })
-  @ApiUnsupportedMediaTypeResponse({ description: 'Неподдерживаемый тип файлов' })
-  @ApiForbiddenResponse({ description: `Создание запрещено кроме пользователя с ролью ${UserRole.Trainer}` })
+  @ApiCreatedResponse({ description: ApiTrainingMessage.CreateSuccess, type: TrainingRdo })
+  @ApiBadRequestResponse({ description: ApiTrainingMessage.ValidationError })
+  @ApiUnsupportedMediaTypeResponse({ description: ApiTrainingMessage.UnsupportedFile })
+  @ApiForbiddenResponse({ description: ApiUserMessage.ForbiddenExceptTrainer })
   @ApiUnauthorizedResponse({ description: ApiUserMessage.Unauthorized })
   @Post('')
-  @UseInterceptors(FileFieldsInterceptor([
-    { name: 'backgroundPicture', maxCount: 1 },
-    { name: 'video', maxCount: 1 },
-  ]))
-  @UseGuards(JwtAuthGuard, new UserRolesGuard([UserRole.Trainer]))
+  @UseInterceptors(FileFieldsInterceptor([{ name: 'video', maxCount: 1 }]))
+  @UseGuards(new UserRolesGuard([UserRole.Trainer]))
   public async createTraining(
-    @Body(new TrainingDataTrasformationPipe()) dto: CreateTrainingDto,
+    @Body() dto: CreateTrainingDto,
     @UserParam() payload: TokenPayload,
     @UploadedFiles(new FilesValidationPipe({
       backgroundPicture: { formats: TrainingBackgroundPictureAllowedExtensions },
@@ -56,47 +55,44 @@ export class TrainingController {
     return fillDto(TrainingRdo, newTraining.toPOJO());
   }
 
-  @ApiTags('Каталог тренировок')
+  @ApiTags(ApiTag.TrainingCatalog)
   @ApiOperation({ summary: 'Каталог тренировок' })
-  @ApiOkResponse({ description: 'Каталог тренировок с пагинацией', type: PaginationRdo<TrainingRdo> })
-  @ApiBadRequestResponse({ description: 'Ошибка валидации данных' })
+  @ApiOkResponsePaginated(TrainingRdo, ApiTrainingMessage.Catalog)
+  @ApiBadRequestResponse({ description: ApiTrainingMessage.ValidationError })
   @ApiUnauthorizedResponse({ description: ApiUserMessage.Unauthorized })
   @Get('')
-  @UsePipes(new ValidationPipe({ transform: true, transformOptions: { enableImplicitConversion: true } }))
-  @UseGuards(JwtAuthGuard)
   public async showMyTrainings(@Query() query: TrainingPaginationQuery) {
     const result = await this.trainingService.getByQuery(query);
     return fillDto(PaginationRdo<TrainingRdo>, result);
   }
 
-  @ApiTags('Личный кабинет тренера')
+  @ApiTags(ApiTag.AccountTrainer)
   @ApiOperation({ summary: 'Детальная информация о тренировке' })
-  @ApiOkResponse({ description: 'Детальная информация о тренировке', type: TrainingRdo })
-  @ApiNotFoundResponse({ description: 'Тренировка не найдена' })
+  @ApiOkResponse({ description: ApiTrainingMessage.TrainingInfo, type: TrainingRdo })
+  @ApiNotFoundResponse({ description: ApiTrainingMessage.NotFound })
   @ApiUnauthorizedResponse({ description: ApiUserMessage.Unauthorized })
   @Get(':id')
-  @UseGuards(JwtAuthGuard)
   public async getById(@Param('id') id: string) {
     const training = await this.trainingService.getById(id);
     return fillDto(TrainingRdo, training.toPOJO());
   }
 
-  @ApiTags('Личный кабинет тренера')
+  @ApiTags(ApiTag.AccountTrainer)
   @ApiOperation({ summary: 'Редактирование тренировки' })
   @ApiConsumes('multipart/form-data', 'application/json')
-  @ApiOkResponse({ description: 'Детальная информация обновленной тренировки', type: TrainingRdo })
-  @ApiNotFoundResponse({ description: 'Тренировка не найдена' })
-  @ApiBadRequestResponse({ description: 'Ошибка валидации данных' })
+  @ApiOkResponse({ description: ApiTrainingMessage.UpdateSuccess, type: TrainingRdo })
+  @ApiNotFoundResponse({ description: ApiTrainingMessage.NotFound })
+  @ApiBadRequestResponse({ description: ApiTrainingMessage.ValidationError })
   @ApiUnauthorizedResponse({ description: ApiUserMessage.Unauthorized })
   @Patch(':id')
   @UseInterceptors(FileFieldsInterceptor([
     { name: 'backgroundPicture', maxCount: 1 },
     { name: 'video', maxCount: 1 },
   ]))
-  @UseGuards(JwtAuthGuard, new UserRolesGuard([UserRole.Trainer]))
+  @UseGuards(new UserRolesGuard([UserRole.Trainer]))
   public async update(
     @Param('id') id: string,
-    @Body(new TrainingDataTrasformationPipe()) dto: UpdateTrainingDto,
+    @Body() dto: UpdateTrainingDto,
     @UserParam() payload: TokenPayload,
     @UploadedFiles(new FilesValidationPipe({
       backgroundPicture: { formats: TrainingBackgroundPictureAllowedExtensions },
@@ -107,25 +103,23 @@ export class TrainingController {
     return fillDto(TrainingRdo, updatedTraining.toPOJO());
   }
 
-  @ApiTags('Личный кабинет тренера')
+  @ApiTags(ApiTag.AccountTrainer)
   @ApiOperation({ summary: 'Получение файла фоновой картинки тренировки' })
-  @ApiOkResponse({ description: 'Файл фоновой картинки тренировки в виде data url', type: TrainingRdo })
-  @ApiNotFoundResponse({ description: 'Тренировка или файл не найдены' })
+  @ApiOkResponse({ description: ApiTrainingMessage.BackgroundPicture, type: TrainingRdo })
+  @ApiNotFoundResponse({ description: ApiTrainingMessage.NotFoundFile })
   @ApiUnauthorizedResponse({ description: ApiUserMessage.Unauthorized })
   @Get(':id/backgroundPicture')
-  @UseGuards(JwtAuthGuard)
   public async getBackgroundPicture(@Param('id') id: string) {
     return await this.trainingService.getBackgroundPicture(id);
   }
 
-  @ApiTags('Личный кабинет тренера')
+  @ApiTags(ApiTag.AccountTrainer)
   @ApiOperation({ summary: 'Получение файла видео тренировки' })
-  @ApiOkResponse({ description: 'Файл видео тренировки', type: TrainingRdo })
-  @ApiNotFoundResponse({ description: 'Тренировка или файл не найдены' })
+  @ApiOkResponse({ description: ApiTrainingMessage.Video, type: TrainingRdo })
+  @ApiNotFoundResponse({ description: ApiTrainingMessage.NotFoundFile })
   @ApiUnauthorizedResponse({ description: ApiUserMessage.Unauthorized })
   @Get(':id/video')
   @Header('Content-disposition', 'attachment; filename=video.mp4')
-  @UseGuards(JwtAuthGuard)
   public async getVideo(@Param('id') id: string) {
     return await this.trainingService.getVideo(id);
   }

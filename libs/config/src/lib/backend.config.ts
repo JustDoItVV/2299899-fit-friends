@@ -12,6 +12,7 @@ export interface BackendConfig {
   accessTokenExpiresIn: string;
   refreshTokenSecret: string;
   refreshTokenExpiresIn: string;
+  mockPassword: string;
 }
 
 const validationSchema = Joi.object({
@@ -20,13 +21,10 @@ const validationSchema = Joi.object({
   appPort: Joi.number().port().required().label('BACKEND_PORT'),
   uploadDirectory: Joi.string().required().label('UPLOAD_DIRECTORY_PATH'),
   accessTokenSecret: Joi.string().required().label('JWT_ACCESS_TOKEN_SECRET'),
-  accessTokenExpiresIn: Joi.string()
-    .required()
-    .label('JWT_ACCESS_TOKEN_EXPIRES_IN'),
+  accessTokenExpiresIn: Joi.string().required().label('JWT_ACCESS_TOKEN_EXPIRES_IN'),
   refreshTokenSecret: Joi.string().required().label('JWT_REFRESH_TOKEN_SECRET'),
-  refreshTokenExpiresIn: Joi.string()
-    .required()
-    .label('JWT_REFRESH_TOKEN_EXPIRES_IN'),
+  refreshTokenExpiresIn: Joi.string().required().label('JWT_REFRESH_TOKEN_EXPIRES_IN'),
+  mockPassword: Joi.string().required().label('MOCK_PASSWORD'),
 });
 
 function validateConvig(config: BackendConfig): void {
@@ -49,6 +47,7 @@ function getConfig(): BackendConfig {
     accessTokenExpiresIn: process.env.JWT_ACCESS_TOKEN_EXPIRES_IN,
     refreshTokenSecret: process.env.JWT_REFRESH_TOKEN_SECRET,
     refreshTokenExpiresIn: process.env.JWT_REFRESH_TOKEN_EXPIRES_IN,
+    mockPassword: process.env.MOCK_PASSWORD,
   };
 
   validateConvig(config);

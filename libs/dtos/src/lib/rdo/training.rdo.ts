@@ -16,15 +16,15 @@ export class TrainingRdo {
   @Expose()
   public backgroundPicture: string;
 
-  @ApiProperty({ description: 'Уровень физической подготовки пользователя, на которого рассчитана тренировка' })
+  @ApiProperty({ description: 'Уровень физической подготовки пользователя, на которого рассчитана тренировка', enum: TrainingLevel })
   @Expose()
   public level: TrainingLevel;
 
-  @ApiProperty({ description: 'Тип тренировки' })
+  @ApiProperty({ description: 'Тип тренировки', enum: TrainingType })
   @Expose()
   public type: TrainingType;
 
-  @ApiProperty({ description: 'Продолжительность тренировки' })
+  @ApiProperty({ description: 'Продолжительность тренировки', enum: TrainingDuration })
   @Expose()
   public duration: TrainingDuration;
 

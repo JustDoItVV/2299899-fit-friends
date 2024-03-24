@@ -3,7 +3,7 @@ import { IsEnum, IsIn, IsOptional } from 'class-validator';
 
 import { METRO_STATIONS } from '@2299899-fit-friends/consts';
 import {
-    SortOption, TrainingLevel, TrainingType, UserSortOptionType
+    SortOption, TrainingLevel, TrainingType, UserSortOption
 } from '@2299899-fit-friends/types';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 
@@ -26,6 +26,7 @@ export class UserPaginationQuery extends PaginationQuery {
   public level?: TrainingLevel;
 
   @ApiPropertyOptional({ description: 'Поле для сортировки', type: String })
-  @Transform(({ value }) => +value || SortOption.CreatedAt)
-  public sortOption: UserSortOptionType;
+  @IsEnum(UserSortOption)
+  @Transform(({ value }) => value ? value : SortOption.CreatedAt)
+  public sortOption: UserSortOption;
 }

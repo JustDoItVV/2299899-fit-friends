@@ -1,8 +1,6 @@
 import { Expose } from 'class-transformer';
 
-import {
-    CaloriesPerDayLimit, CaloriesTargetLimit, MeritsLength, METRO_STATIONS, UserDescriptionLength
-} from '@2299899-fit-friends/consts';
+import { METRO_STATIONS, UserDescriptionLength } from '@2299899-fit-friends/consts';
 import {
     TrainingDuration, TrainingLevel, TrainingType, UserGender, UserRole
 } from '@2299899-fit-friends/types';
@@ -53,7 +51,7 @@ export class UserRdo {
   @Expose()
   public trainingLevel: TrainingLevel;
 
-  @ApiProperty({ description: 'Тип тренировок', minItems: 0, maxItems: 3, enum: TrainingType })
+  @ApiProperty({ description: 'Тип тренировок', enum: TrainingType, isArray: true })
   @Expose()
   public trainingType: TrainingType[];
 
@@ -61,15 +59,15 @@ export class UserRdo {
   @Expose()
   public trainingDuration?: TrainingDuration;
 
-  @ApiPropertyOptional({ description: `Только для роли "${UserRole.User}": Количество калорий для сброса"`, minimum: CaloriesTargetLimit.Min, maximum: CaloriesTargetLimit.Max })
+  @ApiPropertyOptional({ description: `Только для роли "${UserRole.User}": Количество калорий для сброса"` })
   @Expose()
   public caloriesTarget?: number;
 
-  @ApiPropertyOptional({ description: `Только для роли "${UserRole.User}": Количество калорий для траты в день"`, minimum: CaloriesPerDayLimit.Min, maximum: CaloriesPerDayLimit.Max })
+  @ApiPropertyOptional({ description: `Только для роли "${UserRole.User}": Количество калорий для траты в день"` })
   @Expose()
   public caloriesPerDay?: number;
 
-  @ApiPropertyOptional({ description: `Только для роли "${UserRole.User}": Флаг готовности пользователя к приглашениям на тренировку"`, enum: ['true', 'false'] })
+  @ApiPropertyOptional({ description: `Только для роли "${UserRole.User}": Флаг готовности пользователя к приглашениям на тренировку"` })
   @Expose()
   public isReadyToTraining?: boolean;
 
@@ -77,11 +75,11 @@ export class UserRdo {
   @Expose()
   public certificate?: string;
 
-  @ApiPropertyOptional({ description: `Только для роли "${UserRole.Trainer}": Текст с описание заслуг тренера`, minLength: MeritsLength.Min, maxLength: MeritsLength.Max })
+  @ApiPropertyOptional({ description: `Только для роли "${UserRole.Trainer}": Текст с описание заслуг тренера` })
   @Expose()
   public merits?: string;
 
-  @ApiPropertyOptional({ description: `Только для роли "${UserRole.Trainer}": Флаг готовности проводить индивидуальные тренировки"`, enum: ['true', 'false'] })
+  @ApiPropertyOptional({ description: `Только для роли "${UserRole.Trainer}": Флаг готовности проводить индивидуальные тренировки"` })
   @Expose()
   public isReadyToPersonal?: boolean;
 

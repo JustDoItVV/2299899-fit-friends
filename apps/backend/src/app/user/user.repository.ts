@@ -57,7 +57,7 @@ export class UserRepository extends BasePostgresRepository<UserEntity, User> {
     where.trainingLevel = query.level ? query.level : undefined;
 
     const orderBy: Prisma.UserOrderByWithRelationAndSearchRelevanceInput = {};
-    if (query.sortOption === SortOption.CreatedAt) {
+    if (query.sortOption === UserSortOption.CreatedAt) {
       orderBy.createdAt = query.sortDirection;
     } else if (query.sortOption === UserSortOption.Role) {
       orderBy.role = query.sortDirection;

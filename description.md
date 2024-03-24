@@ -22,6 +22,7 @@ docker compose --file ./apps/backend/docker-compose.yml --env-file ./.env --proj
 
 ### 4. Подключить сервер в Postgres
 
+- После старта контейнера pgAdmin возможно потребуется подождать несколько секунд перед тем, как веб-интерфейс запустится
 - PGAdmin ([http://localhost:8081/browser/](http://localhost:8081/browser/)) -> ПКМ на Servers -> Register -> Server...
 - Вкладка General -> поле Name: POSTGRES_DB из env файла
 - Вкладка Connection -> поле Hostname/address: fit_friends_postgres (container_name из docker-compose.yml)
@@ -49,20 +50,17 @@ npm run cli -- --generate 10 postgresql://admin:123456@localhost:5432/fit_friend
 npm run backend
 ```
 
-Терминал 2:
-
-```
-npm run frontend
-```
-
 ### 8. Ручное тестирование
 
-- ## Ручное тестирование rest api сервиса `Backend` доступно с помощь .http файлов:
-  -
-  -
-- Интерфейс FakeSMPTServer для контроля отправки почты: [http://localhost:1083/](http://localhost:1083/)
-- Frontend: [http://localhost:3000/](http://localhost:3000/)
 - Интерактивная OpenAPI спецификация: [http://localhost:3001/spec/](http://localhost:3001/spec/)
+- Интерфейс FakeSMPTServer для контроля отправки почты: [http://localhost:1083/](http://localhost:1083/)
+- .http файлы:
+  - [apps/backend/src/app/user/user.http](apps/backend/src/app/user/user.http) - пользователи
+  - [apps/backend/src/app/training/training.http](apps/backend/src/app/training/training.http) - тренировки, каталог тренировок, ЛК тренера
+  - [apps/backend/src/app/account-user/account-user.http](apps/backend/src/app/account-user/account-user.http) - ЛК пользователя
+  - [apps/backend/src/app/notification/notification.http](apps/backend/src/app/notification/notification.http) - Оповещения
+  - [apps/backend/src/app/training-request/training-request.http](apps/backend/src/app/training-request/training-request.http) - Персональные тренировки/совместные тренировки
+  - [apps/backend/src/app/review/review.http](apps/backend/src/app/review/review.http) - Отзывы
 
 ## Сценарии
 
@@ -74,7 +72,7 @@ npm run frontend
   ```
 - `backend` - запуск бэкэнд приложения
 - `frontend` - запуск фронтэнд приложения
-- `lint` - проверка EsLint директорий `apps`, `libs`
+- `lint` - проверка EsLint директорий
 
 ## Переменные окружения
 
@@ -86,6 +84,7 @@ npm run frontend
 | HOST=localhost                                                                         | Адрес хоста                                                                                                                                         |
 | BACKEND_PORT=3001                                                                      | Порт приложения `backend`                                                                                                                           |
 | UPLOAD_DIRECTORY_PATH=<BASE_DIR>/uploads                                               | Директория для загрузки файло, <BASE_DIR> - указать абсолютный путь до базовой директории проекта                                                   |
+| MOCK_PASSWORD=123456                                                                   | Пароль для генерации моковых данных пользователей        |
 |                                                                                        |                                                                                                                                                     |
 | JWT_ACCESS_TOKEN_SECRET=very-secret                                                    | Секрет JWT access токена                                                                                                                            |
 | JWT_ACCESS_TOKEN_EXPIRES_IN=15m                                                        | Время жизни JWT access токена                                                                                                                       |

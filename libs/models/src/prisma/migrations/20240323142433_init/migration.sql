@@ -71,6 +71,7 @@ CREATE TABLE "orders" (
     "training_id" TEXT NOT NULL,
     "price" INTEGER NOT NULL,
     "amount" INTEGER NOT NULL,
+    "order_sum" INTEGER NOT NULL,
     "payment_method" TEXT NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 

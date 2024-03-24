@@ -4,7 +4,7 @@ import { RatingLimit, ReviewTextLength } from '@2299899-fit-friends/consts';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateReviewDto {
-  @ApiProperty({ description: 'Рейтинг тренировки', example: 4, minimum: RatingLimit.Min, maximum: RatingLimit.Max })
+  @ApiProperty({ description: 'Рейтинг тренировки', example: 4 })
   @Max(RatingLimit.Max)
   @Min(RatingLimit.Min)
   @IsNumber()

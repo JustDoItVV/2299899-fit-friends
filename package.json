@@ -6,12 +6,12 @@
     "cli": "npx nx run cli:build && node dist/apps/cli/main.js",
     "backend": "npx nx serve backend",
     "frontend": "npx nx serve frontend",
-    "lint": "npx eslint apps/** libs/**"
+    "lint": "npx eslint"
   },
   "private": true,
   "dependencies": {
     "@faker-js/faker": "8.4.1",
-    "@nestjs-modules/mailer": "1.11.2",
+    "@nestjs-modules/mailer": "1.10.3",
     "@nestjs/common": "10.3.4",
     "@nestjs/config": "3.2.0",
     "@nestjs/core": "10.3.4",

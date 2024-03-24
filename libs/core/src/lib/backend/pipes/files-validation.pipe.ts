@@ -1,19 +1,14 @@
 import 'multer';
 
-import { UserFilesPayload } from '@2299899-fit-friends/types';
+import { FilesValidationRules, UserFilesPayload } from '@2299899-fit-friends/types';
 import { Injectable, PipeTransform, UnsupportedMediaTypeException } from '@nestjs/common';
-
-type ValidationRules = Record<string, {
-  size?: number;
-  formats?: Record<string, string>,
- }>
 
 @Injectable()
 export class FilesValidationPipe implements PipeTransform<UserFilesPayload, UserFilesPayload> {
-  public rules: ValidationRules;
+  public rules: FilesValidationRules;
   public message: string;
 
-  constructor(rules: ValidationRules, message: string) {
+  constructor(rules: FilesValidationRules, message: string) {
     this.rules = rules;
     this.message = message;
   }
@@ -32,7 +27,7 @@ export class FilesValidationPipe implements PipeTransform<UserFilesPayload, User
             const isValidFormatCondition2 = this.rules[key].formats ? this.rules[key].formats[fileExtention] === mimetype : true;
 
             if (!isValidSize || !isValidFormatCondition1 || !isValidFormatCondition2) {
-              throw new UnsupportedMediaTypeException(this.message);
+              throw new UnsupportedMediaTypeException(`${key} ${this.message}`);
             }
           }
         });

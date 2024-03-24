@@ -1,4 +1,8 @@
-import { TrainingErrorMessage } from '@2299899-fit-friends/consts';
+import { randomUUID } from 'node:crypto';
+import { copyFileSync, existsSync, mkdirSync } from 'node:fs';
+import { join } from 'node:path';
+
+import { MockTrainingBackgroundPicture, TrainingErrorMessage } from '@2299899-fit-friends/consts';
 import {
     CreateTrainingDto, TrainingPaginationQuery, TrainingRdo, UpdateTrainingDto
 } from '@2299899-fit-friends/dtos';
@@ -31,6 +35,18 @@ export class TrainingService {
         entity[key] = path;
       }
     }
+
+    const uploadPath = join(this.uploaderService.getUploadDirectory(), this.uploaderService.getSubDirectoryUpload());
+    if (!existsSync(uploadPath)) {
+      mkdirSync(uploadPath, { recursive: true });
+    }
+
+    const pictureNumber = Math.floor(Math.random() * MockTrainingBackgroundPicture.Count);
+    const mockBackgroundPictureName = `${MockTrainingBackgroundPicture.Prefix}${pictureNumber}${MockTrainingBackgroundPicture.Suffix}`
+    const backgroundPictureName = `${randomUUID()}-${mockBackgroundPictureName}`;
+    copyFileSync(join(MockTrainingBackgroundPicture.Directory, mockBackgroundPictureName), join(uploadPath, backgroundPictureName));
+    const backgroundPicture = join(this.uploaderService.getSubDirectoryUpload(), backgroundPictureName);
+    entity.backgroundPicture = backgroundPicture;
 
     const document = await this.trainingRepository.save(entity);
 

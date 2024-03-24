@@ -27,6 +27,4 @@ const transports = [
   }),
 ];
 
-export const logger = winston.createLogger({
-  transports,
-});
+export const logger = winston.createLogger({ transports });

@@ -6,5 +6,5 @@ import { ApiProperty } from '@nestjs/swagger';
 export class UpdateTrainingRequestDto {
   @ApiProperty({ description: 'Новый статус заявки' })
   @IsEnum(TrainingRequestStatus)
-  public status: string;
+  public status: TrainingRequestStatus;
 }
