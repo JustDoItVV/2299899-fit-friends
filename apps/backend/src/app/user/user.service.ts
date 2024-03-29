@@ -2,13 +2,12 @@ import { randomUUID } from 'node:crypto';
 
 import { BackendConfig } from '@2299899-fit-friends/config';
 import { UserErrorMessage } from '@2299899-fit-friends/consts';
+import { FilesPayload } from '@2299899-fit-friends/core';
 import {
     CreateUserDto, LoginUserDto, PaginationQuery, UpdateUserDto, UserPaginationQuery, UserRdo
 } from '@2299899-fit-friends/dtos';
 import { createJWTPayload, fillDto } from '@2299899-fit-friends/helpers';
-import {
-    Pagination, Token, TokenPayload, UserFilesPayload, UserGender, UserRole
-} from '@2299899-fit-friends/types';
+import { Pagination, Token, TokenPayload, UserGender, UserRole } from '@2299899-fit-friends/types';
 import {
     BadRequestException, ConflictException, ForbiddenException, Inject, Injectable,
     InternalServerErrorException, NotFoundException, StreamableFile, UnauthorizedException
@@ -107,7 +106,7 @@ export class UserService {
     await this.refreshTokenService.deleteByTokenId(tokenData.tokenId);
   }
 
-  public async register(dto: CreateUserDto, files: UserFilesPayload) {
+  public async register(dto: CreateUserDto, files: FilesPayload) {
     const { email, password } = dto;
     const existedUser = await this.userRepository.findByEmail(email);
 
@@ -129,7 +128,7 @@ export class UserService {
     return document;
   }
 
-  public async update(payload: TokenPayload, id: string, dto: UpdateUserDto, files: UserFilesPayload) {
+  public async update(payload: TokenPayload, id: string, dto: UpdateUserDto, files: FilesPayload) {
     const user = await this.userRepository.findById(id);
 
     if (!user) {

@@ -3,14 +3,14 @@ import {
     TrainingErrorMessage, TrainingVideoAllowedExtensions
 } from '@2299899-fit-friends/consts';
 import {
-    FilesValidationPipe, JwtAuthGuard, UserParam, UserRolesGuard
+    FilesPayload, FilesValidationPipe, JwtAuthGuard, UserParam, UserRolesGuard
 } from '@2299899-fit-friends/core';
 import {
     ApiOkResponsePaginated, CreateTrainingDto, PaginationRdo, TrainingPaginationQuery, TrainingRdo,
     UpdateTrainingDto
 } from '@2299899-fit-friends/dtos';
 import { fillDto } from '@2299899-fit-friends/helpers';
-import { TokenPayload, TrainingFilesPayload, UserRole } from '@2299899-fit-friends/types';
+import { TokenPayload, UserRole } from '@2299899-fit-friends/types';
 import {
     Body, Controller, Get, Header, Param, Patch, Post, Query, UploadedFiles, UseGuards,
     UseInterceptors
@@ -49,7 +49,7 @@ export class TrainingController {
     @UploadedFiles(new FilesValidationPipe({
       backgroundPicture: { formats: TrainingBackgroundPictureAllowedExtensions },
       video: { formats: TrainingVideoAllowedExtensions },
-    }, TrainingErrorMessage.FileFormatForbidden)) files: TrainingFilesPayload,
+    }, TrainingErrorMessage.FileFormatForbidden)) files: FilesPayload,
   ) {
     const newTraining = await this.trainingService.create(dto, payload.userId, files);
     return fillDto(TrainingRdo, newTraining.toPOJO());
@@ -97,7 +97,7 @@ export class TrainingController {
     @UploadedFiles(new FilesValidationPipe({
       backgroundPicture: { formats: TrainingBackgroundPictureAllowedExtensions },
       video: { formats: TrainingVideoAllowedExtensions },
-    }, TrainingErrorMessage.FileFormatForbidden)) files: TrainingFilesPayload,
+    }, TrainingErrorMessage.FileFormatForbidden)) files: FilesPayload,
   ) {
     const updatedTraining = await this.trainingService.update(payload, id, dto, files);
     return fillDto(TrainingRdo, updatedTraining.toPOJO());

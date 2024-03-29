@@ -3,11 +3,12 @@ import { copyFileSync, existsSync, mkdirSync } from 'node:fs';
 import { join } from 'node:path';
 
 import { MockTrainingBackgroundPicture, TrainingErrorMessage } from '@2299899-fit-friends/consts';
+import { FilesPayload } from '@2299899-fit-friends/core';
 import {
     CreateTrainingDto, TrainingPaginationQuery, TrainingRdo, UpdateTrainingDto
 } from '@2299899-fit-friends/dtos';
 import { fillDto } from '@2299899-fit-friends/helpers';
-import { Pagination, TokenPayload, TrainingFilesPayload } from '@2299899-fit-friends/types';
+import { Pagination, TokenPayload } from '@2299899-fit-friends/types';
 import { ForbiddenException, Injectable, NotFoundException, StreamableFile } from '@nestjs/common';
 
 import { MailNotificataionEntity } from '../mail-notification/mail-notification.entity';
@@ -26,7 +27,7 @@ export class TrainingService {
     private readonly userRepository: UserRepository,
   ) {}
 
-  public async create(dto: CreateTrainingDto, userId: string, files: TrainingFilesPayload): Promise<TrainingEntity> {
+  public async create(dto: CreateTrainingDto, userId: string, files: FilesPayload): Promise<TrainingEntity> {
     const entity = TrainingEntity.fromDto(dto, userId);
 
     for (const key of Object.keys(files)) {
@@ -82,7 +83,7 @@ export class TrainingService {
     return paginationResult;
   }
 
-  public async update(payload: TokenPayload, id: string, dto: UpdateTrainingDto, files: TrainingFilesPayload) {
+  public async update(payload: TokenPayload, id: string, dto: UpdateTrainingDto, files: FilesPayload) {
     const training = await this.trainingRepository.findById(id);
 
     if (!training) {

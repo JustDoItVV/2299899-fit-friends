@@ -5,15 +5,15 @@ import {
     UserErrorMessage
 } from '@2299899-fit-friends/consts';
 import {
-    FilesValidationPipe, JwtAuthGuard, JwtRefreshGuard, OnlyAnonymousGuard, Token, UserParam,
-    UserRolesGuard
+    FilesPayload, FilesValidationPipe, JwtAuthGuard, JwtRefreshGuard, OnlyAnonymousGuard, Token,
+    UserParam, UserRolesGuard
 } from '@2299899-fit-friends/core';
 import {
     ApiOkResponsePaginated, CreateUserDto, LoggedUserRdo, LoginUserDto, PaginationRdo,
     UpdateUserDto, UserPaginationQuery, UserRdo
 } from '@2299899-fit-friends/dtos';
 import { fillDto } from '@2299899-fit-friends/helpers';
-import { TokenPayload, UserFilesPayload, UserRole } from '@2299899-fit-friends/types';
+import { TokenPayload, UserRole } from '@2299899-fit-friends/types';
 import {
     Body, Controller, Delete, Get, Header, HttpCode, HttpStatus, Param, Patch, Post, Query,
     UploadedFiles, UseGuards, UseInterceptors, UsePipes, ValidationPipe
@@ -116,7 +116,7 @@ export class UserController {
       pageBackground: { formats: AllowedImageFormat },
       certificate: { formats: AllowedCertificateFormat },
     }, UserErrorMessage.ImageFormatForbidden))
-    files: UserFilesPayload
+    files: FilesPayload
   ) {
     const newUser = await this.userService.register(dto, files);
     return fillDto(UserRdo, newUser.toPOJO());
@@ -157,7 +157,7 @@ export class UserController {
       pageBackground: { formats: AllowedImageFormat },
       certificate: { formats: AllowedCertificateFormat },
     }, UserErrorMessage.ImageFormatForbidden))
-    files: UserFilesPayload
+    files: FilesPayload
   ) {
     const updatedUser = await this.userService.update(payload, id, dto, files);
     return fillDto(UserRdo, updatedUser.toPOJO());
