@@ -22,6 +22,8 @@
       "@2299899-fit-friends/helpers": ["libs/helpers/src/index.ts"],
       "@2299899-fit-friends/logger": ["libs/logger/src/index.ts"],
       "@2299899-fit-friends/models": ["libs/models/src/index.ts"],
+      "@2299899-fit-friends/services": ["libs/services/src/index.ts"],
+      "@2299899-fit-friends/storage": ["libs/storage/src/index.ts"],
       "@2299899-fit-friends/types": ["libs/types/src/index.ts"]
     }
   },

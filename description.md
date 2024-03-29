@@ -50,6 +50,12 @@ npm run cli -- --generate 10 postgresql://admin:123456@localhost:5432/fit_friend
 npm run backend
 ```
 
+Терминал 2:
+
+```
+npm run frontend
+```
+
 ### 8. Ручное тестирование
 
 - Интерактивная OpenAPI спецификация: [http://localhost:3001/spec/](http://localhost:3001/spec/)

@@ -42,3 +42,6 @@ export * from './lib/order-sort-option.enum';
 export * from './lib/mail-notification.interface';
 
 export * from './lib/files-validation-rules.type';
+
+export * from './lib/name-space.enum';
+export * from './lib/auth-status.enum';
