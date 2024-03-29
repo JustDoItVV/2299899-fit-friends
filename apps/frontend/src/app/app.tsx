@@ -1,52 +1,43 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import styles from './app.module.css';
+import { useEffect } from 'react';
+import { HelmetProvider } from 'react-helmet-async';
+import { Route, Routes } from 'react-router-dom';
 
-import NxWelcome from './nx-welcome';
+import { checkAuthAction, selectAuthStatus } from '@2299899-fit-friends/storage';
+import { FrontendRoute } from '@2299899-fit-friends/types';
 
-import { Route, Routes, Link } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from './components/hooks';
+import IntroPage from './pages/intro-page/intro.page';
+import LoginPage from './pages/login-page/login.page';
+import MainPage from './pages/main-page/main.page';
+import PersonalPage from './pages/personal-page/personal.page';
+import RegistrationPage from './pages/registration-page/registration.page';
+import TrainingCardPage from './pages/training-card-page/training-card.page';
+import TrainingsPage from './pages/trainings-page/trainings.page';
+import UserCardPage from './pages/user-card-page/user-card.page';
+import UsersPage from './pages/users-page/users.page';
 
 export function App() {
-  return (
-    <div>
-      <NxWelcome title="frontend" />
+  const dispatch = useAppDispatch();
+  const authStatus = useAppSelector(selectAuthStatus);
 
-      {/* START: routes */}
-      {/* These routes and navigation have been generated for you */}
-      {/* Feel free to move and update them to fit your needs */}
-      <br />
-      <hr />
-      <br />
-      <div role="navigation">
-        <ul>
-          <li>
-            <Link to="/">Home</Link>
-          </li>
-          <li>
-            <Link to="/page-2">Page 2</Link>
-          </li>
-        </ul>
-      </div>
+  useEffect(() => {
+    dispatch(checkAuthAction());
+  }, [dispatch, authStatus]);
+
+  return (
+    <HelmetProvider>
       <Routes>
-        <Route
-          path="/"
-          element={
-            <div>
-              This is the generated root route.{' '}
-              <Link to="/page-2">Click here for page 2.</Link>
-            </div>
-          }
-        />
-        <Route
-          path="/page-2"
-          element={
-            <div>
-              <Link to="/">Click here to go back to root page.</Link>
-            </div>
-          }
-        />
+        <Route path={FrontendRoute.Intro} element={<IntroPage />} />
+        <Route path={FrontendRoute.Login} element={<LoginPage />} />
+        <Route path={FrontendRoute.Registration} element={<RegistrationPage />} />
+        <Route path={FrontendRoute.Personal} element={<PersonalPage />} />
+        <Route path={FrontendRoute.Main} element={<MainPage />} />
+        <Route path={FrontendRoute.Users} element={<UsersPage />} />
+        <Route path={FrontendRoute.UserCard} element={<UserCardPage />} />
+        <Route path={FrontendRoute.Trainings} element={<TrainingsPage />} />
+        <Route path={FrontendRoute.TrainingCard} element={<TrainingCardPage />} />
       </Routes>
-      {/* END: routes */}
-    </div>
+    </HelmetProvider>
   );
 }
 

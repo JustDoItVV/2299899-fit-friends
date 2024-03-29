@@ -12,13 +12,11 @@ export * from './lib/user.interface';
 
 export * from './lib/user-gender.enum';
 export * from './lib/user-role.enum';
-export * from './lib/user-files-payload.interface';
 
 export * from './lib/training-auditory.enum';
 export * from './lib/training-duration.enum';
 export * from './lib/training-level.enum';
 export * from './lib/training-type.enum';
-export * from './lib/training-files-payload.interface';
 
 export * from './lib/order-type.enum';
 export * from './lib/order-payment-method.enum';
@@ -42,3 +40,7 @@ export * from './lib/order-sort-option.enum';
 export * from './lib/mail-notification.interface';
 
 export * from './lib/files-validation-rules.type';
+
+export * from './lib/name-space.enum';
+export * from './lib/auth-status.enum';
+export * from './lib/frontend-route.enum';
