@@ -44,3 +44,5 @@ export * from './lib/files-validation-rules.type';
 export * from './lib/name-space.enum';
 export * from './lib/auth-status.enum';
 export * from './lib/frontend-route.enum';
+export * from './lib/auth-data.interface';
+export * from './lib/user-with-tokens.interface';
