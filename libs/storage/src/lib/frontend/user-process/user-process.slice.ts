@@ -1,7 +1,7 @@
 import { AuthStatus, NameSpace } from '@2299899-fit-friends/types';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import { checkAuthAction } from '../api-actions.ts/user-actions';
+import { checkAuthAction } from '../api-actions/user-actions';
 import { UserProcess } from '../types/user-process.type';
 
 const initialState: UserProcess = {
