@@ -19,6 +19,10 @@ export class LoggedUserRdo {
   @Expose()
   public role: string;
 
+  @ApiProperty({ description: 'Флаг заполнения опросника' })
+  @Expose()
+  public isQuestionnaireFilled: string;
+
   @ApiProperty({ description: 'Access token' })
   @Expose()
   public accessToken: string;

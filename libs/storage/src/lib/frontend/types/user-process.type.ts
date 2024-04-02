@@ -8,6 +8,7 @@ export type ResponseError = {
 
 export type UserProcess = {
   authStatus: AuthStatus;
+  currentUser: User | null;
   user: User | null;
   responseError: ResponseError | null;
 };

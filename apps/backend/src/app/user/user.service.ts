@@ -3,7 +3,9 @@ import { copyFileSync, existsSync, mkdirSync } from 'node:fs';
 import { join } from 'node:path';
 
 import { BackendConfig } from '@2299899-fit-friends/config';
-import { MockTrainingBackgroundPicture, UserErrorMessage } from '@2299899-fit-friends/consts';
+import {
+    MockTrainingBackgroundPicture, TRAINING_TYPE_LIMIT, UserErrorMessage
+} from '@2299899-fit-friends/consts';
 import { FilesPayload } from '@2299899-fit-friends/core';
 import {
     CreateUserDto, LoginUserDto, PaginationQuery, UpdateUserDto, UserPaginationQuery, UserRdo
@@ -179,6 +181,17 @@ export class UserService {
           user.pageBackground = pageBackgroundPath;
         }
       }
+    }
+
+    if (user.role === UserRole.Trainer) {
+      user.isQuestionnaireFilled = user.trainingLevel &&
+        user.trainingType.length === TRAINING_TYPE_LIMIT;
+    } else if (user.role === UserRole.User) {
+      user.isQuestionnaireFilled = user.trainingLevel &&
+        user.trainingType.length <= TRAINING_TYPE_LIMIT &&
+        !!user.trainingDuration &&
+        !!user.caloriesTarget &&
+        !!user.caloriesPerDay;
     }
 
     if (!hasChanges) {

@@ -5,4 +5,5 @@ export interface TokenPayload {
   name: string;
   email: string;
   role: UserRole;
+  isQuestionnaireFilled: boolean;
 }

@@ -32,4 +32,5 @@ export interface User {
   subscribers?: string[];
   emailSubscribtions?: string[];
   emailLastDate?: Date;
+  isQuestionnaireFilled?: boolean;
 }
