@@ -78,7 +78,8 @@ export class CreateUserDto {
   @ApiProperty({ description: 'Уровень физической подготовки', example: TrainingLevel.Amateur, enum: TrainingLevel })
   @IsEnum(TrainingLevel)
   @IsNotEmpty({ message: UserErrorMessage.TrainingLevelRequired })
-  public trainingLevel: TrainingLevel;
+  @IsOptional()
+  public trainingLevel?: TrainingLevel;
 
   @ApiProperty({ description: 'Тип тренировок', example: [TrainingType.Running], enum: TrainingType, isArray: true })
   @Validate(ArrayMinLengthByUserRole)
@@ -86,14 +87,16 @@ export class CreateUserDto {
   @ArrayMaxSize(TRAINING_TYPE_LIMIT, { message: UserErrorMessage.TrainingTypeMaxSize })
   @IsArray({ message: UserErrorMessage.TariningTypeMustBeArray })
   @TransformToArray()
-  public trainingType: TrainingType[];
+  @IsOptional()
+  public trainingType?: TrainingType[];
 
   @ApiPropertyOptional({ description: `Только для роли "${UserRole.User}": Время на тренировку"`, example: TrainingDuration.Eighty, enum: TrainingDuration })
   @IsEnum(TrainingDuration)
   @IsString({ message: UserErrorMessage.NotString })
   @IsNotEmpty({ message: UserErrorMessage.TrainingDurationRequired })
   @ValidateIf((object) => object.role === UserRole.User)
-  public trainingDuration: TrainingDuration;
+  @IsOptional()
+  public trainingDuration?: TrainingDuration;
 
   @ApiPropertyOptional({ description: `Только для роли "${UserRole.User}": Количество калорий для сброса"`, example: CaloriesTargetLimit.Max })
   @Max(CaloriesTargetLimit.Max, { message: UserErrorMessage.CaloriesTargetMax })
@@ -101,7 +104,8 @@ export class CreateUserDto {
   @IsNumber()
   @IsNotEmpty({ message: UserErrorMessage.CaloriesTargetRequired })
   @ValidateIf((object) => object.role === UserRole.User)
-  public caloriesTarget: number;
+  @IsOptional()
+  public caloriesTarget?: number;
 
   @ApiPropertyOptional({ description: `Только для роли "${UserRole.User}": Количество калорий для траты в день"`, example: CaloriesPerDayLimit.Max })
   @Max(CaloriesPerDayLimit.Max, { message: UserErrorMessage.CaloriesPerDayMax })
@@ -109,31 +113,34 @@ export class CreateUserDto {
   @IsNumber()
   @IsNotEmpty({ message: UserErrorMessage.CaloriesPerDayRequired })
   @ValidateIf((object) => object.role === UserRole.User)
-  public caloriesPerDay: number;
+  @IsOptional()
+  public caloriesPerDay?: number;
 
   @ApiPropertyOptional({ description: `Только для роли "${UserRole.User}": Флаг готовности пользователя к приглашениям на тренировку"` })
   @IsBoolean()
   @IsNotEmpty({ message: UserErrorMessage.IsReadyToTrainingRequired })
   @ValidateIf((object) => object.role === UserRole.User)
-  public isReadyToTraining: boolean;
+  @IsOptional()
+  public isReadyToTraining?: boolean;
 
   @ApiPropertyOptional({ name: 'certificate', type: 'file', properties: { file: { type: 'string', format: 'binary' } }, required: false })
   @IsNotEmptyObject()
-  @IsOptional()
   @ValidateIf((object) => object.role === UserRole.Trainer)
+  @IsOptional()
   public certificate?: Express.Multer.File;
 
   @ApiPropertyOptional({ description: `Только для роли "${UserRole.Trainer}": Текст с описание заслуг тренера`, example: 'Большие заслуги' })
   @MaxLength(MeritsLength.Max, { message: UserErrorMessage.MeritsMaxLength })
   @MinLength(MeritsLength.Min, { message: UserErrorMessage.MeritsMinLength })
   @IsString({ message: UserErrorMessage.NotString })
-  @IsOptional()
   @ValidateIf((object) => object.role === UserRole.Trainer)
+  @IsOptional()
   public merits?: string;
 
   @ApiPropertyOptional({ description: `Только для роли "${UserRole.Trainer}": Флаг готовности проводить индивидуальные тренировки"` })
   @IsBoolean()
   @IsNotEmpty({ message: UserErrorMessage.IsReadyToPersonalRequired })
   @ValidateIf((object) => object.role === UserRole.Trainer)
-  public isReadyToPersonal: boolean;
+  @IsOptional()
+  public isReadyToPersonal?: boolean;
 }

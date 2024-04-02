@@ -1520,10 +1520,10 @@ input:disabled ~ .role-btn__btn,
 .custom-textarea__error {
   margin-top: 6px;
   color: #e4001b;
-  opacity: 0;
-  -webkit-transition: opacity 0.3s ease;
-  -o-transition: opacity 0.3s ease;
-  transition: opacity 0.3s ease;
+  /* opacity: 0; */
+  /* -webkit-transition: opacity 0.3s ease; */
+  /* -o-transition: opacity 0.3s ease; */
+  /* transition: opacity 0.3s ease; */
 }
 
 .custom-input--error .custom-input__error,

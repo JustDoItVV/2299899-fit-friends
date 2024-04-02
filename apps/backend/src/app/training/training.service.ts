@@ -42,7 +42,7 @@ export class TrainingService {
       mkdirSync(uploadPath, { recursive: true });
     }
 
-    const pictureNumber = Math.floor(Math.random() * MockTrainingBackgroundPicture.Count);
+    const pictureNumber = Math.floor(Math.random() * (MockTrainingBackgroundPicture.Count - 1)) + 1;
     const mockBackgroundPictureName = `${MockTrainingBackgroundPicture.Prefix}${pictureNumber}${MockTrainingBackgroundPicture.Suffix}`
     const backgroundPictureName = `${randomUUID()}-${mockBackgroundPictureName}`;
     copyFileSync(join(MockTrainingBackgroundPicture.Directory, mockBackgroundPictureName), join(uploadPath, backgroundPictureName));

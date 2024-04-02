@@ -2,14 +2,16 @@ import { useEffect } from 'react';
 import { HelmetProvider } from 'react-helmet-async';
 import { Route, Routes } from 'react-router-dom';
 
-import { checkAuthAction, selectAuthStatus } from '@2299899-fit-friends/storage';
+import { checkAuthAction, selectAuthStatus, selectUser } from '@2299899-fit-friends/storage';
 import { FrontendRoute } from '@2299899-fit-friends/types';
 
+import AnonymousRoute from './components/anonymous-route/anonymous-route';
 import { useAppDispatch, useAppSelector } from './components/hooks';
 import IntroPage from './pages/intro-page/intro.page';
 import LoginPage from './pages/login-page/login.page';
 import MainPage from './pages/main-page/main.page';
 import PersonalPage from './pages/personal-page/personal.page';
+import QuestionnairePage from './pages/questionnaire-page/questionnaire-page';
 import RegistrationPage from './pages/registration-page/registration.page';
 import TrainingCardPage from './pages/training-card-page/training-card.page';
 import TrainingsPage from './pages/trainings-page/trainings.page';
@@ -19,6 +21,7 @@ import UsersPage from './pages/users-page/users.page';
 export function App() {
   const dispatch = useAppDispatch();
   const authStatus = useAppSelector(selectAuthStatus);
+  const user = useAppSelector(selectUser);
 
   useEffect(() => {
     dispatch(checkAuthAction());
@@ -28,8 +31,13 @@ export function App() {
     <HelmetProvider>
       <Routes>
         <Route path={FrontendRoute.Intro} element={<IntroPage />} />
-        <Route path={FrontendRoute.Login} element={<LoginPage />} />
-        <Route path={FrontendRoute.Registration} element={<RegistrationPage />} />
+        <Route path={FrontendRoute.Login} element={
+          <AnonymousRoute authStatus={authStatus} userRole={user?.role} children={<LoginPage />} />
+        } />
+        <Route path={FrontendRoute.Registration} element={
+          <AnonymousRoute authStatus={authStatus} userRole={user?.role} children={<RegistrationPage />} />
+        } />
+        <Route path={FrontendRoute.Questionnaire} element={<QuestionnairePage />} />
         <Route path={FrontendRoute.Personal} element={<PersonalPage />} />
         <Route path={FrontendRoute.Main} element={<MainPage />} />
         <Route path={FrontendRoute.Users} element={<UsersPage />} />

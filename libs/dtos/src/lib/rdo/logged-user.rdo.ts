@@ -15,6 +15,10 @@ export class LoggedUserRdo {
   @Expose()
   public email: string;
 
+  @ApiProperty({ description: 'Роль пользователя' })
+  @Expose()
+  public role: string;
+
   @ApiProperty({ description: 'Access token' })
   @Expose()
   public accessToken: string;

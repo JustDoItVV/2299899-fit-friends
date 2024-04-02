@@ -1,7 +1,9 @@
 import { randomUUID } from 'node:crypto';
+import { copyFileSync, existsSync, mkdirSync } from 'node:fs';
+import { join } from 'node:path';
 
 import { BackendConfig } from '@2299899-fit-friends/config';
-import { UserErrorMessage } from '@2299899-fit-friends/consts';
+import { MockTrainingBackgroundPicture, UserErrorMessage } from '@2299899-fit-friends/consts';
 import { FilesPayload } from '@2299899-fit-friends/core';
 import {
     CreateUserDto, LoginUserDto, PaginationQuery, UpdateUserDto, UserPaginationQuery, UserRdo
@@ -115,7 +117,20 @@ export class UserService {
     }
 
     const entity = UserEntity.fromDto(dto);
-    await entity.setPassword(password)
+    await entity.setPassword(password);
+
+    if (!files.pageBackground) {
+      const uploadPath = join(this.uploaderService.getUploadDirectory(), this.uploaderService.getSubDirectoryUpload());
+      if (!existsSync(uploadPath)) {
+        mkdirSync(uploadPath, { recursive: true });
+      }
+      const pictureNumber = Math.floor(Math.random() * (MockTrainingBackgroundPicture.Count - 1)) + 1;
+      const mockPageBackgroundeName = `${MockTrainingBackgroundPicture.Prefix}${pictureNumber}${MockTrainingBackgroundPicture.Suffix}`
+      const pageBackgroundName = `${randomUUID()}-${mockPageBackgroundeName}`;
+      copyFileSync(join(MockTrainingBackgroundPicture.Directory, mockPageBackgroundeName), join(uploadPath, pageBackgroundName));
+      const pageBackground = join(this.uploaderService.getSubDirectoryUpload(), pageBackgroundName);
+      entity.pageBackground = pageBackground;
+    }
 
     for (const key of Object.keys(files)) {
       if (files[key] && files[key].length > 0) {
