@@ -69,7 +69,7 @@ export default function LoginPage(): JSX.Element {
                         <span className="custom-input__wrapper">
                           <input ref={emailRef} type="email" name="email"/>
                         </span>
-                        <span className="">
+                        <span className="custom-input__error">
                           {getResponseErrorMessage(
                             EMAIL_ERROR_CODES,
                             responseError?.statusCode,
@@ -85,7 +85,7 @@ export default function LoginPage(): JSX.Element {
                         <span className="custom-input__wrapper">
                           <input ref={passwordRef} type="password" name="password" />
                         </span>
-                        <span className="">
+                        <span className="custom-input__error">
                           {getResponseErrorMessage(
                             PASSWORD_ERROR_CODES,
                             responseError?.statusCode,

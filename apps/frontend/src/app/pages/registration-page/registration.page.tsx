@@ -49,7 +49,7 @@ export default function RegistrationPage(): JSX.Element {
     evt.preventDefault();
     const formData = new FormData();
 
-    if (avatarRef.current?.files) {
+    if (avatarRef.current?.files && avatarRef.current?.files.length !== 0) {
       formData.append('avatar', avatarRef.current.files[0]);
     }
 
@@ -130,7 +130,7 @@ export default function RegistrationPage(): JSX.Element {
                           <span className="custom-input__wrapper">
                             <input type="text" name="name" onChange={getInputChangeHandler(setName)} />
                           </span>
-                          <span className="">
+                          <span className="custom-input__error">
                             {getResponseErrorMessage(
                               [400],
                               responseError?.statusCode,
@@ -146,7 +146,7 @@ export default function RegistrationPage(): JSX.Element {
                           <span className="custom-input__wrapper">
                             <input type="email" name="email" onChange={getInputChangeHandler(setEmail)} />
                           </span>
-                          <span className="">
+                          <span className="custom-input__error">
                             {getResponseErrorMessage(
                               [400],
                               responseError?.statusCode,
@@ -164,7 +164,7 @@ export default function RegistrationPage(): JSX.Element {
                           <span className="custom-input__wrapper">
                             <input type="date" name="birthday" max="2099-12-31" onChange={getInputChangeHandler(setBirthdate)} />
                           </span>
-                          <span className="">
+                          <span className="custom-input__error">
                             {getResponseErrorMessage(
                               [400],
                               responseError?.statusCode,
@@ -186,7 +186,7 @@ export default function RegistrationPage(): JSX.Element {
                               <option>Спортивная</option>
                             </select>
                           </span>
-                          <span className="">
+                          <span className="custom-input__error">
                             {getResponseErrorMessage(
                               [400],
                               responseError?.statusCode,
@@ -202,7 +202,7 @@ export default function RegistrationPage(): JSX.Element {
                           <span className="custom-input__wrapper">
                             <input type="password" name="password" autoComplete="off" onChange={getInputChangeHandler(setPassword)} />
                           </span>
-                          <span className="">
+                          <span className="custom-input__error">
                             {getResponseErrorMessage(
                               [400],
                               responseError?.statusCode,
