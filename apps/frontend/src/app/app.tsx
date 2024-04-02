@@ -11,6 +11,7 @@ import IntroPage from './pages/intro-page/intro.page';
 import LoginPage from './pages/login-page/login.page';
 import MainPage from './pages/main-page/main.page';
 import PersonalPage from './pages/personal-page/personal.page';
+import QuestionnairePage from './pages/questionnaire-page/questionnaire-page';
 import RegistrationPage from './pages/registration-page/registration.page';
 import TrainingCardPage from './pages/training-card-page/training-card.page';
 import TrainingsPage from './pages/trainings-page/trainings.page';
@@ -36,6 +37,7 @@ export function App() {
         <Route path={FrontendRoute.Registration} element={
           <AnonymousRoute authStatus={authStatus} userRole={user?.role} children={<RegistrationPage />} />
         } />
+        <Route path={FrontendRoute.Questionnaire} element={<QuestionnairePage />} />
         <Route path={FrontendRoute.Personal} element={<PersonalPage />} />
         <Route path={FrontendRoute.Main} element={<MainPage />} />
         <Route path={FrontendRoute.Users} element={<UsersPage />} />

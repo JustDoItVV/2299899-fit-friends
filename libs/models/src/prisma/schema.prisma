@@ -27,8 +27,10 @@ model User {
   createdAt      DateTime  @default(now()) @map("created_at")
   updatedAt      DateTime  @updatedAt @map("updated_at")
 
-  trainingLevel String   @map("training_level")
-  trainingType  String[] @map("training_type")
+  isQuestionnaireFilled Boolean @default(false) @map("is_questionnaire_filled")
+
+  trainingLevel String?  @map("training_level")
+  trainingType  String[] @default([]) @map("training_type")
 
   trainingDuration  String?  @map("training_duration")
   caloriesTarget    Int?     @map("calories_target")

@@ -2,7 +2,7 @@ import { AxiosInstance } from 'axios';
 
 import { ApiRoute } from '@2299899-fit-friends/consts';
 import { saveToken } from '@2299899-fit-friends/services';
-import { AuthData, FrontendRoute, UserWithToken } from '@2299899-fit-friends/types';
+import { AuthData, FrontendRoute, User, UserWithToken } from '@2299899-fit-friends/types';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
 import { redirectToRoute } from '../actions/redirect-to-route';
@@ -20,18 +20,50 @@ export const checkAuthAction = createAsyncThunk<
   return data;
 });
 
-export const loginAction = createAsyncThunk<
+export const loginUserAction = createAsyncThunk<
   UserWithToken,
   AuthData,
   { dispatch: AppDispatch; state: State; extra: AxiosInstance }
 >('user/login', async (authData, { dispatch, extra: api, rejectWithValue }) => {
-  const apiRoute = `${ApiRoute.User}${ApiRoute.Login}`;
   try {
-    const { data } = await api.post<UserWithToken>(apiRoute, authData);
+    const { data } = await api.post<UserWithToken>(
+      `${ApiRoute.User}${ApiRoute.Login}`,
+      authData,
+    );
     saveToken(data.accessToken);
     dispatch(setResponseError(null));
     dispatch(redirectToRoute(FrontendRoute.Login));
     return data;
+
+  } catch (error) {
+    if (!error.response) {
+      throw new Error(error);
+    }
+
+    dispatch(setResponseError(error.response.data));
+    return rejectWithValue(error.response.data);
+  }
+});
+
+export const registerUserAction = createAsyncThunk<
+  User,
+  FormData,
+  { dispatch: AppDispatch; state: State; extra: AxiosInstance }
+>('user/register', async (userData, { dispatch, extra: api, rejectWithValue }) => {
+  try {
+    const { data: user } = await api.post<User>(
+      `${ApiRoute.User}${ApiRoute.Register}`,
+      userData,
+    );
+    const { data: loggedData } = await api.post<UserWithToken>(
+      `${ApiRoute.User}${ApiRoute.Login}`,
+      { email: userData.get('email'), password: userData.get('password') },
+    );
+    saveToken(loggedData.accessToken);
+    dispatch(setResponseError(null));
+    dispatch(redirectToRoute(FrontendRoute.Questionnaire));
+    return user;
+
   } catch (error) {
     if (!error.response) {
       throw new Error(error);

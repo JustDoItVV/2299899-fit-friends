@@ -2,7 +2,7 @@ import { FormEvent, useRef } from 'react';
 import { Helmet } from 'react-helmet-async';
 
 import { EMAIL_ERROR_CODES, PASSWORD_ERROR_CODES } from '@2299899-fit-friends/consts';
-import { loginAction, selectResponseError } from '@2299899-fit-friends/storage';
+import { loginUserAction, selectResponseError } from '@2299899-fit-friends/storage';
 
 import { useAppDispatch, useAppSelector } from '../../components/hooks';
 
@@ -15,14 +15,19 @@ export default function LoginPage(): JSX.Element {
   const handleFormSubmit = (evt: FormEvent<HTMLFormElement>) => {
     evt.preventDefault();
     if (emailRef.current !== null && passwordRef.current !== null) {
-      dispatch(loginAction({
+      dispatch(loginUserAction({
         email: emailRef.current.value,
         password: passwordRef.current.value,
       }));
     }
   };
 
-  const getMessage = (codes: number[], statusCode: number | undefined, message: string | string[] | undefined, field: string) => {
+  const getResponseErrorMessage = (
+    codes: number[],
+    statusCode: number | undefined,
+    message: string | string[] | undefined,
+    field: string
+  ) => {
     if (!statusCode || !message || !codes.includes(statusCode)) {
       return ' ';
     }
@@ -35,6 +40,7 @@ export default function LoginPage(): JSX.Element {
       .filter((item) => item.toLowerCase().includes(field))
       .join(', ');
   };
+
 
   return (
     <div className="wrapper">
@@ -64,7 +70,7 @@ export default function LoginPage(): JSX.Element {
                           <input ref={emailRef} type="email" name="email"/>
                         </span>
                         <span className="">
-                          {getMessage(
+                          {getResponseErrorMessage(
                             EMAIL_ERROR_CODES,
                             responseError?.statusCode,
                             responseError?.message,
@@ -80,7 +86,7 @@ export default function LoginPage(): JSX.Element {
                           <input ref={passwordRef} type="password" name="password" />
                         </span>
                         <span className="">
-                          {getMessage(
+                          {getResponseErrorMessage(
                             PASSWORD_ERROR_CODES,
                             responseError?.statusCode,
                             responseError?.message,

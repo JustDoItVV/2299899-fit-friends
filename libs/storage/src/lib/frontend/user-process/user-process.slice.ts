@@ -1,7 +1,7 @@
 import { AuthStatus, NameSpace, User } from '@2299899-fit-friends/types';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import { checkAuthAction, loginAction } from '../api-actions/user-actions';
+import { checkAuthAction, loginUserAction } from '../api-actions/user-actions';
 import { ResponseError, UserProcess } from '../types/user-process.type';
 
 const initialState: UserProcess = {
@@ -33,11 +33,11 @@ export const userProcess = createSlice({
       .addCase(checkAuthAction.rejected, (state) => {
         state.authStatus = AuthStatus.NoAuth;
       })
-      .addCase(loginAction.fulfilled, (state, action) => {
+      .addCase(loginUserAction.fulfilled, (state, action) => {
         state.authStatus = AuthStatus.Auth;
         state.user = action.payload;
       })
-      .addCase(loginAction.rejected, (state) => {
+      .addCase(loginUserAction.rejected, (state) => {
         state.authStatus = AuthStatus.NoAuth;
       });
   },
