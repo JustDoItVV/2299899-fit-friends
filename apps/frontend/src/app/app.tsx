@@ -1,12 +1,10 @@
-import { useEffect } from 'react';
 import { HelmetProvider } from 'react-helmet-async';
 import { Route, Routes } from 'react-router-dom';
 
-import { checkAuthAction, selectAuthStatus, selectUser } from '@2299899-fit-friends/storage';
 import { FrontendRoute } from '@2299899-fit-friends/types';
 
 import AnonymousRoute from './components/anonymous-route/anonymous-route';
-import { useAppDispatch, useAppSelector } from './components/hooks';
+import AuthorizedRoute from './components/authorized-route/authorized-route';
 import IntroPage from './pages/intro-page/intro.page';
 import LoginPage from './pages/login-page/login.page';
 import MainPage from './pages/main-page/main.page';
@@ -19,31 +17,37 @@ import UserCardPage from './pages/user-card-page/user-card.page';
 import UsersPage from './pages/users-page/users.page';
 
 export function App() {
-  const dispatch = useAppDispatch();
-  const authStatus = useAppSelector(selectAuthStatus);
-  const user = useAppSelector(selectUser);
-
-  useEffect(() => {
-    dispatch(checkAuthAction());
-  }, [dispatch, authStatus]);
-
   return (
     <HelmetProvider>
       <Routes>
         <Route path={FrontendRoute.Intro} element={<IntroPage />} />
         <Route path={FrontendRoute.Login} element={
-          <AnonymousRoute authStatus={authStatus} userRole={user?.role} children={<LoginPage />} />
+          <AnonymousRoute children={<LoginPage />} />
         } />
         <Route path={FrontendRoute.Registration} element={
-          <AnonymousRoute authStatus={authStatus} userRole={user?.role} children={<RegistrationPage />} />
+          <AnonymousRoute children={<RegistrationPage />} />
         } />
-        <Route path={FrontendRoute.Questionnaire} element={<QuestionnairePage />} />
-        <Route path={FrontendRoute.Personal} element={<PersonalPage />} />
-        <Route path={FrontendRoute.Main} element={<MainPage />} />
-        <Route path={FrontendRoute.Users} element={<UsersPage />} />
-        <Route path={FrontendRoute.UserCard} element={<UserCardPage />} />
-        <Route path={FrontendRoute.Trainings} element={<TrainingsPage />} />
-        <Route path={FrontendRoute.TrainingCard} element={<TrainingCardPage />} />
+        <Route path={FrontendRoute.Questionnaire} element={
+          <AuthorizedRoute children={<QuestionnairePage />} />
+        } />
+        <Route path={FrontendRoute.Personal} element={
+          <AuthorizedRoute children={<PersonalPage />} />
+        } />
+        <Route path={FrontendRoute.Main} element={
+          <AuthorizedRoute children={<MainPage />} />
+        } />
+        <Route path={FrontendRoute.Users} element={
+          <AuthorizedRoute children={<UsersPage />} />
+        } />
+        <Route path={FrontendRoute.UserCard} element={
+          <AuthorizedRoute children={<UserCardPage />} />
+        } />
+        <Route path={FrontendRoute.Trainings} element={
+          <AuthorizedRoute children={<TrainingsPage />} />
+        } />
+        <Route path={FrontendRoute.TrainingCard} element={
+          <AuthorizedRoute children={<TrainingCardPage />} />
+        } />
       </Routes>
     </HelmetProvider>
   );

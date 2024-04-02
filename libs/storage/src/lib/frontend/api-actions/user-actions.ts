@@ -2,7 +2,7 @@ import { AxiosInstance } from 'axios';
 
 import { ApiRoute } from '@2299899-fit-friends/consts';
 import { saveToken } from '@2299899-fit-friends/services';
-import { AuthData, FrontendRoute, User, UserWithToken } from '@2299899-fit-friends/types';
+import { AuthData, FrontendRoute, User, UserRole, UserWithToken } from '@2299899-fit-friends/types';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
 import { redirectToRoute } from '../actions/redirect-to-route';
@@ -62,6 +62,42 @@ export const registerUserAction = createAsyncThunk<
     saveToken(loggedData.accessToken);
     dispatch(setResponseError(null));
     dispatch(redirectToRoute(FrontendRoute.Questionnaire));
+    return user;
+
+  } catch (error) {
+    if (!error.response) {
+      throw new Error(error);
+    }
+
+    dispatch(setResponseError(error.response.data));
+    return rejectWithValue(error.response.data);
+  }
+});
+
+
+export const fetchUserAction = createAsyncThunk<
+  User,
+  string,
+  { dispatch: AppDispatch; state: State; extra: AxiosInstance }
+>('user/fetchUser', async (id, { extra: api }) => {
+  const { data: userData } = await api.get(
+    `${ApiRoute.User}/${id}`
+  );
+  return userData;
+});
+
+export const updateUserAction = createAsyncThunk<
+  User,
+  { id: string, data: FormData },
+  { dispatch: AppDispatch; state: State; extra: AxiosInstance }
+>('user/updateUser', async ({ id, data }, { dispatch, extra: api, rejectWithValue }) => {
+  try {
+    const { data: user } = await api.patch<User>(
+      `${ApiRoute.User}/${id}`,
+      data,
+    );
+    dispatch(setResponseError(null));
+    dispatch(redirectToRoute(data.get('role') === UserRole.Trainer ? FrontendRoute.Personal : FrontendRoute.Main));
     return user;
 
   } catch (error) {

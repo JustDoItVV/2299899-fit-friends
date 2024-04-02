@@ -5,6 +5,8 @@ import { ResponseError } from '../types/user-process.type';
 
 export const selectAuthStatus = (state: Pick<State, NameSpace.User>): AuthStatus =>
   state[NameSpace.User].authStatus;
+export const selectCurrentUser = (state: Pick<State, NameSpace.User>): User | null =>
+  state[NameSpace.User].currentUser;
 export const selectUser = (state: Pick<State, NameSpace.User>): User | null =>
   state[NameSpace.User].user;
 export const selectResponseError = (state: Pick<State, NameSpace.User>): ResponseError | null =>
