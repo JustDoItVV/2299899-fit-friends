@@ -1,10 +1,10 @@
 export enum FrontendRoute {
-  Intro = '/intro',
+  Intro = '/',
   Login = '/login',
   Registration = '/registration',
   Questionnaire = '/questionnaire',
   Personal = '/personal',
-  Main = '/',
+  Main = '/main',
   Users = '/users',
   UserCard = '/user',
   Trainings = '/trainings',
