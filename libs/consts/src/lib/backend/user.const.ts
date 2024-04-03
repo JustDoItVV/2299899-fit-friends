@@ -70,7 +70,7 @@ export enum UserErrorMessage {
   OnlyAnonymous = 'Forbidden. Allowed only for unauthorized',
   TokenCreationError = 'Token creation error',
   NameRequired = 'User\'s name required',
-  NameWrongPattern = 'Allowed only latin and russian letters',
+  NameWrongPattern = 'In name allowed only latin and russian letters',
   NameMinLength = `User name min length is ${NameLength.Min} symbols`,
   NameMaxLength = `User name max length is ${NameLength.Max} symbols`,
   GenderRequired = 'Gender required',

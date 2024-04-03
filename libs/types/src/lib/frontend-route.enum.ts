@@ -9,4 +9,7 @@ export enum FrontendRoute {
   UserCard = '/user',
   Trainings = '/trainings',
   TrainingCard = '/training',
+  Friends = '/friends',
+  Notifications = '/notifications',
+  Create = '/create',
 }

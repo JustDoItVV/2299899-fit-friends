@@ -2,7 +2,7 @@ import { AxiosInstance } from 'axios';
 
 import { ApiRoute } from '@2299899-fit-friends/consts';
 import { saveToken } from '@2299899-fit-friends/services';
-import { AuthData, FrontendRoute, User, UserRole, UserWithToken } from '@2299899-fit-friends/types';
+import { AuthData, FrontendRoute, User, UserWithToken } from '@2299899-fit-friends/types';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
 import { redirectToRoute } from '../actions/redirect-to-route';
@@ -97,7 +97,6 @@ export const updateUserAction = createAsyncThunk<
       data,
     );
     dispatch(setResponseError(null));
-    dispatch(redirectToRoute(data.get('role') === UserRole.Trainer ? FrontendRoute.Personal : FrontendRoute.Main));
     return user;
 
   } catch (error) {
