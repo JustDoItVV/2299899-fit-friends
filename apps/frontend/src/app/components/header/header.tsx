@@ -2,7 +2,13 @@ import { Link } from 'react-router-dom';
 
 import { FrontendRoute } from '@2299899-fit-friends/types';
 
-export default function Header(): JSX.Element {
+type HeaderProps = {
+  page: string;
+};
+
+export default function Header(props: HeaderProps): JSX.Element {
+  const { page } = props;
+
   return (
     <header className="header">
       <div className="container">
@@ -14,21 +20,21 @@ export default function Header(): JSX.Element {
         <nav className="main-nav">
           <ul className="main-nav__list">
             <li className="main-nav__item">
-              <Link className="main-nav__link is-active" to={FrontendRoute.Main} aria-label="На главную">
+              <Link className={`main-nav__link ${page === FrontendRoute.Main ? 'is-active' : ''}`} to={FrontendRoute.Main} aria-label="На главную">
                 <svg width={18} height={18} aria-hidden="true">
                   <use xlinkHref="#icon-home" />
                 </svg>
               </Link>
             </li>
             <li className="main-nav__item">
-              <Link className="main-nav__link" to={FrontendRoute.Personal} aria-label="Личный кабинет">
+              <Link className={`main-nav__link ${page === FrontendRoute.Personal ? 'is-active' : ''}`} to={FrontendRoute.Personal} aria-label="Личный кабинет">
                 <svg width={16} height={18} aria-hidden="true">
                   <use xlinkHref="#icon-user" />
                 </svg>
               </Link>
             </li>
             <li className="main-nav__item">
-              <Link className="main-nav__link" to={`${FrontendRoute.Personal}${FrontendRoute.Friends}`} aria-label="Друзья">
+              <Link className={`main-nav__link ${page === FrontendRoute.Friends ? 'is-active' : ''}`} to={`${FrontendRoute.Personal}${FrontendRoute.Friends}`} aria-label="Друзья">
                 <svg width={22} height={16} aria-hidden="true">
                   <use xlinkHref="#icon-friends" />
                 </svg>

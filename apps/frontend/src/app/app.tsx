@@ -8,10 +8,12 @@ import AuthorizedRoute from './components/authorized-route/authorized-route';
 import IntroPage from './pages/intro-page/intro.page';
 import LoginPage from './pages/login-page/login.page';
 import MainPage from './pages/main-page/main.page';
+import NotFoundPage from './pages/not-found-page/not-found.page';
 import PersonalPage from './pages/personal-page/personal.page';
 import QuestionnairePage from './pages/questionnaire-page/questionnaire-page';
 import RegistrationPage from './pages/registration-page/registration.page';
 import TrainingCardPage from './pages/training-card-page/training-card.page';
+import TrainingsCreatePage from './pages/trainings-create-page/trainings-create.page';
 import TrainingsPage from './pages/trainings-page/trainings.page';
 import UserCardPage from './pages/user-card-page/user-card.page';
 import UsersPage from './pages/users-page/users.page';
@@ -45,9 +47,13 @@ export function App() {
         <Route path={FrontendRoute.Trainings} element={
           <AuthorizedRoute children={<TrainingsPage />} />
         } />
+        <Route path={`${FrontendRoute.Trainings}${FrontendRoute.Create}`} element={
+          <AuthorizedRoute children={<TrainingsCreatePage />} />
+        } />
         <Route path={FrontendRoute.TrainingCard} element={
           <AuthorizedRoute children={<TrainingCardPage />} />
         } />
+        <Route path='*' element={<NotFoundPage />} />
       </Routes>
     </HelmetProvider>
   );

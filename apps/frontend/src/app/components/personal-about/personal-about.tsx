@@ -1,10 +1,14 @@
 import { ChangeEvent, FormEvent, useEffect, useRef, useState } from 'react';
 
 import { METRO_STATIONS } from '@2299899-fit-friends/consts';
-import { selectResponseError, selectUser, updateUserAction } from '@2299899-fit-friends/storage';
+import {
+    fetchUserAvatar, selectResponseError, selectUser, updateUserAction
+} from '@2299899-fit-friends/storage';
 import { TrainingLevel, TrainingType, UserGender, UserRole } from '@2299899-fit-friends/types';
+import { unwrapResult } from '@reduxjs/toolkit';
 
 import { useAppDispatch, useAppSelector } from '../hooks';
+import Loading from '../loading/loading';
 
 export default function PersonalAbout(): JSX.Element {
   const dispatch = useAppDispatch();
@@ -12,7 +16,7 @@ export default function PersonalAbout(): JSX.Element {
   const responseError = useAppSelector(selectResponseError);
 
   const [isFormDisabled, setIsFormDisabled] = useState<boolean>(true);
-
+  const [avatarUrl, setAvatarUrl] = useState<string>('');
   const nameRef = useRef<string>(user ? user.name : '');
   const descriptionRef = useRef<string>(user?.description || '');
   const statusRef = useRef<boolean>(user && user.role === UserRole.Trainer ? !!user.isReadyToPersonal : !!user?.isReadyToTraining);
@@ -34,14 +38,29 @@ export default function PersonalAbout(): JSX.Element {
       locationRef.current = user.location;
       genderRef.current = user.gender;
       levelRef.current = user.trainingLevel;
+
+      const fetchAvatar = async () => {
+        const avatar = unwrapResult(await dispatch(fetchUserAvatar(user.id || '')));
+        setAvatarUrl(avatar);
+      };
+
+      fetchAvatar();
     }
-  }, [user]);
+  }, [dispatch, user]);
 
   useEffect(() => {
     if (responseError) {
       setIsFormDisabled(false);
     }
   }, [responseError]);
+
+  if (!user) {
+    return (
+      <section className="user-info-edit">
+        <Loading />
+      </section>
+    );
+  }
 
   const handleEditButtonClick = () => {
     setIsFormDisabled(!isFormDisabled);
@@ -83,7 +102,6 @@ export default function PersonalAbout(): JSX.Element {
     formData.append('name', nameRef.current);
     formData.append('description', descriptionRef.current);
     formData.append(`${user?.role === UserRole.Trainer ? 'isReadyToPersonal' : 'isReadyToTraining'}`, statusRef.current.toString());
-    console.log(formData.get('isReadyToPersonal'));
 
     trainigTypesRef.current.forEach((type) => {
       formData.append('trainingType', type);
@@ -155,7 +173,7 @@ export default function PersonalAbout(): JSX.Element {
             />
             <span className="input-load-avatar__avatar">
               <img
-                src={user?.id && `http://localhost:3001/api/user/${user.id}/avatar`}
+                src={avatarUrl}
                 width={98}
                 height={98}
                 alt="user avatar"

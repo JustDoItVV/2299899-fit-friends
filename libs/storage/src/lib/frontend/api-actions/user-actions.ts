@@ -108,3 +108,14 @@ export const updateUserAction = createAsyncThunk<
     return rejectWithValue(error.response.data);
   }
 });
+
+export const fetchUserAvatar = createAsyncThunk<
+  string,
+  string,
+  { dispatch: AppDispatch; state: State; extra: AxiosInstance }
+>('user/fetchUserAvatar', async (id, { extra: api }) => {
+  const { data: avatarUrl } = await api.get<string>(
+    `${ApiRoute.User}/${id}/avatar`,
+  );
+  return avatarUrl;
+});
