@@ -1,37 +1,53 @@
+import { memo, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
-export default function TrainingCatalogCard(): JSX.Element {
+import { fetchTrainingBackgroundPicture, useAppDispatch } from '@2299899-fit-friends/frontend-core';
+import { FrontendRoute, Training } from '@2299899-fit-friends/types';
+import { unwrapResult } from '@reduxjs/toolkit';
+
+type TrainingCatalogCardProps = {
+  training: Training;
+};
+
+export default memo(function TrainingCatalogCard({ training }: TrainingCatalogCardProps): JSX.Element {
+  const dispatch = useAppDispatch();
+  const [imageUrl, setImageUrl] = useState<string>('');
+
+  useEffect(() => {
+    const fetchAvatar = async () => {
+      const image = unwrapResult(await dispatch(fetchTrainingBackgroundPicture(training.id || '')));
+      setImageUrl(image);
+    };
+
+    fetchAvatar();
+  }, [dispatch, training]);
+
   return (
     <li className="my-trainings__item">
       <div className="thumbnail-training">
         <div className="thumbnail-training__inner">
           <div className="thumbnail-training__image">
             <picture>
-              <source
-                type="image/webp"
-                srcSet="img/content/thumbnails/training-02.webp, img/content/thumbnails/training-02@2x.webp 2x"
-              />
               <img
-                src="img/content/thumbnails/training-02.jpg"
-                srcSet="img/content/thumbnails/training-02@2x.jpg 2x"
+                src={imageUrl}
                 width={330}
                 height={190}
-                alt=""
+                alt="training-card"
               />
             </picture>
           </div>
-          <p className="thumbnail-training__price">Бесплатно</p>
-          <h3 className="thumbnail-training__title">crossfit</h3>
+          <p className="thumbnail-training__price">{!training.price ? 'Бесплатно': training.price}</p>
+          <h3 className="thumbnail-training__title">{training.title}</h3>
           <div className="thumbnail-training__info">
             <ul className="thumbnail-training__hashtags-list">
               <li className="thumbnail-training__hashtags-item">
                 <div className="hashtag thumbnail-training__hashtag">
-                  <span>#кроссфит</span>
+                  <span>#{training.type}</span>
                 </div>
               </li>
               <li className="thumbnail-training__hashtags-item">
                 <div className="hashtag thumbnail-training__hashtag">
-                  <span>#1200ккал</span>
+                  <span>#{training.calories}ккал</span>
                 </div>
               </li>
             </ul>
@@ -40,27 +56,25 @@ export default function TrainingCatalogCard(): JSX.Element {
                 <use xlinkHref="#icon-star" />
               </svg>
               <span className="thumbnail-training__rate-value">
-                5
+                {training.rating}
               </span>
             </div>
           </div>
           <div className="thumbnail-training__text-wrapper">
             <p className="thumbnail-training__text">
-              Сложный комплекс упражнений для профессиональных
-              атлетов на&nbsp;отработку показателей
-              в&nbsp;классическом стиле.
+              {training.description}
             </p>
           </div>
           <div className="thumbnail-training__button-wrapper">
             <Link
               className="btn btn--small thumbnail-training__button-catalog"
-              to="*"
+              to={`/${FrontendRoute.Trainings}/${training.id}`}
             >
               Подробнее
             </Link>
             <Link
               className="btn btn--small btn--outlined thumbnail-training__button-catalog"
-              to="*"
+              to={`/${FrontendRoute.Trainings}/${training.id}/reviews`}
             >
               Отзывы
             </Link>
@@ -69,4 +83,4 @@ export default function TrainingCatalogCard(): JSX.Element {
       </div>
     </li>
   );
-}
+});

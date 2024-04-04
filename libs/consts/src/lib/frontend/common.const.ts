@@ -17,7 +17,7 @@ export enum ApiRoute {
   SendNewTrainingsEmail = '/send-new-trainings-email',
   Notification = '/notification',
   Training = '/training',
-  BackgroundPicture = '/background-picture',
+  BackgroundPicture = '/backgroundPicture',
   Video = '/video',
   Account = '/account',
   Trainer = '/trainer',

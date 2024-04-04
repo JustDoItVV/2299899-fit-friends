@@ -1,7 +1,7 @@
 import { AxiosInstance } from 'axios';
 
 import { ApiRoute } from '@2299899-fit-friends/consts';
-import { FrontendRoute, Training } from '@2299899-fit-friends/types';
+import { FrontendRoute, Pagination, Training } from '@2299899-fit-friends/types';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
 import { redirectToRoute } from '../actions/redirect-to-route';
@@ -20,7 +20,7 @@ export const createTrainingAction = createAsyncThunk<
       formData
     );
     dispatch(setResponseError(null));
-    dispatch(redirectToRoute(`/${FrontendRoute.Personal}`));
+    dispatch(redirectToRoute(`/${FrontendRoute.Account}`));
     return training;
   } catch (error) {
     if (!error.response) {
@@ -33,12 +33,23 @@ export const createTrainingAction = createAsyncThunk<
 });
 
 export const fetchTrainerCatalog = createAsyncThunk<
-  void,
-  void,
+  Pagination<Training>,
+  number,
   { dispatch: AppDispatch; state: State; extra: AxiosInstance }
->('accountTrainer/fetchTrainings', async (_, { extra: api }) => {
-  const { data: pagination } = await api.get(
-    `${ApiRoute.Account}/${ApiRoute.Trainer}`
+>('accountTrainer/fetchTrainings', async (page, { extra: api }) => {
+  const { data: pagination } = await api.get<Pagination<Training>>(
+    `${ApiRoute.Account}${ApiRoute.Trainer}?limit=6&page=${page}`
   );
-  console.log(pagination);
+  return pagination;
+});
+
+export const fetchTrainingBackgroundPicture = createAsyncThunk<
+  string,
+  string,
+  { dispatch: AppDispatch; state: State; extra: AxiosInstance }
+>('user/fetchTrainingBackgroundPicture', async (id, { extra: api }) => {
+  const { data: pictureUrl } = await api.get<string>(
+    `${ApiRoute.Training}/${id}${ApiRoute.BackgroundPicture}`,
+  );
+  return pictureUrl;
 });
