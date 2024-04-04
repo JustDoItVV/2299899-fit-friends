@@ -12,7 +12,7 @@ export default function IntroPage(): JSX.Element {
     evt: MouseEvent<HTMLButtonElement>
   ) => {
     evt.preventDefault();
-    dispatch(redirectToRoute(FrontendRoute.Registration));
+    dispatch(redirectToRoute(`/${FrontendRoute.Registration}`));
   };
 
   return (
@@ -71,7 +71,7 @@ export default function IntroPage(): JSX.Element {
               </button>
               <p className="intro__text">
                 Есть аккаунт?{' '}
-                <Link className="intro__link" to={FrontendRoute.Login}>
+                <Link className="intro__link" to={`/${FrontendRoute.Login}`}>
                   Вход
                 </Link>
               </p>

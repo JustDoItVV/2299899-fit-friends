@@ -25,5 +25,5 @@ export default function AuthorizedRoute(props: AuthorizedRouteProps): JSX.Elemen
     return <Loading />;
   }
 
-  return authStatus === AuthStatus.Auth ? children : <Navigate to={FrontendRoute.Login} />;
+  return authStatus === AuthStatus.Auth ? children : <Navigate to={`/${FrontendRoute.Login}`} />;
 }

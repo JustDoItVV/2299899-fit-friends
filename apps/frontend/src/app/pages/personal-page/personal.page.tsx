@@ -33,7 +33,7 @@ export default function PersonalPage(): JSX.Element {
                   <div className="personal-account-coach__navigation">
                     <Link
                       className="thumbnail-link thumbnail-link--theme-light"
-                      to={`${FrontendRoute.Personal}${FrontendRoute.Trainings}`}
+                      to={`/${FrontendRoute.Personal}/${FrontendRoute.Trainings}`}
                     >
                       <div className="thumbnail-link__icon thumbnail-link__icon--theme-light">
                         <svg width={30} height={26} aria-hidden="true">
@@ -46,7 +46,7 @@ export default function PersonalPage(): JSX.Element {
                     </Link>
                     <Link
                       className="thumbnail-link thumbnail-link--theme-light"
-                      to={`${FrontendRoute.Personal}${FrontendRoute.Create}`}
+                      to={`/${FrontendRoute.Personal}/${FrontendRoute.Create}`}
                     >
                       <div className="thumbnail-link__icon thumbnail-link__icon--theme-light">
                         <svg width={30} height={26} aria-hidden="true">
@@ -59,7 +59,7 @@ export default function PersonalPage(): JSX.Element {
                     </Link>
                     <Link
                       className="thumbnail-link thumbnail-link--theme-light"
-                      to={FrontendRoute.Main}
+                      to={`/${FrontendRoute.Main}/${FrontendRoute.Friends}`}
                     >
                       <div className="thumbnail-link__icon thumbnail-link__icon--theme-light">
                         <svg width={30} height={26} aria-hidden="true">
@@ -70,7 +70,7 @@ export default function PersonalPage(): JSX.Element {
                     </Link>
                     <Link
                       className="thumbnail-link thumbnail-link--theme-light"
-                      to={FrontendRoute.Main}
+                      to={`/${FrontendRoute.Main}/${FrontendRoute.Orders}`}
                     >
                       <div className="thumbnail-link__icon thumbnail-link__icon--theme-light">
                         <svg width={30} height={26} aria-hidden="true">

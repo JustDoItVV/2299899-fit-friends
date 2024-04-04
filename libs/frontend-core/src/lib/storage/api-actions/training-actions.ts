@@ -20,7 +20,7 @@ export const createTrainingAction = createAsyncThunk<
       formData
     );
     dispatch(setResponseError(null));
-    dispatch(redirectToRoute(FrontendRoute.Personal));
+    dispatch(redirectToRoute(`/${FrontendRoute.Personal}`));
     return training;
   } catch (error) {
     if (!error.response) {

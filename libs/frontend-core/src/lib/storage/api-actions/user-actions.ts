@@ -32,7 +32,7 @@ export const loginUserAction = createAsyncThunk<
     );
     saveToken(data.accessToken);
     dispatch(setResponseError(null));
-    dispatch(redirectToRoute(FrontendRoute.Login));
+    dispatch(redirectToRoute(`/${FrontendRoute.Login}`));
     return data;
   } catch (error) {
     if (!error.response) {
@@ -62,7 +62,7 @@ export const registerUserAction = createAsyncThunk<
       );
       saveToken(loggedData.accessToken);
       dispatch(setResponseError(null));
-      dispatch(redirectToRoute(FrontendRoute.Questionnaire));
+      dispatch(redirectToRoute(`/${FrontendRoute.Questionnaire}`));
       return user;
     } catch (error) {
       if (!error.response) {
