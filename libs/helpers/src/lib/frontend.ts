@@ -1,8 +1,11 @@
+import { ResponseError } from '@2299899-fit-friends/types';
+
 export const getResponseErrorMessage = (
-  statusCode: number | undefined,
-  message: string | string[] | undefined,
+  responseError: ResponseError | null,
   field: string
 ) => {
+  const { statusCode, message } = responseError || {};
+
   if (!statusCode || !message) {
     return '';
   }
@@ -11,5 +14,5 @@ export const getResponseErrorMessage = (
     return message;
   }
 
-  return message.filter((item) => item.toLowerCase().includes(field)).join(', ');
+  return message.filter((item) => item.toLowerCase().includes(field))[0];
 };

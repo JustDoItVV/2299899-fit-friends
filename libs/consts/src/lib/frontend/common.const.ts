@@ -25,3 +25,8 @@ export enum ApiRoute {
   Reviews = '/reviews',
   TriningRequest = '/training-request',
 }
+
+export const ResponseErrorMessage = new Map([
+  [404, 'Страница не найдена'],
+  [500, 'Внутренняя ошибка сервера',],
+]);

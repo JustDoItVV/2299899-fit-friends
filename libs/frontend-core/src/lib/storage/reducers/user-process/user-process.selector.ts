@@ -1,7 +1,6 @@
-import { AuthStatus, NameSpace, User } from '@2299899-fit-friends/types';
+import { AuthStatus, NameSpace, ResponseError, User } from '@2299899-fit-friends/types';
 
-import { State } from '../types/state.type';
-import { ResponseError } from '../types/user-process.type';
+import { State } from '../../types/state.type';
 
 export const selectAuthStatus = (
   state: Pick<State, NameSpace.User>

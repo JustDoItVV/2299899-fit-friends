@@ -1,10 +1,4 @@
-import { AuthStatus, User } from '@2299899-fit-friends/types';
-
-export type ResponseError = {
-  error: string;
-  message: string | string[];
-  statusCode: number;
-};
+import { AuthStatus, ResponseError, User } from '@2299899-fit-friends/types';
 
 export type UserProcess = {
   authStatus: AuthStatus;

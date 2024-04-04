@@ -12,9 +12,7 @@ type AnonymousRouteProps = {
   children: JSX.Element;
 };
 
-export default function AnonymousRoute(
-  props: AnonymousRouteProps
-): JSX.Element {
+export default function AnonymousRoute(props: AnonymousRouteProps): JSX.Element {
   const { children } = props;
   const dispatch = useAppDispatch();
   const authStatus = useAppSelector(selectAuthStatus);
@@ -28,15 +26,7 @@ export default function AnonymousRoute(
     return <Loading />;
   }
 
-  return authStatus === AuthStatus.NoAuth ? (
-    children
-  ) : (
-    <Navigate
-      to={
-        currentUser?.role === UserRole.Trainer
-          ? FrontendRoute.Personal
-          : FrontendRoute.Main
-      }
-    />
-  );
+  return authStatus === AuthStatus.NoAuth ? children : <Navigate to={
+        currentUser?.role === UserRole.Trainer ? FrontendRoute.Personal : FrontendRoute.Main
+      }/>;
 }

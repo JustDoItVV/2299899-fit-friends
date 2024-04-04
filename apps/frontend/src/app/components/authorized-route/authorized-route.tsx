@@ -12,9 +12,7 @@ type AuthorizedRouteProps = {
   children: JSX.Element;
 };
 
-export default function AuthorizedRoute(
-  props: AuthorizedRouteProps
-): JSX.Element {
+export default function AuthorizedRoute(props: AuthorizedRouteProps): JSX.Element {
   const { children } = props;
   const dispatch = useAppDispatch();
   const authStatus = useAppSelector(selectAuthStatus);
@@ -27,9 +25,5 @@ export default function AuthorizedRoute(
     return <Loading />;
   }
 
-  return authStatus === AuthStatus.Auth ? (
-    children
-  ) : (
-    <Navigate to={FrontendRoute.Login} />
-  );
+  return authStatus === AuthStatus.Auth ? children : <Navigate to={FrontendRoute.Login} />;
 }

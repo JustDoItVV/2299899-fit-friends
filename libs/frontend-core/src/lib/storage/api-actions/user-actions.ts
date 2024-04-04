@@ -6,9 +6,9 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 
 import { saveToken } from '../../services/token';
 import { redirectToRoute } from '../actions/redirect-to-route';
+import { setResponseError } from '../reducers/user-process/user-process.slice';
 import { AppDispatch } from '../types/app-dispatch.type';
 import { State } from '../types/state.type';
-import { setResponseError } from '../user-process/user-process.slice';
 
 export const checkAuthAction = createAsyncThunk<
   UserWithToken,

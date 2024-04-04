@@ -1,12 +1,8 @@
 import { AuthStatus, NameSpace, User } from '@2299899-fit-friends/types';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import {
-  checkAuthAction,
-  fetchUserAction,
-  loginUserAction,
-} from '../api-actions/user-actions';
-import { ResponseError, UserProcess } from '../types/user-process.type';
+import { checkAuthAction, fetchUserAction, loginUserAction } from '../../api-actions/user-actions';
+import { ResponseError, UserProcess } from '../../types/user-process.type';
 
 const initialState: UserProcess = {
   authStatus: AuthStatus.Unknown,
