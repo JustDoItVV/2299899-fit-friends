@@ -4,7 +4,7 @@ import { Helmet } from 'react-helmet-async';
 import {
     fetchTrainerCatalog, selectAccountTrainerTotalPages
 } from '@2299899-fit-friends/frontend-core';
-import { FrontendRoute, QueryPagination } from '@2299899-fit-friends/types';
+import { FrontendRoute, QueryPagination, Training } from '@2299899-fit-friends/types';
 
 import ExpandingCatalog from '../../components/expanding-catalog/expanding-catalog';
 import Header from '../../components/header/header';
@@ -26,7 +26,7 @@ export default function AccountTrainingsPage(): JSX.Element {
               <TrainingsQueryForm setQueryParams={setQueryParams} />
               <div className="inner-page__content">
                 <div className="my-trainings">
-                  <ExpandingCatalog
+                  <ExpandingCatalog<Training>
                     fetch={fetchTrainerCatalog}
                     selector={selectAccountTrainerTotalPages}
                     component={TrainingCatalogCard}

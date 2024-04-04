@@ -1,7 +1,7 @@
 import { AxiosInstance } from 'axios';
 
 import { ApiRoute } from '@2299899-fit-friends/consts';
-import { FrontendRoute, Pagination, Training } from '@2299899-fit-friends/types';
+import { FrontendRoute, Pagination, Training, User } from '@2299899-fit-friends/types';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
 import { redirectToRoute } from '../actions/redirect-to-route';
@@ -52,4 +52,15 @@ export const fetchTrainingBackgroundPicture = createAsyncThunk<
     `${ApiRoute.Training}/${id}${ApiRoute.BackgroundPicture}`,
   );
   return pictureUrl;
+});
+
+export const fetchTrainerFriends = createAsyncThunk<
+  Pagination<User>,
+  string,
+  { dispatch: AppDispatch; state: State; extra: AxiosInstance }
+>('accountTrainer/fetchFriends', async (query, { extra: api }) => {
+  const { data: pagination } = await api.get<Pagination<User>>(
+    `${ApiRoute.Account}${ApiRoute.Trainer}${ApiRoute.Friends}?${query}`
+  );
+  return pagination;
 });

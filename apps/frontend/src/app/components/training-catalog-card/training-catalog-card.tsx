@@ -2,14 +2,15 @@ import { memo, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import { fetchTrainingBackgroundPicture, useAppDispatch } from '@2299899-fit-friends/frontend-core';
-import { FrontendRoute, Training } from '@2299899-fit-friends/types';
+import { FrontendRoute, Training, User } from '@2299899-fit-friends/types';
 import { unwrapResult } from '@reduxjs/toolkit';
 
 type TrainingCatalogCardProps = {
-  item: Training;
+  item: Training | User;
 };
 
-export default memo(function TrainingCatalogCard({ item: training }: TrainingCatalogCardProps): JSX.Element {
+export default memo(function TrainingCatalogCard({ item }: TrainingCatalogCardProps): JSX.Element {
+  const training = item as Training;
   const dispatch = useAppDispatch();
   const [imageUrl, setImageUrl] = useState<string>('');
 

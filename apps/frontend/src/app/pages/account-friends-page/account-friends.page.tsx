@@ -1,10 +1,18 @@
+import { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 
-import { FrontendRoute } from '@2299899-fit-friends/types';
+import {
+    fetchTrainerFriends, selectAccountTrainerTotalPages
+} from '@2299899-fit-friends/frontend-core';
+import { FrontendRoute, QueryPagination, User } from '@2299899-fit-friends/types';
 
+import ExpandingCatalog from '../../components/expanding-catalog/expanding-catalog';
+import FriendsCatalogCard from '../../components/friends-catalog-card/friends-catalog-card';
 import Header from '../../components/header/header';
 
 export default function AccountFriendsPage(): JSX.Element {
+  const [queryParams,] = useState<QueryPagination>({ page: 1, limit: 3 });
+
   return (
     <div className="wrapper">
       <Helmet><title>Список друзей — FitFriends</title></Helmet>
@@ -22,7 +30,15 @@ export default function AccountFriendsPage(): JSX.Element {
               <div className="friends-list__title-wrapper">
                 <h1 className="friends-list__title">Мои друзья</h1>
               </div>
-              <ul className="friends-list__list">
+              <ExpandingCatalog<User>
+                fetch={fetchTrainerFriends}
+                selector={selectAccountTrainerTotalPages}
+                component={FriendsCatalogCard}
+                keyPrefix='friedns_card'
+                classNameList='friends-list__list'
+                queryParams={queryParams}
+              />
+              {/* <ul className="friends-list__list">
                 <li className="friends-list__item">
                   <div className="thumbnail-friend">
                     <div className="thumbnail-friend__info thumbnail-friend__info--theme-light">
@@ -41,7 +57,6 @@ export default function AccountFriendsPage(): JSX.Element {
                               alt=""
                             />
                           </picture>
-                          {/*<div class="thumbnail-friend__online-status thumbnail-friend__online-status--is-online"></div>*/}
                         </div>
                       </div>
                       <div className="thumbnail-friend__header">
@@ -107,7 +122,6 @@ export default function AccountFriendsPage(): JSX.Element {
                               alt=""
                             />
                           </picture>
-                          {/*<div class="thumbnail-friend__online-status thumbnail-friend__online-status--is-online"></div>*/}
                         </div>
                       </div>
                       <div className="thumbnail-friend__header">
@@ -173,7 +187,6 @@ export default function AccountFriendsPage(): JSX.Element {
                               alt=""
                             />
                           </picture>
-                          {/*<div class="thumbnail-friend__online-status thumbnail-friend__online-status--is-online"></div>*/}
                         </div>
                       </div>
                       <div className="thumbnail-friend__header">
@@ -239,7 +252,6 @@ export default function AccountFriendsPage(): JSX.Element {
                               alt=""
                             />
                           </picture>
-                          {/*<div class="thumbnail-friend__online-status thumbnail-friend__online-status--is-online"></div>*/}
                         </div>
                       </div>
                       <div className="thumbnail-friend__header">
@@ -286,7 +298,6 @@ export default function AccountFriendsPage(): JSX.Element {
                               alt=""
                             />
                           </picture>
-                          {/*<div class="thumbnail-friend__online-status thumbnail-friend__online-status--is-online"></div>*/}
                         </div>
                       </div>
                       <div className="thumbnail-friend__header">
@@ -333,7 +344,6 @@ export default function AccountFriendsPage(): JSX.Element {
                               alt=""
                             />
                           </picture>
-                          {/*<div class="thumbnail-friend__online-status thumbnail-friend__online-status--is-offline"></div>*/}
                         </div>
                       </div>
                       <div className="thumbnail-friend__header">
@@ -380,7 +390,6 @@ export default function AccountFriendsPage(): JSX.Element {
                               alt=""
                             />
                           </picture>
-                          {/*<div class="thumbnail-friend__online-status thumbnail-friend__online-status--is-offline"></div>*/}
                         </div>
                       </div>
                       <div className="thumbnail-friend__header">
@@ -427,7 +436,6 @@ export default function AccountFriendsPage(): JSX.Element {
                               alt=""
                             />
                           </picture>
-                          {/*<div class="thumbnail-friend__online-status thumbnail-friend__online-status--is-online"></div>*/}
                         </div>
                       </div>
                       <div className="thumbnail-friend__header">
@@ -474,7 +482,6 @@ export default function AccountFriendsPage(): JSX.Element {
                               alt=""
                             />
                           </picture>
-                          {/*<div class="thumbnail-friend__online-status thumbnail-friend__online-status--is-online"></div>*/}
                         </div>
                       </div>
                       <div className="thumbnail-friend__header">
@@ -517,7 +524,7 @@ export default function AccountFriendsPage(): JSX.Element {
                 >
                   Вернуться в начало
                 </button>
-              </div>
+              </div> */}
             </div>
           </div>
         </section>
