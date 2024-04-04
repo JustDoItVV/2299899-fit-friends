@@ -6192,13 +6192,15 @@ input:active + .custom-textarea__text {
   background-color: #aeaeae;
 }
 
-.filter-range__bar {
+.filter-range__bar,
+.multi-range-slider .bar {
   width: 208px;
   height: 1px;
   background-color: #333333;
 }
 
-.filter-range__control {
+.filter-range__control,
+.multi-range-slider .thumb {
   position: relative;
   display: -webkit-box;
   display: -ms-flexbox;

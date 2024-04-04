@@ -34,11 +34,11 @@ export const createTrainingAction = createAsyncThunk<
 
 export const fetchTrainerCatalog = createAsyncThunk<
   Pagination<Training>,
-  number,
+  string,
   { dispatch: AppDispatch; state: State; extra: AxiosInstance }
->('accountTrainer/fetchTrainings', async (page, { extra: api }) => {
+>('accountTrainer/fetchTrainings', async (query, { extra: api }) => {
   const { data: pagination } = await api.get<Pagination<Training>>(
-    `${ApiRoute.Account}${ApiRoute.Trainer}?limit=6&page=${page}`
+    `${ApiRoute.Account}${ApiRoute.Trainer}?${query}`
   );
   return pagination;
 });

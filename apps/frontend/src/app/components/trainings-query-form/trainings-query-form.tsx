@@ -1,11 +1,39 @@
-import { redirectToRoute, useAppDispatch } from '@2299899-fit-friends/frontend-core';
-import { FrontendRoute } from '@2299899-fit-friends/types';
+import { debounce } from 'lodash';
+import MultiRangeSlider from 'multi-range-slider-react';
+import { ChangeEvent, useCallback, useRef } from 'react';
 
-export default function TrainingsQueryForm(): JSX.Element {
+import { PriceLimit } from '@2299899-fit-friends/consts';
+import { redirectToRoute, useAppDispatch } from '@2299899-fit-friends/frontend-core';
+import { FrontendRoute, QueryPagination } from '@2299899-fit-friends/types';
+
+type TrainingsQueryFormProps = {
+  setQueryParams: React.Dispatch<React.SetStateAction<QueryPagination>>;
+};
+
+export default function TrainingsQueryForm({ setQueryParams }: TrainingsQueryFormProps): JSX.Element {
   const dispatch = useAppDispatch();
+
+  // const debouncedSetQueryParams = useCallback(
+  //   debounce((value: number, param: string) => {
+  //     setQueryParams((oldData) => {
+  //       const newData = { ...oldData };
+  //       if (param in newData) {
+  //         delete newData[param];
+  //       }
+  //       newData[param] = value;
+  //       newData.page = 1;
+  //       return newData;
+  //     });
+  //   }, 500),
+  //   []
+  // );
 
   const handleBackButtonClick = () => {
     dispatch(redirectToRoute(`/${FrontendRoute.Account}`));
+  };
+
+  const handlePriceMinInputChange = (evt: ChangeEvent<HTMLInputElement>) => {
+    // debouncedSetQueryParams(evt.currentTarget.valueAsNumber, 'price');
   };
 
   return (
@@ -32,7 +60,8 @@ export default function TrainingsQueryForm(): JSX.Element {
                   type="number"
                   id="text-min"
                   name="text-min"
-                  defaultValue={0}
+                  defaultValue={PriceLimit.Min}
+                  onChange={handlePriceMinInputChange}
                 />
                 <label htmlFor="text-min">от</label>
               </div>
@@ -41,12 +70,13 @@ export default function TrainingsQueryForm(): JSX.Element {
                   type="number"
                   id="text-max"
                   name="text-max"
-                  defaultValue={3200}
+                  defaultValue={PriceLimit.Max}
                 />
                 <label htmlFor="text-max">до</label>
               </div>
             </div>
             <div className="filter-range">
+              {/* <MultiRangeSlider className="filter-range__bar" /> */}
               <div className="filter-range__scale">
                 <div className="filter-range__bar">
                   <span className="visually-hidden">
@@ -91,21 +121,15 @@ export default function TrainingsQueryForm(): JSX.Element {
             <div className="filter-range">
               <div className="filter-range__scale">
                 <div className="filter-range__bar">
-                  <span className="visually-hidden">
-                    Полоса прокрутки
-                  </span>
+                  <span className="visually-hidden">Полоса прокрутки</span>
                 </div>
               </div>
               <div className="filter-range__control">
                 <button className="filter-range__min-toggle">
-                  <span className="visually-hidden">
-                    Минимальное значение
-                  </span>
+                  <span className="visually-hidden">Минимальное значение</span>
                 </button>
                 <button className="filter-range__max-toggle">
-                  <span className="visually-hidden">
-                    Максимальное значение
-                  </span>
+                  <span className="visually-hidden">Максимальное значение</span>
                 </button>
               </div>
             </div>
