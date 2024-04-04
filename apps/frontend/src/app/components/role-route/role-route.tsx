@@ -12,5 +12,5 @@ export default function RoleRoute(props: AuthorizedRouteProps): JSX.Element {
   const { role, children } = props;
   const currentUser = useAppSelector(selectCurrentUser);
 
-  return currentUser?.role === role ? children : <Navigate to={FrontendRoute.Main} />;
+  return currentUser?.role === role ? children : <Navigate to={`/${FrontendRoute.Main}`} />;
 }

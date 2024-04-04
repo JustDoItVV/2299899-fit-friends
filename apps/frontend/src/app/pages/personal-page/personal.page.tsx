@@ -59,7 +59,7 @@ export default function PersonalPage(): JSX.Element {
                     </Link>
                     <Link
                       className="thumbnail-link thumbnail-link--theme-light"
-                      to={`/${FrontendRoute.Main}/${FrontendRoute.Friends}`}
+                      to={`/${FrontendRoute.Personal}/${FrontendRoute.Friends}`}
                     >
                       <div className="thumbnail-link__icon thumbnail-link__icon--theme-light">
                         <svg width={30} height={26} aria-hidden="true">
@@ -70,7 +70,7 @@ export default function PersonalPage(): JSX.Element {
                     </Link>
                     <Link
                       className="thumbnail-link thumbnail-link--theme-light"
-                      to={`/${FrontendRoute.Main}/${FrontendRoute.Orders}`}
+                      to={`/${FrontendRoute.Personal}/${FrontendRoute.Orders}`}
                     >
                       <div className="thumbnail-link__icon thumbnail-link__icon--theme-light">
                         <svg width={30} height={26} aria-hidden="true">

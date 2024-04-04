@@ -13,4 +13,5 @@ export enum FrontendRoute {
   Notifications = 'notifications',
   Create = 'create',
   Orders = 'orders',
+  Purchases = 'purchases',
 }

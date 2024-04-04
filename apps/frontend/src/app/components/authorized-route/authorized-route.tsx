@@ -9,10 +9,10 @@ import { AuthStatus, FrontendRoute } from '@2299899-fit-friends/types';
 import Loading from '../loading/loading';
 
 type AuthorizedRouteProps = {
-  children: JSX.Element;
+  children: JSX.Element | JSX.Element[];
 };
 
-export default function AuthorizedRoute(props: AuthorizedRouteProps): JSX.Element {
+export default function AuthorizedRoute(props: AuthorizedRouteProps): JSX.Element | JSX.Element[] {
   const { children } = props;
   const dispatch = useAppDispatch();
   const authStatus = useAppSelector(selectAuthStatus);
