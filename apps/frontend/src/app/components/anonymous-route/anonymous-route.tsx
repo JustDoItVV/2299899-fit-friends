@@ -27,6 +27,6 @@ export default function AnonymousRoute(props: AnonymousRouteProps): JSX.Element 
   }
 
   return authStatus === AuthStatus.NoAuth ? children : <Navigate to={
-        `/${currentUser?.role === UserRole.Trainer ? FrontendRoute.Personal : FrontendRoute.Main}`
+        `/${currentUser?.role === UserRole.Trainer ? FrontendRoute.Account : FrontendRoute.Main}`
       }/>;
 }

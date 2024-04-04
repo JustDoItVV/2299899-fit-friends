@@ -4,7 +4,7 @@ import { FrontendRoute } from '@2299899-fit-friends/types';
 
 import Header from '../../components/header/header';
 
-export default function PersonalFriendsPage(): JSX.Element {
+export default function AccountFriendsPage(): JSX.Element {
   return (
     <div className="wrapper">
       <Helmet><title>Список друзей — FitFriends</title></Helmet>

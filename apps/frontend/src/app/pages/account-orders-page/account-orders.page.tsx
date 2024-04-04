@@ -5,11 +5,11 @@ import { FrontendRoute } from '@2299899-fit-friends/types';
 
 import Header from '../../components/header/header';
 
-export default function PersonalOrdersPage(): JSX.Element {
+export default function AccountOrdersPage(): JSX.Element {
   return (
     <div className="wrapper">
       <Helmet><title>Мои заказы — FitFriends</title></Helmet>
-      <Header page={FrontendRoute.Personal} />
+      <Header page={FrontendRoute.Account} />
       <main>
         <section className="my-orders">
           <div className="container">

@@ -13,7 +13,7 @@ import { unwrapResult } from '@reduxjs/toolkit';
 
 import Loading from '../loading/loading';
 
-export default function PersonalAbout(): JSX.Element {
+export default function AccountAbout(): JSX.Element {
   const dispatch = useAppDispatch();
   const user = useAppSelector(selectUser);
   const responseError = useAppSelector(selectResponseError);

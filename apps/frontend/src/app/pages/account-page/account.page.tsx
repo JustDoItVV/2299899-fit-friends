@@ -6,10 +6,10 @@ import {
 } from '@2299899-fit-friends/frontend-core';
 import { FrontendRoute } from '@2299899-fit-friends/types';
 
+import AccountAbout from '../../components/account-about/account-about';
 import Header from '../../components/header/header';
-import PersonalAbout from '../../components/personal-about/personal-about';
 
-export default function PersonalPage(): JSX.Element {
+export default function AccountPage(): JSX.Element {
   const dispatch = useAppDispatch();
   const currentUser = useAppSelector(selectCurrentUser);
 
@@ -21,19 +21,19 @@ export default function PersonalPage(): JSX.Element {
 
   return (
     <div className="wrapper">
-      <Header page={FrontendRoute.Personal} />
+      <Header page={FrontendRoute.Account} />
       <main>
         <section className="inner-page">
           <div className="container">
             <div className="inner-page__wrapper">
               <h1 className="visually-hidden">Личный кабинет</h1>
-              <PersonalAbout />
+              <AccountAbout />
               <div className="inner-page__content">
                 <div className="personal-account-coach">
                   <div className="personal-account-coach__navigation">
                     <Link
                       className="thumbnail-link thumbnail-link--theme-light"
-                      to={`/${FrontendRoute.Personal}/${FrontendRoute.Trainings}`}
+                      to={`/${FrontendRoute.Account}/${FrontendRoute.Trainings}`}
                     >
                       <div className="thumbnail-link__icon thumbnail-link__icon--theme-light">
                         <svg width={30} height={26} aria-hidden="true">
@@ -46,7 +46,7 @@ export default function PersonalPage(): JSX.Element {
                     </Link>
                     <Link
                       className="thumbnail-link thumbnail-link--theme-light"
-                      to={`/${FrontendRoute.Personal}/${FrontendRoute.Create}`}
+                      to={`/${FrontendRoute.Account}/${FrontendRoute.Create}`}
                     >
                       <div className="thumbnail-link__icon thumbnail-link__icon--theme-light">
                         <svg width={30} height={26} aria-hidden="true">
@@ -59,7 +59,7 @@ export default function PersonalPage(): JSX.Element {
                     </Link>
                     <Link
                       className="thumbnail-link thumbnail-link--theme-light"
-                      to={`/${FrontendRoute.Personal}/${FrontendRoute.Friends}`}
+                      to={`/${FrontendRoute.Account}/${FrontendRoute.Friends}`}
                     >
                       <div className="thumbnail-link__icon thumbnail-link__icon--theme-light">
                         <svg width={30} height={26} aria-hidden="true">
@@ -70,7 +70,7 @@ export default function PersonalPage(): JSX.Element {
                     </Link>
                     <Link
                       className="thumbnail-link thumbnail-link--theme-light"
-                      to={`/${FrontendRoute.Personal}/${FrontendRoute.Orders}`}
+                      to={`/${FrontendRoute.Account}/${FrontendRoute.Orders}`}
                     >
                       <div className="thumbnail-link__icon thumbnail-link__icon--theme-light">
                         <svg width={30} height={26} aria-hidden="true">

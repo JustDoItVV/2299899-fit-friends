@@ -3,7 +3,7 @@ export enum FrontendRoute {
   Login = 'login',
   Registration = 'registration',
   Questionnaire = 'questionnaire',
-  Personal = 'personal',
+  Account = 'account',
   Main = 'main',
   Users = 'users',
   UserCard = 'user',

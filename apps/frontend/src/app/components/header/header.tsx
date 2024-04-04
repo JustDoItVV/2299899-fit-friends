@@ -27,21 +27,21 @@ export default function Header(props: HeaderProps): JSX.Element {
               </Link>
             </li>
             <li className="main-nav__item">
-              <Link className={`main-nav__link ${page === FrontendRoute.Personal ? 'is-active' : ''}`} to={`/${FrontendRoute.Personal}`} aria-label="Личный кабинет">
+              <Link className={`main-nav__link ${page === FrontendRoute.Account ? 'is-active' : ''}`} to={`/${FrontendRoute.Account}`} aria-label="Личный кабинет">
                 <svg width={16} height={18} aria-hidden="true">
                   <use xlinkHref="#icon-user" />
                 </svg>
               </Link>
             </li>
             <li className="main-nav__item">
-              <Link className={`main-nav__link ${page === FrontendRoute.Friends ? 'is-active' : ''}`} to={`/${FrontendRoute.Personal}/${FrontendRoute.Friends}`} aria-label="Друзья">
+              <Link className={`main-nav__link ${page === FrontendRoute.Friends ? 'is-active' : ''}`} to={`/${FrontendRoute.Account}/${FrontendRoute.Friends}`} aria-label="Друзья">
                 <svg width={22} height={16} aria-hidden="true">
                   <use xlinkHref="#icon-friends" />
                 </svg>
               </Link>
             </li>
             <li className="main-nav__item main-nav__item--notifications">
-              <Link className="main-nav__link" to={`/${FrontendRoute.Personal}/${FrontendRoute.Notifications}`} aria-label="Уведомления">
+              <Link className="main-nav__link" to={`/${FrontendRoute.Account}/${FrontendRoute.Notifications}`} aria-label="Уведомления">
                 <svg width={14} height={18} aria-hidden="true">
                   <use xlinkHref="#icon-notification" />
                 </svg>

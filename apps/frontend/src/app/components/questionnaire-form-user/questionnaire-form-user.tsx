@@ -178,7 +178,7 @@ export default function QuestionnaireFormUser(
               {trainingTypes}
             </div>
             <span className="custom-input__error">
-              {getResponseErrorMessage(responseError?.statusCode, responseError?.message, 'type')}
+              {getResponseErrorMessage(responseError, 'type')}
             </span>
           </div>
           <div className="questionnaire-user__block">
@@ -189,7 +189,7 @@ export default function QuestionnaireFormUser(
               {trainingDurations}
             </div>
             <span className="custom-input__error">
-              {getResponseErrorMessage(responseError?.statusCode, responseError?.message, 'duration')}
+              {getResponseErrorMessage(responseError, 'duration')}
             </span>
           </div>
           <div className="questionnaire-user__block">
@@ -198,7 +198,7 @@ export default function QuestionnaireFormUser(
               {trainingLevels}
             </div>
             <span className="custom-input__error">
-              {getResponseErrorMessage(responseError?.statusCode, responseError?.message, 'level')}
+              {getResponseErrorMessage(responseError, 'level')}
             </span>
           </div>
           <div className="questionnaire-user__block">
@@ -220,7 +220,7 @@ export default function QuestionnaireFormUser(
                     <span className="custom-input__text">ккал</span>
                   </span>
                   <span className="custom-input__error">
-                    {getResponseErrorMessage(responseError?.statusCode, responseError?.message, 'target')}
+                    {getResponseErrorMessage(responseError, 'target')}
                   </span>
                 </label>
               </div>
@@ -241,7 +241,7 @@ export default function QuestionnaireFormUser(
                     <span className="custom-input__text">ккал</span>
                   </span>
                   <span className="custom-input__error">
-                    {getResponseErrorMessage(responseError?.statusCode, responseError?.message, 'per')}
+                    {getResponseErrorMessage(responseError, 'per')}
                   </span>
                 </label>
               </div>

@@ -31,3 +31,14 @@ export const createTrainingAction = createAsyncThunk<
     return rejectWithValue(error.response.data);
   }
 });
+
+export const fetchTrainerCatalog = createAsyncThunk<
+  void,
+  void,
+  { dispatch: AppDispatch; state: State; extra: AxiosInstance }
+>('accountTrainer/fetchTrainings', async (_, { extra: api }) => {
+  const { data: pagination } = await api.get(
+    `${ApiRoute.Account}/${ApiRoute.Trainer}`
+  );
+  console.log(pagination);
+});

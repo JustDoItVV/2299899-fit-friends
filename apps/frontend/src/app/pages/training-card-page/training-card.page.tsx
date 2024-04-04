@@ -980,7 +980,7 @@ export default function TrainingCardPage(): JSX.Element {
                 <li className="main-nav__item">
                   <Link
                     className="main-nav__link"
-                    to={FrontendRoute.Personal}
+                    to={FrontendRoute.Account}
                     aria-label="Личный кабинет"
                   >
                     <svg width={16} height={18} aria-hidden="true">
@@ -989,14 +989,14 @@ export default function TrainingCardPage(): JSX.Element {
                   </Link>
                 </li>
                 <li className="main-nav__item">
-                  <Link className="main-nav__link" to={FrontendRoute.Personal} aria-label="Друзья">
+                  <Link className="main-nav__link" to={FrontendRoute.Account} aria-label="Друзья">
                     <svg width={22} height={16} aria-hidden="true">
                       <use xlinkHref="#icon-friends" />
                     </svg>
                   </Link>
                 </li>
                 <li className="main-nav__item main-nav__item--notifications">
-                  <Link className="main-nav__link" to={FrontendRoute.Personal} aria-label="Уведомления">
+                  <Link className="main-nav__link" to={FrontendRoute.Account} aria-label="Уведомления">
                     <svg width={14} height={18} aria-hidden="true">
                       <use xlinkHref="#icon-notification" />
                     </svg>
@@ -1005,7 +1005,7 @@ export default function TrainingCardPage(): JSX.Element {
                     <p className="main-nav__label">Оповещения</p>
                     <ul className="main-nav__sublist">
                       <li className="main-nav__subitem">
-                        <Link className="notification is-active" to={FrontendRoute.Personal}>
+                        <Link className="notification is-active" to={FrontendRoute.Account}>
                           <p className="notification__text">
                             Катерина пригласила вас на&nbsp;тренировку
                           </p>
@@ -1018,7 +1018,7 @@ export default function TrainingCardPage(): JSX.Element {
                         </Link>
                       </li>
                       <li className="main-nav__subitem">
-                        <Link className="notification is-active" to={FrontendRoute.Personal}>
+                        <Link className="notification is-active" to={FrontendRoute.Account}>
                           <p className="notification__text">
                             Никита отклонил приглашение на&nbsp;совместную
                             тренировку
@@ -1032,7 +1032,7 @@ export default function TrainingCardPage(): JSX.Element {
                         </Link>
                       </li>
                       <li className="main-nav__subitem">
-                        <Link className="notification is-active" to={FrontendRoute.Personal}>
+                        <Link className="notification is-active" to={FrontendRoute.Account}>
                           <p className="notification__text">
                             Татьяна добавила вас в&nbsp;друзья
                           </p>
@@ -1045,7 +1045,7 @@ export default function TrainingCardPage(): JSX.Element {
                         </Link>
                       </li>
                       <li className="main-nav__subitem">
-                        <Link className="notification" to={FrontendRoute.Personal}>
+                        <Link className="notification" to={FrontendRoute.Account}>
                           <p className="notification__text">
                             Наталья приняла приглашение на&nbsp;совместную тренировку
                           </p>
