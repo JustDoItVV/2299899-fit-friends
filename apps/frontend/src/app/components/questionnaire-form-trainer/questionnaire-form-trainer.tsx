@@ -1,9 +1,8 @@
 import { ChangeEvent, FormEvent, useEffect, useRef, useState } from 'react';
 
-import { updateUserAction } from '@2299899-fit-friends/storage';
+import { updateUserAction, useAppDispatch } from '@2299899-fit-friends/frontend-core';
 import { TrainingLevel, TrainingType, User } from '@2299899-fit-friends/types';
 
-import { useAppDispatch } from '../hooks';
 import Loading from '../loading/loading';
 
 type QuestionnaireFormTrainerProps = {
@@ -24,7 +23,9 @@ export default function QuestionnaireFormTrainer(props: QuestionnaireFormTrainer
       setUpdatedTrainingTypes([...user.trainingType]);
       setUpdatedTrainingLevel(user.trainingLevel);
       setUpdatedMerits(user.merits ? user.merits : '');
-      setUpdatedIsReadyToPersonal(user.isReadyToPersonal ? user.isReadyToPersonal : false);
+      setUpdatedIsReadyToPersonal(
+        user.isReadyToPersonal ? user.isReadyToPersonal : false
+      );
     }
   }, [user]);
 
@@ -38,10 +39,13 @@ export default function QuestionnaireFormTrainer(props: QuestionnaireFormTrainer
     if (!updatedTrainingTypes.includes(trainingType)) {
       setUpdatedTrainingTypes([...updatedTrainingTypes, trainingType]);
     } else {
-      const elementIndex = updatedTrainingTypes.indexOf(trainingType)
-      setUpdatedTrainingTypes([...updatedTrainingTypes.slice(0, elementIndex), ...updatedTrainingTypes.slice(elementIndex + 1)]);
+      const elementIndex = updatedTrainingTypes.indexOf(trainingType);
+      setUpdatedTrainingTypes([
+        ...updatedTrainingTypes.slice(0, elementIndex),
+        ...updatedTrainingTypes.slice(elementIndex + 1),
+      ]);
     }
-  }
+  };
 
   const handleTrainingLevelChange = (evt: ChangeEvent<HTMLInputElement>) => {
     setUpdatedTrainingLevel(evt.currentTarget.value as TrainingLevel);
@@ -49,7 +53,7 @@ export default function QuestionnaireFormTrainer(props: QuestionnaireFormTrainer
 
   const handleMeritsChange = (evt: ChangeEvent<HTMLTextAreaElement>) => {
     setUpdatedMerits(evt.currentTarget.value);
-  }
+  };
 
   const handleFormSubmit = (evt: FormEvent) => {
     evt.preventDefault();
@@ -62,7 +66,10 @@ export default function QuestionnaireFormTrainer(props: QuestionnaireFormTrainer
 
       formData.append('trainingLevel', updatedTrainingLevel);
 
-      if (certificateRef.current?.files && certificateRef.current?.files.length !== 0) {
+      if (
+        certificateRef.current?.files &&
+        certificateRef.current?.files.length !== 0
+      ) {
         formData.append('certificate', certificateRef.current.files[0]);
       }
 
@@ -71,10 +78,10 @@ export default function QuestionnaireFormTrainer(props: QuestionnaireFormTrainer
 
       dispatch(updateUserAction({ id: user.id, data: formData }));
     }
-  }
+  };
 
   const trainingTypes = Object.values(TrainingType).map((type, index) => (
-    <div className="btn-checkbox" key={`training_type_${index}`} >
+    <div className="btn-checkbox" key={`training_type_${index}`}>
       <label>
         <input
           className="visually-hidden"
@@ -156,7 +163,12 @@ export default function QuestionnaireFormTrainer(props: QuestionnaireFormTrainer
             </span>
             <div className="custom-textarea questionnaire-coach__textarea">
               <label>
-                <textarea name="description" placeholder=" " defaultValue={""} onChange={handleMeritsChange} />
+                <textarea
+                  name="description"
+                  placeholder=" "
+                  defaultValue={''}
+                  onChange={handleMeritsChange}
+                />
               </label>
             </div>
             <div className="questionnaire-coach__checkbox">
@@ -178,7 +190,13 @@ export default function QuestionnaireFormTrainer(props: QuestionnaireFormTrainer
             </div>
           </div>
         </div>
-        <button className="btn questionnaire-coach__button" type="submit" disabled={certificateRef.current?.files?.length === 0 && !!updatedMerits}>
+        <button
+          className="btn questionnaire-coach__button"
+          type="submit"
+          disabled={
+            certificateRef.current?.files?.length === 0 && !!updatedMerits
+          }
+        >
           Продолжить
         </button>
       </div>

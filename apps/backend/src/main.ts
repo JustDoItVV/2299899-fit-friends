@@ -5,7 +5,7 @@
 
 import { BackendConfig } from '@2299899-fit-friends/config';
 import { BACKEND_GLOBAL_PREFIX } from '@2299899-fit-friends/consts';
-import { LoggingErrorsInterceptor } from '@2299899-fit-friends/core';
+import { LoggingErrorsInterceptor } from '@2299899-fit-friends/backend-core';
 import { BackendLoggerService } from '@2299899-fit-friends/logger';
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
@@ -31,13 +31,22 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, specificationConfig);
   SwaggerModule.setup('spec', app, document);
 
-  app.useGlobalPipes(new ValidationPipe({ transform: true, transformOptions: { enableImplicitConversion: true } }));
-  app.useGlobalInterceptors(new LoggingErrorsInterceptor(new BackendLoggerService()));
+  app.useGlobalPipes(
+    new ValidationPipe({
+      transform: true,
+      transformOptions: { enableImplicitConversion: true },
+    })
+  );
+  app.useGlobalInterceptors(
+    new LoggingErrorsInterceptor(new BackendLoggerService())
+  );
 
   const host = BackendConfig().host;
   const port = BackendConfig().appPort;
   await app.listen(port);
-  Logger.log(`🚀 Application is running on: http://${host}:${port}/${BACKEND_GLOBAL_PREFIX}`);
+  Logger.log(
+    `🚀 Application is running on: http://${host}:${port}/${BACKEND_GLOBAL_PREFIX}`
+  );
 }
 
 bootstrap();

@@ -4,17 +4,37 @@ import { join } from 'node:path';
 
 import { BackendConfig } from '@2299899-fit-friends/config';
 import {
-    MockTrainingBackgroundPicture, TRAINING_TYPE_LIMIT, UserErrorMessage
+  MockTrainingBackgroundPicture,
+  TRAINING_TYPE_LIMIT,
+  UserErrorMessage,
 } from '@2299899-fit-friends/consts';
-import { FilesPayload } from '@2299899-fit-friends/core';
+import { FilesPayload } from '@2299899-fit-friends/backend-core';
 import {
-    CreateUserDto, LoginUserDto, PaginationQuery, UpdateUserDto, UserPaginationQuery, UserRdo
+  CreateUserDto,
+  LoginUserDto,
+  PaginationQuery,
+  UpdateUserDto,
+  UserPaginationQuery,
+  UserRdo,
 } from '@2299899-fit-friends/dtos';
 import { createJWTPayload, fillDto } from '@2299899-fit-friends/helpers';
-import { Pagination, Token, TokenPayload, UserGender, UserRole } from '@2299899-fit-friends/types';
 import {
-    BadRequestException, ConflictException, ForbiddenException, Inject, Injectable,
-    InternalServerErrorException, NotFoundException, StreamableFile, UnauthorizedException
+  Pagination,
+  Token,
+  TokenPayload,
+  UserGender,
+  UserRole,
+} from '@2299899-fit-friends/types';
+import {
+  BadRequestException,
+  ConflictException,
+  ForbiddenException,
+  Inject,
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+  StreamableFile,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
@@ -34,7 +54,7 @@ export class UserService {
     @Inject(BackendConfig.KEY)
     private readonly config: ConfigType<typeof BackendConfig>,
     private readonly uploaderService: UploaderService,
-    private readonly notificationService: NotificationService,
+    private readonly notificationService: NotificationService
   ) {}
 
   public async createUserToken(user: UserEntity): Promise<Token> {
@@ -81,11 +101,15 @@ export class UserService {
     return user;
   }
 
-  public async getUsersByQuery(query: UserPaginationQuery): Promise<Pagination<UserRdo>> {
+  public async getUsersByQuery(
+    query: UserPaginationQuery
+  ): Promise<Pagination<UserRdo>> {
     const pagination = await this.userRepository.find(query);
     const paginationResult = {
       ...pagination,
-      entities: pagination.entities.map((entity) => fillDto(UserRdo, entity.toPOJO())),
+      entities: pagination.entities.map((entity) =>
+        fillDto(UserRdo, entity.toPOJO())
+      ),
     };
     return paginationResult;
   }
@@ -122,15 +146,26 @@ export class UserService {
     await entity.setPassword(password);
 
     if (!files.pageBackground) {
-      const uploadPath = join(this.uploaderService.getUploadDirectory(), this.uploaderService.getSubDirectoryUpload());
+      const uploadPath = join(
+        this.uploaderService.getUploadDirectory(),
+        this.uploaderService.getSubDirectoryUpload()
+      );
       if (!existsSync(uploadPath)) {
         mkdirSync(uploadPath, { recursive: true });
       }
-      const pictureNumber = Math.floor(Math.random() * (MockTrainingBackgroundPicture.Count - 1)) + 1;
-      const mockPageBackgroundeName = `${MockTrainingBackgroundPicture.Prefix}${pictureNumber}${MockTrainingBackgroundPicture.Suffix}`
+      const pictureNumber =
+        Math.floor(Math.random() * (MockTrainingBackgroundPicture.Count - 1)) +
+        1;
+      const mockPageBackgroundeName = `${MockTrainingBackgroundPicture.Prefix}${pictureNumber}${MockTrainingBackgroundPicture.Suffix}`;
       const pageBackgroundName = `${randomUUID()}-${mockPageBackgroundeName}`;
-      copyFileSync(join(MockTrainingBackgroundPicture.Directory, mockPageBackgroundeName), join(uploadPath, pageBackgroundName));
-      const pageBackground = join(this.uploaderService.getSubDirectoryUpload(), pageBackgroundName);
+      copyFileSync(
+        join(MockTrainingBackgroundPicture.Directory, mockPageBackgroundeName),
+        join(uploadPath, pageBackgroundName)
+      );
+      const pageBackground = join(
+        this.uploaderService.getSubDirectoryUpload(),
+        pageBackgroundName
+      );
       entity.pageBackground = pageBackground;
     }
 
@@ -145,7 +180,12 @@ export class UserService {
     return document;
   }
 
-  public async update(payload: TokenPayload, id: string, dto: UpdateUserDto, files: FilesPayload) {
+  public async update(
+    payload: TokenPayload,
+    id: string,
+    dto: UpdateUserDto,
+    files: FilesPayload
+  ) {
     const user = await this.userRepository.findById(id);
 
     if (!user) {
@@ -169,7 +209,9 @@ export class UserService {
           if (user.avatar) {
             await this.uploaderService.deleteFile(user.avatar);
           }
-          const avatarPath = await this.uploaderService.saveFile(files.avatar[0]);
+          const avatarPath = await this.uploaderService.saveFile(
+            files.avatar[0]
+          );
           user.avatar = avatarPath;
         }
 
@@ -177,17 +219,20 @@ export class UserService {
           if (user.pageBackground) {
             await this.uploaderService.deleteFile(user.pageBackground);
           }
-          const pageBackgroundPath = await this.uploaderService.saveFile(files.pageBackground[0]);
+          const pageBackgroundPath = await this.uploaderService.saveFile(
+            files.pageBackground[0]
+          );
           user.pageBackground = pageBackgroundPath;
         }
       }
     }
 
     if (user.role === UserRole.Trainer) {
-      user.isQuestionnaireFilled = user.trainingLevel &&
-        user.trainingType.length === TRAINING_TYPE_LIMIT;
+      user.isQuestionnaireFilled =
+        user.trainingLevel && user.trainingType.length === TRAINING_TYPE_LIMIT;
     } else if (user.role === UserRole.User) {
-      user.isQuestionnaireFilled = user.trainingLevel &&
+      user.isQuestionnaireFilled =
+        user.trainingLevel &&
         user.trainingType.length <= TRAINING_TYPE_LIMIT &&
         !!user.trainingDuration &&
         !!user.caloriesTarget &&
@@ -226,7 +271,10 @@ export class UserService {
     return await this.uploaderService.getFile(user.certificate);
   }
 
-  public async addToFriends(userId: string, friendId: string): Promise<Pagination<UserRdo>> {
+  public async addToFriends(
+    userId: string,
+    friendId: string
+  ): Promise<Pagination<UserRdo>> {
     if (userId === friendId) {
       throw new BadRequestException(UserErrorMessage.UserSelfFriend);
     }
@@ -246,18 +294,28 @@ export class UserService {
     await this.userRepository.update(userId, user);
     await this.userRepository.update(friendId, friend);
 
-    await this.notificationService.createNotification(friendId, `${user.name} добавил${user.gender === UserGender.Female ? 'а' : ''} Вас в друзья`);
+    await this.notificationService.createNotification(
+      friendId,
+      `${user.name} добавил${
+        user.gender === UserGender.Female ? 'а' : ''
+      } Вас в друзья`
+    );
 
     const query = new PaginationQuery();
     const pagination = await this.userRepository.findFriends(query, userId);
     const paginationResult = {
       ...pagination,
-      entities: pagination.entities.map((entity) => fillDto(UserRdo, entity.toPOJO())),
+      entities: pagination.entities.map((entity) =>
+        fillDto(UserRdo, entity.toPOJO())
+      ),
     };
     return paginationResult;
   }
 
-  public async removeFromFriends(userId: string, friendId: string): Promise<Pagination<UserRdo>> {
+  public async removeFromFriends(
+    userId: string,
+    friendId: string
+  ): Promise<Pagination<UserRdo>> {
     if (userId === friendId) {
       throw new BadRequestException(UserErrorMessage.UserSelfFriend);
     }
@@ -281,7 +339,9 @@ export class UserService {
     const pagination = await this.userRepository.findFriends(query, userId);
     const paginationResult = {
       ...pagination,
-      entities: pagination.entities.map((entity) => fillDto(UserRdo, entity.toPOJO())),
+      entities: pagination.entities.map((entity) =>
+        fillDto(UserRdo, entity.toPOJO())
+      ),
     };
     return paginationResult;
   }
@@ -297,7 +357,7 @@ export class UserService {
     }
 
     if (targetUser.role !== UserRole.Trainer) {
-      throw new ForbiddenException(UserErrorMessage.SubscribeForbidden)
+      throw new ForbiddenException(UserErrorMessage.SubscribeForbidden);
     }
 
     const user = await this.getUserById(userId);
@@ -323,7 +383,7 @@ export class UserService {
     }
 
     if (targetUser.role !== UserRole.Trainer) {
-      throw new ForbiddenException(UserErrorMessage.SubscribeForbidden)
+      throw new ForbiddenException(UserErrorMessage.SubscribeForbidden);
     }
 
     const user = await this.getUserById(userId);
@@ -331,7 +391,10 @@ export class UserService {
       throw new ConflictException(UserErrorMessage.NotInSubscribtions);
     }
 
-    user.emailSubscribtions.splice(user.emailSubscribtions.indexOf(targetId), 1);
+    user.emailSubscribtions.splice(
+      user.emailSubscribtions.indexOf(targetId),
+      1
+    );
     targetUser.subscribers.splice(targetUser.subscribers.indexOf(userId), 1);
     await this.userRepository.update(userId, user);
     await this.userRepository.update(targetId, targetUser);

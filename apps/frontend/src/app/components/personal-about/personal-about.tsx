@@ -2,12 +2,13 @@ import { ChangeEvent, FormEvent, useEffect, useRef, useState } from 'react';
 
 import { METRO_STATIONS } from '@2299899-fit-friends/consts';
 import {
-    fetchUserAvatar, selectResponseError, selectUser, updateUserAction
-} from '@2299899-fit-friends/storage';
+    fetchUserAvatar, selectResponseError, selectUser, updateUserAction, useAppDispatch,
+    useAppSelector
+} from '@2299899-fit-friends/frontend-core';
+import { getResponseErrorMessage } from '@2299899-fit-friends/helpers';
 import { TrainingLevel, TrainingType, UserGender, UserRole } from '@2299899-fit-friends/types';
 import { unwrapResult } from '@reduxjs/toolkit';
 
-import { useAppDispatch, useAppSelector } from '../hooks';
 import Loading from '../loading/loading';
 
 export default function PersonalAbout(): JSX.Element {
@@ -143,23 +144,6 @@ export default function PersonalAbout(): JSX.Element {
     <option key={`level_${index}`}>{level}</option>
   ));
 
-  const getResponseErrorMessage = (
-    codes: number[],
-    statusCode: number | undefined,
-    message: string | string[] | undefined,
-    field: string
-  ) => {
-    if (!statusCode || !message || !codes.includes(statusCode)) {
-      return ' ';
-    }
-
-    if (!Array.isArray(message)) {
-      return message;
-    }
-
-    return message.filter((item) => item.toLowerCase().includes(field)).join(', ');
-  };
-
   return (
     <section className="user-info-edit">
       <div className="user-info-edit__header">
@@ -232,12 +216,7 @@ export default function PersonalAbout(): JSX.Element {
                 />
               </span>
               <span className="custom-input__error">
-                {getResponseErrorMessage(
-                  [400],
-                  responseError?.statusCode,
-                  responseError?.message,
-                  'name'
-                )}
+                {getResponseErrorMessage(responseError?.statusCode, responseError?.message, 'name')}
               </span>
             </label>
           </div>
@@ -251,12 +230,7 @@ export default function PersonalAbout(): JSX.Element {
                 disabled={isFormDisabled}
               />
               <span className="custom-input__error">
-                {getResponseErrorMessage(
-                  [400],
-                  responseError?.statusCode,
-                  responseError?.message,
-                  'description'
-                )}
+                {getResponseErrorMessage(responseError?.statusCode, responseError?.message, 'description')}
               </span>
             </label>
           </div>
@@ -294,12 +268,7 @@ export default function PersonalAbout(): JSX.Element {
             {trainingTypesElements}
           </div>
           <span className="custom-input__error">
-            {getResponseErrorMessage(
-              [400],
-              responseError?.statusCode,
-              responseError?.message,
-              'type'
-            )}
+            {getResponseErrorMessage(responseError?.statusCode, responseError?.message, 'type')}
           </span>
         </div>
         <div className={isFormDisabled ? 'custom-edit--readonly user-info__edit' : 'user-info-edit__select'}>
@@ -312,12 +281,7 @@ export default function PersonalAbout(): JSX.Element {
             {locationOptionElements}
           </select>
           <span className="custom-input__error">
-            {getResponseErrorMessage(
-              [400],
-              responseError?.statusCode,
-              responseError?.message,
-              'location'
-            )}
+            {getResponseErrorMessage(responseError?.statusCode, responseError?.message, 'location')}
           </span>
         </div>
         <div className={isFormDisabled ? 'custom-edit--readonly user-info__edit' : 'user-info-edit__select'}>
@@ -330,12 +294,7 @@ export default function PersonalAbout(): JSX.Element {
             {genderOptionElements}
           </select>
           <span className="custom-input__error">
-            {getResponseErrorMessage(
-              [400],
-              responseError?.statusCode,
-              responseError?.message,
-              'gender'
-            )}
+            {getResponseErrorMessage(responseError?.statusCode, responseError?.message, 'gender')}
           </span>
         </div>
         <div className={isFormDisabled ? 'custom-edit--readonly user-info__edit' : 'user-info-edit__select'}>
@@ -348,12 +307,7 @@ export default function PersonalAbout(): JSX.Element {
             {levelOptionElements}
           </select>
           <span className="custom-input__error">
-            {getResponseErrorMessage(
-              [400],
-              responseError?.statusCode,
-              responseError?.message,
-              'level'
-            )}
+            {getResponseErrorMessage(responseError?.statusCode, responseError?.message, 'level')}
           </span>
         </div>
       </form>

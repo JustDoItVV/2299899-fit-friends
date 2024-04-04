@@ -1,18 +1,44 @@
 import {
-    ApiAccountUserMessage, ApiTag, ApiTrainingMessage, ApiUserMessage
+  ApiAccountUserMessage,
+  ApiTag,
+  ApiTrainingMessage,
+  ApiUserMessage,
 } from '@2299899-fit-friends/consts';
-import { JwtAuthGuard, UserParam, UserRolesGuard } from '@2299899-fit-friends/core';
 import {
-    ApiOkResponsePaginated, BalanceRdo, PaginationQuery, PaginationRdo, UpdateBalanceDto, UserRdo
+  JwtAuthGuard,
+  UserParam,
+  UserRolesGuard,
+} from '@2299899-fit-friends/backend-core';
+import {
+  ApiOkResponsePaginated,
+  BalanceRdo,
+  PaginationQuery,
+  PaginationRdo,
+  UpdateBalanceDto,
+  UserRdo,
 } from '@2299899-fit-friends/dtos';
 import { fillDto } from '@2299899-fit-friends/helpers';
 import { TokenPayload, UserRole } from '@2299899-fit-friends/types';
 import {
-    Body, Controller, Get, HttpCode, HttpStatus, Patch, Post, Query, UseGuards
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Patch,
+  Post,
+  Query,
+  UseGuards,
 } from '@nestjs/common';
 import {
-    ApiBadRequestResponse, ApiBearerAuth, ApiForbiddenResponse, ApiNotFoundResponse, ApiOkResponse,
-    ApiOperation, ApiTags, ApiUnauthorizedResponse
+  ApiBadRequestResponse,
+  ApiBearerAuth,
+  ApiForbiddenResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiTags,
+  ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 
 import { AccountUserService } from './account-user.service';
@@ -22,9 +48,7 @@ import { AccountUserService } from './account-user.service';
 @UseGuards(JwtAuthGuard, new UserRolesGuard([UserRole.User]))
 @Controller('account/user')
 export class AccountUserController {
-  constructor(
-    private readonly accountUserService: AccountUserService,
-  ) {}
+  constructor(private readonly accountUserService: AccountUserService) {}
 
   @ApiOperation({ summary: 'Список друзей Пользователя' })
   @ApiOkResponsePaginated(UserRdo, ApiAccountUserMessage.FriendsList)
@@ -34,9 +58,12 @@ export class AccountUserController {
   @Get('friends')
   public async showFriends(
     @UserParam() payload: TokenPayload,
-    @Query() query: PaginationQuery,
+    @Query() query: PaginationQuery
   ) {
-    const result = await this.accountUserService.getUserFriends(query, payload.userId);
+    const result = await this.accountUserService.getUserFriends(
+      query,
+      payload.userId
+    );
     return fillDto(PaginationRdo<UserRdo>, result);
   }
 
@@ -47,14 +74,20 @@ export class AccountUserController {
   @Get('balance')
   public async showBalance(
     @UserParam() payload: TokenPayload,
-    @Query() query: PaginationQuery,
+    @Query() query: PaginationQuery
   ) {
-    const result = await this.accountUserService.getBalance(query, payload.userId);
-    return fillDto(PaginationRdo<BalanceRdo>, result)
+    const result = await this.accountUserService.getBalance(
+      query,
+      payload.userId
+    );
+    return fillDto(PaginationRdo<BalanceRdo>, result);
   }
 
   @ApiOperation({ summary: 'Обновление баланса пользователя' })
-  @ApiOkResponsePaginated(BalanceRdo, ApiAccountUserMessage.BalanceUpdateSuccess)
+  @ApiOkResponsePaginated(
+    BalanceRdo,
+    ApiAccountUserMessage.BalanceUpdateSuccess
+  )
   @ApiNotFoundResponse({ description: ApiTrainingMessage.NotFound })
   @ApiBadRequestResponse({ description: ApiUserMessage.ValidationError })
   @ApiForbiddenResponse({ description: ApiUserMessage.ForbiddenExceptUser })
@@ -62,19 +95,29 @@ export class AccountUserController {
   @Patch('balance')
   public async updateBalance(
     @Body() dto: UpdateBalanceDto,
-    @UserParam() payload: TokenPayload,
+    @UserParam() payload: TokenPayload
   ) {
     console.log(dto);
-    const updatedDocument = await this.accountUserService.updateBalanceRecord(dto, payload.userId);
+    const updatedDocument = await this.accountUserService.updateBalanceRecord(
+      dto,
+      payload.userId
+    );
     return fillDto(BalanceRdo, updatedDocument.toPOJO());
   }
 
-  @ApiOperation({ summary: 'Запустить рассылку уведомлений по email о новых тренировках в подписках' })
+  @ApiOperation({
+    summary:
+      'Запустить рассылку уведомлений по email о новых тренировках в подписках',
+  })
   @ApiOkResponse({ description: ApiAccountUserMessage.SendNews })
   @ApiUnauthorizedResponse({ description: ApiUserMessage.Unauthorized })
   @HttpCode(HttpStatus.OK)
   @Post('send-new-trainings-mail')
-  public async sendNewTrainingsMailNotifications(@UserParam() payload: TokenPayload) {
-    return await this.accountUserService.sendNewTrainingsMailNotifications(payload.userId);
+  public async sendNewTrainingsMailNotifications(
+    @UserParam() payload: TokenPayload
+  ) {
+    return await this.accountUserService.sendNewTrainingsMailNotifications(
+      payload.userId
+    );
   }
 }

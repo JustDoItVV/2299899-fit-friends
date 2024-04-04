@@ -1,10 +1,10 @@
 import { ChangeEvent, FormEvent, useRef, useState } from 'react';
 
 import { METRO_STATIONS } from '@2299899-fit-friends/consts';
-import { registerUserAction, selectResponseError } from '@2299899-fit-friends/storage';
+import {
+    registerUserAction, selectResponseError, useAppDispatch, useAppSelector
+} from '@2299899-fit-friends/frontend-core';
 import { UserGender, UserRole } from '@2299899-fit-friends/types';
-
-import { useAppDispatch, useAppSelector } from '../hooks';
 
 export default function RegistrationForm(): JSX.Element {
   const dispatch = useAppDispatch();
@@ -33,7 +33,10 @@ export default function RegistrationForm(): JSX.Element {
     }
   };
 
-  const getInputChangeHandler = <T, V extends HTMLInputElement | HTMLSelectElement>(setState: React.Dispatch<React.SetStateAction<T>>) =>
+  const getInputChangeHandler =
+    <T, V extends HTMLInputElement | HTMLSelectElement>(
+      setState: React.Dispatch<React.SetStateAction<T>>
+    ) =>
     (evt: ChangeEvent<V>) => {
       if (evt.currentTarget) {
         setState(evt.currentTarget.value as T);
@@ -77,28 +80,35 @@ export default function RegistrationForm(): JSX.Element {
       return message;
     }
 
-    return message.filter((item) => item.toLowerCase().includes(field)).join(', ');
+    return message
+      .filter((item) => item.toLowerCase().includes(field))
+      .join(', ');
   };
 
   return (
-    <form method="post" onSubmit={handleFormSubmit} >
+    <form method="post" onSubmit={handleFormSubmit}>
       <div className="sign-up">
         <div className="sign-up__load-photo">
           <div className="input-load-avatar">
             <label>
-              <input ref={avatarRef} className="visually-hidden" type="file" accept="image/png, image/jpeg" onChange={handleAvatarInputChange} />
-              {avatarPreview ||
+              <input
+                ref={avatarRef}
+                className="visually-hidden"
+                type="file"
+                accept="image/png, image/jpeg"
+                onChange={handleAvatarInputChange}
+              />
+              {avatarPreview || (
                 <span className="input-load-avatar__btn">
                   <svg width={20} height={20} aria-hidden="true">
                     <use xlinkHref="#icon-import" />
                   </svg>
-                </span>}
+                </span>
+              )}
             </label>
           </div>
           <div className="sign-up__description">
-            <h2 className="sign-up__legend">
-              Загрузите фото профиля
-            </h2>
+            <h2 className="sign-up__legend">Загрузите фото профиля</h2>
             <span className="sign-up__text">
               JPG, PNG, оптимальный размер 100×100&nbsp;px
             </span>
@@ -109,7 +119,11 @@ export default function RegistrationForm(): JSX.Element {
             <label>
               <span className="custom-input__label">Имя</span>
               <span className="custom-input__wrapper">
-                <input type="text" name="name" onChange={getInputChangeHandler(setName)} />
+                <input
+                  type="text"
+                  name="name"
+                  onChange={getInputChangeHandler(setName)}
+                />
               </span>
               <span className="custom-input__error">
                 {getResponseErrorMessage(
@@ -125,7 +139,11 @@ export default function RegistrationForm(): JSX.Element {
             <label>
               <span className="custom-input__label">E-mail</span>
               <span className="custom-input__wrapper">
-                <input type="email" name="email" onChange={getInputChangeHandler(setEmail)} />
+                <input
+                  type="email"
+                  name="email"
+                  onChange={getInputChangeHandler(setEmail)}
+                />
               </span>
               <span className="custom-input__error">
                 {getResponseErrorMessage(
@@ -139,11 +157,14 @@ export default function RegistrationForm(): JSX.Element {
           </div>
           <div className="custom-input">
             <label>
-              <span className="custom-input__label">
-                Дата рождения
-              </span>
+              <span className="custom-input__label">Дата рождения</span>
               <span className="custom-input__wrapper">
-                <input type="date" name="birthday" max="2099-12-31" onChange={getInputChangeHandler(setBirthdate)} />
+                <input
+                  type="date"
+                  name="birthday"
+                  max="2099-12-31"
+                  onChange={getInputChangeHandler(setBirthdate)}
+                />
               </span>
               <span className="custom-input__error">
                 {getResponseErrorMessage(
@@ -159,7 +180,11 @@ export default function RegistrationForm(): JSX.Element {
             <label>
               <span className="custom-input__label">Ваша локация</span>
               <span className="custom-input__wrapper">
-                <select className="custom-select__button" id="location_select" onChange={getInputChangeHandler(setLocation)} >
+                <select
+                  className="custom-select__button"
+                  id="location_select"
+                  onChange={getInputChangeHandler(setLocation)}
+                >
                   <option>Пионерская</option>
                   <option>Петроградская</option>
                   <option>Удельная</option>
@@ -181,7 +206,12 @@ export default function RegistrationForm(): JSX.Element {
             <label>
               <span className="custom-input__label">Пароль</span>
               <span className="custom-input__wrapper">
-                <input type="password" name="password" autoComplete="off" onChange={getInputChangeHandler(setPassword)} />
+                <input
+                  type="password"
+                  name="password"
+                  autoComplete="off"
+                  onChange={getInputChangeHandler(setPassword)}
+                />
               </span>
               <span className="custom-input__error">
                 {getResponseErrorMessage(
@@ -194,44 +224,50 @@ export default function RegistrationForm(): JSX.Element {
             </label>
           </div>
           <div className="sign-up__radio">
-            <span className="sign-up__label">
-              Пол
-            </span>
+            <span className="sign-up__label">Пол</span>
             <div className="custom-toggle-radio custom-toggle-radio--big">
               <div className="custom-toggle-radio__block">
                 <label>
-                  <input type="radio" name="sex" value={UserGender.Male} defaultChecked onChange={getInputChangeHandler(setGender)} />
+                  <input
+                    type="radio"
+                    name="sex"
+                    value={UserGender.Male}
+                    defaultChecked
+                    onChange={getInputChangeHandler(setGender)}
+                  />
                   <span className="custom-toggle-radio__icon" />
-                  <span className="custom-toggle-radio__label">
-                    Мужской
-                  </span>
+                  <span className="custom-toggle-radio__label">Мужской</span>
                 </label>
               </div>
               <div className="custom-toggle-radio__block">
                 <label>
-                  <input type="radio" name="sex" value={UserGender.Female} onChange={getInputChangeHandler(setGender)} />
+                  <input
+                    type="radio"
+                    name="sex"
+                    value={UserGender.Female}
+                    onChange={getInputChangeHandler(setGender)}
+                  />
                   <span className="custom-toggle-radio__icon" />
-                  <span className="custom-toggle-radio__label">
-                    Женский
-                  </span>
+                  <span className="custom-toggle-radio__label">Женский</span>
                 </label>
               </div>
               <div className="custom-toggle-radio__block">
                 <label>
-                  <input type="radio" name="sex" value={UserGender.Other} onChange={getInputChangeHandler(setGender)} />
+                  <input
+                    type="radio"
+                    name="sex"
+                    value={UserGender.Other}
+                    onChange={getInputChangeHandler(setGender)}
+                  />
                   <span className="custom-toggle-radio__icon" />
-                  <span className="custom-toggle-radio__label">
-                    Неважно
-                  </span>
+                  <span className="custom-toggle-radio__label">Неважно</span>
                 </label>
               </div>
             </div>
           </div>
         </div>
         <div className="sign-up__role">
-          <h2 className="sign-up__legend">
-            Выберите роль
-          </h2>
+          <h2 className="sign-up__legend">Выберите роль</h2>
           <div className="role-selector sign-up__role-selector">
             <div className="role-btn">
               <label>
@@ -248,9 +284,7 @@ export default function RegistrationForm(): JSX.Element {
                     <use xlinkHref="#icon-cup" />
                   </svg>
                 </span>
-                <span className="role-btn__btn">
-                  Я хочу тренировать
-                </span>
+                <span className="role-btn__btn">Я хочу тренировать</span>
               </label>
             </div>
             <div className="role-btn">
@@ -267,28 +301,34 @@ export default function RegistrationForm(): JSX.Element {
                     <use xlinkHref="#icon-weight" />
                   </svg>
                 </span>
-                <span className="role-btn__btn">
-                  Я хочу тренироваться
-                </span>
+                <span className="role-btn__btn">Я хочу тренироваться</span>
               </label>
             </div>
           </div>
         </div>
         <div className="sign-up__checkbox">
           <label>
-            <input type="checkbox" defaultValue="user-agreement" name="user-agreement" onChange={handleAgreementChange} />
+            <input
+              type="checkbox"
+              defaultValue="user-agreement"
+              name="user-agreement"
+              onChange={handleAgreementChange}
+            />
             <span className="sign-up__checkbox-icon">
               <svg width={9} height={6} aria-hidden="true">
                 <use xlinkHref="#arrow-check" />
               </svg>
             </span>
             <span className="sign-up__checkbox-label">
-              Я соглашаюсь с <span>политикой конфиденциальности</span>{" "}
-              компании
+              Я соглашаюсь с <span>политикой конфиденциальности</span> компании
             </span>
           </label>
         </div>
-        <button className="btn sign-up__button" type="submit" disabled={!name || !email || !birthdate || !password || !agreement} >
+        <button
+          className="btn sign-up__button"
+          type="submit"
+          disabled={!name || !email || !birthdate || !password || !agreement}
+        >
           Продолжить
         </button>
       </div>

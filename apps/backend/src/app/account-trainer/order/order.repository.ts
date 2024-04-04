@@ -1,10 +1,17 @@
 import { DefaultPagination } from '@2299899-fit-friends/consts';
-import { BasePostgresRepository } from '@2299899-fit-friends/core';
+import { BasePostgresRepository } from '@2299899-fit-friends/backend-core';
 import { OrderPaginationQuery } from '@2299899-fit-friends/dtos';
 import { PrismaClientService } from '@2299899-fit-friends/models';
 import {
-    Order, OrderPaymentMethod, OrderSortOption, OrderType, Pagination, TrainingAuditory,
-    TrainingDuration, TrainingLevel, TrainingType
+  Order,
+  OrderPaymentMethod,
+  OrderSortOption,
+  OrderType,
+  Pagination,
+  TrainingAuditory,
+  TrainingDuration,
+  TrainingLevel,
+  TrainingType,
 } from '@2299899-fit-friends/types';
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
@@ -13,10 +20,11 @@ import { TrainingEntity } from '../../training/training.entity';
 import { OrderEntity } from './order.entity';
 
 @Injectable()
-export class OrderRepository extends BasePostgresRepository<OrderEntity, Order> {
-  constructor(
-    protected readonly clientService: PrismaClientService,
-  ) {
+export class OrderRepository extends BasePostgresRepository<
+  OrderEntity,
+  Order
+> {
+  constructor(protected readonly clientService: PrismaClientService) {
     super(clientService, OrderEntity.fromObject);
   }
 
@@ -32,9 +40,12 @@ export class OrderRepository extends BasePostgresRepository<OrderEntity, Order> 
     return Math.ceil(totalCount / limit);
   }
 
-  public async find(query: OrderPaginationQuery, userId?: string): Promise<Pagination<OrderEntity>> {
+  public async find(
+    query: OrderPaginationQuery,
+    userId?: string
+  ): Promise<Pagination<OrderEntity>> {
     let limit = query.limit;
-    if (query.limit < 1){
+    if (query.limit < 1) {
       limit = 1;
     } else if (query.limit > DefaultPagination.Limit) {
       limit = DefaultPagination.Limit;
@@ -65,7 +76,10 @@ export class OrderRepository extends BasePostgresRepository<OrderEntity, Order> 
 
     const skip = (currentPage - 1) * limit;
     const documents = await this.clientService.order.findMany({
-      where, orderBy, skip, take: limit,
+      where,
+      orderBy,
+      skip,
+      take: limit,
       include: { training: true },
     });
 

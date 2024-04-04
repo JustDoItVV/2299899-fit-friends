@@ -1,5 +1,5 @@
 import { DefaultPagination } from '@2299899-fit-friends/consts';
-import { BasePostgresRepository } from '@2299899-fit-friends/core';
+import { BasePostgresRepository } from '@2299899-fit-friends/backend-core';
 import { PaginationQuery } from '@2299899-fit-friends/dtos';
 import { PrismaClientService } from '@2299899-fit-friends/models';
 import { Pagination, Review, SortOption } from '@2299899-fit-friends/types';
@@ -10,15 +10,20 @@ import { TrainingRepository } from '../training/training.repository';
 import { ReviewEntity } from './review.entity';
 
 @Injectable()
-export class ReviewRepository extends BasePostgresRepository<ReviewEntity, Review> {
+export class ReviewRepository extends BasePostgresRepository<
+  ReviewEntity,
+  Review
+> {
   constructor(
     protected readonly clientService: PrismaClientService,
-    private readonly trainingRepository: TrainingRepository,
+    private readonly trainingRepository: TrainingRepository
   ) {
     super(clientService, ReviewEntity.fromObject);
   }
 
-  private async getReviewsCount(where: Prisma.ReviewWhereInput): Promise<number> {
+  private async getReviewsCount(
+    where: Prisma.ReviewWhereInput
+  ): Promise<number> {
     return this.clientService.review.count({ where });
   }
 
@@ -32,24 +37,35 @@ export class ReviewRepository extends BasePostgresRepository<ReviewEntity, Revie
 
   public async save(entity: ReviewEntity): Promise<ReviewEntity> {
     const pojoEntity = entity.toPOJO();
-    const training = await this.trainingRepository.findById(pojoEntity.trainingId);
+    const training = await this.trainingRepository.findById(
+      pojoEntity.trainingId
+    );
 
     if (!training.rating) {
       training.rating = pojoEntity.rating;
     } else {
-      const reviewsCount = await this.getReviewsCount({ trainingId: entity.trainingId });
-      training.rating = (training.rating * reviewsCount + pojoEntity.rating) / (reviewsCount + 1);
+      const reviewsCount = await this.getReviewsCount({
+        trainingId: entity.trainingId,
+      });
+      training.rating =
+        (training.rating * reviewsCount + pojoEntity.rating) /
+        (reviewsCount + 1);
     }
 
     await this.trainingRepository.update(training.id, training);
-    const document = await this.clientService.review.create({ data: pojoEntity });
+    const document = await this.clientService.review.create({
+      data: pojoEntity,
+    });
     entity.id = document.id;
     return entity;
   }
 
-  public async find(query: PaginationQuery, trainingId: string): Promise<Pagination<ReviewEntity>> {
+  public async find(
+    query: PaginationQuery,
+    trainingId: string
+  ): Promise<Pagination<ReviewEntity>> {
     let limit = query.limit;
-    if (query.limit < 1){
+    if (query.limit < 1) {
       limit = 1;
     } else if (query.limit > DefaultPagination.Limit) {
       limit = DefaultPagination.Limit;
@@ -73,10 +89,17 @@ export class ReviewRepository extends BasePostgresRepository<ReviewEntity, Revie
     }
 
     const skip = (currentPage - 1) * limit;
-    const documents = await this.clientService.review.findMany({ where, orderBy, skip, take: limit });
+    const documents = await this.clientService.review.findMany({
+      where,
+      orderBy,
+      skip,
+      take: limit,
+    });
 
     return {
-      entities: documents.map((review) => this.createEntityFromDocument(review)),
+      entities: documents.map((review) =>
+        this.createEntityFromDocument(review)
+      ),
       currentPage,
       totalPages,
       itemsPerPage: limit,

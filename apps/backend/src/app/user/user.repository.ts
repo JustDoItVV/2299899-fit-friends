@@ -1,10 +1,20 @@
 import { DefaultPagination } from '@2299899-fit-friends/consts';
-import { BasePostgresRepository } from '@2299899-fit-friends/core';
-import { PaginationQuery, UserPaginationQuery } from '@2299899-fit-friends/dtos';
+import { BasePostgresRepository } from '@2299899-fit-friends/backend-core';
+import {
+  PaginationQuery,
+  UserPaginationQuery,
+} from '@2299899-fit-friends/dtos';
 import { PrismaClientService } from '@2299899-fit-friends/models';
 import {
-    Pagination, SortOption, TrainingDuration, TrainingLevel, TrainingType, User, UserGender,
-    UserRole, UserSortOption
+  Pagination,
+  SortOption,
+  TrainingDuration,
+  TrainingLevel,
+  TrainingType,
+  User,
+  UserGender,
+  UserRole,
+  UserSortOption,
 } from '@2299899-fit-friends/types';
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
@@ -36,10 +46,12 @@ export class UserRepository extends BasePostgresRepository<UserEntity, User> {
     return entity;
   }
 
-  public async find(query: UserPaginationQuery): Promise<Pagination<UserEntity>> {
+  public async find(
+    query: UserPaginationQuery
+  ): Promise<Pagination<UserEntity>> {
     let limit = query.limit;
 
-    if (query.limit < 1){
+    if (query.limit < 1) {
       limit = 1;
     } else if (query.limit > DefaultPagination.Limit) {
       limit = DefaultPagination.Limit;
@@ -51,7 +63,7 @@ export class UserRepository extends BasePostgresRepository<UserEntity, User> {
       if (Array.isArray(query.specialization)) {
         where.trainingType = { hasEvery: query.specialization };
       } else {
-        where.trainingType = { has: query.specialization};
+        where.trainingType = { has: query.specialization };
       }
     }
     where.trainingLevel = query.level ? query.level : undefined;
@@ -74,17 +86,24 @@ export class UserRepository extends BasePostgresRepository<UserEntity, User> {
     }
 
     const skip = (currentPage - 1) * limit;
-    const documents = await this.clientService.user.findMany({ where, orderBy, skip, take: limit });
+    const documents = await this.clientService.user.findMany({
+      where,
+      orderBy,
+      skip,
+      take: limit,
+    });
 
     return {
-      entities: documents.map((document) => this.createEntityFromDocument({
-        ...document,
-        gender: document.gender as UserGender,
-        role: document.role as UserRole,
-        trainingLevel: document.trainingLevel as TrainingLevel,
-        trainingType: document.trainingType as TrainingType[],
-        trainingDuration: document.trainingDuration as TrainingDuration,
-      })),
+      entities: documents.map((document) =>
+        this.createEntityFromDocument({
+          ...document,
+          gender: document.gender as UserGender,
+          role: document.role as UserRole,
+          trainingLevel: document.trainingLevel as TrainingLevel,
+          trainingType: document.trainingType as TrainingType[],
+          trainingDuration: document.trainingDuration as TrainingDuration,
+        })
+      ),
       currentPage,
       totalPages,
       itemsPerPage: limit,
@@ -96,33 +115,38 @@ export class UserRepository extends BasePostgresRepository<UserEntity, User> {
     const document = await this.clientService.user.findFirst({ where: { id } });
     return document
       ? this.createEntityFromDocument({
-        ...document,
-        gender: document.gender as UserGender,
-        role: document.role as UserRole,
-        trainingLevel: document.trainingLevel as TrainingLevel,
-        trainingType: document.trainingType as TrainingType[],
-        trainingDuration: document.trainingDuration as TrainingDuration,
-      })
+          ...document,
+          gender: document.gender as UserGender,
+          role: document.role as UserRole,
+          trainingLevel: document.trainingLevel as TrainingLevel,
+          trainingType: document.trainingType as TrainingType[],
+          trainingDuration: document.trainingDuration as TrainingDuration,
+        })
       : null;
   }
 
   public async findByEmail(email: string): Promise<UserEntity | null> {
-    const document = await this.clientService.user.findFirst({ where: { email } });
+    const document = await this.clientService.user.findFirst({
+      where: { email },
+    });
     return document
       ? this.createEntityFromDocument({
-        ...document,
-        gender: document.gender as UserGender,
-        role: document.role as UserRole,
-        trainingLevel: document.trainingLevel as TrainingLevel,
-        trainingType: document.trainingType as TrainingType[],
-        trainingDuration: document.trainingDuration as TrainingDuration,
-      })
+          ...document,
+          gender: document.gender as UserGender,
+          role: document.role as UserRole,
+          trainingLevel: document.trainingLevel as TrainingLevel,
+          trainingType: document.trainingType as TrainingType[],
+          trainingDuration: document.trainingDuration as TrainingDuration,
+        })
       : null;
   }
 
-  public async findFriends(query: PaginationQuery, userId: string): Promise<Pagination<UserEntity>> {
+  public async findFriends(
+    query: PaginationQuery,
+    userId: string
+  ): Promise<Pagination<UserEntity>> {
     let limit = query.limit;
-    if (query.limit < 1){
+    if (query.limit < 1) {
       limit = 1;
     } else if (query.limit > DefaultPagination.Limit) {
       limit = DefaultPagination.Limit;
@@ -146,17 +170,24 @@ export class UserRepository extends BasePostgresRepository<UserEntity, User> {
     }
 
     const skip = (currentPage - 1) * limit;
-    const documents = await this.clientService.user.findMany({ where, orderBy, skip, take: limit });
+    const documents = await this.clientService.user.findMany({
+      where,
+      orderBy,
+      skip,
+      take: limit,
+    });
 
     return {
-      entities: documents.map((document) => this.createEntityFromDocument({
-        ...document,
-        gender: document.gender as UserGender,
-        role: document.role as UserRole,
-        trainingLevel: document.trainingLevel as TrainingLevel,
-        trainingType: document.trainingType as TrainingType[],
-        trainingDuration: document.trainingDuration as TrainingDuration,
-      })),
+      entities: documents.map((document) =>
+        this.createEntityFromDocument({
+          ...document,
+          gender: document.gender as UserGender,
+          role: document.role as UserRole,
+          trainingLevel: document.trainingLevel as TrainingLevel,
+          trainingType: document.trainingType as TrainingType[],
+          trainingDuration: document.trainingDuration as TrainingDuration,
+        })
+      ),
       currentPage,
       totalPages,
       itemsPerPage: limit,

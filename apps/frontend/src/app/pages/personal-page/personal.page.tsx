@@ -1,11 +1,12 @@
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
-import { fetchUserAction, selectCurrentUser } from '@2299899-fit-friends/storage';
+import {
+    fetchUserAction, selectCurrentUser, useAppDispatch, useAppSelector
+} from '@2299899-fit-friends/frontend-core';
 import { FrontendRoute } from '@2299899-fit-friends/types';
 
 import Header from '../../components/header/header';
-import { useAppDispatch, useAppSelector } from '../../components/hooks';
 import PersonalAbout from '../../components/personal-about/personal-about';
 
 export default function PersonalPage(): JSX.Element {
@@ -30,15 +31,23 @@ export default function PersonalPage(): JSX.Element {
               <div className="inner-page__content">
                 <div className="personal-account-coach">
                   <div className="personal-account-coach__navigation">
-                    <Link className="thumbnail-link thumbnail-link--theme-light" to={`${FrontendRoute.Personal}${FrontendRoute.Trainings}`}>
+                    <Link
+                      className="thumbnail-link thumbnail-link--theme-light"
+                      to={`${FrontendRoute.Personal}${FrontendRoute.Trainings}`}
+                    >
                       <div className="thumbnail-link__icon thumbnail-link__icon--theme-light">
                         <svg width={30} height={26} aria-hidden="true">
                           <use xlinkHref="#icon-flash" />
                         </svg>
                       </div>
-                      <span className="thumbnail-link__text">Мои тренировки</span>
+                      <span className="thumbnail-link__text">
+                        Мои тренировки
+                      </span>
                     </Link>
-                    <Link className="thumbnail-link thumbnail-link--theme-light" to={`${FrontendRoute.Trainings}${FrontendRoute.Create}`}>
+                    <Link
+                      className="thumbnail-link thumbnail-link--theme-light"
+                      to={`${FrontendRoute.Trainings}${FrontendRoute.Create}`}
+                    >
                       <div className="thumbnail-link__icon thumbnail-link__icon--theme-light">
                         <svg width={30} height={26} aria-hidden="true">
                           <use xlinkHref="#icon-add" />
@@ -48,7 +57,10 @@ export default function PersonalPage(): JSX.Element {
                         Создать тренировку
                       </span>
                     </Link>
-                    <Link className="thumbnail-link thumbnail-link--theme-light" to={FrontendRoute.Main}>
+                    <Link
+                      className="thumbnail-link thumbnail-link--theme-light"
+                      to={FrontendRoute.Main}
+                    >
                       <div className="thumbnail-link__icon thumbnail-link__icon--theme-light">
                         <svg width={30} height={26} aria-hidden="true">
                           <use xlinkHref="#icon-friends" />
@@ -56,7 +68,10 @@ export default function PersonalPage(): JSX.Element {
                       </div>
                       <span className="thumbnail-link__text">Мои друзья</span>
                     </Link>
-                    <Link className="thumbnail-link thumbnail-link--theme-light" to={FrontendRoute.Main}>
+                    <Link
+                      className="thumbnail-link thumbnail-link--theme-light"
+                      to={FrontendRoute.Main}
+                    >
                       <div className="thumbnail-link__icon thumbnail-link__icon--theme-light">
                         <svg width={30} height={26} aria-hidden="true">
                           <use xlinkHref="#icon-bag" />
@@ -68,7 +83,10 @@ export default function PersonalPage(): JSX.Element {
                       <div className="thumbnail-spec-gym">
                         <div className="thumbnail-spec-gym__image">
                           <picture>
-                            <source type="image/webp" srcSet="img/content/thumbnails/nearest-gym-01.webp, img/content/thumbnails/nearest-gym-01@2x.webp 2x" />
+                            <source
+                              type="image/webp"
+                              srcSet="img/content/thumbnails/nearest-gym-01.webp, img/content/thumbnails/nearest-gym-01@2x.webp 2x"
+                            />
                             <img
                               src="img/content/thumbnails/nearest-gym-01.jpg"
                               srcSet="img/content/thumbnails/nearest-gym-01@2x.jpg 2x"
@@ -78,7 +96,10 @@ export default function PersonalPage(): JSX.Element {
                             />
                           </picture>
                         </div>
-                        <div className="thumbnail-spec-gym__header" style={{ alignContent: "center" }}>
+                        <div
+                          className="thumbnail-spec-gym__header"
+                          style={{ alignContent: 'center' }}
+                        >
                           <h3 className="thumbnail-spec-gym__title">
                             Скоро тут будет интересно
                           </h3>

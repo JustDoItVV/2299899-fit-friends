@@ -1,5 +1,8 @@
-import { BackendConfigModule, getJwtOptions } from '@2299899-fit-friends/config';
-import { JwtAccessStrategy } from '@2299899-fit-friends/core';
+import {
+  BackendConfigModule,
+  getJwtOptions,
+} from '@2299899-fit-friends/config';
+import { JwtAccessStrategy } from '@2299899-fit-friends/backend-core';
 import { PrismaClientModule } from '@2299899-fit-friends/models';
 import { Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
@@ -32,9 +35,6 @@ import { UserService } from './user.service';
     JwtAccessStrategy,
     JwtRefreshStrategy,
   ],
-  exports: [
-    UserRepository,
-    UserService,
-  ],
+  exports: [UserRepository, UserService],
 })
 export class UserModule {}
