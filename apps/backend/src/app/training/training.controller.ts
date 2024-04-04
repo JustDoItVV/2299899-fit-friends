@@ -1,54 +1,25 @@
 import {
-  ApiTag,
-  ApiTrainingMessage,
-  ApiUserMessage,
-  TrainingBackgroundPictureAllowedExtensions,
-  TrainingErrorMessage,
-  TrainingVideoAllowedExtensions,
-} from '@2299899-fit-friends/consts';
-import {
-  FilesPayload,
-  FilesValidationPipe,
-  JwtAuthGuard,
-  UserParam,
-  UserRolesGuard,
+    FilesPayload, FilesValidationPipe, JwtAuthGuard, UserParam, UserRolesGuard
 } from '@2299899-fit-friends/backend-core';
 import {
-  ApiOkResponsePaginated,
-  CreateTrainingDto,
-  PaginationRdo,
-  TrainingPaginationQuery,
-  TrainingRdo,
-  UpdateTrainingDto,
+    ApiTag, ApiTrainingMessage, ApiUserMessage, TrainingBackgroundPictureAllowedExtensions,
+    TrainingErrorMessage, TrainingVideoAllowedExtensions
+} from '@2299899-fit-friends/consts';
+import {
+    ApiOkResponsePaginated, CreateTrainingDto, PaginationRdo, TrainingPaginationQuery, TrainingRdo,
+    UpdateTrainingDto
 } from '@2299899-fit-friends/dtos';
 import { fillDto } from '@2299899-fit-friends/helpers';
 import { TokenPayload, UserRole } from '@2299899-fit-friends/types';
 import {
-  Body,
-  Controller,
-  Get,
-  Header,
-  Param,
-  Patch,
-  Post,
-  Query,
-  UploadedFiles,
-  UseGuards,
-  UseInterceptors,
+    Body, Controller, Get, Header, Param, Patch, Post, Query, UploadedFiles, UseGuards,
+    UseInterceptors
 } from '@nestjs/common';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import {
-  ApiBadRequestResponse,
-  ApiBearerAuth,
-  ApiConsumes,
-  ApiCreatedResponse,
-  ApiForbiddenResponse,
-  ApiNotFoundResponse,
-  ApiOkResponse,
-  ApiOperation,
-  ApiTags,
-  ApiUnauthorizedResponse,
-  ApiUnsupportedMediaTypeResponse,
+    ApiBadRequestResponse, ApiBearerAuth, ApiConsumes, ApiCreatedResponse, ApiForbiddenResponse,
+    ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiTags, ApiUnauthorizedResponse,
+    ApiUnsupportedMediaTypeResponse
 } from '@nestjs/swagger';
 
 import { TrainingService } from './training.service';
@@ -62,14 +33,9 @@ export class TrainingController {
   @ApiTags(ApiTag.AccountTrainer)
   @ApiOperation({ summary: 'Создание тренировки' })
   @ApiConsumes('multipart/form-data')
-  @ApiCreatedResponse({
-    description: ApiTrainingMessage.CreateSuccess,
-    type: TrainingRdo,
-  })
+  @ApiCreatedResponse({ description: ApiTrainingMessage.CreateSuccess, type: TrainingRdo })
   @ApiBadRequestResponse({ description: ApiTrainingMessage.ValidationError })
-  @ApiUnsupportedMediaTypeResponse({
-    description: ApiTrainingMessage.UnsupportedFile,
-  })
+  @ApiUnsupportedMediaTypeResponse({ description: ApiTrainingMessage.UnsupportedFile })
   @ApiForbiddenResponse({ description: ApiUserMessage.ForbiddenExceptTrainer })
   @ApiUnauthorizedResponse({ description: ApiUserMessage.Unauthorized })
   @Post('')
@@ -78,24 +44,15 @@ export class TrainingController {
   public async createTraining(
     @Body() dto: CreateTrainingDto,
     @UserParam() payload: TokenPayload,
-    @UploadedFiles(
-      new FilesValidationPipe(
-        {
-          backgroundPicture: {
-            formats: TrainingBackgroundPictureAllowedExtensions,
-          },
-          video: { formats: TrainingVideoAllowedExtensions },
-        },
-        TrainingErrorMessage.FileFormatForbidden
-      )
-    )
+    @UploadedFiles(new FilesValidationPipe({
+        backgroundPicture: { formats: TrainingBackgroundPictureAllowedExtensions },
+        video: { formats: TrainingVideoAllowedExtensions, required: true },
+      },
+      TrainingErrorMessage.FileFormatForbidden
+    ))
     files: FilesPayload
   ) {
-    const newTraining = await this.trainingService.create(
-      dto,
-      payload.userId,
-      files
-    );
+    const newTraining = await this.trainingService.create(dto, payload.userId, files);
     return fillDto(TrainingRdo, newTraining.toPOJO());
   }
 

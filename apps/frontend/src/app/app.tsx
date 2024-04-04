@@ -1,10 +1,11 @@
 import { HelmetProvider } from 'react-helmet-async';
 import { Route, Routes } from 'react-router-dom';
 
-import { FrontendRoute } from '@2299899-fit-friends/types';
+import { FrontendRoute, UserRole } from '@2299899-fit-friends/types';
 
 import AnonymousRoute from './components/anonymous-route/anonymous-route';
 import AuthorizedRoute from './components/authorized-route/authorized-route';
+import RoleRoute from './components/role-route/role-route';
 import IntroPage from './pages/intro-page/intro.page';
 import LoginPage from './pages/login-page/login.page';
 import MainPage from './pages/main-page/main.page';
@@ -35,6 +36,13 @@ export function App() {
         <Route path={FrontendRoute.Personal} element={
           <AuthorizedRoute children={<PersonalPage />} />
         } />
+        <Route path={`${FrontendRoute.Personal}${FrontendRoute.Create}`} element={
+          <AuthorizedRoute>
+            <RoleRoute role={UserRole.Trainer}>
+              <TrainingsCreatePage />
+            </RoleRoute>
+          </AuthorizedRoute>
+        } />
         <Route path={FrontendRoute.Main} element={
           <AuthorizedRoute children={<MainPage />} />
         } />
@@ -46,9 +54,6 @@ export function App() {
         } />
         <Route path={FrontendRoute.Trainings} element={
           <AuthorizedRoute children={<TrainingsPage />} />
-        } />
-        <Route path={`${FrontendRoute.Trainings}${FrontendRoute.Create}`} element={
-          <AuthorizedRoute children={<TrainingsCreatePage />} />
         } />
         <Route path={FrontendRoute.TrainingCard} element={
           <AuthorizedRoute children={<TrainingCardPage />} />

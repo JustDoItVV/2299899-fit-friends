@@ -1,12 +1,14 @@
-import { ChangeEvent, FormEvent, useEffect, useRef, useState } from 'react';
+import { ChangeEvent, FormEvent, MouseEvent, useEffect, useRef, useState } from 'react';
 
 import { METRO_STATIONS } from '@2299899-fit-friends/consts';
 import {
-    fetchUserAvatar, selectResponseError, selectUser, updateUserAction, useAppDispatch,
-    useAppSelector
+    dropToken, fetchUserAvatar, selectResponseError, selectUser, setAuthStatus, setCurrentUser,
+    updateUserAction, useAppDispatch, useAppSelector
 } from '@2299899-fit-friends/frontend-core';
 import { getResponseErrorMessage } from '@2299899-fit-friends/helpers';
-import { TrainingLevel, TrainingType, UserGender, UserRole } from '@2299899-fit-friends/types';
+import {
+    AuthStatus, TrainingLevel, TrainingType, UserGender, UserRole
+} from '@2299899-fit-friends/types';
 import { unwrapResult } from '@reduxjs/toolkit';
 
 import Loading from '../loading/loading';
@@ -115,6 +117,13 @@ export default function PersonalAbout(): JSX.Element {
     dispatch(updateUserAction({ id: user?.id || '', data: formData }))
   }
 
+  const handleLogoutButtonCLick = (evt: MouseEvent<HTMLButtonElement>) => {
+    evt.preventDefault();
+    dropToken();
+    dispatch(setCurrentUser(null));
+    dispatch(setAuthStatus(AuthStatus.NoAuth));
+  };
+
   const trainingTypesElements = Object.values(TrainingType).map((type, index) => (
     <div className="btn-checkbox" key={`training_type_${index}`}>
       <label>
@@ -146,6 +155,7 @@ export default function PersonalAbout(): JSX.Element {
 
   return (
     <section className="user-info-edit">
+      <button className='btn-flat btn-flat--underlined' onClick={handleLogoutButtonCLick}>Выйти</button>
       <div className="user-info-edit__header">
         <div className="input-load-avatar">
           <label>
@@ -216,7 +226,7 @@ export default function PersonalAbout(): JSX.Element {
                 />
               </span>
               <span className="custom-input__error">
-                {getResponseErrorMessage(responseError?.statusCode, responseError?.message, 'name')}
+                {getResponseErrorMessage(responseError, 'name')}
               </span>
             </label>
           </div>
@@ -230,7 +240,7 @@ export default function PersonalAbout(): JSX.Element {
                 disabled={isFormDisabled}
               />
               <span className="custom-input__error">
-                {getResponseErrorMessage(responseError?.statusCode, responseError?.message, 'description')}
+                {getResponseErrorMessage(responseError, 'description')}
               </span>
             </label>
           </div>
@@ -268,7 +278,7 @@ export default function PersonalAbout(): JSX.Element {
             {trainingTypesElements}
           </div>
           <span className="custom-input__error">
-            {getResponseErrorMessage(responseError?.statusCode, responseError?.message, 'type')}
+            {getResponseErrorMessage(responseError, 'type')}
           </span>
         </div>
         <div className={isFormDisabled ? 'custom-edit--readonly user-info__edit' : 'user-info-edit__select'}>
@@ -281,7 +291,7 @@ export default function PersonalAbout(): JSX.Element {
             {locationOptionElements}
           </select>
           <span className="custom-input__error">
-            {getResponseErrorMessage(responseError?.statusCode, responseError?.message, 'location')}
+            {getResponseErrorMessage(responseError, 'location')}
           </span>
         </div>
         <div className={isFormDisabled ? 'custom-edit--readonly user-info__edit' : 'user-info-edit__select'}>
@@ -294,7 +304,7 @@ export default function PersonalAbout(): JSX.Element {
             {genderOptionElements}
           </select>
           <span className="custom-input__error">
-            {getResponseErrorMessage(responseError?.statusCode, responseError?.message, 'gender')}
+            {getResponseErrorMessage(responseError, 'gender')}
           </span>
         </div>
         <div className={isFormDisabled ? 'custom-edit--readonly user-info__edit' : 'user-info-edit__select'}>
@@ -307,7 +317,7 @@ export default function PersonalAbout(): JSX.Element {
             {levelOptionElements}
           </select>
           <span className="custom-input__error">
-            {getResponseErrorMessage(responseError?.statusCode, responseError?.message, 'level')}
+            {getResponseErrorMessage(responseError, 'level')}
           </span>
         </div>
       </form>

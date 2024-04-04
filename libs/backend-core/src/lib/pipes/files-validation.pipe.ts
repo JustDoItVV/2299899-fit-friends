@@ -2,9 +2,7 @@ import 'multer';
 
 import { FilesValidationRules } from '@2299899-fit-friends/types';
 import {
-  Injectable,
-  PipeTransform,
-  UnsupportedMediaTypeException,
+    BadRequestException, Injectable, PipeTransform, UnsupportedMediaTypeException
 } from '@nestjs/common';
 
 export interface FilesPayload {
@@ -24,6 +22,20 @@ export class FilesValidationPipe
   }
 
   transform(value: FilesPayload): FilesPayload {
+    let isBadRequest = false;
+    const badRequestMessages = [];
+
+    for (const fileRuleKey of Object.keys(this.rules)) {
+      if (this.rules[fileRuleKey].required && !(fileRuleKey in value)) {
+        isBadRequest = true;
+        badRequestMessages.push(`${fileRuleKey} file required`);
+      }
+    }
+
+    if (isBadRequest) {
+      throw new BadRequestException(badRequestMessages);
+    }
+
     if (value) {
       for (const key of Object.keys(value)) {
         value[key].map((file: Express.Multer.File) => {
