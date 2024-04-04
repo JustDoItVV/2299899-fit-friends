@@ -6,10 +6,10 @@ import { FrontendRoute, Training } from '@2299899-fit-friends/types';
 import { unwrapResult } from '@reduxjs/toolkit';
 
 type TrainingCatalogCardProps = {
-  training: Training;
+  item: Training;
 };
 
-export default memo(function TrainingCatalogCard({ training }: TrainingCatalogCardProps): JSX.Element {
+export default memo(function TrainingCatalogCard({ item: training }: TrainingCatalogCardProps): JSX.Element {
   const dispatch = useAppDispatch();
   const [imageUrl, setImageUrl] = useState<string>('');
 
