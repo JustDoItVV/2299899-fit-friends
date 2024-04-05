@@ -1,3 +1,5 @@
+import 'react-pdf/dist/esm/Page/TextLayer.css';
+
 import { AxiosInstance } from 'axios';
 
 import { ApiRoute } from '@2299899-fit-friends/consts';
@@ -74,4 +76,18 @@ export const fetchTrainerOrders = createAsyncThunk<
     `${ApiRoute.Account}${ApiRoute.Trainer}${ApiRoute.Orders}?${query}`
   );
   return pagination;
+});
+
+export const fetchCertificate = createAsyncThunk<
+  string,
+  { id: string, path: string },
+  { dispatch: AppDispatch; state: State; extra: AxiosInstance }
+>('accountTrainer/fetchCertificate', async ({ id, path }, { extra: api }) => {
+  const { data } = await api.post<Blob>(
+    `${ApiRoute.User}/${id}${ApiRoute.Certificates}`,
+    { path },
+    { responseType: 'blob'}
+  );
+  const dataUrl = URL.createObjectURL(data);
+  return dataUrl;
 });

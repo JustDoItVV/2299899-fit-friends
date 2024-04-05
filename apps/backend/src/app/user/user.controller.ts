@@ -225,7 +225,8 @@ export class UserController {
   @ApiNotFoundResponse({ description: ApiUserMessage.UserOrFileNotFound })
   @ApiUnauthorizedResponse({ description: ApiUserMessage.Unauthorized })
   @Post(':id/certificates')
-  @Header('Content-disposition', 'attachment; filename=certificate.pdf')
+  @Header('Content-Disposition', 'attachment; filename=certificate.pdf')
+  @Header('Content-Type', 'application/pdf')
   @UseGuards(JwtAuthGuard)
   public async getCertificate(@Param('id') id: string, @Body() dto: GetFileQuery) {
     return await this.userService.getCertificate(id, dto.path);
