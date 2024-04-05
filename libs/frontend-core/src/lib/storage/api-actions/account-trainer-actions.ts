@@ -1,7 +1,7 @@
 import { AxiosInstance } from 'axios';
 
 import { ApiRoute } from '@2299899-fit-friends/consts';
-import { FrontendRoute, Pagination, Training, User } from '@2299899-fit-friends/types';
+import { FrontendRoute, Order, Pagination, Training, User } from '@2299899-fit-friends/types';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
 import { redirectToRoute } from '../actions/redirect-to-route';
@@ -61,6 +61,17 @@ export const fetchTrainerFriends = createAsyncThunk<
 >('accountTrainer/fetchFriends', async (query, { extra: api }) => {
   const { data: pagination } = await api.get<Pagination<User>>(
     `${ApiRoute.Account}${ApiRoute.Trainer}${ApiRoute.Friends}?${query}`
+  );
+  return pagination;
+});
+
+export const fetchTrainerOrders = createAsyncThunk<
+  Pagination<Order>,
+  string,
+  { dispatch: AppDispatch; state: State; extra: AxiosInstance }
+>('accountTrainer/fetchFriends', async (query, { extra: api }) => {
+  const { data: pagination } = await api.get<Pagination<Order>>(
+    `${ApiRoute.Account}${ApiRoute.Trainer}${ApiRoute.Orders}?${query}`
   );
   return pagination;
 });

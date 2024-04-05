@@ -1,20 +1,20 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import {
-    selectCatalogTotalPages, useAppDispatch, useAppSelector
+    CatalogItem, selectCatalogTotalPages, useAppDispatch, useAppSelector
 } from '@2299899-fit-friends/frontend-core';
-import { Pagination, QueryPagination, Training, User } from '@2299899-fit-friends/types';
+import { Pagination, QueryPagination } from '@2299899-fit-friends/types';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { AsyncThunk, AsyncThunkConfig } from '@reduxjs/toolkit/dist/createAsyncThunk';
 
 type ExpandingCatalogProps<T> = {
   fetch: AsyncThunk<Pagination<T>, string, AsyncThunkConfig>;
-  component: React.ComponentType<{ item: Training | User, key?: string }>;
+  component: React.ComponentType<{ item: CatalogItem, key?: string }>;
   classNameList: string;
   queryParams: QueryPagination;
 };
 
-export default function ExpandingCatalog<T extends Training | User>(props: ExpandingCatalogProps<T>): JSX.Element {
+export default function ExpandingCatalog<T extends CatalogItem>(props: ExpandingCatalogProps<T>): JSX.Element {
   const { fetch, component: Card, classNameList, queryParams } = props;
   const dispatch = useAppDispatch();
   const totalPages = useAppSelector(selectCatalogTotalPages);

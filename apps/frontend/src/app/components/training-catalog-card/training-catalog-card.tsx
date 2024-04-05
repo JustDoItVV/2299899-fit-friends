@@ -1,12 +1,14 @@
 import { memo, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import { fetchTrainingBackgroundPicture, useAppDispatch } from '@2299899-fit-friends/frontend-core';
-import { FrontendRoute, Training, User } from '@2299899-fit-friends/types';
+import {
+    CatalogItem, fetchTrainingBackgroundPicture, useAppDispatch
+} from '@2299899-fit-friends/frontend-core';
+import { FrontendRoute, Training } from '@2299899-fit-friends/types';
 import { unwrapResult } from '@reduxjs/toolkit';
 
 type TrainingCatalogCardProps = {
-  item: Training | User;
+  item: CatalogItem;
 };
 
 export default memo(function TrainingCatalogCard({ item }: TrainingCatalogCardProps): JSX.Element {
@@ -16,8 +18,12 @@ export default memo(function TrainingCatalogCard({ item }: TrainingCatalogCardPr
 
   useEffect(() => {
     const fetchAvatar = async () => {
-      const image = unwrapResult(await dispatch(fetchTrainingBackgroundPicture(training.id || '')));
-      setImageUrl(image);
+      try {
+        const image = unwrapResult(await dispatch(fetchTrainingBackgroundPicture(training.id || '')));
+        setImageUrl(image);
+      } catch {
+        setImageUrl('img/content/placeholder.png');
+      }
     };
 
     fetchAvatar();

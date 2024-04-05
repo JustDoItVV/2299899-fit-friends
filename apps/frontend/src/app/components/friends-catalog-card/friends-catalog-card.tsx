@@ -1,22 +1,26 @@
-import { useEffect, useState } from 'react';
+import { memo, useEffect, useState } from 'react';
 
-import { fetchUserAvatar, useAppDispatch } from '@2299899-fit-friends/frontend-core';
-import { Training, User } from '@2299899-fit-friends/types';
+import { CatalogItem, fetchUserAvatar, useAppDispatch } from '@2299899-fit-friends/frontend-core';
+import { User } from '@2299899-fit-friends/types';
 import { unwrapResult } from '@reduxjs/toolkit';
 
 type FriendsCatalogCardProps = {
-  item: Training | User;
+  item: CatalogItem;
 };
 
-export default function FriendsCatalogCard({ item }: FriendsCatalogCardProps): JSX.Element {
+export default memo(function FriendsCatalogCard({ item }: FriendsCatalogCardProps): JSX.Element {
   const user = item as User;
   const dispatch = useAppDispatch();
   const [imageUrl, setImageUrl] = useState<string>('');
 
   useEffect(() => {
     const fetchAvatar = async () => {
-      const image = unwrapResult(await dispatch(fetchUserAvatar(user.id || '')));
-      setImageUrl(image);
+      try {
+        const image = unwrapResult(await dispatch(fetchUserAvatar(user.id || '')));
+        setImageUrl(image);
+      } catch {
+        setImageUrl('img/content/placeholder.png');
+      }
     };
 
     fetchAvatar();
@@ -88,4 +92,4 @@ export default function FriendsCatalogCard({ item }: FriendsCatalogCardProps): J
       </div>
     </li>
   );
-}
+});

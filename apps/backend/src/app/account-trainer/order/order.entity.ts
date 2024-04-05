@@ -20,6 +20,7 @@ export class OrderEntity implements Order, BaseEntity<string, Order> {
     this.amount = data.amount;
     this.paymentMethod = data.paymentMethod;
     this.orderSum = data.amount * data.price;
+    this.training = new TrainingEntity().populate(data.training);
 
     return this;
   }
@@ -33,6 +34,7 @@ export class OrderEntity implements Order, BaseEntity<string, Order> {
       amount: this.amount,
       orderSum: this.orderSum,
       paymentMethod: this.paymentMethod,
+      training: this.training.toPOJO(),
     };
   }
 

@@ -15,4 +15,5 @@ export * from './lib/storage/reducers/training-process/training-process.slice';
 export * from './lib/storage/reducers/user-process/user-process.selector';
 export * from './lib/storage/reducers/user-process/user-process.slice';
 export * from './lib/storage/types/app-dispatch.type';
+export * from './lib/storage/types/catalog-process.type';
 export * from './lib/storage/types/state.type';
