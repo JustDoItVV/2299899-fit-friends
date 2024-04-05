@@ -1,7 +1,7 @@
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 import 'react-pdf/dist/Page/TextLayer.css';
 
-import { useEffect, useState } from 'react';
+import { memo, useEffect, useState } from 'react';
 import { Document, Page, pdfjs } from 'react-pdf';
 
 import { fetchCertificate, useAppDispatch } from '@2299899-fit-friends/frontend-core';
@@ -14,9 +14,10 @@ type CertificateCardProps = {
   path: string;
 };
 
-export default function CertificateCard({ userId, path }: CertificateCardProps): JSX.Element {
+export default memo(function CertificateCard({ userId, path }: CertificateCardProps): JSX.Element {
   const dispatch = useAppDispatch();
   const [fileUrl, setFileUrl] = useState<string | null>(null);
+  const [isEditing, setIsEditing] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchFile = async () => {
@@ -31,6 +32,14 @@ export default function CertificateCard({ userId, path }: CertificateCardProps):
     fetchFile();
   }, [dispatch, path, userId]);
 
+  const handleChangeButtonClick = () => {
+    setIsEditing(true);
+  };
+
+  const handleSaveButtonClick = () => {
+    setIsEditing(false);
+  };
+
   return (
     <li className="personal-account-coach__item">
       <div className="certificate-card certificate-card--edit">
@@ -39,106 +48,54 @@ export default function CertificateCard({ userId, path }: CertificateCardProps):
             <Page pageNumber={1} width={294} canvasBackground='transparent'/>
           </Document>
         </div>
-        <div className="certificate-card__buttons">
-          <button
-            className="btn-flat btn-flat--underlined certificate-card__button certificate-card__button--edit"
-            type="button"
-          >
-            <svg width={12} height={12} aria-hidden="true">
-              <use xlinkHref="#icon-edit" />
-            </svg>
-            <span>Изменить</span>
-          </button>
-          <button
-            className="btn-flat btn-flat--underlined certificate-card__button certificate-card__button--save"
-            type="button"
-          >
-            <svg width={12} height={12} aria-hidden="true">
-              <use xlinkHref="#icon-edit" />
-            </svg>
-            <span>Сохранить</span>
-          </button>
-          <div className="certificate-card__controls">
+        {
+          isEditing
+          ? <div className="certificate-card__buttons">
+              <button
+                className="btn-flat btn-flat--underlined"
+                type="button"
+                onClick={handleSaveButtonClick}
+              >
+                <svg width={12} height={12} aria-hidden="true">
+                  <use xlinkHref="#icon-edit" />
+                </svg>
+                <span>Сохранить</span>
+              </button>
+              <div className="certificate-card__controls">
+                <button
+                  className="btn-icon certificate-card__control"
+                  type="button"
+                  aria-label="next"
+                >
+                  <svg width={16} height={16} aria-hidden="true">
+                    <use xlinkHref="#icon-change" />
+                  </svg>
+                </button>
+                <button
+                  className="btn-icon certificate-card__control"
+                  type="button"
+                  aria-label="next"
+                >
+                  <svg width={14} height={16} aria-hidden="true">
+                    <use xlinkHref="#icon-trash" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+        : <div className="certificate-card__buttons">
             <button
-              className="btn-icon certificate-card__control"
+              className="btn-flat btn-flat--underlined"
               type="button"
-              aria-label="next"
+              onClick={handleChangeButtonClick}
             >
-              <svg width={16} height={16} aria-hidden="true">
-                <use xlinkHref="#icon-change" />
+              <svg width={12} height={12} aria-hidden="true">
+                <use xlinkHref="#icon-edit" />
               </svg>
-            </button>
-            <button
-              className="btn-icon certificate-card__control"
-              type="button"
-              aria-label="next"
-            >
-              <svg width={14} height={16} aria-hidden="true">
-                <use xlinkHref="#icon-trash" />
-              </svg>
+              <span>Изменить</span>
             </button>
           </div>
-        </div>
+        }
       </div>
     </li>
-//     <li className="personal-account-coach__item">
-//     <div className="certificate-card">
-//       <div className="certificate-card__image">
-//         <picture>
-//           <source
-//             type="image/webp"
-//             srcSet="img/content/certificates-and-diplomas/certificate-2.webp, img/content/certificates-and-diplomas/certificate-2@2x.webp 2x"
-//           />
-//           <img
-//             src="img/content/certificates-and-diplomas/certificate-2.jpg"
-//             srcSet="img/content/certificates-and-diplomas/certificate-2@2x.jpg 2x"
-//             width={294}
-//             height={360}
-//             alt="Сертификат - Организационно-методическая подготовка и проведение групповых и индивидуальных физкультурно-оздоровительных занятий"
-//           />
-//         </picture>
-//       </div>
-//       <div className="certificate-card__buttons">
-//         <button
-//           className="btn-flat btn-flat--underlined certificate-card__button certificate-card__button--edit"
-//           type="button"
-//         >
-//           <svg width={12} height={12} aria-hidden="true">
-//             <use xlinkHref="#icon-edit" />
-//           </svg>
-//           <span>Изменить</span>
-//         </button>
-//         <button
-//           className="btn-flat btn-flat--underlined certificate-card__button certificate-card__button--save"
-//           type="button"
-//         >
-//           <svg width={12} height={12} aria-hidden="true">
-//             <use xlinkHref="#icon-edit" />
-//           </svg>
-//           <span>Сохранить</span>
-//         </button>
-//         <div className="certificate-card__controls">
-//           <button
-//             className="btn-icon certificate-card__control"
-//             type="button"
-//             aria-label="next"
-//           >
-//             <svg width={16} height={16} aria-hidden="true">
-//               <use xlinkHref="#icon-change" />
-//             </svg>
-//           </button>
-//           <button
-//             className="btn-icon certificate-card__control"
-//             type="button"
-//             aria-label="next"
-//           >
-//             <svg width={14} height={16} aria-hidden="true">
-//               <use xlinkHref="#icon-trash" />
-//             </svg>
-//           </button>
-//         </div>
-//       </div>
-//     </div>
-//   </li>
   );
-}
+});

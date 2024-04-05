@@ -1,5 +1,6 @@
 export const BACKEND_URL = 'http://localhost:3001/api';
 export const REQUEST_TIMEOUT = 5000;
+export const DEBOUNCE_THRESHOLD = 500;
 
 export enum ApiRoute {
   User = '/user',

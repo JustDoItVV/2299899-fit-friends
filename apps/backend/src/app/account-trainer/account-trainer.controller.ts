@@ -33,16 +33,15 @@ export class AccountTrainerController {
   @ApiForbiddenResponse({ description: ApiUserMessage.ForbiddenExceptTrainer })
   @ApiUnauthorizedResponse({ description: ApiUserMessage.Unauthorized })
   @Get('')
-  @UsePipes(
-    new ValidationPipe({
-      transform: true,
-      transformOptions: { enableImplicitConversion: true },
-    })
-  )
+  @UsePipes(new ValidationPipe({
+    transform: true,
+    transformOptions: { enableImplicitConversion: true },
+  }))
   public async showTrainings(
     @UserParam() payload: TokenPayload,
     @Query() query: TrainingPaginationQuery
   ) {
+    console.log(query);
     const result = await this.trainingService.getByQuery(query, payload.userId);
     return fillDto(PaginationRdo<TrainingRdo>, result);
   }

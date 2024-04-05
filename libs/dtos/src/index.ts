@@ -25,5 +25,4 @@ export * from './lib/rdo/balance.rdo';
 export * from './lib/rdo/training-request.rdo';
 
 export * from './lib/decorators/api-ok-response-paginated.decorator';
-export * from './lib/decorators/transform-array-int.decorator';
 export * from './lib/decorators/transform-to-array.decorator';

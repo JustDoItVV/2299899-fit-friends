@@ -1,14 +1,14 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import {
-    CatalogItem, selectCatalogTotalPages, useAppDispatch, useAppSelector
+    CatalogItem, selectCatalogTotalItems, selectCatalogTotalPages, useAppDispatch, useAppSelector
 } from '@2299899-fit-friends/frontend-core';
 import { Pagination, QueryPagination } from '@2299899-fit-friends/types';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { AsyncThunk, AsyncThunkConfig } from '@reduxjs/toolkit/dist/createAsyncThunk';
 
 type ExpandingCatalogProps<T> = {
-  fetch: AsyncThunk<Pagination<T>, string, AsyncThunkConfig>;
+  fetch: AsyncThunk<Pagination<T>, QueryPagination, AsyncThunkConfig>;
   component: React.ComponentType<{ item: CatalogItem, key?: string }>;
   classNameList: string;
   queryParams: QueryPagination;
@@ -18,20 +18,16 @@ export default function ExpandingCatalog<T extends CatalogItem>(props: Expanding
   const { fetch, component: Card, classNameList, queryParams } = props;
   const dispatch = useAppDispatch();
   const totalPages = useAppSelector(selectCatalogTotalPages);
+  const totalItems = useAppSelector(selectCatalogTotalItems);
   const [catalogCards, setCatalogCards] = useState<JSX.Element[]>([]);
   const currentPageRef = useRef<number>(1);
 
-  const getQueryString = (query: QueryPagination): string => {
-    const queryStrings = Object.keys(query).map((key) => `${key}=${query[key as keyof QueryPagination]}`);
-    return queryStrings.join('&');
-  };
-
   const fetchPageItems = useCallback(async () => {
-    const { entities: pageItems, totalPages: totalPagesCount } =
-      unwrapResult(await dispatch(fetch(getQueryString(queryParams))));
+    const { entities: pageItems, totalItems: totalItemsCount } =
+      unwrapResult(await dispatch(fetch(queryParams)));
     const newTrainingCatalogCards: JSX.Element[] = [];
 
-    if (totalPages !== totalPagesCount) {
+    if (totalItems !== totalItemsCount) {
       setCatalogCards([]);
       currentPageRef.current = 1;
     } else {
@@ -45,7 +41,7 @@ export default function ExpandingCatalog<T extends CatalogItem>(props: Expanding
     }
 
     queryParams.page = currentPageRef.current;
-  }, [dispatch, Card, fetch, totalPages, queryParams]);
+  }, [dispatch, Card, fetch, totalPages, totalItems, queryParams]);
 
   useEffect(() => {
     fetchPageItems();

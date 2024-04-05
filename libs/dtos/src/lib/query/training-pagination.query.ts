@@ -1,33 +1,41 @@
-import { IsEnum, IsNumber, IsOptional, ValidationArguments } from 'class-validator';
+import { IsEnum, IsNumber, IsOptional } from 'class-validator';
 
 import { PriceLimit, RatingLimit, TrainingCaloriesLimit } from '@2299899-fit-friends/consts';
 import { TrainingDuration, TrainingType } from '@2299899-fit-friends/types';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 
-import { TransformArrayInt } from '../decorators/transform-array-int.decorator';
 import { PaginationQuery } from './pagination.query';
 
 export class TrainingPaginationQuery extends PaginationQuery {
-  @ApiPropertyOptional({ description: 'Фильтр по диапазону цен', type: Number, isArray: true })
-  @IsNumber({}, { each: true })
-  @TransformArrayInt(PriceLimit.Max)
+  @ApiPropertyOptional({ description: 'Фильтр по минимальной цене', type: Number })
+  @IsNumber()
   @IsOptional()
-  public price: [number, number] = [PriceLimit.Min, PriceLimit.Max];
+  public priceMin: number = PriceLimit.Min;
 
-  @ApiPropertyOptional({ description: 'Фильтр по диапазону калорий', type: Number, isArray: true })
-  @IsNumber({}, { each: true })
-  @TransformArrayInt(TrainingCaloriesLimit.Max)
+  @ApiPropertyOptional({ description: 'Фильтр по максимальной цене', type: Number })
+  @IsNumber()
   @IsOptional()
-  public calories: [number, number] = [TrainingCaloriesLimit.Min, TrainingCaloriesLimit.Max];
+  public priceMax: number = PriceLimit.Max;
 
-  @ApiPropertyOptional({ description: 'Фильтр по диапазону рейтингов', type: Number, isArray: true })
-  @IsNumber({}, { each: true, message: (args: ValidationArguments) => {
-    console.log(args.value);
-    return 'dafuq';
-  } })
-  @TransformArrayInt(RatingLimit.Max)
+  @ApiPropertyOptional({ description: 'Фильтр по минимальным калориям', type: Number })
+  @IsNumber()
   @IsOptional()
-  public rating: [number, number] = [0, RatingLimit.Max];
+  public caloriesMin: number = TrainingCaloriesLimit.Min;
+
+  @ApiPropertyOptional({ description: 'Фильтр по максимальным калориям', type: Number })
+  @IsNumber()
+  @IsOptional()
+  public caloriesMax: number = TrainingCaloriesLimit.Max;
+
+  @ApiPropertyOptional({ description: 'Фильтр по минимальному рейтингу', type: Number })
+  @IsNumber()
+  @IsOptional()
+  public ratingMin: number = RatingLimit.Min - 1;
+
+  @ApiPropertyOptional({ description: 'Фильтр по максимальному рейтингу', type: Number })
+  @IsNumber()
+  @IsOptional()
+  public ratingMax: number = RatingLimit.Max;
 
   @ApiPropertyOptional({ description: 'Фильтр по продолжительности', enum: TrainingDuration, isArray: true })
   @IsEnum(TrainingDuration, { each: true })

@@ -1,15 +1,10 @@
-import { DefaultPagination } from '@2299899-fit-friends/consts';
 import { BasePostgresRepository } from '@2299899-fit-friends/backend-core';
+import { DefaultPagination } from '@2299899-fit-friends/consts';
 import { TrainingPaginationQuery } from '@2299899-fit-friends/dtos';
 import { PrismaClientService } from '@2299899-fit-friends/models';
 import {
-  Pagination,
-  SortOption,
-  Training,
-  TrainingAuditory,
-  TrainingDuration,
-  TrainingLevel,
-  TrainingType,
+    Pagination, SortOption, Training, TrainingAuditory, TrainingDuration, TrainingLevel,
+    TrainingType
 } from '@2299899-fit-friends/types';
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
@@ -17,17 +12,12 @@ import { Prisma } from '@prisma/client';
 import { TrainingEntity } from './training.entity';
 
 @Injectable()
-export class TrainingRepository extends BasePostgresRepository<
-  TrainingEntity,
-  Training
-> {
+export class TrainingRepository extends BasePostgresRepository<TrainingEntity, Training> {
   constructor(protected readonly clientService: PrismaClientService) {
     super(clientService, TrainingEntity.fromObject);
   }
 
-  private async getTrainingsCount(
-    where: Prisma.TrainingWhereInput
-  ): Promise<number> {
+  private async getTrainingsCount(where: Prisma.TrainingWhereInput): Promise<number> {
     return this.clientService.training.count({ where });
   }
 
@@ -41,17 +31,12 @@ export class TrainingRepository extends BasePostgresRepository<
 
   public async save(entity: TrainingEntity): Promise<TrainingEntity> {
     const pojoEntity = entity.toPOJO();
-    const document = await this.clientService.training.create({
-      data: pojoEntity,
-    });
+    const document = await this.clientService.training.create({ data: pojoEntity });
     entity.id = document.id;
     return entity;
   }
 
-  public async find(
-    query: TrainingPaginationQuery,
-    userId?: string
-  ): Promise<Pagination<TrainingEntity>> {
+  public async find(query: TrainingPaginationQuery, userId?: string): Promise<Pagination<TrainingEntity>> {
     let limit = query.limit;
     if (query.limit < 1) {
       limit = 1;
@@ -60,9 +45,9 @@ export class TrainingRepository extends BasePostgresRepository<
     }
 
     const where: Prisma.TrainingWhereInput = {};
-    where.price = { gte: query.price[0], lte: query.price[1] };
-    where.calories = { gte: query.calories[0], lte: query.calories[1] };
-    where.rating = { gte: query.rating[0], lte: query.rating[1] };
+    where.price = { gte: query.priceMin, lte: query.priceMax };
+    where.calories = { gte: query.caloriesMin, lte: query.caloriesMax };
+    where.rating = { gte: query.ratingMin, lte: query.ratingMax };
 
     if (userId) {
       where.userId = userId;
@@ -83,8 +68,7 @@ export class TrainingRepository extends BasePostgresRepository<
       }
     }
 
-    const orderBy: Prisma.TrainingOrderByWithRelationAndSearchRelevanceInput =
-      {};
+    const orderBy: Prisma.TrainingOrderByWithRelationAndSearchRelevanceInput = {};
     if (query.sortOption === SortOption.CreatedAt) {
       orderBy.createdAt = query.sortDirection;
     }
@@ -124,9 +108,7 @@ export class TrainingRepository extends BasePostgresRepository<
   }
 
   public async findById(id: string): Promise<TrainingEntity | null> {
-    const document = await this.clientService.training.findFirst({
-      where: { id },
-    });
+    const document = await this.clientService.training.findFirst({ where: { id } });
     return document
       ? this.createEntityFromDocument({
           ...document,
@@ -138,16 +120,11 @@ export class TrainingRepository extends BasePostgresRepository<
       : null;
   }
 
-  public async update(
-    id: string,
-    entity: TrainingEntity
-  ): Promise<TrainingEntity> {
+  public async update(id: string, entity: TrainingEntity): Promise<TrainingEntity> {
     const pojoEntity = entity.toPOJO();
     const updatedDocument = await this.clientService.training.update({
       where: { id },
-      data: {
-        ...pojoEntity,
-      },
+      data: { ...pojoEntity },
     });
 
     return this.createEntityFromDocument({

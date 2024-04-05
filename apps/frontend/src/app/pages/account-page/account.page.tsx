@@ -41,7 +41,6 @@ export default function AccountPage(): JSX.Element {
                         <AccountPanelUser />
                       </div>
                 }
-
               </div>
             </div>
           </div>

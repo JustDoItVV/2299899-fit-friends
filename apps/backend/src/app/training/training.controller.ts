@@ -62,7 +62,8 @@ export class TrainingController {
   @ApiBadRequestResponse({ description: ApiTrainingMessage.ValidationError })
   @ApiUnauthorizedResponse({ description: ApiUserMessage.Unauthorized })
   @Get('')
-  public async showMyTrainings(@Query() query: TrainingPaginationQuery) {
+  public async showCatalog(@Query() query: TrainingPaginationQuery) {
+    console.log(query);
     const result = await this.trainingService.getByQuery(query);
     return fillDto(PaginationRdo<TrainingRdo>, result);
   }
