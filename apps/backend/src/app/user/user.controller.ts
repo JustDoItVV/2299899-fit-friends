@@ -1,68 +1,28 @@
 import 'multer';
 
 import {
-  AllowedCertificateFormat,
-  AllowedImageFormat,
-  ApiTag,
-  ApiUserMessage,
-  AVATAR_SIZE_LIMIT,
-  UserErrorMessage,
-} from '@2299899-fit-friends/consts';
-import {
-  FilesPayload,
-  FilesValidationPipe,
-  JwtAuthGuard,
-  JwtRefreshGuard,
-  OnlyAnonymousGuard,
-  Token,
-  UserParam,
-  UserRolesGuard,
+    FilesPayload, FilesValidationPipe, JwtAuthGuard, JwtRefreshGuard, OnlyAnonymousGuard, Token,
+    UserParam, UserRolesGuard
 } from '@2299899-fit-friends/backend-core';
 import {
-  ApiOkResponsePaginated,
-  CreateUserDto,
-  LoggedUserRdo,
-  LoginUserDto,
-  PaginationRdo,
-  UpdateUserDto,
-  UserPaginationQuery,
-  UserRdo,
+    AllowedCertificateFormat, AllowedImageFormat, ApiTag, ApiUserMessage, AVATAR_SIZE_LIMIT,
+    UserErrorMessage
+} from '@2299899-fit-friends/consts';
+import {
+    ApiOkResponsePaginated, CreateUserDto, GetFileQuery, LoggedUserRdo, LoginUserDto, PaginationRdo,
+    UpdateUserDto, UserPaginationQuery, UserRdo
 } from '@2299899-fit-friends/dtos';
 import { fillDto } from '@2299899-fit-friends/helpers';
 import { TokenPayload, UserRole } from '@2299899-fit-friends/types';
 import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Header,
-  HttpCode,
-  HttpStatus,
-  Param,
-  Patch,
-  Post,
-  Query,
-  UploadedFiles,
-  UseGuards,
-  UseInterceptors,
-  UsePipes,
-  ValidationPipe,
+    Body, Controller, Delete, Get, Header, HttpCode, HttpStatus, Param, Patch, Post, Query,
+    UploadedFiles, UseGuards, UseInterceptors, UsePipes, ValidationPipe
 } from '@nestjs/common';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import {
-  ApiBadRequestResponse,
-  ApiBearerAuth,
-  ApiConflictResponse,
-  ApiConsumes,
-  ApiCreatedResponse,
-  ApiForbiddenResponse,
-  ApiNoContentResponse,
-  ApiNotFoundResponse,
-  ApiOkResponse,
-  ApiOperation,
-  ApiTags,
-  ApiUnauthorizedResponse,
-  ApiUnsupportedMediaTypeResponse,
+    ApiBadRequestResponse, ApiBearerAuth, ApiConflictResponse, ApiConsumes, ApiCreatedResponse,
+    ApiForbiddenResponse, ApiNoContentResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation,
+    ApiTags, ApiUnauthorizedResponse, ApiUnsupportedMediaTypeResponse
 } from '@nestjs/swagger';
 
 import { UserEntity } from './user.entity';
@@ -264,11 +224,11 @@ export class UserController {
   @ApiOkResponse({ description: ApiUserMessage.FileCertificate })
   @ApiNotFoundResponse({ description: ApiUserMessage.UserOrFileNotFound })
   @ApiUnauthorizedResponse({ description: ApiUserMessage.Unauthorized })
-  @Get(':id/certificates')
+  @Post(':id/certificates')
   @Header('Content-disposition', 'attachment; filename=certificate.pdf')
   @UseGuards(JwtAuthGuard)
-  public async getCertificate(@Param('id') id: string) {
-    return await this.userService.getCertificate(id);
+  public async getCertificate(@Param('id') id: string, @Body() dto: GetFileQuery) {
+    return await this.userService.getCertificate(id, dto.path);
   }
 
   @ApiTags(ApiTag.AccountUser)

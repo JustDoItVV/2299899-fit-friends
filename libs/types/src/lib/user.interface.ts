@@ -22,7 +22,7 @@ export interface User {
   caloriesTarget?: number;
   caloriesPerDay?: number;
   isReadyToTraining?: boolean;
-  certificate?: string;
+  certificates?: string[];
   merits?: string | undefined;
   isReadyToPersonal?: boolean;
   accessToken?: string;

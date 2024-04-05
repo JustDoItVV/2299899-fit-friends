@@ -2,39 +2,19 @@ import { randomUUID } from 'node:crypto';
 import { copyFileSync, existsSync, mkdirSync } from 'node:fs';
 import { join } from 'node:path';
 
+import { FilesPayload } from '@2299899-fit-friends/backend-core';
 import { BackendConfig } from '@2299899-fit-friends/config';
 import {
-  MockTrainingBackgroundPicture,
-  TRAINING_TYPE_LIMIT,
-  UserErrorMessage,
+    MockTrainingBackgroundPicture, TRAINING_TYPE_LIMIT, UserErrorMessage
 } from '@2299899-fit-friends/consts';
-import { FilesPayload } from '@2299899-fit-friends/backend-core';
 import {
-  CreateUserDto,
-  LoginUserDto,
-  PaginationQuery,
-  UpdateUserDto,
-  UserPaginationQuery,
-  UserRdo,
+    CreateUserDto, LoginUserDto, PaginationQuery, UpdateUserDto, UserPaginationQuery, UserRdo
 } from '@2299899-fit-friends/dtos';
 import { createJWTPayload, fillDto } from '@2299899-fit-friends/helpers';
+import { Pagination, Token, TokenPayload, UserGender, UserRole } from '@2299899-fit-friends/types';
 import {
-  Pagination,
-  Token,
-  TokenPayload,
-  UserGender,
-  UserRole,
-} from '@2299899-fit-friends/types';
-import {
-  BadRequestException,
-  ConflictException,
-  ForbiddenException,
-  Inject,
-  Injectable,
-  InternalServerErrorException,
-  NotFoundException,
-  StreamableFile,
-  UnauthorizedException,
+    BadRequestException, ConflictException, ForbiddenException, Inject, Injectable,
+    InternalServerErrorException, NotFoundException, StreamableFile, UnauthorizedException
 } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
@@ -261,14 +241,14 @@ export class UserService {
     return await this.uploaderService.getImageUrl(user.pageBackground);
   }
 
-  public async getCertificate(id: string): Promise<StreamableFile> {
+  public async getCertificate(id: string, path: string): Promise<StreamableFile> {
     const user = await this.getUserById(id);
 
-    if (!user.certificate) {
+    if (!user.certificates.includes(path)) {
       throw new NotFoundException(UserErrorMessage.NoFileUploaded);
     }
 
-    return await this.uploaderService.getFile(user.certificate);
+    return await this.uploaderService.getFile(path);
   }
 
   public async addToFriends(

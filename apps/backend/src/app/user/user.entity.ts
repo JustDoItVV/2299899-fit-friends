@@ -24,7 +24,7 @@ export class UserEntity implements User, BaseEntity<string, User> {
   public caloriesTarget?: number;
   public caloriesPerDay?: number;
   public isReadyToTraining?: boolean;
-  public certificate?: string;
+  public certificates?: string[];
   public merits?: string;
   public isReadyToPersonal?: boolean;
   public accessToken?: string;
@@ -60,7 +60,7 @@ export class UserEntity implements User, BaseEntity<string, User> {
     Object.assign(userPojo, this.caloriesTarget === null ? null : { caloriesTarget: this.caloriesTarget });
     Object.assign(userPojo, this.caloriesPerDay === null ? null : { caloriesPerDay: this.caloriesPerDay });
     Object.assign(userPojo, this.isReadyToTraining === null ? null : { isReadyToTraining: this.isReadyToTraining });
-    Object.assign(userPojo, this.certificate === null ? null : { certificate: this.certificate });
+    Object.assign(userPojo, this.certificates === null ? null : { certificates: this.certificates });
     Object.assign(userPojo, this.merits === null ? null : { merits: this.merits });
     Object.assign(userPojo, this.isReadyToPersonal === null ? null : { isReadyToPersonal: this.isReadyToPersonal });
     Object.assign(userPojo, this.accessToken === null ? null : { accessToken: this.accessToken });
@@ -88,7 +88,7 @@ export class UserEntity implements User, BaseEntity<string, User> {
     this.caloriesTarget = data.caloriesTarget;
     this.caloriesPerDay = data.caloriesPerDay;
     this.isReadyToTraining = data.isReadyToTraining;
-    this.certificate = data.certificate;
+    this.certificates = data.certificates;
     this.merits = data.merits;
     this.isReadyToPersonal = data.isReadyToPersonal;
     this.accessToken = data.accessToken ?? undefined;

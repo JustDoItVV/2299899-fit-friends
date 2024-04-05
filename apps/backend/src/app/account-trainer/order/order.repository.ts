@@ -13,10 +13,7 @@ import { TrainingEntity } from '../../training/training.entity';
 import { OrderEntity } from './order.entity';
 
 @Injectable()
-export class OrderRepository extends BasePostgresRepository<
-  OrderEntity,
-  Order
-> {
+export class OrderRepository extends BasePostgresRepository<OrderEntity, Order> {
   constructor(protected readonly clientService: PrismaClientService) {
     super(clientService, OrderEntity.fromObject);
   }
@@ -33,10 +30,7 @@ export class OrderRepository extends BasePostgresRepository<
     return Math.ceil(totalCount / limit);
   }
 
-  public async find(
-    query: OrderPaginationQuery,
-    userId?: string
-  ): Promise<Pagination<OrderEntity>> {
+  public async find(query: OrderPaginationQuery, userId?: string): Promise<Pagination<OrderEntity>> {
     let limit = query.limit;
     if (query.limit < 1) {
       limit = 1;
