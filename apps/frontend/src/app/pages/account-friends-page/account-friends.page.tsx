@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 
 import {
-    fetchTrainerFriends, selectAccountTrainerTotalPages
+    fetchTrainerFriends, redirectToRoute, useAppDispatch
 } from '@2299899-fit-friends/frontend-core';
 import { FrontendRoute, QueryPagination, User } from '@2299899-fit-friends/types';
 
@@ -11,7 +11,12 @@ import FriendsCatalogCard from '../../components/friends-catalog-card/friends-ca
 import Header from '../../components/header/header';
 
 export default function AccountFriendsPage(): JSX.Element {
+  const dispatch = useAppDispatch();
   const [queryParams,] = useState<QueryPagination>({ page: 1, limit: 3 });
+
+  const handleBackButtonClick = () => {
+    dispatch(redirectToRoute(`/${FrontendRoute.Account}`));
+  };
 
   return (
     <div className="wrapper">
@@ -21,7 +26,7 @@ export default function AccountFriendsPage(): JSX.Element {
         <section className="friends-list">
           <div className="container">
             <div className="friends-list__wrapper">
-              <button className="btn-flat friends-list__back" type="button">
+              <button className="btn-flat friends-list__back" type="button" onClick={handleBackButtonClick} >
                 <svg width={14} height={10} aria-hidden="true">
                   <use xlinkHref="#arrow-left" />
                 </svg>
@@ -32,9 +37,7 @@ export default function AccountFriendsPage(): JSX.Element {
               </div>
               <ExpandingCatalog<User>
                 fetch={fetchTrainerFriends}
-                selector={selectAccountTrainerTotalPages}
                 component={FriendsCatalogCard}
-                keyPrefix='friedns_card'
                 classNameList='friends-list__list'
                 queryParams={queryParams}
               />

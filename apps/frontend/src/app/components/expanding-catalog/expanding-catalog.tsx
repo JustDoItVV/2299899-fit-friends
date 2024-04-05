@@ -1,24 +1,23 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-import { State, useAppDispatch, useAppSelector } from '@2299899-fit-friends/frontend-core';
-import { NameSpace, Pagination, QueryPagination, Training, User } from '@2299899-fit-friends/types';
+import {
+    selectCatalogTotalPages, useAppDispatch, useAppSelector
+} from '@2299899-fit-friends/frontend-core';
+import { Pagination, QueryPagination, Training, User } from '@2299899-fit-friends/types';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { AsyncThunk, AsyncThunkConfig } from '@reduxjs/toolkit/dist/createAsyncThunk';
 
 type ExpandingCatalogProps<T> = {
   fetch: AsyncThunk<Pagination<T>, string, AsyncThunkConfig>;
-  selector: (state: Pick<State, NameSpace>) => number;
   component: React.ComponentType<{ item: Training | User, key?: string }>;
-  keyPrefix: string;
   classNameList: string;
   queryParams: QueryPagination;
 };
 
 export default function ExpandingCatalog<T extends Training | User>(props: ExpandingCatalogProps<T>): JSX.Element {
-  const { fetch, selector, component: Card, keyPrefix, classNameList, queryParams } = props;
+  const { fetch, component: Card, classNameList, queryParams } = props;
   const dispatch = useAppDispatch();
-  // const [totalPages, setTotalPages] = useState<number>(1);
-  const totalPages = useAppSelector(selector);
+  const totalPages = useAppSelector(selectCatalogTotalPages);
   const [catalogCards, setCatalogCards] = useState<JSX.Element[]>([]);
   const currentPageRef = useRef<number>(1);
 
@@ -34,12 +33,11 @@ export default function ExpandingCatalog<T extends Training | User>(props: Expan
 
     if (totalPages !== totalPagesCount) {
       setCatalogCards([]);
-      // setTotalPages(totalPagesCount);
       currentPageRef.current = 1;
     } else {
       if (currentPageRef.current <= totalPages) {
         pageItems.forEach((item) => newTrainingCatalogCards.push(
-          <Card item={item} key={`${keyPrefix}_${item.id}`} />
+          <Card item={item} key={`catalog_item_${item.id}`} />
         ));
         setCatalogCards(((oldValue) => [...oldValue, ...newTrainingCatalogCards]));
         currentPageRef.current++;
@@ -47,7 +45,7 @@ export default function ExpandingCatalog<T extends Training | User>(props: Expan
     }
 
     queryParams.page = currentPageRef.current;
-  }, [dispatch, Card, fetch, keyPrefix, totalPages, queryParams]);
+  }, [dispatch, Card, fetch, totalPages, queryParams]);
 
   useEffect(() => {
     fetchPageItems();

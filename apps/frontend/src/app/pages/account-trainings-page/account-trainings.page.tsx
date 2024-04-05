@@ -1,9 +1,7 @@
 import { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 
-import {
-    fetchTrainerCatalog, selectAccountTrainerTotalPages
-} from '@2299899-fit-friends/frontend-core';
+import { fetchTrainerCatalog } from '@2299899-fit-friends/frontend-core';
 import { FrontendRoute, QueryPagination, Training } from '@2299899-fit-friends/types';
 
 import ExpandingCatalog from '../../components/expanding-catalog/expanding-catalog';
@@ -28,9 +26,7 @@ export default function AccountTrainingsPage(): JSX.Element {
                 <div className="my-trainings">
                   <ExpandingCatalog<Training>
                     fetch={fetchTrainerCatalog}
-                    selector={selectAccountTrainerTotalPages}
                     component={TrainingCatalogCard}
-                    keyPrefix='training_card'
                     classNameList='my-trainings__list'
                     queryParams={queryParams}
                   />
