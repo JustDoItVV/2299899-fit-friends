@@ -2,14 +2,25 @@ import { randomUUID } from 'node:crypto';
 import { copyFileSync, existsSync, mkdirSync } from 'node:fs';
 import { join } from 'node:path';
 
-import { MockTrainingBackgroundPicture, TrainingErrorMessage } from '@2299899-fit-friends/consts';
-import { FilesPayload } from '@2299899-fit-friends/core';
 import {
-    CreateTrainingDto, TrainingPaginationQuery, TrainingRdo, UpdateTrainingDto
+  MockTrainingBackgroundPicture,
+  TrainingErrorMessage,
+} from '@2299899-fit-friends/consts';
+import { FilesPayload } from '@2299899-fit-friends/backend-core';
+import {
+  CreateTrainingDto,
+  TrainingPaginationQuery,
+  TrainingRdo,
+  UpdateTrainingDto,
 } from '@2299899-fit-friends/dtos';
 import { fillDto } from '@2299899-fit-friends/helpers';
 import { Pagination, TokenPayload } from '@2299899-fit-friends/types';
-import { ForbiddenException, Injectable, NotFoundException, StreamableFile } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+  StreamableFile,
+} from '@nestjs/common';
 
 import { MailNotificataionEntity } from '../mail-notification/mail-notification.entity';
 import { MailNotificationRepository } from '../mail-notification/mail-notification.repository';
@@ -24,10 +35,14 @@ export class TrainingService {
     private readonly trainingRepository: TrainingRepository,
     private readonly uploaderService: UploaderService,
     private readonly mailNotificationRepository: MailNotificationRepository,
-    private readonly userRepository: UserRepository,
+    private readonly userRepository: UserRepository
   ) {}
 
-  public async create(dto: CreateTrainingDto, userId: string, files: FilesPayload): Promise<TrainingEntity> {
+  public async create(
+    dto: CreateTrainingDto,
+    userId: string,
+    files: FilesPayload
+  ): Promise<TrainingEntity> {
     const entity = TrainingEntity.fromDto(dto, userId);
 
     for (const key of Object.keys(files)) {
@@ -37,29 +52,41 @@ export class TrainingService {
       }
     }
 
-    const uploadPath = join(this.uploaderService.getUploadDirectory(), this.uploaderService.getSubDirectoryUpload());
+    const uploadPath = join(
+      this.uploaderService.getUploadDirectory(),
+      this.uploaderService.getSubDirectoryUpload()
+    );
     if (!existsSync(uploadPath)) {
       mkdirSync(uploadPath, { recursive: true });
     }
 
-    const pictureNumber = Math.floor(Math.random() * (MockTrainingBackgroundPicture.Count - 1)) + 1;
-    const mockBackgroundPictureName = `${MockTrainingBackgroundPicture.Prefix}${pictureNumber}${MockTrainingBackgroundPicture.Suffix}`
+    const pictureNumber =
+      Math.floor(Math.random() * (MockTrainingBackgroundPicture.Count - 1)) + 1;
+    const mockBackgroundPictureName = `${MockTrainingBackgroundPicture.Prefix}${pictureNumber}${MockTrainingBackgroundPicture.Suffix}`;
     const backgroundPictureName = `${randomUUID()}-${mockBackgroundPictureName}`;
-    copyFileSync(join(MockTrainingBackgroundPicture.Directory, mockBackgroundPictureName), join(uploadPath, backgroundPictureName));
-    const backgroundPicture = join(this.uploaderService.getSubDirectoryUpload(), backgroundPictureName);
+    copyFileSync(
+      join(MockTrainingBackgroundPicture.Directory, mockBackgroundPictureName),
+      join(uploadPath, backgroundPictureName)
+    );
+    const backgroundPicture = join(
+      this.uploaderService.getSubDirectoryUpload(),
+      backgroundPictureName
+    );
     entity.backgroundPicture = backgroundPicture;
 
     const document = await this.trainingRepository.save(entity);
 
     const trainer = await this.userRepository.findById(userId);
-    await Promise.all(trainer.subscribers.map((subscriber) => {
-      const mailNotificationEntity = MailNotificataionEntity.fromObject({
-        authorId: trainer.id,
-        targetId: subscriber,
-        text: `Новая тренировка "${document.title}"`,
-      });
-      return this.mailNotificationRepository.save(mailNotificationEntity);
-    }))
+    await Promise.all(
+      trainer.subscribers.map((subscriber) => {
+        const mailNotificationEntity = MailNotificataionEntity.fromObject({
+          authorId: trainer.id,
+          targetId: subscriber,
+          text: `Новая тренировка "${document.title}"`,
+        });
+        return this.mailNotificationRepository.save(mailNotificationEntity);
+      })
+    );
 
     return document;
   }
@@ -74,16 +101,26 @@ export class TrainingService {
     return document;
   }
 
-  public async getByQuery(query: TrainingPaginationQuery, userId?: string): Promise<Pagination<TrainingRdo>> {
+  public async getByQuery(
+    query: TrainingPaginationQuery,
+    userId?: string
+  ): Promise<Pagination<TrainingRdo>> {
     const pagination = await this.trainingRepository.find(query, userId);
     const paginationResult = {
       ...pagination,
-      entities: pagination.entities.map((entity) => fillDto(TrainingRdo, entity.toPOJO())),
+      entities: pagination.entities.map((entity) =>
+        fillDto(TrainingRdo, entity.toPOJO())
+      ),
     };
     return paginationResult;
   }
 
-  public async update(payload: TokenPayload, id: string, dto: UpdateTrainingDto, files: FilesPayload) {
+  public async update(
+    payload: TokenPayload,
+    id: string,
+    dto: UpdateTrainingDto,
+    files: FilesPayload
+  ) {
     const training = await this.trainingRepository.findById(id);
 
     if (!training) {
@@ -107,7 +144,9 @@ export class TrainingService {
           if (training.backgroundPicture) {
             await this.uploaderService.deleteFile(training.backgroundPicture);
           }
-          const backgroundPicturePath = await this.uploaderService.saveFile(files.backgroundPicture[0]);
+          const backgroundPicturePath = await this.uploaderService.saveFile(
+            files.backgroundPicture[0]
+          );
           training.backgroundPicture = backgroundPicturePath;
         }
 

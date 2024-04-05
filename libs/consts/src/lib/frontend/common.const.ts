@@ -1,5 +1,6 @@
 export const BACKEND_URL = 'http://localhost:3001/api';
 export const REQUEST_TIMEOUT = 5000;
+export const DEBOUNCE_THRESHOLD = 500;
 
 export enum ApiRoute {
   User = '/user',
@@ -17,7 +18,7 @@ export enum ApiRoute {
   SendNewTrainingsEmail = '/send-new-trainings-email',
   Notification = '/notification',
   Training = '/training',
-  BackgroundPicture = '/background-picture',
+  BackgroundPicture = '/backgroundPicture',
   Video = '/video',
   Account = '/account',
   Trainer = '/trainer',
@@ -25,3 +26,8 @@ export enum ApiRoute {
   Reviews = '/reviews',
   TriningRequest = '/training-request',
 }
+
+export const ResponseErrorMessage = new Map([
+  [404, 'Страница не найдена'],
+  [500, 'Внутренняя ошибка сервера',],
+]);

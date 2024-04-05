@@ -1,32 +1,50 @@
 import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 
-import { selectResponseError, updateUserAction } from '@2299899-fit-friends/storage';
+import {
+    selectResponseError, updateUserAction, useAppDispatch, useAppSelector
+} from '@2299899-fit-friends/frontend-core';
+import { getResponseErrorMessage } from '@2299899-fit-friends/helpers';
 import { TrainingDuration, TrainingLevel, TrainingType, User } from '@2299899-fit-friends/types';
 
-import { useAppDispatch, useAppSelector } from '../hooks';
 import Loading from '../loading/loading';
 
 type QuestionnaireFormUserProps = {
   user: User | null;
 };
 
-export default function QuestionnaireFormUser(props: QuestionnaireFormUserProps): JSX.Element {
+export default function QuestionnaireFormUser(
+  props: QuestionnaireFormUserProps
+): JSX.Element {
   const { user } = props;
   const dispatch = useAppDispatch();
   const responseError = useAppSelector(selectResponseError);
-  const [updatedTrainingTypes, setUpdatedTrainingTypes] = useState<TrainingType[]>([]);
-  const [updatedTrainingDuration, setUpdatedTrainingDuration] = useState<TrainingDuration>(TrainingDuration.Thirty);
-  const [updatedTrainingLevel, setUpdatedTrainingLevel] = useState<TrainingLevel>(TrainingLevel.Beginner);
-  const [updatedCaloriesTarget, setUpdatedCaloriesTarget] = useState<number | null>(null);
-  const [updatedCaloriesPerDay, setUpdatedCaloriesPerDay] = useState<number | null>(null);
+  const [updatedTrainingTypes, setUpdatedTrainingTypes] = useState<
+    TrainingType[]
+  >([]);
+  const [updatedTrainingDuration, setUpdatedTrainingDuration] =
+    useState<TrainingDuration>(TrainingDuration.Thirty);
+  const [updatedTrainingLevel, setUpdatedTrainingLevel] =
+    useState<TrainingLevel>(TrainingLevel.Beginner);
+  const [updatedCaloriesTarget, setUpdatedCaloriesTarget] = useState<
+    number | null
+  >(null);
+  const [updatedCaloriesPerDay, setUpdatedCaloriesPerDay] = useState<
+    number | null
+  >(null);
 
   useEffect(() => {
     if (user) {
       setUpdatedTrainingTypes([...user.trainingType]);
-      setUpdatedTrainingDuration(user.trainingDuration ? user.trainingDuration : TrainingDuration.Thirty);
+      setUpdatedTrainingDuration(
+        user.trainingDuration ? user.trainingDuration : TrainingDuration.Thirty
+      );
       setUpdatedTrainingLevel(user.trainingLevel);
-      setUpdatedCaloriesTarget(user.caloriesTarget ? user.caloriesTarget : null);
-      setUpdatedCaloriesPerDay(user.caloriesPerDay ? user.caloriesPerDay : null);
+      setUpdatedCaloriesTarget(
+        user.caloriesTarget ? user.caloriesTarget : null
+      );
+      setUpdatedCaloriesPerDay(
+        user.caloriesPerDay ? user.caloriesPerDay : null
+      );
     }
   }, [user]);
 
@@ -40,10 +58,13 @@ export default function QuestionnaireFormUser(props: QuestionnaireFormUserProps)
     if (!updatedTrainingTypes.includes(trainingType)) {
       setUpdatedTrainingTypes([...updatedTrainingTypes, trainingType]);
     } else {
-      const elementIndex = updatedTrainingTypes.indexOf(trainingType)
-      setUpdatedTrainingTypes([...updatedTrainingTypes.slice(0, elementIndex), ...updatedTrainingTypes.slice(elementIndex + 1)]);
+      const elementIndex = updatedTrainingTypes.indexOf(trainingType);
+      setUpdatedTrainingTypes([
+        ...updatedTrainingTypes.slice(0, elementIndex),
+        ...updatedTrainingTypes.slice(elementIndex + 1),
+      ]);
     }
-  }
+  };
 
   const handleTrainingDurationChange = (evt: ChangeEvent<HTMLInputElement>) => {
     setUpdatedTrainingDuration(evt.currentTarget.value as TrainingDuration);
@@ -53,7 +74,10 @@ export default function QuestionnaireFormUser(props: QuestionnaireFormUserProps)
     setUpdatedTrainingLevel(evt.currentTarget.value as TrainingLevel);
   };
 
-  const getCaloriesInputChangeHandler = <T, V extends HTMLInputElement>(setState: React.Dispatch<React.SetStateAction<T>>) =>
+  const getCaloriesInputChangeHandler =
+    <T, V extends HTMLInputElement>(
+      setState: React.Dispatch<React.SetStateAction<T>>
+    ) =>
     (evt: ChangeEvent<V>) => {
       if (evt.currentTarget) {
         setState(evt.currentTarget.valueAsNumber as T);
@@ -71,15 +95,21 @@ export default function QuestionnaireFormUser(props: QuestionnaireFormUserProps)
 
       formData.append('trainingDuration', updatedTrainingDuration);
       formData.append('trainingLevel', updatedTrainingLevel);
-      formData.append('caloriesTarget', updatedCaloriesTarget ? updatedCaloriesTarget.toString() : '');
-      formData.append('caloriesPerDay', updatedCaloriesPerDay ? updatedCaloriesPerDay.toString() : '');
+      formData.append(
+        'caloriesTarget',
+        updatedCaloriesTarget ? updatedCaloriesTarget.toString() : ''
+      );
+      formData.append(
+        'caloriesPerDay',
+        updatedCaloriesPerDay ? updatedCaloriesPerDay.toString() : ''
+      );
 
       dispatch(updateUserAction({ id: user.id, data: formData }));
     }
-  }
+  };
 
   const trainingTypes = Object.values(TrainingType).map((type, index) => (
-    <div className="btn-checkbox" key={`training_type_${index}`} >
+    <div className="btn-checkbox" key={`training_type_${index}`}>
       <label>
         <input
           className="visually-hidden"
@@ -96,23 +126,26 @@ export default function QuestionnaireFormUser(props: QuestionnaireFormUserProps)
     </div>
   ));
 
-  const trainingDurations = Object.values(TrainingDuration).map((duration, index) => (
-    <div className="custom-toggle-radio__block" key={`training_duration_${index}`}>
-      <label>
-        <input
-          type="radio"
-          name="trainingDuration"
-          value={duration}
-          checked={updatedTrainingDuration === duration}
-          onChange={handleTrainingDurationChange}
-        />
-        <span className="custom-toggle-radio__icon" />
-        <span className="custom-toggle-radio__label">
-          {duration}
-        </span>
-      </label>
-    </div>
-  ));
+  const trainingDurations = Object.values(TrainingDuration).map(
+    (duration, index) => (
+      <div
+        className="custom-toggle-radio__block"
+        key={`training_duration_${index}`}
+      >
+        <label>
+          <input
+            type="radio"
+            name="trainingDuration"
+            value={duration}
+            checked={updatedTrainingDuration === duration}
+            onChange={handleTrainingDurationChange}
+          />
+          <span className="custom-toggle-radio__icon" />
+          <span className="custom-toggle-radio__label">{duration}</span>
+        </label>
+      </div>
+    )
+  );
 
   const trainingLevels = Object.values(TrainingLevel).map((level, index) => (
     <div className="custom-toggle-radio__block" key={`training_level_${index}`}>
@@ -132,23 +165,6 @@ export default function QuestionnaireFormUser(props: QuestionnaireFormUserProps)
     </div>
   ));
 
-  const getResponseErrorMessage = (
-    codes: number[],
-    statusCode: number | undefined,
-    message: string | string[] | undefined,
-    field: string
-  ) => {
-    if (!statusCode || !message || !codes.includes(statusCode)) {
-      return ' ';
-    }
-
-    if (!Array.isArray(message)) {
-      return message;
-    }
-
-    return message.filter((item) => item.toLowerCase().includes(field)).join(', ');
-  };
-
   return (
     <form method="post" action="#" onSubmit={handleFormSubmit}>
       <div className="questionnaire-user">
@@ -162,12 +178,7 @@ export default function QuestionnaireFormUser(props: QuestionnaireFormUserProps)
               {trainingTypes}
             </div>
             <span className="custom-input__error">
-              {getResponseErrorMessage(
-                [400],
-                responseError?.statusCode,
-                responseError?.message,
-                'type'
-              )}
+              {getResponseErrorMessage(responseError, 'type')}
             </span>
           </div>
           <div className="questionnaire-user__block">
@@ -178,28 +189,16 @@ export default function QuestionnaireFormUser(props: QuestionnaireFormUserProps)
               {trainingDurations}
             </div>
             <span className="custom-input__error">
-              {getResponseErrorMessage(
-                [400],
-                responseError?.statusCode,
-                responseError?.message,
-                'duration'
-              )}
+              {getResponseErrorMessage(responseError, 'duration')}
             </span>
           </div>
           <div className="questionnaire-user__block">
-            <span className="questionnaire-user__legend">
-              Ваш уровень
-            </span>
+            <span className="questionnaire-user__legend">Ваш уровень</span>
             <div className="custom-toggle-radio custom-toggle-radio--big questionnaire-user__radio">
               {trainingLevels}
             </div>
             <span className="custom-input__error">
-              {getResponseErrorMessage(
-                [400],
-                responseError?.statusCode,
-                responseError?.message,
-                'level'
-              )}
+              {getResponseErrorMessage(responseError, 'level')}
             </span>
           </div>
           <div className="questionnaire-user__block">
@@ -210,16 +209,18 @@ export default function QuestionnaireFormUser(props: QuestionnaireFormUserProps)
               <div className="custom-input custom-input--with-text-right questionnaire-user__input">
                 <label>
                   <span className="custom-input__wrapper">
-                    <input type="number" name="calories-lose" onChange={getCaloriesInputChangeHandler(setUpdatedCaloriesTarget)} required />
+                    <input
+                      type="number"
+                      name="calories-lose"
+                      onChange={getCaloriesInputChangeHandler(
+                        setUpdatedCaloriesTarget
+                      )}
+                      required
+                    />
                     <span className="custom-input__text">ккал</span>
                   </span>
                   <span className="custom-input__error">
-                    {getResponseErrorMessage(
-                      [400],
-                      responseError?.statusCode,
-                      responseError?.message,
-                      'target'
-                    )}
+                    {getResponseErrorMessage(responseError, 'target')}
                   </span>
                 </label>
               </div>
@@ -231,16 +232,16 @@ export default function QuestionnaireFormUser(props: QuestionnaireFormUserProps)
               <div className="custom-input custom-input--with-text-right questionnaire-user__input">
                 <label>
                   <span className="custom-input__wrapper">
-                    <input type="number" name="calories-waste" onChange={getCaloriesInputChangeHandler(setUpdatedCaloriesPerDay)} required />
+                    <input
+                      type="number"
+                      name="calories-waste"
+                      onChange={getCaloriesInputChangeHandler(setUpdatedCaloriesPerDay)}
+                      required
+                    />
                     <span className="custom-input__text">ккал</span>
                   </span>
                   <span className="custom-input__error">
-                    {getResponseErrorMessage(
-                      [400],
-                      responseError?.statusCode,
-                      responseError?.message,
-                      'per'
-                    )}
+                    {getResponseErrorMessage(responseError, 'per')}
                   </span>
                 </label>
               </div>

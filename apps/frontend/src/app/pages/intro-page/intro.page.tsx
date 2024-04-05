@@ -2,22 +2,24 @@ import { MouseEvent } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 
-import { redirectToRoute } from '@2299899-fit-friends/storage';
+import { redirectToRoute, useAppDispatch } from '@2299899-fit-friends/frontend-core';
 import { FrontendRoute } from '@2299899-fit-friends/types';
-
-import { useAppDispatch } from '../../components/hooks';
 
 export default function IntroPage(): JSX.Element {
   const dispatch = useAppDispatch();
 
-  const handleRegistrationButtonClick = (evt: MouseEvent<HTMLButtonElement>) => {
+  const handleRegistrationButtonClick = (
+    evt: MouseEvent<HTMLButtonElement>
+  ) => {
     evt.preventDefault();
-    dispatch(redirectToRoute(FrontendRoute.Registration));
-  }
+    dispatch(redirectToRoute(`/${FrontendRoute.Registration}`));
+  };
 
   return (
     <div className="wrapper">
-      <Helmet><title>Разводящая — FitFriends</title></Helmet>
+      <Helmet>
+        <title>Разводящая — FitFriends</title>
+      </Helmet>
       <main>
         <div className="intro">
           <div className="intro__background">
@@ -60,12 +62,16 @@ export default function IntroPage(): JSX.Element {
               </picture>
             </div>
             <div className="intro__buttons">
-              <button className="btn intro__button" type="button" onClick={handleRegistrationButtonClick}>
+              <button
+                className="btn intro__button"
+                type="button"
+                onClick={handleRegistrationButtonClick}
+              >
                 Регистрация
               </button>
               <p className="intro__text">
-                Есть аккаунт?{" "}
-                <Link className="intro__link" to={FrontendRoute.Login}>
+                Есть аккаунт?{' '}
+                <Link className="intro__link" to={`/${FrontendRoute.Login}`}>
                   Вход
                 </Link>
               </p>

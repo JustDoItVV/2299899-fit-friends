@@ -71,9 +71,9 @@ export class UserRdo {
   @Expose()
   public isReadyToTraining?: boolean;
 
-  @ApiPropertyOptional({ description: 'Локальный путь до файла сертификата тренера' })
+  @ApiPropertyOptional({ description: 'Локальные пути до файлов сертификатов тренера' })
   @Expose()
-  public certificate?: string;
+  public certificates?: string[];
 
   @ApiPropertyOptional({ description: `Только для роли "${UserRole.Trainer}": Текст с описание заслуг тренера` })
   @Expose()

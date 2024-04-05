@@ -1,5 +1,5 @@
+import { BasePostgresRepository } from '@2299899-fit-friends/backend-core';
 import { DefaultPagination } from '@2299899-fit-friends/consts';
-import { BasePostgresRepository } from '@2299899-fit-friends/core';
 import { TrainingPaginationQuery } from '@2299899-fit-friends/dtos';
 import { PrismaClientService } from '@2299899-fit-friends/models';
 import {
@@ -13,9 +13,7 @@ import { TrainingEntity } from './training.entity';
 
 @Injectable()
 export class TrainingRepository extends BasePostgresRepository<TrainingEntity, Training> {
-  constructor(
-    protected readonly clientService: PrismaClientService
-  ) {
+  constructor(protected readonly clientService: PrismaClientService) {
     super(clientService, TrainingEntity.fromObject);
   }
 
@@ -40,16 +38,16 @@ export class TrainingRepository extends BasePostgresRepository<TrainingEntity, T
 
   public async find(query: TrainingPaginationQuery, userId?: string): Promise<Pagination<TrainingEntity>> {
     let limit = query.limit;
-    if (query.limit < 1){
+    if (query.limit < 1) {
       limit = 1;
     } else if (query.limit > DefaultPagination.Limit) {
       limit = DefaultPagination.Limit;
     }
 
     const where: Prisma.TrainingWhereInput = {};
-    where.price = { gte: query.price[0], lte: query.price[1] };
-    where.calories = { gte: query.calories[0], lte: query.calories[1] };
-    where.rating = { gte: query.rating[0], lte: query.rating[1] };
+    where.price = { gte: query.priceMin, lte: query.priceMax };
+    where.calories = { gte: query.caloriesMin, lte: query.caloriesMax };
+    where.rating = { gte: query.ratingMin, lte: query.ratingMax };
 
     if (userId) {
       where.userId = userId;
@@ -85,16 +83,23 @@ export class TrainingRepository extends BasePostgresRepository<TrainingEntity, T
     }
 
     const skip = (currentPage - 1) * limit;
-    const documents = await this.clientService.training.findMany({ where, orderBy, skip, take: limit });
+    const documents = await this.clientService.training.findMany({
+      where,
+      orderBy,
+      skip,
+      take: limit,
+    });
 
     return {
-      entities: documents.map((document) => this.createEntityFromDocument({
-        ...document,
-        level: document.level as TrainingLevel,
-        type: document.type as TrainingType,
-        duration: document.duration as TrainingDuration,
-        gender: document.gender as TrainingAuditory,
-      })),
+      entities: documents.map((document) =>
+        this.createEntityFromDocument({
+          ...document,
+          level: document.level as TrainingLevel,
+          type: document.type as TrainingType,
+          duration: document.duration as TrainingDuration,
+          gender: document.gender as TrainingAuditory,
+        })
+      ),
       currentPage,
       totalPages,
       itemsPerPage: limit,
@@ -106,12 +111,12 @@ export class TrainingRepository extends BasePostgresRepository<TrainingEntity, T
     const document = await this.clientService.training.findFirst({ where: { id } });
     return document
       ? this.createEntityFromDocument({
-        ...document,
-        level: document.level as TrainingLevel,
-        type: document.type as TrainingType,
-        duration: document.duration as TrainingDuration,
-        gender: document.gender as TrainingAuditory,
-      })
+          ...document,
+          level: document.level as TrainingLevel,
+          type: document.type as TrainingType,
+          duration: document.duration as TrainingDuration,
+          gender: document.gender as TrainingAuditory,
+        })
       : null;
   }
 
@@ -119,9 +124,7 @@ export class TrainingRepository extends BasePostgresRepository<TrainingEntity, T
     const pojoEntity = entity.toPOJO();
     const updatedDocument = await this.clientService.training.update({
       where: { id },
-      data: {
-        ...pojoEntity,
-      },
+      data: { ...pojoEntity },
     });
 
     return this.createEntityFromDocument({

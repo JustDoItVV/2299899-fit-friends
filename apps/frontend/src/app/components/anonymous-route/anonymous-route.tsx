@@ -1,10 +1,11 @@
 import { useEffect } from 'react';
 import { Navigate } from 'react-router-dom';
 
-import { checkAuthAction, selectAuthStatus, selectCurrentUser } from '@2299899-fit-friends/storage';
+import {
+    checkAuthAction, selectAuthStatus, selectCurrentUser, useAppDispatch, useAppSelector
+} from '@2299899-fit-friends/frontend-core';
 import { AuthStatus, FrontendRoute, UserRole } from '@2299899-fit-friends/types';
 
-import { useAppDispatch, useAppSelector } from '../hooks';
 import Loading from '../loading/loading';
 
 type AnonymousRouteProps = {
@@ -25,7 +26,7 @@ export default function AnonymousRoute(props: AnonymousRouteProps): JSX.Element 
     return <Loading />;
   }
 
-  return authStatus === AuthStatus.NoAuth
-    ? (children)
-    : (<Navigate to={currentUser?.role === UserRole.Trainer ? FrontendRoute.Personal : FrontendRoute.Main} />);
+  return authStatus === AuthStatus.NoAuth ? children : <Navigate to={
+        `/${currentUser?.role === UserRole.Trainer ? FrontendRoute.Account : FrontendRoute.Main}`
+      }/>;
 }

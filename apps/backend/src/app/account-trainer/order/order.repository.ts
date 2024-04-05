@@ -1,5 +1,5 @@
+import { BasePostgresRepository } from '@2299899-fit-friends/backend-core';
 import { DefaultPagination } from '@2299899-fit-friends/consts';
-import { BasePostgresRepository } from '@2299899-fit-friends/core';
 import { OrderPaginationQuery } from '@2299899-fit-friends/dtos';
 import { PrismaClientService } from '@2299899-fit-friends/models';
 import {
@@ -14,9 +14,7 @@ import { OrderEntity } from './order.entity';
 
 @Injectable()
 export class OrderRepository extends BasePostgresRepository<OrderEntity, Order> {
-  constructor(
-    protected readonly clientService: PrismaClientService,
-  ) {
+  constructor(protected readonly clientService: PrismaClientService) {
     super(clientService, OrderEntity.fromObject);
   }
 
@@ -34,7 +32,7 @@ export class OrderRepository extends BasePostgresRepository<OrderEntity, Order> 
 
   public async find(query: OrderPaginationQuery, userId?: string): Promise<Pagination<OrderEntity>> {
     let limit = query.limit;
-    if (query.limit < 1){
+    if (query.limit < 1) {
       limit = 1;
     } else if (query.limit > DefaultPagination.Limit) {
       limit = DefaultPagination.Limit;
@@ -65,7 +63,10 @@ export class OrderRepository extends BasePostgresRepository<OrderEntity, Order> 
 
     const skip = (currentPage - 1) * limit;
     const documents = await this.clientService.order.findMany({
-      where, orderBy, skip, take: limit,
+      where,
+      orderBy,
+      skip,
+      take: limit,
       include: { training: true },
     });
 
@@ -75,13 +76,13 @@ export class OrderRepository extends BasePostgresRepository<OrderEntity, Order> 
           ...document,
           type: document.type as OrderType,
           paymentMethod: document.paymentMethod as OrderPaymentMethod,
-        });
-        entity.training = new TrainingEntity().populate({
-          ...document.training,
-          level: document.training.level as TrainingLevel,
-          type: document.training.type as TrainingType,
-          duration: document.training.duration as TrainingDuration,
-          gender: document.training.gender as TrainingAuditory,
+          training: new TrainingEntity().populate({
+            ...document.training,
+            level: document.training.level as TrainingLevel,
+            type: document.training.type as TrainingType,
+            duration: document.training.duration as TrainingDuration,
+            gender: document.training.gender as TrainingAuditory,
+          }),
         });
         return entity;
       }),

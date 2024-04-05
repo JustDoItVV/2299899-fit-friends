@@ -12,6 +12,7 @@ export * from './lib/query/pagination.query';
 export * from './lib/query/user-pagination.query';
 export * from './lib/query/training-pagination.query';
 export * from './lib/query/order-pagination.query';
+export * from './lib/query/get-file.query';
 
 export * from './lib/rdo/logged-user.rdo';
 export * from './lib/rdo/user.rdo';
@@ -24,5 +25,4 @@ export * from './lib/rdo/balance.rdo';
 export * from './lib/rdo/training-request.rdo';
 
 export * from './lib/decorators/api-ok-response-paginated.decorator';
-export * from './lib/decorators/transform-array-int.decorator';
 export * from './lib/decorators/transform-to-array.decorator';

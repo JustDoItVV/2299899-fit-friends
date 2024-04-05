@@ -1,11 +1,29 @@
-import { ApiNotificationMessage, ApiTag, ApiUserMessage } from '@2299899-fit-friends/consts';
-import { JwtAuthGuard, UserParam } from '@2299899-fit-friends/core';
+import {
+  ApiNotificationMessage,
+  ApiTag,
+  ApiUserMessage,
+} from '@2299899-fit-friends/consts';
+import { JwtAuthGuard, UserParam } from '@2299899-fit-friends/backend-core';
 import { NotificationRdo } from '@2299899-fit-friends/dtos';
 import { TokenPayload } from '@2299899-fit-friends/types';
-import { Controller, Delete, Get, HttpCode, HttpStatus, Param, UseGuards } from '@nestjs/common';
 import {
-    ApiBearerAuth, ApiForbiddenResponse, ApiNoContentResponse, ApiNotFoundResponse, ApiOkResponse,
-    ApiOperation, ApiTags, ApiUnauthorizedResponse
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  UseGuards,
+} from '@nestjs/common';
+import {
+  ApiBearerAuth,
+  ApiForbiddenResponse,
+  ApiNoContentResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiTags,
+  ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 
 import { NotificationService } from './notification.service';
@@ -18,7 +36,11 @@ export class NotificationController {
   constructor(private readonly notificationService: NotificationService) {}
 
   @ApiOperation({ summary: 'Список оповещений' })
-  @ApiOkResponse({ description: ApiNotificationMessage.List, type: NotificationRdo, isArray: true })
+  @ApiOkResponse({
+    description: ApiNotificationMessage.List,
+    type: NotificationRdo,
+    isArray: true,
+  })
   @ApiUnauthorizedResponse({ description: ApiUserMessage.Unauthorized })
   @Get('')
   public async show(@UserParam() payload: TokenPayload) {
@@ -34,7 +56,7 @@ export class NotificationController {
   @Delete(':id')
   public async delete(
     @Param('id') id: string,
-    @UserParam() payload: TokenPayload,
+    @UserParam() payload: TokenPayload
   ) {
     return await this.notificationService.delete(id, payload.userId);
   }

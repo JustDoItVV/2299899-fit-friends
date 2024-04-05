@@ -46,3 +46,5 @@ export * from './lib/auth-status.enum';
 export * from './lib/frontend-route.enum';
 export * from './lib/auth-data.interface';
 export * from './lib/user-with-tokens.interface';
+export * from './lib/response-error.interface';
+export * from './lib/query-pagination.interface';

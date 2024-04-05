@@ -1,22 +1,29 @@
 import { DefaultPagination } from '@2299899-fit-friends/consts';
-import { BasePostgresRepository } from '@2299899-fit-friends/core';
+import { BasePostgresRepository } from '@2299899-fit-friends/backend-core';
 import { PaginationQuery } from '@2299899-fit-friends/dtos';
 import { PrismaClientService } from '@2299899-fit-friends/models';
-import { Pagination, SortOption, TrainingRequest } from '@2299899-fit-friends/types';
+import {
+  Pagination,
+  SortOption,
+  TrainingRequest,
+} from '@2299899-fit-friends/types';
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 
 import { TrainingRequestEntity } from './training-request.entity';
 
 @Injectable()
-export class TrainingRequestRepository extends BasePostgresRepository<TrainingRequestEntity, TrainingRequest> {
-  constructor(
-    protected readonly clientService: PrismaClientService,
-  ) {
+export class TrainingRequestRepository extends BasePostgresRepository<
+  TrainingRequestEntity,
+  TrainingRequest
+> {
+  constructor(protected readonly clientService: PrismaClientService) {
     super(clientService, TrainingRequestEntity.fromObject);
   }
 
-  private async getTrainingRequestsCount(where: Prisma.TrainingRequestWhereInput): Promise<number> {
+  private async getTrainingRequestsCount(
+    where: Prisma.TrainingRequestWhereInput
+  ): Promise<number> {
     return this.clientService.trainingRequest.count({ where });
   }
 
@@ -28,17 +35,24 @@ export class TrainingRequestRepository extends BasePostgresRepository<TrainingRe
     return Math.ceil(totalCount / limit);
   }
 
-  public async save(entity: TrainingRequestEntity): Promise<TrainingRequestEntity> {
+  public async save(
+    entity: TrainingRequestEntity
+  ): Promise<TrainingRequestEntity> {
     const pojoEntity = entity.toPOJO();
-    const document = await this.clientService.trainingRequest.create({ data: pojoEntity });
+    const document = await this.clientService.trainingRequest.create({
+      data: pojoEntity,
+    });
     entity.id = document.id;
     return entity;
   }
 
-  public async find(query: PaginationQuery, userId: string): Promise<Pagination<TrainingRequestEntity>> {
+  public async find(
+    query: PaginationQuery,
+    userId: string
+  ): Promise<Pagination<TrainingRequestEntity>> {
     let limit = query.limit;
 
-    if (query.limit < 1){
+    if (query.limit < 1) {
       limit = 1;
     } else if (query.limit > DefaultPagination.Limit) {
       limit = DefaultPagination.Limit;
@@ -47,7 +61,8 @@ export class TrainingRequestRepository extends BasePostgresRepository<TrainingRe
     const where: Prisma.TrainingRequestWhereInput = {};
     where.targetId = userId;
 
-    const orderBy: Prisma.TrainingRequestOrderByWithRelationAndSearchRelevanceInput = {};
+    const orderBy: Prisma.TrainingRequestOrderByWithRelationAndSearchRelevanceInput =
+      {};
     if (query.sortOption === SortOption.CreatedAt) {
       orderBy.createdAt = query.sortDirection;
     }
@@ -63,10 +78,17 @@ export class TrainingRequestRepository extends BasePostgresRepository<TrainingRe
     }
 
     const skip = (currentPage - 1) * limit;
-    const documents = await this.clientService.trainingRequest.findMany({ where, orderBy, skip, take: limit });
+    const documents = await this.clientService.trainingRequest.findMany({
+      where,
+      orderBy,
+      skip,
+      take: limit,
+    });
 
     return {
-      entities: documents.map((document) => this.createEntityFromDocument(document)),
+      entities: documents.map((document) =>
+        this.createEntityFromDocument(document)
+      ),
       currentPage,
       totalPages,
       itemsPerPage: limit,
@@ -75,11 +97,16 @@ export class TrainingRequestRepository extends BasePostgresRepository<TrainingRe
   }
 
   public async findById(id: string): Promise<TrainingRequestEntity | null> {
-    const document = await this.clientService.trainingRequest.findFirst({ where: { id } });
+    const document = await this.clientService.trainingRequest.findFirst({
+      where: { id },
+    });
     return document ? this.createEntityFromDocument(document) : null;
   }
 
-  public async update(id: string, entity: TrainingRequestEntity): Promise<TrainingRequestEntity> {
+  public async update(
+    id: string,
+    entity: TrainingRequestEntity
+  ): Promise<TrainingRequestEntity> {
     const pojoEntity = entity.toPOJO();
     const updatedDocument = await this.clientService.trainingRequest.update({
       where: { id },

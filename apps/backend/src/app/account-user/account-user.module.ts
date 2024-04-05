@@ -1,5 +1,5 @@
+import { getMailerAsyncOptions } from '@2299899-fit-friends/backend-core';
 import { BackendConfigModule } from '@2299899-fit-friends/config';
-import { getMailerAsyncOptions } from '@2299899-fit-friends/helpers';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { Module } from '@nestjs/common';
 

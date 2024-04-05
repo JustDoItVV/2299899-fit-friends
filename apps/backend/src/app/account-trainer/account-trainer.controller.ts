@@ -1,7 +1,7 @@
+import { JwtAuthGuard, UserParam, UserRolesGuard } from '@2299899-fit-friends/backend-core';
 import {
     ApiAccountTrainerMessage, ApiTag, ApiTrainingMessage, ApiUserMessage
 } from '@2299899-fit-friends/consts';
-import { JwtAuthGuard, UserParam, UserRolesGuard } from '@2299899-fit-friends/core';
 import {
     ApiOkResponsePaginated, OrderPaginationQuery, OrderRdo, PaginationQuery, PaginationRdo,
     TrainingPaginationQuery, TrainingRdo, UserRdo
@@ -24,7 +24,7 @@ import { AccountTrainerService } from './account-trainer.service';
 export class AccountTrainerController {
   constructor(
     private readonly trainingService: TrainingService,
-    private readonly accountTrainerService: AccountTrainerService,
+    private readonly accountTrainerService: AccountTrainerService
   ) {}
 
   @ApiOperation({ summary: 'Список тренировок Тренера' })
@@ -33,11 +33,15 @@ export class AccountTrainerController {
   @ApiForbiddenResponse({ description: ApiUserMessage.ForbiddenExceptTrainer })
   @ApiUnauthorizedResponse({ description: ApiUserMessage.Unauthorized })
   @Get('')
-  @UsePipes(new ValidationPipe({ transform: true, transformOptions: { enableImplicitConversion: true } }))
+  @UsePipes(new ValidationPipe({
+    transform: true,
+    transformOptions: { enableImplicitConversion: true },
+  }))
   public async showTrainings(
     @UserParam() payload: TokenPayload,
-    @Query() query: TrainingPaginationQuery,
+    @Query() query: TrainingPaginationQuery
   ) {
+    console.log(query);
     const result = await this.trainingService.getByQuery(query, payload.userId);
     return fillDto(PaginationRdo<TrainingRdo>, result);
   }
@@ -48,10 +52,13 @@ export class AccountTrainerController {
   @ApiForbiddenResponse({ description: ApiUserMessage.ForbiddenExceptTrainer })
   @ApiUnauthorizedResponse({ description: ApiUserMessage.Unauthorized })
   @Get('orders')
-  @UsePipes(new ValidationPipe({ transform: true, transformOptions: { enableImplicitConversion: true } }))
+  @UsePipes(new ValidationPipe({
+    transform: true,
+    transformOptions: { enableImplicitConversion: true },
+  }))
   public async showOrders(
     @UserParam() payload: TokenPayload,
-    @Query() query: OrderPaginationQuery,
+    @Query() query: OrderPaginationQuery
   ) {
     const result = await this.accountTrainerService.getTrainerOrdersByQuery(query, payload.userId);
     return fillDto(PaginationRdo<OrderRdo>, result);
@@ -63,10 +70,13 @@ export class AccountTrainerController {
   @ApiForbiddenResponse({ description: ApiUserMessage.ForbiddenExceptTrainer })
   @ApiUnauthorizedResponse({ description: ApiUserMessage.Unauthorized })
   @Get('friends')
-  @UsePipes(new ValidationPipe({ transform: true, transformOptions: { enableImplicitConversion: true } }))
+  @UsePipes(new ValidationPipe({
+    transform: true,
+    transformOptions: { enableImplicitConversion: true },
+  }))
   public async showFriends(
     @UserParam() payload: TokenPayload,
-    @Query() query: PaginationQuery,
+    @Query() query: PaginationQuery
   ) {
     const result = await this.accountTrainerService.getTrainerFriends(query, payload.userId);
     return fillDto(PaginationRdo<UserRdo>, result);

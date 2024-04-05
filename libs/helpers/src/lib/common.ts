@@ -1,7 +1,5 @@
 import { ClassTransformOptions, plainToInstance } from 'class-transformer';
 
-import { faker } from '@faker-js/faker';
-
 export type DateTimeUnit = 's' | 'h' | 'd' | 'm' | 'y';
 export type TimeAndUnit = {
   value: number;
@@ -50,5 +48,17 @@ export function fillDto<T, V>(
   });
 }
 
-export const randomArrayElement = <T>(array: T[]): T => faker.helpers.arrayElement(array);
-export const randomArrayElements = <T>(array: T[], count?: number): T[] => faker.helpers.arrayElements(array, count);
+export const randomArrayElement = <T>(array: T[]): T => array[Math.floor(Math.random() * array.length)];
+
+export const randomArrayElements = <T>(array: T[], count?: number): T[] => {
+  const randomArray = [];
+
+  while (randomArray.length !== count) {
+    const element = randomArrayElement<T>(array);
+    if (!randomArray.includes(element)) {
+      randomArray.push(element);
+    }
+  }
+
+  return randomArray;
+};

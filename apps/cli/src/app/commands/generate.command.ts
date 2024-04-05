@@ -1,6 +1,6 @@
 import { genSalt, hash } from 'bcrypt';
 import chalk from 'chalk';
-import { randomUUID } from 'crypto';
+import { randomInt, randomUUID } from 'crypto';
 import dayjs from 'dayjs';
 import { copyFileSync, existsSync, mkdirSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
@@ -8,7 +8,7 @@ import { join } from 'node:path';
 import { BackendConfig } from '@2299899-fit-friends/config';
 import {
     BalanceAvailable, CaloriesPerDayLimit, CaloriesTargetLimit, METRO_STATIONS, MOCK_EMAIL_OPTIONS,
-    OrderAmountLimit, PriceLimit, RatingLimit, SALT_ROUNDS, TRAINING_TYPE_LIMIT
+    MockCertificate, OrderAmountLimit, PriceLimit, RatingLimit, SALT_ROUNDS, TRAINING_TYPE_LIMIT
 } from '@2299899-fit-friends/consts';
 import {
     Balance, CliCommand, Notification, Order, OrderPaymentMethod, OrderType, Review, Training,
@@ -52,13 +52,15 @@ export class GenerateCommand implements CliCommand {
       copyFileSync(join(mockPageBackgroundDirectory, mockPageBackgroundName), join(uploadDirectory, pageBackgroundName));
       const pageBackground = join(this.getSubDirectoryUpload(), pageBackgroundName);
 
-      let certificate = '';
+      const certificates = [];
       if (role === UserRole.Trainer) {
-        const mockCertificateDirectory = `apps/frontend/public/img/content/certificates-and-diplomas`;
-        const mockCertificateName = 'certificate-1.pdf';
-        const certificateName = `${randomUUID()}-${mockCertificateName}`;
-        copyFileSync(join(mockCertificateDirectory, mockCertificateName), join(uploadDirectory, certificateName));
-        certificate = join(this.getSubDirectoryUpload(), certificateName);
+        const certificatesCount = randomInt(1, MockCertificate.Count + 1);
+        for (let i = 1; i <= certificatesCount; i++) {
+          const mockCertificateName = `${MockCertificate.Prefix}${i}${MockCertificate.Suffix}`;
+          const certificateName = `${randomUUID()}-${mockCertificateName}`;
+          copyFileSync(join(MockCertificate.Directory, mockCertificateName), join(uploadDirectory, certificateName));
+          certificates.push(join(this.getSubDirectoryUpload(), certificateName));
+        }
       }
 
       mockUsers.push({
@@ -87,7 +89,7 @@ export class GenerateCommand implements CliCommand {
             ? faker.number.int({ min: CaloriesPerDayLimit.Min, max: CaloriesPerDayLimit.Max })
             : CaloriesPerDayLimit.Min,
         isReadyToTraining: role == UserRole.User ? faker.datatype.boolean() : false,
-        certificate,
+        certificates,
         merits: faker.person.bio(),
         isReadyToPersonal: role == UserRole.Trainer ? faker.datatype.boolean() : false,
       });
@@ -156,8 +158,8 @@ export class GenerateCommand implements CliCommand {
   private generateMockOrders(trainings: TrainingModel[], count: number): Order[] {
     const mockOrders: Order[] = [];
     for (let i = 0; i < count; i++) {
-      const trainingId = faker.helpers.arrayElement(trainings).id;
-      const training = trainings.find((training) => training.id === trainingId);
+      const trainingId = trainings[i].id;
+      const training = trainings[i];
       const amount = faker.number.int({ min: OrderAmountLimit.Min, max: OrderAmountLimit.Max });
 
       mockOrders.push({
@@ -254,24 +256,16 @@ export class GenerateCommand implements CliCommand {
     }
 
     const mockOrders = this.generateMockOrders(trainingDocuments, mockRecordsCount);
-    await Promise.all(
-      mockOrders.map((order) => prismaClient.order.create({ data: order }))
-    );
+    await prismaClient.order.createMany({ data: mockOrders });
 
     const mockRequests = this.generateMockTrainingRequests(userDocuments, mockRecordsCount);
-    await Promise.all(
-      mockRequests.map((request) => prismaClient.trainingRequest.create({ data: request }))
-    );
+    await prismaClient.trainingRequest.createMany({ data: mockRequests });
 
     const mockNotifications = this.generateMockNotifications(userDocuments, mockRecordsCount);
-    await Promise.all(
-      mockNotifications.map((notification) => prismaClient.notification.create({ data: notification }))
-    );
+    await prismaClient.notification.createMany({ data: mockNotifications });
 
     const mockBalances = this.generateMockBalances(userDocuments, trainingDocuments, mockRecordsCount);
-    await Promise.all(
-      mockBalances.map((balance) => prismaClient.balance.create({ data: balance }))
-    );
+    await prismaClient.balance.createMany({ data: mockBalances });
 
     console.info(chalk.green(`Database filled with ${mockRecordsCount} records for each model`));
   }

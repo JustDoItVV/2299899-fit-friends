@@ -6192,7 +6192,11 @@ input:active + .custom-textarea__text {
   background-color: #aeaeae;
 }
 
-.filter-range__bar {
+.filter-range__bar,
+.multi-range-slider .bar-left,
+.multi-range-slider .bar-right,
+.multi-range-slider .bar-inner
+{
   width: 208px;
   height: 1px;
   background-color: #333333;
@@ -6210,14 +6214,15 @@ input:active + .custom-textarea__text {
 }
 
 .filter-range__min-toggle,
-.filter-range__max-toggle {
+.filter-range__max-toggle
+{
   width: 16px;
   height: 16px;
   background-color: #333333;
   border-radius: 50%;
-  -webkit-transition: 0.3s ease;
-  -o-transition: 0.3s ease;
-  transition: 0.3s ease;
+  /* -webkit-transition: 0.3s ease; */
+  /* -o-transition: 0.3s ease; */
+  /* transition: 0.3s ease; */
   border: none;
   cursor: pointer;
 }
@@ -9477,6 +9482,12 @@ input:active + .custom-textarea__text {
   width: 294px;
   height: 360px;
   margin-bottom: 16px;
+}
+
+.certificate-card__pdf-page {
+  overflow: hidden;
+  position: relative;
+  top: -8%;
 }
 
 .certificate-card__image img {

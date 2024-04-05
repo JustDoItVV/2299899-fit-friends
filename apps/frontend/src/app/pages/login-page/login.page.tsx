@@ -2,9 +2,9 @@ import { FormEvent, useRef } from 'react';
 import { Helmet } from 'react-helmet-async';
 
 import { EMAIL_ERROR_CODES, PASSWORD_ERROR_CODES } from '@2299899-fit-friends/consts';
-import { loginUserAction, selectResponseError } from '@2299899-fit-friends/storage';
-
-import { useAppDispatch, useAppSelector } from '../../components/hooks';
+import {
+    loginUserAction, selectResponseError, useAppDispatch, useAppSelector
+} from '@2299899-fit-friends/frontend-core';
 
 export default function LoginPage(): JSX.Element {
   const dispatch = useAppDispatch();
@@ -15,10 +15,12 @@ export default function LoginPage(): JSX.Element {
   const handleFormSubmit = (evt: FormEvent<HTMLFormElement>) => {
     evt.preventDefault();
     if (emailRef.current !== null && passwordRef.current !== null) {
-      dispatch(loginUserAction({
-        email: emailRef.current.value,
-        password: passwordRef.current.value,
-      }));
+      dispatch(
+        loginUserAction({
+          email: emailRef.current.value,
+          password: passwordRef.current.value,
+        })
+      );
     }
   };
 
@@ -41,16 +43,27 @@ export default function LoginPage(): JSX.Element {
       .join(', ');
   };
 
-
   return (
     <div className="wrapper">
-      <Helmet><title>Войти — FitFriends</title></Helmet>
+      <Helmet>
+        <title>Войти — FitFriends</title>
+      </Helmet>
       <main>
         <div className="background-logo">
-          <svg className="background-logo__logo" width={750} height={284} aria-hidden="true">
+          <svg
+            className="background-logo__logo"
+            width={750}
+            height={284}
+            aria-hidden="true"
+          >
             <use xlinkHref="#logo-big" />
           </svg>
-          <svg className="background-logo__icon" width={343} height={343} aria-hidden="true">
+          <svg
+            className="background-logo__icon"
+            width={343}
+            height={343}
+            aria-hidden="true"
+          >
             <use xlinkHref="#icon-logotype" />
           </svg>
         </div>
@@ -67,7 +80,7 @@ export default function LoginPage(): JSX.Element {
                       <label>
                         <span className="custom-input__label">E-mail</span>
                         <span className="custom-input__wrapper">
-                          <input ref={emailRef} type="email" name="email"/>
+                          <input ref={emailRef} type="email" name="email" />
                         </span>
                         <span className="custom-input__error">
                           {getResponseErrorMessage(
@@ -83,7 +96,11 @@ export default function LoginPage(): JSX.Element {
                       <label>
                         <span className="custom-input__label">Пароль</span>
                         <span className="custom-input__wrapper">
-                          <input ref={passwordRef} type="password" name="password" />
+                          <input
+                            ref={passwordRef}
+                            type="password"
+                            name="password"
+                          />
                         </span>
                         <span className="custom-input__error">
                           {getResponseErrorMessage(

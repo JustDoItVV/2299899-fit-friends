@@ -27,8 +27,6 @@ model User {
   createdAt      DateTime  @default(now()) @map("created_at")
   updatedAt      DateTime  @updatedAt @map("updated_at")
 
-  isQuestionnaireFilled Boolean @default(false) @map("is_questionnaire_filled")
-
   trainingLevel String?  @map("training_level")
   trainingType  String[] @default([]) @map("training_type")
 
@@ -37,7 +35,7 @@ model User {
   caloriesPerDay    Int?     @map("calories_per_day")
   isReadyToTraining Boolean? @map("is_ready_to_training")
 
-  certificate       String?
+  certificates      String[] @default([])
   merits            String?
   isReadyToPersonal Boolean? @map("is_ready_to_personal")
 
