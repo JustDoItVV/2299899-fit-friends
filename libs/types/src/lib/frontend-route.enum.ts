@@ -1,5 +1,4 @@
 export enum FrontendRoute {
-  Intro = '',
   Login = 'login',
   Registration = 'registration',
   Questionnaire = 'questionnaire',

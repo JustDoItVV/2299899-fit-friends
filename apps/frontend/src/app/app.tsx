@@ -28,22 +28,60 @@ export default function App() {
     <HelmetProvider>
       <Routes>
         <Route path={''} element={<IntroPage />} />
-        <Route path={FrontendRoute.Login} element={<AnonymousRoute children={<LoginPage />} />} />
-        <Route path={FrontendRoute.Registration} element={<AnonymousRoute children={<RegistrationPage />} />} />
-        <Route path={FrontendRoute.Questionnaire} element={<AuthorizedRoute children={<QuestionnairePage />} />} />
+        <Route path={FrontendRoute.Login} element={<AnonymousRoute children={
+          <LoginPage />
+        } />} />
+        <Route path={FrontendRoute.Registration} element={<AnonymousRoute children={
+          <RegistrationPage />
+        } />} />
+        <Route path={FrontendRoute.Questionnaire} element={<AuthorizedRoute children={
+          <QuestionnairePage />
+        } />} />
         <Route path={FrontendRoute.Account}>
-          <Route path={''} element={<AuthorizedRoute children={<AccountPage />} />} />
-          <Route path={FrontendRoute.Friends} element={<AuthorizedRoute children={<AccountFriendsPage />} />} />
-          <Route path={FrontendRoute.Create} element={<AuthorizedRoute children={<RoleRoute role={UserRole.Trainer} children={<TrainingsCreatePage />} />} /> } />
-          <Route path={FrontendRoute.Trainings} element={<AuthorizedRoute children={<RoleRoute role={UserRole.Trainer} children={<AccountTrainingsPage />} />} />} />
-          <Route path={FrontendRoute.Orders} element={<AuthorizedRoute children={<RoleRoute role={UserRole.Trainer} children={<AccountOrdersPage />} />} />} />
-          <Route path={FrontendRoute.Purchases} element={<AuthorizedRoute children={<RoleRoute role={UserRole.User} children={<AccountPurchasesPage />} />} />} />
+          <Route path={''} element={<AuthorizedRoute children={
+            <AccountPage />
+          } />} />
+          <Route path={FrontendRoute.Friends} element={<AuthorizedRoute children={
+            <AccountFriendsPage />
+          } />} />
+          <Route path={FrontendRoute.Create} element={<AuthorizedRoute children={
+            <RoleRoute role={UserRole.Trainer} children={
+              <TrainingsCreatePage />
+            } />
+          } /> } />
+          <Route path={FrontendRoute.Trainings} element={<AuthorizedRoute children={
+            <RoleRoute role={UserRole.Trainer} children={
+              <AccountTrainingsPage />
+            } />
+          } />} />
+          <Route path={FrontendRoute.Orders} element={<AuthorizedRoute children={
+            <RoleRoute role={UserRole.Trainer} children={
+              <AccountOrdersPage />
+            } />
+          } />} />
+          <Route path={FrontendRoute.Purchases} element={<AuthorizedRoute children={
+            <RoleRoute role={UserRole.User} children={
+              <AccountPurchasesPage />
+            } />
+          } />} />
         </Route>
-        <Route path={FrontendRoute.Main} element={<AuthorizedRoute children={<MainPage />} />} />
-        <Route path={FrontendRoute.Users} element={<AuthorizedRoute children={<UsersPage />} />} />
-        <Route path={FrontendRoute.UserCard} element={<AuthorizedRoute children={<UserCardPage />} />} />
-        <Route path={FrontendRoute.Trainings} element={<AuthorizedRoute children={<TrainingsPage />} />} />
-        <Route path={FrontendRoute.TrainingCard} element={<AuthorizedRoute children={<TrainingCardPage />} />} />
+        <Route path={FrontendRoute.Main} element={<AuthorizedRoute children={
+          <RoleRoute role={UserRole.User} redirect={`/${FrontendRoute.Account}`} children={
+            <MainPage />
+          } />
+        } />} />
+        <Route path={FrontendRoute.Users} element={<AuthorizedRoute children={
+          <UsersPage />
+        } />} />
+        <Route path={FrontendRoute.UserCard} element={<AuthorizedRoute children={
+          <UserCardPage />
+        } />} />
+        <Route path={FrontendRoute.Trainings} element={<AuthorizedRoute children={
+          <TrainingsPage />
+        } />} />
+        <Route path={FrontendRoute.TrainingCard} element={<AuthorizedRoute children={
+          <TrainingCardPage />
+        } />} />
         <Route path='*' element={<NotFoundPage />} />
       </Routes>
     </HelmetProvider>

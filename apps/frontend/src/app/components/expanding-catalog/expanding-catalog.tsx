@@ -1,8 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-import {
-    CatalogItem, selectCatalogTotalItems, selectCatalogTotalPages, useAppDispatch, useAppSelector
-} from '@2299899-fit-friends/frontend-core';
+import { CatalogItem, useAppDispatch } from '@2299899-fit-friends/frontend-core';
 import { Pagination, QueryPagination } from '@2299899-fit-friends/types';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { AsyncThunk, AsyncThunkConfig } from '@reduxjs/toolkit/dist/createAsyncThunk';
@@ -17,8 +15,6 @@ type ExpandingCatalogProps<T> = {
 export default function ExpandingCatalog<T extends CatalogItem>(props: ExpandingCatalogProps<T>): JSX.Element {
   const { fetch, component: Card, classNameList, queryParams } = props;
   const dispatch = useAppDispatch();
-  const totalPages = useAppSelector(selectCatalogTotalPages);
-  const totalItems = useAppSelector(selectCatalogTotalItems);
   const [catalogCards, setCatalogCards] = useState<JSX.Element[]>([]);
   const currentPageRef = useRef<number>(1);
 
@@ -27,11 +23,11 @@ export default function ExpandingCatalog<T extends CatalogItem>(props: Expanding
       unwrapResult(await dispatch(fetch(queryParams)));
     const newTrainingCatalogCards: JSX.Element[] = [];
 
-    if (totalItems !== totalItemsCount) {
+    if (1000 !== totalItemsCount) {
       setCatalogCards([]);
       currentPageRef.current = 1;
     } else {
-      if (currentPageRef.current <= totalPages) {
+      if (currentPageRef.current <= 1000) {
         pageItems.forEach((item) => newTrainingCatalogCards.push(
           <Card item={item} key={`catalog_item_${item.id}`} />
         ));
@@ -41,7 +37,7 @@ export default function ExpandingCatalog<T extends CatalogItem>(props: Expanding
     }
 
     queryParams.page = currentPageRef.current;
-  }, [dispatch, Card, fetch, totalPages, totalItems, queryParams]);
+  }, [dispatch, Card, fetch, queryParams]);
 
   useEffect(() => {
     fetchPageItems();
@@ -64,14 +60,14 @@ export default function ExpandingCatalog<T extends CatalogItem>(props: Expanding
       </ul>
       <div className={`show-more my-trainings__show-more ${!catalogCards.length && 'show-more__button--to-top'}`}>
         <button
-          className={`btn show-more__button show-more__button--more ${currentPageRef.current > totalPages && 'show-more__button--to-top'}`}
+          className={`btn show-more__button show-more__button--more ${currentPageRef.current > 1000 && 'show-more__button--to-top'}`}
           type="button"
           onClick={handleShowMoreButtonClick}
         >
           Показать еще
         </button>
         <button
-          className={`btn show-more__button show-more__button--more ${currentPageRef.current <= totalPages && 'show-more__button--to-top'}`}
+          className={`btn show-more__button show-more__button--more ${currentPageRef.current <= 1000 && 'show-more__button--to-top'}`}
           type="button"
           onClick={handleToTopButtonClick}
         >
