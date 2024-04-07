@@ -3,7 +3,7 @@ import { stringify } from 'qs';
 
 import { ApiRoute } from '@2299899-fit-friends/consts';
 import {
-    AuthData, FrontendRoute, Pagination, QueryPagination, User, UserWithToken
+    AuthData, FetchFileParams, FrontendRoute, Pagination, QueryPagination, User, UserWithToken
 } from '@2299899-fit-friends/types';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
@@ -115,9 +115,9 @@ export const updateUserAction = createAsyncThunk<
 
 export const fetchUserAvatar = createAsyncThunk<
   string,
-  string,
+  FetchFileParams,
   { dispatch: AppDispatch; state: State; extra: AxiosInstance }
->('user/fetchUserAvatar', async (id, { extra: api }) => {
+>('user/fetchUserAvatar', async ({ id }, { extra: api }) => {
   const { data: avatarUrl } = await api.get<string>(
     `${ApiRoute.User}/${id}/avatar`
   );

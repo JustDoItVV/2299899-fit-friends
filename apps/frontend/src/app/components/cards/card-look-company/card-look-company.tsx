@@ -10,7 +10,7 @@ type CardSeekCompanyProps = {
 
 export default memo(function CardLookCompany({ item }: CardSeekCompanyProps): JSX.Element {
   const user = item as User;
-  const thumbnailUrl = useFetchFileUrl(user.id, fetchUserAvatar, 'img/content/placeholder.png');
+  const thumbnailUrl = useFetchFileUrl(fetchUserAvatar, { id: user.id }, 'img/content/placeholder.png');
 
   const hashtagsElements = user.trainingType.map((type, index) => (
     <li className="thumbnail-user__hashtags-item" key={`seek-company-hashtag_${user.id}_${index}`}>

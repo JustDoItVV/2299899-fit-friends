@@ -1,13 +1,14 @@
 import { useEffect, useState } from 'react';
 
+import { FetchFileParams } from '@2299899-fit-friends/types';
 import { AsyncThunk, unwrapResult } from '@reduxjs/toolkit';
 import { AsyncThunkConfig } from '@reduxjs/toolkit/dist/createAsyncThunk';
 
 import { useAppDispatch } from './';
 
 export function useFetchFileUrl(
-  itemId: string | undefined,
-  fetch: AsyncThunk<string, string, AsyncThunkConfig>,
+  fetch: AsyncThunk<string, FetchFileParams, AsyncThunkConfig>,
+  params?: FetchFileParams,
   defaultValue = ''
 ) {
   const dispatch = useAppDispatch();
@@ -15,9 +16,9 @@ export function useFetchFileUrl(
 
   useEffect(() => {
     const fetchAvatar = async () => {
-      if (itemId) {
+      if (params) {
         try {
-          const url = unwrapResult(await dispatch(fetch(itemId)));
+          const url = unwrapResult(await dispatch(fetch(params)));
           setFileUrl(url);
         } catch {
           setFileUrl(defaultValue);

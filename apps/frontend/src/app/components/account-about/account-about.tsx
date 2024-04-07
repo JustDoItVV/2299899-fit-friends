@@ -43,7 +43,7 @@ export default function AccountAbout(): JSX.Element {
       levelRef.current = user.trainingLevel;
 
       const fetchAvatar = async () => {
-        const avatar = unwrapResult(await dispatch(fetchUserAvatar(user.id || '')));
+        const avatar = unwrapResult(await dispatch(fetchUserAvatar({ id: user.id })));
         setAvatarUrl(avatar);
       };
 

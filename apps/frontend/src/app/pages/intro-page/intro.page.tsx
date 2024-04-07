@@ -8,9 +8,7 @@ import { FrontendRoute } from '@2299899-fit-friends/types';
 export default function IntroPage(): JSX.Element {
   const dispatch = useAppDispatch();
 
-  const handleRegistrationButtonClick = (
-    evt: MouseEvent<HTMLButtonElement>
-  ) => {
+  const handleRegistrationButtonClick = (evt: MouseEvent<HTMLButtonElement>) => {
     evt.preventDefault();
     dispatch(redirectToRoute(`/${FrontendRoute.Registration}`));
   };

@@ -12,7 +12,7 @@ type CardTrainingThumbnailProps = {
 
 export default memo(function CardTrainingThumbnail(props: CardTrainingThumbnailProps): JSX.Element {
   const training = props.item as Training;
-  const thumbnailUrl = useFetchFileUrl(training.id, fetchTrainingBackgroundPicture, 'img/content/placeholder.png');
+  const thumbnailUrl = useFetchFileUrl(fetchTrainingBackgroundPicture, { id: training.id }, 'img/content/placeholder.png');
 
   return (
     <div className="thumbnail-preview">

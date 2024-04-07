@@ -39,6 +39,7 @@ export default function MainPage(): JSX.Element {
           itemsPerPage={SliderBlockItems.SpecialVisible}
           preload={true}
           controls={false}
+          autoplay={true}
           children={
             <CardPlaceholder classNameInfix='spec-gym' imagePath={CardPlaceholderPreviewImage.Special} />
           }

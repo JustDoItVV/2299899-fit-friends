@@ -27,6 +27,7 @@ type SliderBlockProps = {
   outlinedButtons?: boolean;
   controls?: boolean;
   dots?: boolean;
+  autoplay?: boolean;
   children?: JSX.Element | JSX.Element[];
 };
 
@@ -41,6 +42,7 @@ export default function SliderBlock(props: SliderBlockProps): JSX.Element {
   const controls = props.controls ?? true;
   const dots = props.dots ?? true;
   const showTitle = props.showTitle ?? true;
+  const autoplay = props.autoplay ?? false;
 
   const slickSliderRef = useRef<Slider | null>(null);
   const [currentItem, setCurrentItem] = useState<number>(0);
@@ -158,10 +160,11 @@ export default function SliderBlock(props: SliderBlockProps): JSX.Element {
                 slidesToShow={itemsPerPage}
                 slidesToScroll={itemsToScroll}
                 arrows={false}
-                infinite={false}
                 variableWidth={true}
                 adaptiveHeight={true}
                 dots={false}
+                autoplay={autoplay}
+                infinite={autoplay}
               >
                 {itemsElements}
               </Slider>

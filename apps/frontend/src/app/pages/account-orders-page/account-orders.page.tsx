@@ -4,11 +4,11 @@ import { Helmet } from 'react-helmet-async';
 import {
     fetchTrainerOrders, redirectToRoute, useAppDispatch
 } from '@2299899-fit-friends/frontend-core';
-import { FrontendRoute, Order, QueryPagination } from '@2299899-fit-friends/types';
+import { FrontendRoute, QueryPagination } from '@2299899-fit-friends/types';
 
+import CardOrders from '../../components/cards/card-orders/card-orders';
 import ExpandingCatalog from '../../components/expanding-catalog/expanding-catalog';
 import Header from '../../components/header/header';
-import OrderCatalogCard from '../../components/order-catalog-card/order-catalog-card';
 
 export default function AccountOrdersPage(): JSX.Element {
   const dispatch = useAppDispatch();
@@ -56,9 +56,9 @@ export default function AccountOrdersPage(): JSX.Element {
                   </div>
                 </div>
               </div>
-              <ExpandingCatalog<Order>
+              <ExpandingCatalog
                 fetch={fetchTrainerOrders}
-                component={OrderCatalogCard}
+                component={CardOrders}
                 classNameList='my-orders__list'
                 queryParams={queryParams}
               />

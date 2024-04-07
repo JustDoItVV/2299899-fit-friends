@@ -4,10 +4,10 @@ import { Helmet } from 'react-helmet-async';
 import {
     fetchTrainerFriends, redirectToRoute, useAppDispatch
 } from '@2299899-fit-friends/frontend-core';
-import { FrontendRoute, QueryPagination, User } from '@2299899-fit-friends/types';
+import { FrontendRoute, QueryPagination } from '@2299899-fit-friends/types';
 
+import CardFriendsTrainer from '../../components/cards/card-friends-trainer/card-friends-trainer';
 import ExpandingCatalog from '../../components/expanding-catalog/expanding-catalog';
-import FriendsCatalogCard from '../../components/friends-catalog-card/friends-catalog-card';
 import Header from '../../components/header/header';
 
 export default function AccountFriendsPage(): JSX.Element {
@@ -35,9 +35,9 @@ export default function AccountFriendsPage(): JSX.Element {
               <div className="friends-list__title-wrapper">
                 <h1 className="friends-list__title">Мои друзья</h1>
               </div>
-              <ExpandingCatalog<User>
+              <ExpandingCatalog
                 fetch={fetchTrainerFriends}
-                component={FriendsCatalogCard}
+                component={CardFriendsTrainer}
                 classNameList='friends-list__list'
                 queryParams={queryParams}
               />

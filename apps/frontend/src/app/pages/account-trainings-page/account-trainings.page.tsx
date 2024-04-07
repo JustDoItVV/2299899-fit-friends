@@ -2,11 +2,11 @@ import { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 
 import { fetchTrainerCatalog } from '@2299899-fit-friends/frontend-core';
-import { FrontendRoute, QueryPagination, Training } from '@2299899-fit-friends/types';
+import { FrontendRoute, QueryPagination } from '@2299899-fit-friends/types';
 
+import CardTraining from '../../components/cards/card-training/card-training';
 import ExpandingCatalog from '../../components/expanding-catalog/expanding-catalog';
 import Header from '../../components/header/header';
-import TrainingCatalogCard from '../../components/training-catalog-card/training-catalog-card';
 import TrainingsQueryForm from '../../components/trainings-query-form/trainings-query-form';
 
 export default function AccountTrainingsPage(): JSX.Element {
@@ -24,9 +24,9 @@ export default function AccountTrainingsPage(): JSX.Element {
               <TrainingsQueryForm setQueryParams={setQueryParams} />
               <div className="inner-page__content">
                 <div className="my-trainings">
-                  <ExpandingCatalog<Training>
+                  <ExpandingCatalog
                     fetch={fetchTrainerCatalog}
-                    component={TrainingCatalogCard}
+                    component={CardTraining}
                     classNameList='my-trainings__list'
                     queryParams={queryParams}
                   />
