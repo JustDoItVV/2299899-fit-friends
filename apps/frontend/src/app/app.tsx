@@ -1,3 +1,5 @@
+import './style.css';
+
 import { HelmetProvider } from 'react-helmet-async';
 import { Route, Routes } from 'react-router-dom';
 

@@ -1,13 +1,17 @@
 import { AxiosInstance } from 'axios';
+import { stringify } from 'qs';
 
 import { ApiRoute } from '@2299899-fit-friends/consts';
-import { AuthData, FrontendRoute, User, UserWithToken } from '@2299899-fit-friends/types';
+import {
+    AuthData, FrontendRoute, Pagination, QueryPagination, User, UserWithToken
+} from '@2299899-fit-friends/types';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
 import { saveToken } from '../../services/token';
 import { redirectToRoute } from '../actions/redirect-to-route';
 import { setResponseError } from '../reducers/user-process/user-process.slice';
 import { AppDispatch } from '../types/app-dispatch.type';
+import { CatalogItem } from '../types/catalog-item.type';
 import { State } from '../types/state.type';
 
 export const checkAuthAction = createAsyncThunk<
@@ -118,4 +122,15 @@ export const fetchUserAvatar = createAsyncThunk<
     `${ApiRoute.User}/${id}/avatar`
   );
   return avatarUrl;
+});
+
+export const fetchUsersCatalog = createAsyncThunk<
+  Pagination<CatalogItem>,
+  QueryPagination,
+  { dispatch: AppDispatch; state: State; extra: AxiosInstance }
+>('user/fetchUsers', async (query, { extra: api }) => {
+    const { data: pagination } = await api.get<Pagination<User>>(
+    `${ApiRoute.User}?${stringify(query)}`
+  );
+  return pagination;
 });

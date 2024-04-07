@@ -1,0 +1,123 @@
+.slick-list {
+  max-width: 1396px;
+}
+
+.slick-track {
+  background-color: #ff0000;
+}
+
+/* Main special for you */
+
+.special-for-you .slick-track {
+  background-color: #f2f2f2;
+}
+
+.special-for-you .slider-block-wrapper {
+  margin-bottom: 50px;
+}
+
+.special-for-you .slick-slide {
+  min-width: 452px;
+  min-height: 291px;
+  width: 452px;
+  height: 291px;
+  margin-right: 15px;
+}
+
+.special-for-you .slick-slide:last-child {
+  margin-right: 0px;
+}
+
+/* Main special offers */
+
+.special-offers .special-offers__list,
+.special-offers .slick-list {
+  max-width: 1040px;
+}
+
+.special-offers .slick-track {
+  background-color: #f2f2f2;
+}
+
+.special-offers .slider-block-wrapper {
+  margin-bottom: 50px;
+}
+
+.special-offers .slick-slide {
+  width: 1040px;
+  height: 471px;
+}
+
+.special-offers .slick-slide:last-child {
+  margin-right: 0px;
+}
+
+.special-offers .special-offers__slider-dots {
+  list-style: none;
+  position: relative;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  left: -550px;
+  align-items: end;
+  bottom: 20px;
+}
+
+.special-offers .special-offers__slider-dot {
+  width: 10px;
+  height: 10px;
+  padding: 0;
+  margin: 5px;
+  background: #e8e8e8;
+  border: none;
+  border-radius: 50%;
+  -webkit-transition: -webkit-box-shadow 0.3s ease;
+  transition: -webkit-box-shadow 0.3s ease;
+  -o-transition: box-shadow 0.3s ease;
+  transition: box-shadow 0.3s ease;
+  transition: box-shadow 0.3s ease, -webkit-box-shadow 0.3s ease;
+}
+
+.special-offers .special-offers__slider-dot--active {
+  background: #c5ec2a;
+}
+
+/* Main popular */
+
+.popular-trainings .slick-track {
+  background-color: #f2f2f2;
+}
+
+.popular-trainings .slider-block-wrapper {
+  margin-bottom: 50px;
+  height: 450px;
+}
+
+.popular-trainings .slick-slide {
+  min-width: 334px;
+  margin-right: 15px;
+}
+
+.popular-trainings .slick-slide:last-child {
+  margin-right: 0px;
+}
+
+/* Main look for company */
+
+.look-for-company .slick-track {
+  background-color: #333333;
+}
+
+.look-for-company .slider-block-wrapper {
+  margin-top: 25px;
+  height: 350px;
+}
+
+.look-for-company .slick-slide {
+  min-width: 334px;
+  margin-right: 15px;
+}
+
+.look-for-company .slick-slide:last-child {
+  margin-right: 0px;
+}

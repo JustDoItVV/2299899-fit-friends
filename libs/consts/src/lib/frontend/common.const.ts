@@ -40,6 +40,7 @@ export const SliderBlockItems = {
   SpecialMax: 3,
   SpecialVisible: 1,
   PopularVisible: 4,
+  PopularMax: 8,
   SeekCompanyMax: 8,
   SeekCompanyVisible: 4,
 } as const;
@@ -48,3 +49,5 @@ export enum CardPlaceholderPreviewImage {
   ForYou = 'img/content/thumbnails/preview-01',
   Special = 'img/content/thumbnails/nearest-gym-01',
 }
+
+export const DISCOUNT = 0.1;

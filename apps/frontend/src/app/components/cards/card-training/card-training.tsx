@@ -1,11 +1,10 @@
-import { memo, useEffect, useState } from 'react';
+import { memo } from 'react';
 import { Link } from 'react-router-dom';
 
 import {
-    CatalogItem, fetchTrainingBackgroundPicture, useAppDispatch
+    CatalogItem, fetchTrainingBackgroundPicture, useFetchFileUrl
 } from '@2299899-fit-friends/frontend-core';
 import { FrontendRoute, Training } from '@2299899-fit-friends/types';
-import { unwrapResult } from '@reduxjs/toolkit';
 
 type CardTrainingProps = {
   item: CatalogItem;
@@ -13,21 +12,7 @@ type CardTrainingProps = {
 
 export default memo(function CardTraining({ item }: CardTrainingProps): JSX.Element {
   const training = item as Training;
-  const dispatch = useAppDispatch();
-  const [imageUrl, setImageUrl] = useState<string>('');
-
-  useEffect(() => {
-    const fetchAvatar = async () => {
-      try {
-        const image = unwrapResult(await dispatch(fetchTrainingBackgroundPicture(training.id || '')));
-        setImageUrl(image);
-      } catch {
-        setImageUrl('img/content/placeholder.png');
-      }
-    };
-
-    fetchAvatar();
-  }, [dispatch, training]);
+  const thumbnailUrl = useFetchFileUrl(training.id, fetchTrainingBackgroundPicture, 'img/content/placeholder.png');
 
   return (
     <div className="popular-trinings__item">
@@ -36,10 +21,10 @@ export default memo(function CardTraining({ item }: CardTrainingProps): JSX.Elem
           <div className="thumbnail-training__image">
             <picture>
               <img
-                src={imageUrl}
+                src={thumbnailUrl}
                 width={330}
                 height={190}
-                alt="training-card"
+                alt={training.title}
               />
             </picture>
           </div>

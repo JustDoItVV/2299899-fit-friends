@@ -6,10 +6,11 @@ import { Pagination, QueryPagination, Training } from '@2299899-fit-friends/type
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
 import { AppDispatch } from '../types/app-dispatch.type';
+import { CatalogItem } from '../types/catalog-item.type';
 import { State } from '../types/state.type';
 
 export const fetchTrainingsCatalog = createAsyncThunk<
-  Pagination<Training>,
+  Pagination<CatalogItem>,
   QueryPagination,
   { dispatch: AppDispatch; state: State; extra: AxiosInstance }
 >('accountTrainer/fetchTrainings', async (query, { extra: api }) => {

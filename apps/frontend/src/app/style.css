@@ -4760,6 +4760,9 @@ input:active + .custom-textarea__text {
   letter-spacing: 0.01em;
   text-transform: uppercase;
   color: #181818;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .thumbnail-training__info {
@@ -4834,6 +4837,7 @@ input:active + .custom-textarea__text {
   -ms-grid-row: 4;
   -ms-grid-row-span: 1;
   grid-row: 4/5;
+  height: 95px;
 }
 
 .thumbnail-training__text {
@@ -4841,6 +4845,11 @@ input:active + .custom-textarea__text {
   margin-bottom: 5px;
   font-size: 14px;
   line-height: 1.3;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  line-clamp: 2;
+  -webkit-line-clamp: 2;
 }
 
 .thumbnail-training__text:last-child {
