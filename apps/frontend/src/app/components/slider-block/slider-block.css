@@ -110,14 +110,28 @@
 
 .look-for-company .slider-block-wrapper {
   margin-top: 25px;
-  height: 350px;
+  height: 235px;
 }
 
 .look-for-company .slick-slide {
-  min-width: 334px;
+  width: 334px;
   margin-right: 15px;
+  height: 235px;
 }
 
 .look-for-company .slick-slide:last-child {
   margin-right: 0px;
+}
+
+.look-for-company .slick-slide li {
+  padding: 0;
+  margin: 0;
+}
+
+.look-for-company .slick-slide a {
+  margin-top: 0;
+}
+
+.look-for-company .look-for-company__item {
+  height: 235px;
 }

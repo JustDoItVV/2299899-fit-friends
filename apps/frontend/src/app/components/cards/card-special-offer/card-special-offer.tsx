@@ -1,10 +1,11 @@
 import { memo } from 'react';
+import { Link } from 'react-router-dom';
 
 import { DISCOUNT } from '@2299899-fit-friends/consts';
 import {
     CatalogItem, fetchTrainingBackgroundPicture, useFetchFileUrl
 } from '@2299899-fit-friends/frontend-core';
-import { Training } from '@2299899-fit-friends/types';
+import { FrontendRoute, Training } from '@2299899-fit-friends/types';
 
 type CardSpecialOfferProps = {
   item: CatalogItem;
@@ -15,7 +16,7 @@ export default memo(function CardSpecialOffer({ item }: CardSpecialOfferProps): 
   const thumbnailUrl = useFetchFileUrl(fetchTrainingBackgroundPicture, { id: training.id }, 'img/content/placeholder.png');
 
   return (
-    <aside className="promo-slider">
+    <Link className="promo-slider" to={`/${FrontendRoute.Trainings}/${training.id}`}>
       <div className="promo-slider__overlay" />
       <div className="promo-slider__image">
         <img
@@ -45,6 +46,6 @@ export default memo(function CardSpecialOffer({ item }: CardSpecialOfferProps): 
           <p className="promo-slider__old-price">{training.price} ₽</p>
         </div>
       </div>
-    </aside>
+    </Link>
   );
 });

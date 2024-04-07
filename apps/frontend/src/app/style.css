@@ -4579,6 +4579,10 @@ input:active + .custom-textarea__text {
   line-height: 1;
   letter-spacing: 0.01em;
   text-transform: uppercase;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  width: 190px;
 }
 
 .thumbnail-user__location {

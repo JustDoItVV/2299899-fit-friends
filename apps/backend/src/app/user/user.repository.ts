@@ -1,20 +1,10 @@
-import { DefaultPagination } from '@2299899-fit-friends/consts';
 import { BasePostgresRepository } from '@2299899-fit-friends/backend-core';
-import {
-  PaginationQuery,
-  UserPaginationQuery,
-} from '@2299899-fit-friends/dtos';
+import { DefaultPagination } from '@2299899-fit-friends/consts';
+import { PaginationQuery, UserPaginationQuery } from '@2299899-fit-friends/dtos';
 import { PrismaClientService } from '@2299899-fit-friends/models';
 import {
-  Pagination,
-  SortOption,
-  TrainingDuration,
-  TrainingLevel,
-  TrainingType,
-  User,
-  UserGender,
-  UserRole,
-  UserSortOption,
+    Pagination, SortOption, TrainingDuration, TrainingLevel, TrainingType, User, UserGender,
+    UserRole, UserSortOption
 } from '@2299899-fit-friends/types';
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
@@ -67,6 +57,9 @@ export class UserRepository extends BasePostgresRepository<UserEntity, User> {
       }
     }
     where.trainingLevel = query.level ? query.level : undefined;
+    if (query.isReadyToTraining) {
+      where.isReadyToTraining = query.isReadyToTraining;
+    }
 
     const orderBy: Prisma.UserOrderByWithRelationAndSearchRelevanceInput = {};
     if (query.sortOption === UserSortOption.CreatedAt) {

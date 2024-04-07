@@ -19,8 +19,12 @@ export const checkAuthAction = createAsyncThunk<
   undefined,
   { dispatch: AppDispatch; state: State; extra: AxiosInstance }
 >('user/checkAuth', async (_arg, { extra: api }) => {
-  const apiRouteCheck = `${ApiRoute.User}${ApiRoute.Check}`;
-  const { data } = await api.post<UserWithToken>(apiRouteCheck);
+  const { data: tokenData } = await api.post<UserWithToken>(
+    `${ApiRoute.User}${ApiRoute.Check}`
+  );
+  const { data } = await api.get<UserWithToken>(
+    `${ApiRoute.User}/${tokenData.id}`
+  );
   return data;
 });
 

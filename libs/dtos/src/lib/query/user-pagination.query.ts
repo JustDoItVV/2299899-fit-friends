@@ -1,5 +1,5 @@
 import { Transform } from 'class-transformer';
-import { IsEnum, IsIn, IsOptional } from 'class-validator';
+import { IsBoolean, IsEnum, IsIn, IsOptional } from 'class-validator';
 
 import { METRO_STATIONS } from '@2299899-fit-friends/consts';
 import {
@@ -29,4 +29,9 @@ export class UserPaginationQuery extends PaginationQuery {
   @IsEnum(UserSortOption)
   @Transform(({ value }) => value ? value : SortOption.CreatedAt)
   public sortOption: UserSortOption;
+
+  @ApiPropertyOptional({ description: 'Готовность к тренировкам', type: String })
+  @IsBoolean()
+  @IsOptional()
+  public isReadyToTraining?: boolean;
 }
