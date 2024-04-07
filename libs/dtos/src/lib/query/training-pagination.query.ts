@@ -1,4 +1,4 @@
-import { IsEnum, IsNumber, IsOptional } from 'class-validator';
+import { IsBoolean, IsEnum, IsNumber, IsOptional } from 'class-validator';
 
 import { PriceLimit, RatingLimit, TrainingCaloriesLimit } from '@2299899-fit-friends/consts';
 import { TrainingDuration, TrainingType } from '@2299899-fit-friends/types';
@@ -46,4 +46,9 @@ export class TrainingPaginationQuery extends PaginationQuery {
   @IsEnum(TrainingType, { each: true })
   @IsOptional()
   public type?: TrainingType | TrainingType[];
+
+  @ApiPropertyOptional({ description: 'Фильтр по специальным предложениям' })
+  @IsBoolean()
+  @IsOptional()
+  public isSpecialOffer?: boolean;
 }

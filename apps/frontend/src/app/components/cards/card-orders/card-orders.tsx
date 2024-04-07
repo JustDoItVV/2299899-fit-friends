@@ -1,11 +1,10 @@
-import { memo, useEffect, useState } from 'react';
+import { memo } from 'react';
 import { Link } from 'react-router-dom';
 
 import {
-    CatalogItem, fetchTrainingBackgroundPicture, useAppDispatch
+    CatalogItem, fetchTrainingBackgroundPicture, useFetchFileUrl
 } from '@2299899-fit-friends/frontend-core';
 import { FrontendRoute, Order } from '@2299899-fit-friends/types';
-import { unwrapResult } from '@reduxjs/toolkit';
 
 type OrderCatalogCardProps = {
   item: CatalogItem;
@@ -13,21 +12,7 @@ type OrderCatalogCardProps = {
 
 export default memo(function OrderCatalogCard({ item }: OrderCatalogCardProps): JSX.Element {
   const order = item as Order;
-  const dispatch = useAppDispatch();
-  const [imageUrl, setImageUrl] = useState<string>('');
-
-  useEffect(() => {
-    const fetchAvatar = async () => {
-      try {
-        const image = unwrapResult(await dispatch(fetchTrainingBackgroundPicture(order.trainingId || '')));
-        setImageUrl(image);
-      } catch {
-        setImageUrl('img/content/placeholder.png');
-      }
-    };
-
-    fetchAvatar();
-  }, [dispatch, order]);
+  const thumbnailUrl = useFetchFileUrl(fetchTrainingBackgroundPicture, { id: order.id }, 'img/content/placeholder.png');
 
   return (
     <li className="my-orders__item">
@@ -36,7 +21,7 @@ export default memo(function OrderCatalogCard({ item }: OrderCatalogCardProps): 
           <div className="thumbnail-training__image">
             <picture>
               <img
-                src={imageUrl}
+                src={thumbnailUrl}
                 width={330}
                 height={190}
                 alt="training"

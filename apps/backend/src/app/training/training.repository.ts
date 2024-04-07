@@ -68,6 +68,10 @@ export class TrainingRepository extends BasePostgresRepository<TrainingEntity, T
       }
     }
 
+    if (query.isSpecialOffer) {
+      where.isSpecialOffer = query.isSpecialOffer;
+    }
+
     const orderBy: Prisma.TrainingOrderByWithRelationAndSearchRelevanceInput = {};
     if (query.sortOption === SortOption.CreatedAt) {
       orderBy.createdAt = query.sortDirection;

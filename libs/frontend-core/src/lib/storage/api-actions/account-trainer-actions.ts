@@ -3,7 +3,7 @@ import { stringify } from 'qs';
 
 import { ApiRoute } from '@2299899-fit-friends/consts';
 import {
-    FrontendRoute, Order, Pagination, QueryPagination, Training, User
+    FetchFileParams, FrontendRoute, Order, Pagination, QueryPagination, Training, User
 } from '@2299899-fit-friends/types';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
@@ -48,9 +48,9 @@ export const fetchTrainerCatalog = createAsyncThunk<
 
 export const fetchTrainingBackgroundPicture = createAsyncThunk<
   string,
-  string,
+  FetchFileParams,
   { dispatch: AppDispatch; state: State; extra: AxiosInstance }
->('user/fetchTrainingBackgroundPicture', async (id, { extra: api }) => {
+>('user/fetchTrainingBackgroundPicture', async ({ id }, { extra: api }) => {
   const { data: pictureUrl } = await api.get<string>(
     `${ApiRoute.Training}/${id}${ApiRoute.BackgroundPicture}`,
   );
@@ -59,29 +59,29 @@ export const fetchTrainingBackgroundPicture = createAsyncThunk<
 
 export const fetchTrainerFriends = createAsyncThunk<
   Pagination<User>,
-  string,
+  QueryPagination,
   { dispatch: AppDispatch; state: State; extra: AxiosInstance }
 >('accountTrainer/fetchFriends', async (query, { extra: api }) => {
   const { data: pagination } = await api.get<Pagination<User>>(
-    `${ApiRoute.Account}${ApiRoute.Trainer}${ApiRoute.Friends}?${query}`
+    `${ApiRoute.Account}${ApiRoute.Trainer}${ApiRoute.Friends}?${stringify(query)}`
   );
   return pagination;
 });
 
 export const fetchTrainerOrders = createAsyncThunk<
   Pagination<Order>,
-  string,
+  QueryPagination,
   { dispatch: AppDispatch; state: State; extra: AxiosInstance }
 >('accountTrainer/fetchFriends', async (query, { extra: api }) => {
   const { data: pagination } = await api.get<Pagination<Order>>(
-    `${ApiRoute.Account}${ApiRoute.Trainer}${ApiRoute.Orders}?${query}`
+    `${ApiRoute.Account}${ApiRoute.Trainer}${ApiRoute.Orders}?${stringify(query)}`
   );
   return pagination;
 });
 
 export const fetchCertificate = createAsyncThunk<
   string,
-  { id: string, path: string },
+  FetchFileParams,
   { dispatch: AppDispatch; state: State; extra: AxiosInstance }
 >('accountTrainer/fetchCertificate', async ({ id, path }, { extra: api }) => {
   const { data } = await api.post<Blob>(

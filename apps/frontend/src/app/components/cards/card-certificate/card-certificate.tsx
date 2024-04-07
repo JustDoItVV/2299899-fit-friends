@@ -1,36 +1,22 @@
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 import 'react-pdf/dist/Page/TextLayer.css';
 
-import { memo, useEffect, useState } from 'react';
+import { memo, useState } from 'react';
 import { Document, Page, pdfjs } from 'react-pdf';
 
-import { fetchCertificate, useAppDispatch } from '@2299899-fit-friends/frontend-core';
-import { unwrapResult } from '@reduxjs/toolkit';
+import { CatalogItem, fetchCertificate, useFetchFileUrl } from '@2299899-fit-friends/frontend-core';
+import { User } from '@2299899-fit-friends/types';
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
 
-type CertificateCardProps = {
-  userId: string;
-  path: string;
+type CardCertificateProps = {
+  item: CatalogItem;
 };
 
-export default memo(function CertificateCard({ userId, path }: CertificateCardProps): JSX.Element {
-  const dispatch = useAppDispatch();
-  const [fileUrl, setFileUrl] = useState<string | null>(null);
+export default memo(function CardCertificate({ item }: CardCertificateProps): JSX.Element {
+  const user = item as User;
+  const fileUrl = useFetchFileUrl(fetchCertificate, { id: user.id }, 'img/content/placeholder.png');
   const [isEditing, setIsEditing] = useState<boolean>(false);
-
-  useEffect(() => {
-    const fetchFile = async () => {
-      try {
-        const file = unwrapResult(await dispatch(fetchCertificate({ id: userId, path })));
-        setFileUrl(file);
-      } catch {
-        setFileUrl(null);
-      }
-    };
-
-    fetchFile();
-  }, [dispatch, path, userId]);
 
   const handleChangeButtonClick = () => {
     setIsEditing(true);

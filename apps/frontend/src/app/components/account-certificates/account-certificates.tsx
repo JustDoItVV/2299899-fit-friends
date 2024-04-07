@@ -6,7 +6,7 @@ import Slider from 'react-slick';
 
 import { selectUser, useAppSelector } from '@2299899-fit-friends/frontend-core';
 
-import CertificateCard from '../certificate-card/certificate-card';
+import CardCertificate from '../cards/card-certificate/card-certificate';
 
 export default function AccountCertificates(): JSX.Element {
   const slickSliderRef = useRef<Slider | null>(null);
@@ -21,7 +21,7 @@ export default function AccountCertificates(): JSX.Element {
   };
 
   const certificateCards = currentUser?.certificates?.map((path, index) =>
-    <CertificateCard userId={currentUser.id || ''} path={path} key={`certificate_card_${index}`} />
+    <CardCertificate item={currentUser} key={`certificate_card_${index}`} />
   );
 
   return (

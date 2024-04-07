@@ -1,13 +1,17 @@
 import { AxiosInstance } from 'axios';
+import { stringify } from 'qs';
 
 import { ApiRoute } from '@2299899-fit-friends/consts';
-import { AuthData, FrontendRoute, User, UserWithToken } from '@2299899-fit-friends/types';
+import {
+    AuthData, FetchFileParams, FrontendRoute, Pagination, QueryPagination, User, UserWithToken
+} from '@2299899-fit-friends/types';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
 import { saveToken } from '../../services/token';
 import { redirectToRoute } from '../actions/redirect-to-route';
 import { setResponseError } from '../reducers/user-process/user-process.slice';
 import { AppDispatch } from '../types/app-dispatch.type';
+import { CatalogItem } from '../types/catalog-item.type';
 import { State } from '../types/state.type';
 
 export const checkAuthAction = createAsyncThunk<
@@ -15,8 +19,12 @@ export const checkAuthAction = createAsyncThunk<
   undefined,
   { dispatch: AppDispatch; state: State; extra: AxiosInstance }
 >('user/checkAuth', async (_arg, { extra: api }) => {
-  const apiRouteCheck = `${ApiRoute.User}${ApiRoute.Check}`;
-  const { data } = await api.post<UserWithToken>(apiRouteCheck);
+  const { data: tokenData } = await api.post<UserWithToken>(
+    `${ApiRoute.User}${ApiRoute.Check}`
+  );
+  const { data } = await api.get<UserWithToken>(
+    `${ApiRoute.User}/${tokenData.id}`
+  );
   return data;
 });
 
@@ -111,11 +119,22 @@ export const updateUserAction = createAsyncThunk<
 
 export const fetchUserAvatar = createAsyncThunk<
   string,
-  string,
+  FetchFileParams,
   { dispatch: AppDispatch; state: State; extra: AxiosInstance }
->('user/fetchUserAvatar', async (id, { extra: api }) => {
+>('user/fetchUserAvatar', async ({ id }, { extra: api }) => {
   const { data: avatarUrl } = await api.get<string>(
     `${ApiRoute.User}/${id}/avatar`
   );
   return avatarUrl;
+});
+
+export const fetchUsersCatalog = createAsyncThunk<
+  Pagination<CatalogItem>,
+  QueryPagination,
+  { dispatch: AppDispatch; state: State; extra: AxiosInstance }
+>('user/fetchUsers', async (query, { extra: api }) => {
+    const { data: pagination } = await api.get<Pagination<User>>(
+    `${ApiRoute.User}?${stringify(query)}`
+  );
+  return pagination;
 });

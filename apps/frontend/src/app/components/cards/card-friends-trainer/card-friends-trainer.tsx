@@ -1,8 +1,7 @@
-import { memo, useEffect, useState } from 'react';
+import { memo } from 'react';
 
-import { CatalogItem, fetchUserAvatar, useAppDispatch } from '@2299899-fit-friends/frontend-core';
+import { CatalogItem, fetchUserAvatar, useFetchFileUrl } from '@2299899-fit-friends/frontend-core';
 import { User } from '@2299899-fit-friends/types';
-import { unwrapResult } from '@reduxjs/toolkit';
 
 type FriendsCatalogCardProps = {
   item: CatalogItem;
@@ -10,21 +9,7 @@ type FriendsCatalogCardProps = {
 
 export default memo(function FriendsCatalogCard({ item }: FriendsCatalogCardProps): JSX.Element {
   const user = item as User;
-  const dispatch = useAppDispatch();
-  const [imageUrl, setImageUrl] = useState<string>('');
-
-  useEffect(() => {
-    const fetchAvatar = async () => {
-      try {
-        const image = unwrapResult(await dispatch(fetchUserAvatar(user.id || '')));
-        setImageUrl(image);
-      } catch {
-        setImageUrl('img/content/placeholder.png');
-      }
-    };
-
-    fetchAvatar();
-  }, [dispatch, user]);
+  const thumbnailUrl = useFetchFileUrl(fetchUserAvatar, { id: user.id }, 'img/content/placeholder.png');
 
   const hashtagElements = user.trainingType.map((type, index) => (
     <li key={`${user.id}_hashtag_${index}`}>
@@ -42,7 +27,7 @@ export default memo(function FriendsCatalogCard({ item }: FriendsCatalogCardProp
             <div className="thumbnail-friend__image">
               <picture>
                 <img
-                  src={imageUrl}
+                  src={thumbnailUrl}
                   width={78}
                   height={78}
                   alt={user.name}

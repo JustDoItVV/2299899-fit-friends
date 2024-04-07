@@ -6,11 +6,13 @@ import { FrontendRoute, UserRole } from '@2299899-fit-friends/types';
 type AuthorizedRouteProps = {
   role: UserRole;
   children: JSX.Element;
+  redirect?: string;
 };
 
 export default function RoleRoute(props: AuthorizedRouteProps): JSX.Element {
-  const { role, children } = props;
+  const { role, children, redirect } = props;
+  const redirectPath = redirect ?? `/${FrontendRoute.Main}`;
   const currentUser = useAppSelector(selectCurrentUser);
 
-  return currentUser?.role === role ? children : <Navigate to={`/${FrontendRoute.Main}`} />;
+  return currentUser?.role === role ? children : <Navigate to={redirectPath} />;
 }
