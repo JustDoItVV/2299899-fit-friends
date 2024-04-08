@@ -3,8 +3,8 @@ import { DefaultPagination } from '@2299899-fit-friends/consts';
 import { TrainingPaginationQuery } from '@2299899-fit-friends/dtos';
 import { PrismaClientService } from '@2299899-fit-friends/models';
 import {
-    Pagination, SortOption, Training, TrainingAuditory, TrainingDuration, TrainingLevel,
-    TrainingType
+    Pagination, SortDirection, Training, TrainingAuditory, TrainingDuration, TrainingLevel,
+    TrainingSortOption, TrainingType
 } from '@2299899-fit-friends/types';
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
@@ -72,10 +72,15 @@ export class TrainingRepository extends BasePostgresRepository<TrainingEntity, T
       where.isSpecialOffer = query.isSpecialOffer;
     }
 
-    const orderBy: Prisma.TrainingOrderByWithRelationAndSearchRelevanceInput = {};
-    if (query.sortOption === SortOption.CreatedAt) {
-      orderBy.createdAt = query.sortDirection;
+    const orderBy: Prisma.TrainingOrderByWithRelationAndSearchRelevanceInput[] = [{}];
+
+    if (query.sortOption === TrainingSortOption.CreatedAt) {
+      orderBy.push({ createdAt: query.sortDirection });
+    } else if (query.sortOption === TrainingSortOption.Price) {
+      orderBy.push({ price: query.sortDirection });
     }
+
+    orderBy.push({ id: SortDirection.Asc });
 
     const documentsCount = await this.getTrainingsCount(where);
     const totalPages = this.calculatePage(documentsCount, limit);
