@@ -1,7 +1,10 @@
+import { Transform } from 'class-transformer';
 import { IsBoolean, IsEnum, IsNumber, IsOptional } from 'class-validator';
 
 import { PriceLimit, RatingLimit, TrainingCaloriesLimit } from '@2299899-fit-friends/consts';
-import { TrainingDuration, TrainingType } from '@2299899-fit-friends/types';
+import {
+    SortOption, TrainingDuration, TrainingSortOption, TrainingType
+} from '@2299899-fit-friends/types';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 
 import { PaginationQuery } from './pagination.query';
@@ -51,4 +54,9 @@ export class TrainingPaginationQuery extends PaginationQuery {
   @IsBoolean()
   @IsOptional()
   public isSpecialOffer?: boolean;
+
+  @ApiPropertyOptional({ description: 'Поле для сортировки', type: String })
+  @IsEnum(TrainingSortOption)
+  @Transform(({ value }) => value ? value : SortOption.CreatedAt)
+  public sortOption: TrainingSortOption;
 }

@@ -7,7 +7,8 @@ import {
 import { redirectToRoute, useAppDispatch } from '@2299899-fit-friends/frontend-core';
 import { isEmptyObject } from '@2299899-fit-friends/helpers';
 import {
-    FrontendRoute, QueryPagination, SortDirection, TrainingDuration, TrainingType
+    FrontendRoute, QueryPagination, SortDirection, TrainingDuration, TrainingSortOption,
+    TrainingType
 } from '@2299899-fit-friends/types';
 
 import MultiRangeSlider, {
@@ -18,14 +19,14 @@ type FormFilterSortCatalogProps = {
   classNamePrefix: string;
   filters: Record<string, boolean>;
   sorters: Record<string, boolean>;
-  setQueryParams: React.Dispatch<React.SetStateAction<QueryPagination>>;
+  setQuery: React.Dispatch<React.SetStateAction<QueryPagination>>;
   title?: string;
   buttonBackPath?: string;
   debounceTreshold?: number;
 };
 
 export default function FormFilterSortCatalog(props: FormFilterSortCatalogProps): JSX.Element {
-  const { classNamePrefix, title, filters, sorters, setQueryParams } = props;
+  const { classNamePrefix, title, filters, sorters, setQuery } = props;
   const backButtonPath = props.buttonBackPath ?? `/${FrontendRoute.Main}`;
   const debounceTreshold = props.debounceTreshold ?? DEBOUNCE_THRESHOLD;
 
@@ -38,22 +39,22 @@ export default function FormFilterSortCatalog(props: FormFilterSortCatalogProps)
   const sliderCaloriesRef = useRef<MultiRangeSliderHandles | null>(null);
   const typeRef = useRef<string[]>([]);
   const durationRef = useRef<string[]>([]);
-  const sortPriceRef = useRef<SortDirection>(SortDirection.Asc);
 
   const debouncedSetQueryParams = useMemo(() =>
-    debounce((value: string[] | string | null, param: string) => {
-      setQueryParams((oldData) => {
+    debounce((params: Record<string, string[] | string | null>) => {
+      setQuery((oldData) => {
         const newData = { ...oldData };
-        if (!value) {
-          delete newData[param];
-        } else {
-          newData[param] = value;
-          newData.page = 1;
-        }
+        Object.keys(params).forEach((key) => {
+          if (!params[key]) {
+            delete newData[key];
+          } else {
+            newData[key] = params[key];
+          }
+        });
         return newData;
       });
     }, debounceTreshold),
-    [setQueryParams, debounceTreshold]
+    [setQuery, debounceTreshold],
   );
 
   const handleBackButtonClick = () => {
@@ -66,14 +67,14 @@ export default function FormFilterSortCatalog(props: FormFilterSortCatalogProps)
     if (slider) {
       slider.setMinValue(target.valueAsNumber || PriceLimit.Min);
     }
-    debouncedSetQueryParams(target.value ? target.value : null, 'priceMin');
+    debouncedSetQueryParams({ priceMin: target.value ? target.value : null });
   };
 
   const handlePriceMinChange = useCallback((value: number) => {
     if (priceMinInputRef.current) {
       priceMinInputRef.current.value = value.toString();
     }
-    debouncedSetQueryParams(value.toString(), 'priceMin');
+    debouncedSetQueryParams({ priceMin: value.toString()});
   }, [debouncedSetQueryParams]);
 
   const handlePriceMaxInputChange = (evt: ChangeEvent<HTMLInputElement>) => {
@@ -82,14 +83,14 @@ export default function FormFilterSortCatalog(props: FormFilterSortCatalogProps)
     if (slider) {
       slider.setMaxValue(target.valueAsNumber || PriceLimit.MockMax);
     }
-    debouncedSetQueryParams(target.value ? target.value : null, 'priceMax');
+    debouncedSetQueryParams({ priceMax: target.value ? target.value : null });
   };
 
   const handlePriceMaxChange = useCallback((value: number) => {
     if (priceMaxInputRef.current) {
       priceMaxInputRef.current.value = value.toString();
     }
-    debouncedSetQueryParams(value.toString(), 'priceMax');
+    debouncedSetQueryParams({ priceMax: value.toString() });
   }, [debouncedSetQueryParams]);
 
   const handleCaloriesMinInputChange = (evt: ChangeEvent<HTMLInputElement>) => {
@@ -98,14 +99,14 @@ export default function FormFilterSortCatalog(props: FormFilterSortCatalogProps)
     if (slider) {
       slider.setMinValue(target.valueAsNumber || CaloriesTargetLimit.Min);
     }
-    debouncedSetQueryParams(target.value ? target.value : null, 'caloriesMin');
+    debouncedSetQueryParams({ caloriesMin: target.value ? target.value : null });
   };
 
   const handleCaloriesMinChange = useCallback((value: number) => {
     if (caloriesMinInputRef.current) {
       caloriesMinInputRef.current.value = value.toString();
     }
-    debouncedSetQueryParams(value.toString(), 'caloriesMin');
+    debouncedSetQueryParams({ caloriesMin: value.toString() });
   }, [debouncedSetQueryParams]);
 
   const handleCaloriesMaxInputChange = (evt: ChangeEvent<HTMLInputElement>) => {
@@ -114,22 +115,22 @@ export default function FormFilterSortCatalog(props: FormFilterSortCatalogProps)
     if (slider) {
       slider.setMaxValue(target.valueAsNumber || CaloriesTargetLimit.Max);
     }
-    debouncedSetQueryParams(target.value ? target.value : null, 'caloriesMax');
+    debouncedSetQueryParams({ caloriesMax: target.value ? target.value : null });
   };
 
   const handleCaloriesMaxChange = useCallback((value: number) => {
     if (caloriesMaxInputRef.current) {
       caloriesMaxInputRef.current.value = value.toString();
     }
-    debouncedSetQueryParams(value.toString(), 'caloriesMax');
+    debouncedSetQueryParams({ caloriesMax: value.toString() });
   }, [debouncedSetQueryParams]);
 
   const handleRatingMinChange = useCallback((value: number) => {
-    debouncedSetQueryParams(value.toString(), 'ratingMin');
+    debouncedSetQueryParams({ ratingMin: value.toString() });
   }, [debouncedSetQueryParams]);
 
   const handleRatingMaxChange = useCallback((value: number) => {
-    debouncedSetQueryParams(value.toString(), 'ratingMax');
+    debouncedSetQueryParams({ ratingMax: value.toString() });
   }, [debouncedSetQueryParams]);
 
   const handleTypeInputChange = (evt: ChangeEvent<HTMLInputElement>) => {
@@ -142,7 +143,7 @@ export default function FormFilterSortCatalog(props: FormFilterSortCatalogProps)
       typeRef.current.splice(index, 1);
     }
 
-    debouncedSetQueryParams(typeRef.current, 'type');
+    debouncedSetQueryParams({ type: typeRef.current });
   };
 
   const handleDurationInputChange = (evt: ChangeEvent<HTMLInputElement>) => {
@@ -155,23 +156,24 @@ export default function FormFilterSortCatalog(props: FormFilterSortCatalogProps)
       durationRef.current.splice(index, 1);
     }
 
-    debouncedSetQueryParams(durationRef.current, 'duration');
+    debouncedSetQueryParams({ duration: durationRef.current });
   };
 
   const handleSortPriceChange = (evt: ChangeEvent<HTMLInputElement>) => {
+    const queryOptions: Record<string, string> = {
+      sortOption: TrainingSortOption.Price,
+    };
     const value = evt.currentTarget.value;
 
     if (value === 'free') {
-      sortPriceRef.current = SortDirection.Asc;
-      debouncedSetQueryParams(PriceLimit.Min.toString(), 'priceMin');
-    } else if (value === SortDirection.Asc) {
-      sortPriceRef.current = value;
-      debouncedSetQueryParams((PriceLimit.Min + 1).toString(), 'priceMin');
+      queryOptions.sortDirection = SortDirection.Asc;
+      queryOptions.priceMin = PriceLimit.Min.toString();
+      queryOptions.priceMax = PriceLimit.Min.toString();
     } else {
-      sortPriceRef.current = value as SortDirection;
+      queryOptions.sortDirection = value;
     }
 
-    debouncedSetQueryParams(sortPriceRef.current, 'sortDirection');
+    debouncedSetQueryParams(queryOptions);
   };
 
   const durationFilterElements = Object.values(TrainingDuration).map((duration, index) => (

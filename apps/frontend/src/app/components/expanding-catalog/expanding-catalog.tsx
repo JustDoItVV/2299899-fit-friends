@@ -1,50 +1,46 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 
-import { CatalogItem, useAppDispatch } from '@2299899-fit-friends/frontend-core';
+import { CatalogItem, useFetchPagination } from '@2299899-fit-friends/frontend-core';
 import { Pagination, QueryPagination } from '@2299899-fit-friends/types';
-import { unwrapResult } from '@reduxjs/toolkit';
 import { AsyncThunk, AsyncThunkConfig } from '@reduxjs/toolkit/dist/createAsyncThunk';
 
-type ExpandingCatalogProps<T> = {
-  fetch: AsyncThunk<Pagination<T>, QueryPagination, AsyncThunkConfig>;
+type ExpandingCatalogProps = {
+  fetch: AsyncThunk<Pagination<CatalogItem>, QueryPagination, AsyncThunkConfig>;
   component: React.ComponentType<{ item: CatalogItem, key?: string }>;
-  classNameList: string;
-  queryParams: QueryPagination;
+  query: QueryPagination;
+  classNamePrefix?: string;
+  preload?: boolean;
 };
 
-export default function ExpandingCatalog<T extends CatalogItem>(props: ExpandingCatalogProps<T>): JSX.Element {
-  const { fetch, component: Card, classNameList, queryParams } = props;
-  const dispatch = useAppDispatch();
-  const [catalogCards, setCatalogCards] = useState<JSX.Element[]>([]);
-  const currentPageRef = useRef<number>(1);
+export default function ExpandingCatalog(props: ExpandingCatalogProps): JSX.Element {
+  const { fetch, component: Card, query } = props;
+  const classNamePrefix = props.classNamePrefix ?? '';
+  const preload = props.preload ?? false;
 
-  const fetchPageItems = useCallback(async () => {
-    const { entities: pageItems, totalItems: totalItemsCount } =
-      unwrapResult(await dispatch(fetch(queryParams)));
-    const newTrainingCatalogCards: JSX.Element[] = [];
-
-    if (1000 !== totalItemsCount) {
-      setCatalogCards([]);
-      currentPageRef.current = 1;
-    } else {
-      if (currentPageRef.current <= 1000) {
-        pageItems.forEach((item) => newTrainingCatalogCards.push(
-          <Card item={item} key={`catalog_item_${item.id}`} />
-        ));
-        setCatalogCards(((oldValue) => [...oldValue, ...newTrainingCatalogCards]));
-        currentPageRef.current++;
-      }
-    }
-
-    queryParams.page = currentPageRef.current;
-  }, [dispatch, Card, fetch, queryParams]);
+  const { items, nextPage, setItems, totalPages, fetchNextPage } =
+    useFetchPagination<CatalogItem>(fetch, query, undefined);
+  const [itemsElements, setItemsElements] = useState<JSX.Element[]>([]);
 
   useEffect(() => {
-    fetchPageItems();
-  }, [fetchPageItems]);
+    if (!preload) {
+      setItems([]);
+      fetchNextPage();
+    }
+  }, [setItems, fetchNextPage, preload, query]);
+
+  useEffect(() => {
+    const newElements = items.map((item) => (
+      <li className={`${classNamePrefix}__item`} key={`${classNamePrefix}__item__${item.id}`}>
+        <Card item={item} />
+      </li>
+    ));
+    setItemsElements(newElements);
+  }, [items, Card, classNamePrefix]);
 
   const handleShowMoreButtonClick = () => {
-    fetchPageItems();
+    if (!preload) {
+      fetchNextPage();
+    }
   };
 
   const handleToTopButtonClick = () => {
@@ -52,28 +48,28 @@ export default function ExpandingCatalog<T extends CatalogItem>(props: Expanding
   };
 
   return (
-    <>
-      <ul className={classNameList}>
-        {catalogCards.length > 0
-          ? catalogCards
+    <div className={classNamePrefix}>
+      <ul className={`${classNamePrefix}__list`}>
+        {itemsElements.length > 0
+          ? itemsElements
           : <p>Записей не найдено</p>}
       </ul>
-      <div className={`show-more my-trainings__show-more ${!catalogCards.length && 'show-more__button--to-top'}`}>
+      <div className={`show-more ${classNamePrefix}__show-more ${!itemsElements.length && 'show-more__button--to-top'}`}>
         <button
-          className={`btn show-more__button show-more__button--more ${currentPageRef.current > 1000 && 'show-more__button--to-top'}`}
+          className={`btn show-more__button show-more__button--more ${totalPages && nextPage > totalPages && 'show-more__button--to-top'}`}
           type="button"
           onClick={handleShowMoreButtonClick}
         >
           Показать еще
         </button>
         <button
-          className={`btn show-more__button show-more__button--more ${currentPageRef.current <= 1000 && 'show-more__button--to-top'}`}
+          className={`btn show-more__button ${nextPage <= 2 && 'show-more__button--to-top'}`}
           type="button"
           onClick={handleToTopButtonClick}
         >
           Вернуться в начало
         </button>
       </div>
-    </>
+    </div>
   );
 }
