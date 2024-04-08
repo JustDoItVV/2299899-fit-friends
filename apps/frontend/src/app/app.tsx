@@ -72,14 +72,16 @@ export default function App() {
             <MainPage />
           } />
         } />} />
+        <Route path={FrontendRoute.Trainings} element={<AuthorizedRoute children={
+          <RoleRoute role={UserRole.User} children={
+            <TrainingsPage />
+          } />
+        } />} />
         <Route path={FrontendRoute.Users} element={<AuthorizedRoute children={
           <UsersPage />
         } />} />
         <Route path={FrontendRoute.UserCard} element={<AuthorizedRoute children={
           <UserCardPage />
-        } />} />
-        <Route path={FrontendRoute.Trainings} element={<AuthorizedRoute children={
-          <TrainingsPage />
         } />} />
         <Route path={FrontendRoute.TrainingCard} element={<AuthorizedRoute children={
           <TrainingCardPage />

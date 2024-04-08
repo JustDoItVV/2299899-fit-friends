@@ -51,3 +51,7 @@ export enum CardPlaceholderPreviewImage {
 }
 
 export const DISCOUNT = 0.1;
+
+export const FormQueryParams = {
+  TrainingsCatalogLimit: 12,
+} as const;

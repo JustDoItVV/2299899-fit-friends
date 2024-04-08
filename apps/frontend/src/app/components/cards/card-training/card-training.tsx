@@ -1,7 +1,6 @@
 import { memo } from 'react';
 import { Link } from 'react-router-dom';
 
-import { DISCOUNT } from '@2299899-fit-friends/consts';
 import {
     CatalogItem, fetchTrainingBackgroundPicture, useFetchFileUrl
 } from '@2299899-fit-friends/frontend-core';
@@ -14,7 +13,6 @@ type CardTrainingProps = {
 export default memo(function CardTraining({ item }: CardTrainingProps): JSX.Element {
   const training = item as Training;
   const thumbnailUrl = useFetchFileUrl(fetchTrainingBackgroundPicture, { id: training.id }, 'img/content/placeholder.png');
-  const price = training.isSpecialOffer ? training.price * (1 - DISCOUNT) : training.price;
 
   return (
     <div className="thumbnail-training">
@@ -29,7 +27,7 @@ export default memo(function CardTraining({ item }: CardTrainingProps): JSX.Elem
             />
           </picture>
         </div>
-        <p className="thumbnail-training__price">{!price ? 'Бесплатно': price} ₽</p>
+        <p className="thumbnail-training__price">{!training.price ? 'Бесплатно': training.price} ₽</p>
         <h3 className="thumbnail-training__title">{training.title}</h3>
         <div className="thumbnail-training__info">
           <ul className="thumbnail-training__hashtags-list">
@@ -49,7 +47,11 @@ export default memo(function CardTraining({ item }: CardTrainingProps): JSX.Elem
               <use xlinkHref="#icon-star" />
             </svg>
             <span className="thumbnail-training__rate-value">
-              {training.rating}
+              {
+                (training.rating - Math.floor(training.rating)) > 0
+                ? training.rating.toFixed(1)
+                : training.rating
+              }
             </span>
           </div>
         </div>

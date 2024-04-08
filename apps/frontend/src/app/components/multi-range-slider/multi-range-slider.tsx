@@ -1,7 +1,9 @@
 import './multi-range-slider.css';
 
 import classnames from 'classnames';
-import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react';
+import {
+    ChangeEvent, forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState
+} from 'react';
 
 type MultiRangeSliderProps = {
   min: number,
@@ -61,17 +63,19 @@ export default forwardRef<MultiRangeSliderHandles, MultiRangeSliderProps>(functi
     }
   }, [maxVal, getPercent]);
 
-  useEffect(() => {
-    if (onChangeMin) {
-      onChangeMin(minVal);
-    }
-  }, [minVal, onChangeMin]);
+  const handleMinInputChange = (evt: ChangeEvent<HTMLInputElement>) => {
+    const value = Math.min(+evt.currentTarget.value, maxVal - 1);
+    setMinVal(value);
+    evt.currentTarget.value = value.toString();
+    onChangeMin(value);
+  };
 
-  useEffect(() => {
-    if (onChangeMax) {
-      onChangeMax(maxVal);
-    }
-  }, [maxVal, onChangeMax])
+  const handleMaxInputChange = (evt: ChangeEvent<HTMLInputElement>) => {
+    const value = Math.max(+evt.currentTarget.value, minVal + 1);
+    setMaxVal(value);
+    evt.currentTarget.value = value.toString();
+    onChangeMax(value);
+  };
 
   return (
     <div className="filter-range">
@@ -81,11 +85,7 @@ export default forwardRef<MultiRangeSliderHandles, MultiRangeSliderProps>(functi
         max={max}
         value={minVal}
         ref={minValRef}
-        onChange={(event) => {
-          const value = Math.min(+event.target.value, maxVal - 1);
-          setMinVal(value);
-          event.target.value = value.toString();
-        }}
+        onChange={handleMinInputChange}
         className={classnames("thumb thumb--zindex-3", {
           "thumb--zindex-5": minVal > max - 100
         })}
@@ -96,11 +96,7 @@ export default forwardRef<MultiRangeSliderHandles, MultiRangeSliderProps>(functi
         max={max}
         value={maxVal}
         ref={maxValRef}
-        onChange={(event) => {
-          const value = Math.max(+event.target.value, minVal + 1);
-          setMaxVal(value);
-          event.target.value = value.toString();
-        }}
+        onChange={handleMaxInputChange}
         className="thumb thumb--zindex-4"
       />
 

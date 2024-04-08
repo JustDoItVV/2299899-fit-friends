@@ -12,7 +12,7 @@ import MultiRangeSlider, {
 } from '../multi-range-slider/multi-range-slider';
 
 type TrainingsQueryFormProps = {
-  setQueryParams: React.Dispatch<React.SetStateAction<QueryPagination>>;
+
 };
 
 export default function TrainingsQueryForm({ setQueryParams }: TrainingsQueryFormProps): JSX.Element {
@@ -23,135 +23,21 @@ export default function TrainingsQueryForm({ setQueryParams }: TrainingsQueryFor
   const caloriesMinInputRef = useRef<HTMLInputElement | null>(null);
   const caloriesMaxInputRef = useRef<HTMLInputElement | null>(null);
   const sliderCaloriesRef = useRef<MultiRangeSliderHandles | null>(null);
-  const durationRef = useRef<string[]>([]);
 
-  const debouncedSetQueryParams = useMemo(() =>
-    debounce((value: string[] | string | null, param: string) => {
-      setQueryParams((oldData) => {
-        const newData = { ...oldData };
-        if (!value) {
-          delete newData[param];
-        } else {
-          newData[param] = value;
-          newData.page = 1;
-        }
-        return newData;
-      });
-    }, DEBOUNCE_THRESHOLD),
-    [setQueryParams]
-  );
+
+
 
   const handleBackButtonClick = () => {
     dispatch(redirectToRoute(`/${FrontendRoute.Account}`));
   };
 
-  const handlePriceMinInputChange = (evt: ChangeEvent<HTMLInputElement>) => {
-    const slider = sliderPriceRef.current;
-    const target = evt.currentTarget;
-    if (slider) {
-      slider.setMinValue(target.valueAsNumber || PriceLimit.Min);
-    }
-    debouncedSetQueryParams(target.value ? target.value : null, 'priceMin');
-  };
 
-  const handlePriceMinChange = useCallback((value: number) => {
-    if (priceMinInputRef.current) {
-      priceMinInputRef.current.value = value.toString();
-    }
-    debouncedSetQueryParams(value.toString(), 'priceMin');
-  }, [debouncedSetQueryParams]);
 
-  const handlePriceMaxInputChange = (evt: ChangeEvent<HTMLInputElement>) => {
-    const slider = sliderPriceRef.current;
-    const target = evt.currentTarget;
-    if (slider) {
-      slider.setMaxValue(target.valueAsNumber || PriceLimit.MockMax);
-    }
-    debouncedSetQueryParams(target.value ? target.value : null, 'priceMax');
-  };
 
-  const handlePriceMaxChange = useCallback((value: number) => {
-    if (priceMaxInputRef.current) {
-      priceMaxInputRef.current.value = value.toString();
-    }
-    debouncedSetQueryParams(value.toString(), 'priceMax');
-  }, [debouncedSetQueryParams]);
 
-  const handleCaloriesMinInputChange = (evt: ChangeEvent<HTMLInputElement>) => {
-    const slider = sliderCaloriesRef.current;
-    const target = evt.currentTarget;
-    if (slider) {
-      slider.setMinValue(target.valueAsNumber || CaloriesTargetLimit.Min);
-    }
-    debouncedSetQueryParams(target.value ? target.value : null, 'caloriesMin');
-  };
 
-  const handleCaloriesMinChange = useCallback((value: number) => {
-    if (caloriesMinInputRef.current) {
-      caloriesMinInputRef.current.value = value.toString();
-    }
-    debouncedSetQueryParams(value.toString(), 'caloriesMin');
-  }, [debouncedSetQueryParams]);
 
-  const handleCaloriesMaxInputChange = (evt: ChangeEvent<HTMLInputElement>) => {
-    const slider = sliderCaloriesRef.current;
-    const target = evt.currentTarget;
-    if (slider) {
-      slider.setMaxValue(target.valueAsNumber || CaloriesTargetLimit.Max);
-    }
-    debouncedSetQueryParams(target.value ? target.value : null, 'caloriesMax');
-  };
 
-  const handleCaloriesMaxChange = useCallback((value: number) => {
-    if (caloriesMaxInputRef.current) {
-      caloriesMaxInputRef.current.value = value.toString();
-    }
-    debouncedSetQueryParams(value.toString(), 'caloriesMax');
-  }, [debouncedSetQueryParams]);
-
-  const handleRatingMinChange = useCallback((value: number) => {
-    debouncedSetQueryParams(value.toString(), 'ratingMin');
-  }, [debouncedSetQueryParams]);
-
-  const handleRatingMaxChange = useCallback((value: number) => {
-    debouncedSetQueryParams(value.toString(), 'ratingMax');
-  }, [debouncedSetQueryParams]);
-
-  const handleDurationInputChange = (evt: ChangeEvent<HTMLInputElement>) => {
-    const value = evt.currentTarget.value;
-    const index = durationRef.current.indexOf(value);
-
-    if (evt.currentTarget.checked) {
-      durationRef.current.push(value);
-    } else if (index !== -1) {
-      durationRef.current.splice(index, 1);
-    }
-
-    debouncedSetQueryParams(durationRef.current, 'duration');
-  };
-
-  const durationFilerElements = Object.values(TrainingDuration).map((duration, index) => (
-    <li className="my-training-form__check-list-item" key={`duration_filter_${index}`}>
-      <div className="custom-toggle custom-toggle--checkbox">
-        <label>
-          <input
-            type="checkbox"
-            value={duration}
-            name="duration"
-            onChange={handleDurationInputChange}
-          />
-          <span className="custom-toggle__icon">
-            <svg width={9} height={6} aria-hidden="true">
-              <use xlinkHref="#arrow-check" />
-            </svg>
-          </span>
-          <span className="custom-toggle__label">
-            {duration}
-          </span>
-        </label>
-      </div>
-    </li>
-  ));
 
   return (
     <div className="my-training-form">

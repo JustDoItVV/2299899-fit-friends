@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { Pagination, QueryPagination } from '@2299899-fit-friends/types';
 import { AsyncThunk, unwrapResult } from '@reduxjs/toolkit';
@@ -6,42 +6,59 @@ import { AsyncThunk, unwrapResult } from '@reduxjs/toolkit';
 import { CatalogItem } from '../storage/types/catalog-item.type';
 import { useAppDispatch } from './';
 
-export function useFetchPagination<T extends CatalogItem | JSX.Element>(
+export function useFetchPagination<T extends CatalogItem>(
   fetch: AsyncThunk<Pagination<T>, QueryPagination, Record<string, unknown>>,
-  queryParams: QueryPagination,
+  query: QueryPagination,
   maxItems?: number | undefined,
 ) {
   const dispatch = useAppDispatch();
   const [items, setItems] = useState<T[]>([]);
   const totalItemsRef = useRef<number | null>(null);
   const totalPagesRef = useRef<number | null>(null);
-  const nextPage = useRef<number>(1);
+  const nextPageRef = useRef<number>(1);
+
+  useEffect(() => {
+    nextPageRef.current = 1;
+  }, [query]);
 
   const fetchNextPage = useCallback(async () => {
-    queryParams.page = nextPage.current;
-    const { entities, totalPages, totalItems } = unwrapResult(
-      await dispatch(fetch(queryParams))
+    const { entities, totalPages, currentPage, totalItems } = unwrapResult(
+      await dispatch(fetch({ ...query, page: nextPageRef.current }))
     );
 
-    if (totalItemsRef.current !== totalItems) {
-      totalItemsRef.current = totalItems;
-      totalPagesRef.current = totalPages;
-      nextPage.current = 1;
-      setItems([]);
-    } else if (nextPage.current < totalPages) {
-      nextPage.current++;
-      setItems((old) => [...old, ...entities]);
+    if (nextPageRef.current !== currentPage) {
+      nextPageRef.current = currentPage;
     }
-  }, [dispatch, fetch, queryParams]);
+
+    if (!totalPagesRef.current || totalPagesRef.current !== totalPages) {
+      totalPagesRef.current = totalPages;
+    }
+
+    if (!totalPagesRef.current || totalItemsRef.current !== totalItems) {
+      totalItemsRef.current = totalItems;
+    }
+
+    if (nextPageRef.current <= totalPages) {
+      setItems((old) => {
+        const newItems = [...old];
+        entities.forEach((entity) => {
+          if (!newItems.some((item) => item.id === entity.id)) {
+            newItems.push(entity);
+          }
+        });
+        return newItems
+      });
+      nextPageRef.current++;
+    }
+  }, [dispatch, fetch, query]);
 
   const fetchAll = useCallback(async () => {
     const result = [];
-    nextPage.current = 1;
-    queryParams.page = nextPage.current;
+    let page = 1;
 
     do {
       const { entities, totalPages, totalItems } = unwrapResult(
-        await dispatch(fetch(queryParams))
+        await dispatch(fetch(query))
       );
 
       if (!totalPagesRef.current || !totalItemsRef.current) {
@@ -59,15 +76,22 @@ export function useFetchPagination<T extends CatalogItem | JSX.Element>(
         }
       });
 
-      nextPage.current++;
+      page++;
 
       if (maxItems && result.length === maxItems) {
         break;
       }
-    } while (nextPage.current <= totalPagesRef.current);
+    } while (page <= totalPagesRef.current);
 
     setItems(result);
-  }, [dispatch, fetch, queryParams]);
+  }, [dispatch, fetch, query]);
 
-  return { items, fetchNextPage, fetchAll };
+  return {
+    items,
+    nextPage: nextPageRef.current,
+    setItems,
+    totalPages: totalPagesRef.current,
+    fetchNextPage,
+    fetchAll,
+  };
 }
