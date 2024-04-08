@@ -48,9 +48,11 @@ export function fillDto<T, V>(
   });
 }
 
-export const randomArrayElement = <T>(array: T[]): T => array[Math.floor(Math.random() * array.length)];
+export function randomArrayElement<T>(array: T[]): T {
+  return array[Math.floor(Math.random() * array.length)];
+}
 
-export const randomArrayElements = <T>(array: T[], count?: number): T[] => {
+export function randomArrayElements<T>(array: T[], count?: number): T[] {
   const randomArray = [];
 
   while (randomArray.length !== count) {
@@ -61,4 +63,13 @@ export const randomArrayElements = <T>(array: T[], count?: number): T[] => {
   }
 
   return randomArray;
-};
+}
+
+export function isEmptyObject(object): boolean {
+  for (const key in object) {
+    if (Object.prototype.hasOwnProperty.call(object, key)) {
+      return false;
+    }
+  }
+  return true;
+}
