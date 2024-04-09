@@ -9,7 +9,8 @@ import { useAppDispatch } from './';
 export function useFetchFileUrl(
   fetch: AsyncThunk<string, FetchFileParams, AsyncThunkConfig>,
   params?: FetchFileParams,
-  defaultValue = ''
+  defaultValue = '',
+  dependencies: unknown[] = [],
 ) {
   const dispatch = useAppDispatch();
   const [fileUrl, setFileUrl] = useState<string>(defaultValue);
@@ -27,7 +28,7 @@ export function useFetchFileUrl(
     };
 
     fetchAvatar();
-  }, [dispatch]);
+  }, [dispatch, ...dependencies]);
 
   return fileUrl;
 }

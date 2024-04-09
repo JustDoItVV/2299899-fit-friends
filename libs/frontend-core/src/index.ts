@@ -11,6 +11,8 @@ export * from './lib/storage/actions/redirect-to-route';
 export * from './lib/storage/api-actions/account-trainer-actions';
 export * from './lib/storage/api-actions/trainings-catalog-action';
 export * from './lib/storage/api-actions/user-actions';
+export * from './lib/storage/reducers/app-process/app-process.selector';
+export * from './lib/storage/reducers/app-process/app-process.slice';
 export * from './lib/storage/reducers/training-process/training-process.selector';
 export * from './lib/storage/reducers/training-process/training-process.slice';
 export * from './lib/storage/reducers/user-process/user-process.selector';

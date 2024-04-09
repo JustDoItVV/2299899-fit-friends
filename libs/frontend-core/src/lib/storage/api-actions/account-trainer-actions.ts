@@ -8,7 +8,7 @@ import {
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
 import { redirectToRoute } from '../actions/redirect-to-route';
-import { setResponseError } from '../reducers/user-process/user-process.slice';
+import { setResponseError } from '../reducers/app-process/app-process.slice';
 import { AppDispatch } from '../types/app-dispatch.type';
 import { State } from '../types/state.type';
 
@@ -91,4 +91,13 @@ export const fetchCertificate = createAsyncThunk<
   );
   const dataUrl = URL.createObjectURL(data);
   return dataUrl;
+});
+
+export const fetchTraining = createAsyncThunk<
+  Training,
+  string,
+  { dispatch: AppDispatch; state: State; extra: AxiosInstance }
+>('accountTrainer/fetchTraining', async (id, { extra: api }) => {
+  const { data } = await api.get<Training>(`${ApiRoute.Training}/${id}`);
+  return data;
 });

@@ -9,7 +9,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 
 import { saveToken } from '../../services/token';
 import { redirectToRoute } from '../actions/redirect-to-route';
-import { setResponseError } from '../reducers/user-process/user-process.slice';
+import { setResponseError } from '../reducers/app-process/app-process.slice';
 import { AppDispatch } from '../types/app-dispatch.type';
 import { CatalogItem } from '../types/catalog-item.type';
 import { State } from '../types/state.type';
