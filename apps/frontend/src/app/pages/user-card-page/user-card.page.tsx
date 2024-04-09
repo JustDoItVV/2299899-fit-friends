@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { FrontendRoute } from '@2299899-fit-friends/types';
 
 import Header from '../../components/header/header';
+import PopupCertificates from '../../components/popups/popup-certificates/popup-certificates';
 
 export default function UserCardPage(): JSX.Element {
 
@@ -21,6 +22,7 @@ export default function UserCardPage(): JSX.Element {
                 </svg>
                 <span>Назад</span>
               </button>
+              <PopupCertificates children={<button>DAFUQ</button>}/>
               <div className="inner-page__content">
                 <section className="user-card">
                   <h1 className="visually-hidden">Карточка пользователя</h1>

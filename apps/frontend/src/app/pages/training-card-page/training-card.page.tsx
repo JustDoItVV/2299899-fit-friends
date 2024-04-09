@@ -3,8 +3,8 @@ import { Helmet } from 'react-helmet-async';
 import { useParams } from 'react-router-dom';
 
 import {
-    createReview, fetchReviews, fetchTraining, fetchUserAction, fetchUserAvatar, selectReviews,
-    selectTraining, useAppDispatch, useAppSelector, useFetchFileUrl
+    fetchReviews, fetchTraining, fetchUserAction, fetchUserAvatar, selectReviews, selectTraining,
+    useAppDispatch, useAppSelector, useFetchFileUrl
 } from '@2299899-fit-friends/frontend-core';
 import { FrontendRoute, User } from '@2299899-fit-friends/types';
 import { unwrapResult } from '@reduxjs/toolkit';
@@ -12,6 +12,7 @@ import { unwrapResult } from '@reduxjs/toolkit';
 import AsideLeftBlock from '../../components/aside-left-block/aside-left-block';
 import CardReview from '../../components/cards/card-review/card-review';
 import Header from '../../components/header/header';
+import PopupReview from '../../components/popups/popup-review/popup-review';
 
 export default function TrainingCardPage(): JSX.Element {
   const { id } = useParams();
@@ -47,15 +48,6 @@ export default function TrainingCardPage(): JSX.Element {
     fetch();
   }, [dispatch, training]);
 
-  const handleLeaveReviewButtonClick = () => {
-    if (id) {
-      dispatch(createReview({ id, data: {
-        rating: Math.round(Math.random() * 5),
-        text: `dafuq dafuq dafuq dafuq dafuq dafuq dafuq dafuq dafuq dafuq dafuq dafuq dafuq dafuq dafuq dafuq dafuq dafuq dafuq dafuq dafuq dafuq `,
-      } }));
-    }
-  };
-
   useEffect(() => {
     setReviewsElements(reviews.map((review, index) => (
       <li className="reviews-side-bar__item" key={`review_item_${index}`}>
@@ -76,15 +68,16 @@ export default function TrainingCardPage(): JSX.Element {
               <AsideLeftBlock className='reviews-side-bar' backButtonPath={`/${FrontendRoute.Trainings}`}>
                 <h2 className="reviews-side-bar__title">Отзывы</h2>
                 <ul className="reviews-side-bar__list">
-                  {reviewsElements}
+                  {reviewsElements.length > 0 ? reviewsElements : 'Нет отзывов'}
                 </ul>
-                <button
-                  className="btn btn--medium reviews-side-bar__button"
-                  type="button"
-                  onClick={handleLeaveReviewButtonClick}
-                >
-                  Оставить отзыв
-                </button>
+                <PopupReview trainingId={id} children={
+                  <button
+                    className="btn btn--medium reviews-side-bar__button"
+                    type="button"
+                  >
+                    Оставить отзыв
+                  </button>
+                } />
               </AsideLeftBlock>
               <div className="training-card">
                 <div className="training-info">
