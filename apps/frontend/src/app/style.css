@@ -4085,7 +4085,7 @@ input:active + .custom-textarea__text {
 
 .training-info__input--rating input {
   max-width: 99px;
-  padding: 28px 31px 28px 55px;
+  padding: 28px 3px 28px 55px;
   font-weight: 500;
   font-size: 18px;
   line-height: 18px;
