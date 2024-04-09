@@ -2,13 +2,13 @@ import { debounce } from 'lodash';
 import { ChangeEvent, useCallback, useMemo, useRef } from 'react';
 
 import {
-    CaloriesTargetLimit, DEBOUNCE_THRESHOLD, PriceLimit, RatingLimit
+    CaloriesTargetLimit, DEBOUNCE_THRESHOLD, METRO_STATIONS, PriceLimit, RatingLimit
 } from '@2299899-fit-friends/consts';
 import { redirectToRoute, useAppDispatch } from '@2299899-fit-friends/frontend-core';
 import { isEmptyObject } from '@2299899-fit-friends/helpers';
 import {
-    FrontendRoute, QueryPagination, SortDirection, TrainingDuration, TrainingSortOption,
-    TrainingType
+    FrontendRoute, QueryPagination, SortDirection, TrainingDuration, TrainingLevel,
+    TrainingSortOption, TrainingType
 } from '@2299899-fit-friends/types';
 
 import MultiRangeSlider, {
@@ -37,7 +37,9 @@ export default function FormFilterSortCatalog(props: FormFilterSortCatalogProps)
   const caloriesMinInputRef = useRef<HTMLInputElement | null>(null);
   const caloriesMaxInputRef = useRef<HTMLInputElement | null>(null);
   const sliderCaloriesRef = useRef<MultiRangeSliderHandles | null>(null);
+  const locationRef = useRef<string[]>([]);
   const typeRef = useRef<string[]>([]);
+  const specializationRef = useRef<string[]>([]);
   const durationRef = useRef<string[]>([]);
 
   const debouncedSetQueryParams = useMemo(() =>
@@ -133,6 +135,19 @@ export default function FormFilterSortCatalog(props: FormFilterSortCatalogProps)
     debouncedSetQueryParams({ ratingMax: value.toString() });
   }, [debouncedSetQueryParams]);
 
+  const handleLocationInputChange = (evt: ChangeEvent<HTMLInputElement>) => {
+    const value = evt.currentTarget.value;
+    const index = locationRef.current.indexOf(value);
+
+    if (evt.currentTarget.checked) {
+      locationRef.current.push(value);
+    } else if (index !== -1) {
+      locationRef.current.splice(index, 1);
+    }
+
+    debouncedSetQueryParams({ location: locationRef.current });
+  };
+
   const handleTypeInputChange = (evt: ChangeEvent<HTMLInputElement>) => {
     const value = evt.currentTarget.value;
     const index = typeRef.current.indexOf(value);
@@ -144,6 +159,23 @@ export default function FormFilterSortCatalog(props: FormFilterSortCatalogProps)
     }
 
     debouncedSetQueryParams({ type: typeRef.current });
+  };
+
+  const handleSpecializationInputChange = (evt: ChangeEvent<HTMLInputElement>) => {
+    const value = evt.currentTarget.value;
+    const index = specializationRef.current.indexOf(value);
+
+    if (evt.currentTarget.checked) {
+      specializationRef.current.push(value);
+    } else if (index !== -1) {
+      specializationRef.current.splice(index, 1);
+    }
+
+    debouncedSetQueryParams({ specialization: specializationRef.current });
+  };
+
+  const handleLevelInputChange = (evt: ChangeEvent<HTMLInputElement>) => {
+    debouncedSetQueryParams({ level: evt.currentTarget.value });
   };
 
   const handleDurationInputChange = (evt: ChangeEvent<HTMLInputElement>) => {
@@ -176,6 +208,10 @@ export default function FormFilterSortCatalog(props: FormFilterSortCatalogProps)
     debouncedSetQueryParams(queryOptions);
   };
 
+  const handleSortRoleChange = (evt: ChangeEvent<HTMLInputElement>) => {
+    debouncedSetQueryParams({ sortOption: 'role', sortDirection: evt.currentTarget.value });
+  };
+
   const durationFilterElements = Object.values(TrainingDuration).map((duration, index) => (
     <li className={`${classNamePrefix}-form__check-list-item`} key={`duration_filter_${index}`}>
       <div className="custom-toggle custom-toggle--checkbox">
@@ -199,6 +235,27 @@ export default function FormFilterSortCatalog(props: FormFilterSortCatalogProps)
     </li>
   ));
 
+  const locationElements = METRO_STATIONS.map((location, index) => (
+    <li className={`${classNamePrefix}-form__check-list-item`} key={`filter_location_${index}`}>
+      <div className="custom-toggle custom-toggle--checkbox">
+        <label>
+          <input
+            type="checkbox"
+            value={location}
+            name="user-agreement"
+            onChange={handleLocationInputChange}
+          />
+          <span className="custom-toggle__icon">
+            <svg width={9} height={6} aria-hidden="true">
+              <use xlinkHref="#arrow-check" />
+            </svg>
+          </span>
+          <span className="custom-toggle__label">{location}</span>
+        </label>
+      </div>
+    </li>
+  ));
+
   const typeFilterElements = Object.values(TrainingType).map((type, index) => (
     <li className={`${classNamePrefix}__check-list-item`} key={`type_filter_${index}`}>
       <div className="custom-toggle custom-toggle--checkbox">
@@ -215,11 +272,51 @@ export default function FormFilterSortCatalog(props: FormFilterSortCatalogProps)
             </svg>
           </span>
           <span className="custom-toggle__label">
-            {type}
+            {type.charAt(0).toLocaleUpperCase() + type.slice(1)}
           </span>
         </label>
       </div>
     </li>
+  ));
+
+  const specializationFilterElements = Object.values(TrainingType).map((specialization, index) => (
+    <li className={`${classNamePrefix}__check-list-item`} key={`type_filter_${index}`}>
+      <div className="custom-toggle custom-toggle--checkbox">
+        <label>
+          <input
+            type="checkbox"
+            value={specialization}
+            name="spezialization"
+            onChange={handleSpecializationInputChange}
+          />
+          <span className="custom-toggle__icon">
+            <svg width={9} height={6} aria-hidden="true">
+              <use xlinkHref="#arrow-check" />
+            </svg>
+          </span>
+          <span className="custom-toggle__label">
+            {specialization.charAt(0).toLocaleUpperCase() + specialization.slice(1)}
+          </span>
+        </label>
+      </div>
+    </li>
+  ));
+
+  const levelElements = Object.values(TrainingLevel).map((level, index) => (
+    <div className="custom-toggle-radio__block" key={`filter_level_${index}`}>
+      <label>
+        <input
+          type="radio"
+          name="user-agreement"
+          value={level}
+          onChange={handleLevelInputChange}
+        />
+        <span className="custom-toggle-radio__icon" />
+        <span className="custom-toggle-radio__label">
+          {level.charAt(0).toLocaleUpperCase() + level.slice(1)}
+        </span>
+      </label>
+    </div>
   ));
 
   return (
@@ -335,6 +432,31 @@ export default function FormFilterSortCatalog(props: FormFilterSortCatalogProps)
             </div>
           }
           {
+            Object.prototype.hasOwnProperty.call(filters, 'location') &&
+            <div className={`${classNamePrefix}-form__block ${classNamePrefix}-form__block--location`}>
+              <h4 className={`${classNamePrefix}-form__block-title`}>
+                Локация, станция метро
+              </h4>
+              <ul className={`${classNamePrefix}-form__check-list`}>
+                {locationElements}
+              </ul>
+              <button
+                className={`btn-show-more ${classNamePrefix}-form__btn-show`}
+                type="button"
+              >
+                <span>Посмотреть все</span>
+                <svg
+                  className="btn-show-more__icon"
+                  width={10}
+                  height={4}
+                  aria-hidden="true"
+                >
+                  <use xlinkHref="#arrow-down" />
+                </svg>
+              </button>
+            </div>
+          }
+          {
             Object.prototype.hasOwnProperty.call(filters, 'type') &&
             <div className={`${classNamePrefix}-form__block ${classNamePrefix}-form__block--type`}>
               <h4 className={`${classNamePrefix}-form__block-title`}>
@@ -343,6 +465,28 @@ export default function FormFilterSortCatalog(props: FormFilterSortCatalogProps)
               <ul className={`${classNamePrefix}-form__check-list`}>
                 {typeFilterElements}
               </ul>
+            </div>
+          }
+          {
+            Object.prototype.hasOwnProperty.call(filters, 'specialization') &&
+            <div className={`${classNamePrefix}-form__block ${classNamePrefix}-form__block--spezialization`}>
+              <h4 className={`${classNamePrefix}-form__block-title`}>
+                Тип
+              </h4>
+              <ul className={`${classNamePrefix}-form__check-list`}>
+                {specializationFilterElements}
+              </ul>
+            </div>
+          }
+          {
+            Object.prototype.hasOwnProperty.call(filters, 'level') &&
+            <div className={`${classNamePrefix}-form__block ${classNamePrefix}-form__block--level`}>
+              <h4 className={`${classNamePrefix}-form__block-title`}>
+                Ваш уровень
+              </h4>
+              <div className="custom-toggle-radio">
+                {levelElements}
+              </div>
             </div>
           }
           {
@@ -376,6 +520,33 @@ export default function FormFilterSortCatalog(props: FormFilterSortCatalogProps)
                   <label>
                     <input type="radio" name="sort" value='free' onChange={handleSortPriceChange} />
                     <span className="btn-radio-sort__label">Бесплатные</span>
+                  </label>
+                </div>
+              }
+              {
+                Object.prototype.hasOwnProperty.call(sorters, 'role') &&
+                <div className="btn-radio-sort">
+                  <label>
+                    <input
+                      type="radio"
+                      name="sort"
+                      value={SortDirection.Desc}
+                      onChange={handleSortRoleChange}
+                    />
+                    <span className="btn-radio-sort__label">
+                      Тренеры
+                    </span>
+                  </label>
+                  <label>
+                    <input
+                      type="radio"
+                      name="sort"
+                      value={SortDirection.Asc}
+                      onChange={handleSortRoleChange}
+                    />
+                    <span className="btn-radio-sort__label">
+                      Пользователи
+                    </span>
                   </label>
                 </div>
               }
