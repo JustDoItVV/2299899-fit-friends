@@ -6,11 +6,11 @@ import { FrontendRoute, QueryPagination } from '@2299899-fit-friends/types';
 
 import CardTraining from '../../components/cards/card-training/card-training';
 import ExpandingCatalog from '../../components/expanding-catalog/expanding-catalog';
+import FormFilterSortCatalog from '../../components/forms/form-filter-sort-catalog/form-filter-sort-catalog';
 import Header from '../../components/header/header';
-import TrainingsQueryForm from '../../components/trainings-query-form/trainings-query-form';
 
 export default function AccountTrainingsPage(): JSX.Element {
-  const [queryParams, setQueryParams] = useState<QueryPagination>({ page: 1, limit: 3 });
+  const [query, setQuery] = useState<QueryPagination>({ page: 1, limit: 3 });
 
   return (
     <div className="wrapper">
@@ -21,14 +21,24 @@ export default function AccountTrainingsPage(): JSX.Element {
           <div className="container">
             <div className="inner-page__wrapper">
               <h1 className="visually-hidden">Мои тренировки</h1>
-              <TrainingsQueryForm setQueryParams={setQueryParams} />
+              <FormFilterSortCatalog
+                classNamePrefix='my-training'
+                filters={{
+                  price: true,
+                  calories: true,
+                  rating: true,
+                  duration: true,
+                }}
+                sorters={{}}
+                setQuery={setQuery}
+              />
               <div className="inner-page__content">
                 <div className="my-trainings">
                   <ExpandingCatalog
                     fetch={fetchTrainerCatalog}
                     component={CardTraining}
-                    classNameList='my-trainings__list'
-                    queryParams={queryParams}
+                    classNamePrefix='my-trainings'
+                    query={query}
                   />
                 </div>
               </div>
