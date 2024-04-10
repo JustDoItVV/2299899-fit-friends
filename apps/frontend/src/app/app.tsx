@@ -39,6 +39,11 @@ export default function App() {
         <Route path={FrontendRoute.Questionnaire} element={<AuthorizedRoute children={
           <QuestionnairePage />
         } />} />
+        <Route path={FrontendRoute.Main} element={<AuthorizedRoute children={
+          <RoleRoute role={UserRole.User} redirect={`/${FrontendRoute.Account}`} children={
+            <MainPage />
+          } />
+        } />} />
         <Route path={FrontendRoute.Account}>
           <Route path={''} element={<AuthorizedRoute children={
             <AccountPage />
@@ -67,25 +72,24 @@ export default function App() {
             } />
           } />} />
         </Route>
-        <Route path={FrontendRoute.Main} element={<AuthorizedRoute children={
-          <RoleRoute role={UserRole.User} redirect={`/${FrontendRoute.Account}`} children={
-            <MainPage />
-          } />
-        } />} />
-        <Route path={FrontendRoute.Trainings} element={<AuthorizedRoute children={
-          <RoleRoute role={UserRole.User} children={
-            <TrainingsPage />
-          } />
-        } />} />
-        <Route path={FrontendRoute.Users} element={<AuthorizedRoute children={
-          <UsersPage />
-        } />} />
-        <Route path={FrontendRoute.UserCard} element={<AuthorizedRoute children={
-          <UserCardPage />
-        } />} />
-        <Route path={FrontendRoute.TrainingCard} element={<AuthorizedRoute children={
-          <TrainingCardPage />
-        } />} />
+        <Route path={FrontendRoute.Trainings}>
+          <Route path='' element={<AuthorizedRoute children={
+            <RoleRoute role={UserRole.User} children={
+              <TrainingsPage />
+            } />
+          } />} />
+          <Route path=':id' element={<AuthorizedRoute children={
+            <TrainingCardPage />
+          } />} />
+        </Route>
+        <Route path={FrontendRoute.Users}>
+          <Route path='' element={<AuthorizedRoute children={
+            <UsersPage />
+          } />} />
+          <Route path=':id' element={<AuthorizedRoute children={
+            <UserCardPage />
+          } />} />
+        </Route>
         <Route path='*' element={<NotFoundPage />} />
       </Routes>
     </HelmetProvider>

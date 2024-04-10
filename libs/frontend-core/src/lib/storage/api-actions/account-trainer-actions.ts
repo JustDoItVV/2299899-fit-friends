@@ -8,7 +8,7 @@ import {
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
 import { redirectToRoute } from '../actions/redirect-to-route';
-import { setResponseError } from '../reducers/user-process/user-process.slice';
+import { setResponseError } from '../reducers/app-process/app-process.slice';
 import { AppDispatch } from '../types/app-dispatch.type';
 import { State } from '../types/state.type';
 
@@ -50,11 +50,24 @@ export const fetchTrainingBackgroundPicture = createAsyncThunk<
   string,
   FetchFileParams,
   { dispatch: AppDispatch; state: State; extra: AxiosInstance }
->('user/fetchTrainingBackgroundPicture', async ({ id }, { extra: api }) => {
+>('accountTrainer/fetchTrainingBackgroundPicture', async ({ id }, { extra: api }) => {
   const { data: pictureUrl } = await api.get<string>(
     `${ApiRoute.Training}/${id}${ApiRoute.BackgroundPicture}`,
   );
   return pictureUrl;
+});
+
+export const fetchTrainingVideo = createAsyncThunk<
+  string,
+  FetchFileParams,
+  { dispatch: AppDispatch; state: State; extra: AxiosInstance }
+>('accountTrainer/fetchTrainingVideo', async ({ id }, { extra: api }) => {
+  const { data } = await api.get<Blob>(
+    `${ApiRoute.Training}/${id}${ApiRoute.Video}`,
+    { responseType: 'blob'}
+  );
+  const dataUrl = URL.createObjectURL(data);
+  return dataUrl;
 });
 
 export const fetchTrainerFriends = createAsyncThunk<
@@ -92,3 +105,36 @@ export const fetchCertificate = createAsyncThunk<
   const dataUrl = URL.createObjectURL(data);
   return dataUrl;
 });
+
+export const fetchTraining = createAsyncThunk<
+  Training,
+  string,
+  { dispatch: AppDispatch; state: State; extra: AxiosInstance }
+>('accountTrainer/fetchTraining', async (id, { extra: api }) => {
+  const { data } = await api.get<Training>(`${ApiRoute.Training}/${id}`);
+  return data;
+});
+
+export const updateTraining = createAsyncThunk<
+  Training,
+  { id: string; data: FormData },
+  { dispatch: AppDispatch; state: State; extra: AxiosInstance }
+>('accountTrainer/updateTraining', async ({ id, data }, { dispatch, extra: api, rejectWithValue }) => {
+    try {
+      const { data: training } = await api.patch<Training>(
+        `${ApiRoute.Training}/${id}`,
+        data
+      );
+      console.log(data, training);
+      dispatch(setResponseError(null));
+      return training;
+    } catch (error) {
+      if (!error.response) {
+        throw new Error(error);
+      }
+
+      dispatch(setResponseError(error.response.data));
+      return rejectWithValue(error.response.data);
+    }
+  }
+);

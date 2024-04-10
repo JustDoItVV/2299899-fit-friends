@@ -48,7 +48,13 @@ export class UserRepository extends BasePostgresRepository<UserEntity, User> {
     }
 
     const where: Prisma.UserWhereInput = {};
-    where.location = query.location ? query.location : undefined;
+    if (query.location) {
+      if (Array.isArray(query.location)) {
+        where.location = { in: query.location };
+      } else {
+        where.location = query.location;
+      }
+    }
     if (query.specialization) {
       if (Array.isArray(query.specialization)) {
         where.trainingType = { hasEvery: query.specialization };
@@ -61,12 +67,13 @@ export class UserRepository extends BasePostgresRepository<UserEntity, User> {
       where.isReadyToTraining = query.isReadyToTraining;
     }
 
-    const orderBy: Prisma.UserOrderByWithRelationAndSearchRelevanceInput = {};
+    const orderBy: Prisma.UserOrderByWithRelationAndSearchRelevanceInput[] = [{}];
     if (query.sortOption === UserSortOption.CreatedAt) {
-      orderBy.createdAt = query.sortDirection;
+      orderBy.push({ createdAt: query.sortDirection });
     } else if (query.sortOption === UserSortOption.Role) {
-      orderBy.role = query.sortDirection;
+      orderBy.push({ role: query.sortDirection });
     }
+    orderBy.push({ id: query.sortDirection });
 
     const usersCount = await this.getUsersCount(where);
     const totalPages = this.calculatePage(usersCount, limit);

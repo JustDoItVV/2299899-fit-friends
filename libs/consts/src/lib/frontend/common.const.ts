@@ -54,4 +54,5 @@ export const DISCOUNT = 0.1;
 
 export const FormQueryParams = {
   TrainingsCatalogLimit: 12,
+  UsersCatalogLimit: 12,
 } as const;

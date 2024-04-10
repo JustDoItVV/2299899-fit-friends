@@ -1,5 +1,5 @@
-import { DefaultPagination } from '@2299899-fit-friends/consts';
 import { BasePostgresRepository } from '@2299899-fit-friends/backend-core';
+import { DefaultPagination } from '@2299899-fit-friends/consts';
 import { PaginationQuery } from '@2299899-fit-friends/dtos';
 import { PrismaClientService } from '@2299899-fit-friends/models';
 import { Pagination, Review, SortOption } from '@2299899-fit-friends/types';

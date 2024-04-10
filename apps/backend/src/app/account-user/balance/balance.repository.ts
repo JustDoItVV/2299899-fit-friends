@@ -1,6 +1,6 @@
-import { DefaultPagination } from '@2299899-fit-friends/consts';
 import { BasePostgresRepository } from '@2299899-fit-friends/backend-core';
-import { PaginationQuery } from '@2299899-fit-friends/dtos';
+import { DefaultPagination } from '@2299899-fit-friends/consts';
+import { BalancePaginationQuery } from '@2299899-fit-friends/dtos';
 import { PrismaClientService } from '@2299899-fit-friends/models';
 import { Balance, Pagination, SortOption } from '@2299899-fit-friends/types';
 import { Injectable } from '@nestjs/common';
@@ -41,7 +41,7 @@ export class BalanceRepository extends BasePostgresRepository<
   }
 
   public async find(
-    query: PaginationQuery,
+    query: BalancePaginationQuery,
     userId?: string
   ): Promise<Pagination<BalanceEntity>> {
     let limit = query.limit;
@@ -55,12 +55,15 @@ export class BalanceRepository extends BasePostgresRepository<
     if (userId) {
       where.userId = userId;
     }
-
-    const orderBy: Prisma.BalanceOrderByWithRelationAndSearchRelevanceInput =
-      {};
-    if (query.sortOption === SortOption.CreatedAt) {
-      orderBy.createdAt = query.sortDirection;
+    if (query.trainingId) {
+      where.trainingId = query.trainingId;
     }
+
+    const orderBy: Prisma.BalanceOrderByWithRelationAndSearchRelevanceInput[] = [{}];
+    if (query.sortOption === SortOption.CreatedAt) {
+      orderBy.push({ createdAt: query.sortDirection });
+    }
+    orderBy.push({ id: query.sortDirection });
 
     const documentsCount = await this.getbalancesCount(where);
     const totalPages = this.calculatePage(documentsCount, limit);

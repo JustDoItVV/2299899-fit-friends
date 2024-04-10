@@ -2,13 +2,17 @@ import { MailConfig } from '@2299899-fit-friends/config';
 import {
     BALANCE_AVAILABLE_MIN, EmailSubject, EmailTemplate, TrainingErrorMessage
 } from '@2299899-fit-friends/consts';
-import { BalanceRdo, PaginationQuery, UpdateBalanceDto, UserRdo } from '@2299899-fit-friends/dtos';
+import {
+    BalancePaginationQuery, BalanceRdo, PaginationQuery, UpdateBalanceDto, UserRdo
+} from '@2299899-fit-friends/dtos';
 import { fillDto } from '@2299899-fit-friends/helpers';
-import { Pagination } from '@2299899-fit-friends/types';
+import { OrderType, Pagination } from '@2299899-fit-friends/types';
 import { MailerService } from '@nestjs-modules/mailer';
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 
+import { OrderEntity } from '../account-trainer/order/order.entity';
+import { OrderRepository } from '../account-trainer/order/order.repository';
 import { MailNotificationRepository } from '../mail-notification/mail-notification.repository';
 import { TrainingRepository } from '../training/training.repository';
 import { UserRepository } from '../user/user.repository';
@@ -21,6 +25,7 @@ export class AccountUserService {
     private readonly userRepository: UserRepository,
     private readonly trainingRepository: TrainingRepository,
     private readonly balanceRepository: BalanceRepository,
+    private readonly orderRepository: OrderRepository,
     private readonly mailNotificationRepository: MailNotificationRepository,
     private readonly mailerService: MailerService,
     @Inject(MailConfig.KEY) private readonly mailConfig: ConfigType<typeof MailConfig>,
@@ -35,7 +40,7 @@ export class AccountUserService {
     return paginationResult;
   }
 
-  public async getBalance(query: PaginationQuery, userId: string): Promise<Pagination<BalanceRdo>> {
+  public async getBalance(query: BalancePaginationQuery, userId: string): Promise<Pagination<BalanceRdo>> {
     const pagination = await this.balanceRepository.find(query, userId);
     const paginationResult = {
       ...pagination,
@@ -70,6 +75,18 @@ export class AccountUserService {
 
     if (!hasChanges) {
       return balanceRecord;
+    }
+
+    if (dto.paymentMethod) {
+      await this.orderRepository.save(new OrderEntity().populate({
+        type: OrderType.Subscription,
+        trainingId: training.id,
+        price: training.price,
+        amount: dto.available,
+        paymentMethod: dto.paymentMethod,
+        orderSum: training.price * dto.available,
+        training,
+      }));
     }
 
     return await this.balanceRepository.update(balanceRecord.id, balanceRecord);

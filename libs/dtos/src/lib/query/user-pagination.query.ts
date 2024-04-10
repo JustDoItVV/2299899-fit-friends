@@ -11,9 +11,9 @@ import { PaginationQuery } from './pagination.query';
 
 export class UserPaginationQuery extends PaginationQuery {
   @ApiPropertyOptional({ description: 'Локация, станция метро', type: String })
-  @IsIn(METRO_STATIONS)
+  @IsIn(METRO_STATIONS, { each: true })
   @IsOptional()
-  public location?: string;
+  public location?: string | string[];
 
   @ApiPropertyOptional({ description: 'Тип тренировок', type: Array })
   @IsEnum(TrainingType, { each: true })

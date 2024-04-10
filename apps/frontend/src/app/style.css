@@ -4085,7 +4085,7 @@ input:active + .custom-textarea__text {
 
 .training-info__input--rating input {
   max-width: 99px;
-  padding: 28px 31px 28px 55px;
+  padding: 28px 3px 28px 55px;
   font-weight: 500;
   font-size: 18px;
   line-height: 18px;
@@ -4269,7 +4269,7 @@ input:active + .custom-textarea__text {
 }
 
 .training-video--stop .training-video__button--start {
-  display: none;
+  display: block;
 }
 
 .training-video--stop .training-video__button--stop {
@@ -4277,7 +4277,7 @@ input:active + .custom-textarea__text {
 }
 
 .training-video--load .training-video__video {
-  display: none;
+  display: block;
 }
 
 .training-video--load .training-video__drop-files {
@@ -4403,7 +4403,7 @@ input:active + .custom-textarea__text {
 }
 
 .training-video__button--stop {
-  display: none;
+  display: block;
 }
 
 .training-video__drop-files {
@@ -4439,7 +4439,7 @@ input:active + .custom-textarea__text {
 }
 
 .training-video__edit-buttons {
-  display: none;
+  display: block;
   -ms-grid-columns: 256px 256px;
   grid-template-columns: 256px 256px;
   -webkit-column-gap: 30px;
