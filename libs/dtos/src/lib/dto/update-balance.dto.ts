@@ -1,4 +1,4 @@
-import { IsEnum, IsNotEmpty, IsNumber, IsUUID, Min } from 'class-validator';
+import { IsEnum, IsNotEmpty, IsNumber, IsOptional, IsUUID, Min } from 'class-validator';
 
 import { BALANCE_AVAILABLE_MIN } from '@2299899-fit-friends/consts';
 import { OrderPaymentMethod } from '@2299899-fit-friends/types';
@@ -17,5 +17,6 @@ export class UpdateBalanceDto {
 
   @ApiProperty({ description: 'Метод оплаты для обновления списка заказов тренера' })
   @IsEnum(OrderPaymentMethod)
-  public paymentMethod: OrderPaymentMethod;
+  @IsOptional()
+  public paymentMethod?: OrderPaymentMethod;
 }

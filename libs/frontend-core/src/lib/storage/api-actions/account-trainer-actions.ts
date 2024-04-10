@@ -50,11 +50,24 @@ export const fetchTrainingBackgroundPicture = createAsyncThunk<
   string,
   FetchFileParams,
   { dispatch: AppDispatch; state: State; extra: AxiosInstance }
->('user/fetchTrainingBackgroundPicture', async ({ id }, { extra: api }) => {
+>('accountTrainer/fetchTrainingBackgroundPicture', async ({ id }, { extra: api }) => {
   const { data: pictureUrl } = await api.get<string>(
     `${ApiRoute.Training}/${id}${ApiRoute.BackgroundPicture}`,
   );
   return pictureUrl;
+});
+
+export const fetchTrainingVideo = createAsyncThunk<
+  string,
+  FetchFileParams,
+  { dispatch: AppDispatch; state: State; extra: AxiosInstance }
+>('accountTrainer/fetchTrainingVideo', async ({ id }, { extra: api }) => {
+  const { data } = await api.get<Blob>(
+    `${ApiRoute.Training}/${id}${ApiRoute.Video}`,
+    { responseType: 'blob'}
+  );
+  const dataUrl = URL.createObjectURL(data);
+  return dataUrl;
 });
 
 export const fetchTrainerFriends = createAsyncThunk<

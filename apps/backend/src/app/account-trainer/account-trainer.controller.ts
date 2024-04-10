@@ -41,7 +41,6 @@ export class AccountTrainerController {
     @UserParam() payload: TokenPayload,
     @Query() query: TrainingPaginationQuery
   ) {
-    console.log(query);
     const result = await this.trainingService.getByQuery(query, payload.userId);
     return fillDto(PaginationRdo<TrainingRdo>, result);
   }

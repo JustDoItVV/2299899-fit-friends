@@ -2,25 +2,14 @@ import { randomUUID } from 'node:crypto';
 import { copyFileSync, existsSync, mkdirSync } from 'node:fs';
 import { join } from 'node:path';
 
-import {
-  MockTrainingBackgroundPicture,
-  TrainingErrorMessage,
-} from '@2299899-fit-friends/consts';
 import { FilesPayload } from '@2299899-fit-friends/backend-core';
+import { MockTrainingBackgroundPicture, TrainingErrorMessage } from '@2299899-fit-friends/consts';
 import {
-  CreateTrainingDto,
-  TrainingPaginationQuery,
-  TrainingRdo,
-  UpdateTrainingDto,
+    CreateTrainingDto, TrainingPaginationQuery, TrainingRdo, UpdateTrainingDto
 } from '@2299899-fit-friends/dtos';
 import { fillDto } from '@2299899-fit-friends/helpers';
 import { Pagination, TokenPayload } from '@2299899-fit-friends/types';
-import {
-  ForbiddenException,
-  Injectable,
-  NotFoundException,
-  StreamableFile,
-} from '@nestjs/common';
+import { ForbiddenException, Injectable, NotFoundException, StreamableFile } from '@nestjs/common';
 
 import { MailNotificataionEntity } from '../mail-notification/mail-notification.entity';
 import { MailNotificationRepository } from '../mail-notification/mail-notification.repository';

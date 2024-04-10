@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
+import ReactPlayer from 'react-player/lazy';
 import { useParams } from 'react-router-dom';
 
 import {
-    fetchBalanceCatalog, fetchReviews, fetchTraining, fetchUserAction, fetchUserAvatar,
-    selectBalance, selectReviews, selectTraining, useAppDispatch, useAppSelector, useFetchFileUrl
+    fetchBalanceCatalog, fetchReviews, fetchTraining, fetchTrainingBackgroundPicture,
+    fetchTrainingVideo, fetchUserAction, fetchUserAvatar, selectBalance, selectReviews,
+    selectTraining, updateBalance, useAppDispatch, useAppSelector, useFetchFileUrl
 } from '@2299899-fit-friends/frontend-core';
 import { FrontendRoute, User } from '@2299899-fit-friends/types';
 import { unwrapResult } from '@reduxjs/toolkit';
@@ -24,6 +26,9 @@ export default function TrainingCardPage(): JSX.Element {
   const [reviewsElements, setReviewsElements] = useState<JSX.Element[]>([]);
   const [trainer, setTrainer] = useState<User | null>(null);
   const avatarUrl = useFetchFileUrl(fetchUserAvatar, { id: training?.userId }, 'img/content/placeholder.png', [trainer]);
+  const videoUrl = useFetchFileUrl(fetchTrainingVideo, { id: training?.id }, 'img/content/placeholder.png', [training]);
+  const thumbnailUrl = useFetchFileUrl(fetchTrainingBackgroundPicture, { id: training?.id }, 'img/content/placeholder.png', [training]);
+  const [isTrainingActive, setIsTrainingActive] = useState<boolean>(false);
 
   useEffect(() => {
     if (id) {
@@ -58,6 +63,31 @@ export default function TrainingCardPage(): JSX.Element {
       </li>
     )));
   }, [reviews]);
+
+  const handleStartTrainingButtonClick = () => {
+    if (training?.id) {
+      dispatch(updateBalance({ trainingId: training.id, available: balance.available - 1 }));
+      setIsTrainingActive(true);
+    }
+  };
+
+  const handleStopTrainingButtonClick = () => {
+    setIsTrainingActive(false);
+  };
+
+  const videoPreviewElement = (
+    <picture>
+      <img src={thumbnailUrl} alt='videoPreview'/>
+      <button
+        className="training-video__play-button btn-reset"
+        disabled={!isTrainingActive}
+      >
+        <svg width={18} height={30} aria-hidden="true">
+          <use xlinkHref="#icon-arrow" />
+        </svg>
+      </button>
+    </picture>
+  );
 
   return (
     <div className="wrapper">
@@ -209,40 +239,38 @@ export default function TrainingCardPage(): JSX.Element {
                   <h2 className="training-video__title">Видео</h2>
                   <div className="training-video__video">
                     <div className="training-video__thumbnail">
-                      <picture>
-                        <source
-                          type="image/webp"
-                          srcSet="img/content/training-video/video-thumbnail.webp, img/content/training-video/video-thumbnail@2x.webp 2x"
-                        />
-                        <img
-                          src="img/content/training-video/video-thumbnail.png"
-                          srcSet="img/content/training-video/video-thumbnail@2x.png 2x"
-                          width={922}
-                          height={566}
-                          alt="Обложка видео"
-                        />
-                      </picture>
+                      <ReactPlayer
+                        url={videoUrl}
+                        controls={isTrainingActive}
+                        light={true}
+                        width='100%'
+                        height='100%'
+                        playIcon={videoPreviewElement}
+                        onEnded={handleStopTrainingButtonClick}
+                      />
                     </div>
-                    <button className="training-video__play-button btn-reset">
-                      <svg width={18} height={30} aria-hidden="true">
-                        <use xlinkHref="#icon-arrow" />
-                      </svg>
-                    </button>
                   </div>
                   <div className="training-video__buttons-wrapper">
-                    <button
-                      className="btn training-video__button training-video__button--start"
-                      type="button"
-                      disabled={balance && !balance.available}
-                    >
-                      Приступить
-                    </button>
-                    <button
-                      className="btn training-video__button training-video__button--stop"
-                      type="button"
-                    >
-                      Закончить
-                    </button>
+                    {
+                      isTrainingActive
+                      ?
+                      <button
+                        className="btn training-video__button training-video__button--stop"
+                        type="button"
+                        onClick={handleStopTrainingButtonClick}
+                      >
+                        Закончить
+                      </button>
+                      :
+                      <button
+                        className="btn training-video__button training-video__button--start"
+                        type="button"
+                        disabled={balance && !balance.available}
+                        onClick={handleStartTrainingButtonClick}
+                      >
+                        Приступить
+                      </button>
+                    }
                   </div>
                 </div>
               </div>

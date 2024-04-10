@@ -4269,7 +4269,7 @@ input:active + .custom-textarea__text {
 }
 
 .training-video--stop .training-video__button--start {
-  display: none;
+  display: block;
 }
 
 .training-video--stop .training-video__button--stop {
@@ -4277,7 +4277,7 @@ input:active + .custom-textarea__text {
 }
 
 .training-video--load .training-video__video {
-  display: none;
+  display: block;
 }
 
 .training-video--load .training-video__drop-files {
@@ -4403,7 +4403,7 @@ input:active + .custom-textarea__text {
 }
 
 .training-video__button--stop {
-  display: none;
+  display: block;
 }
 
 .training-video__drop-files {

@@ -11,7 +11,7 @@ import { State } from '../types/state.type';
 
 export const updateBalance = createAsyncThunk<
   Balance,
-  Pick<Balance, 'trainingId' | 'available'> | { 'paymentMethod': string },
+  Pick<Balance, 'trainingId' | 'available'> | { paymentMethod?: string },
   { dispatch: AppDispatch; state: State; extra: AxiosInstance }
 >('accountUser/updateBalance', async (data, { extra: api }) => {
   const { data: balance } = await api.patch<Balance>(

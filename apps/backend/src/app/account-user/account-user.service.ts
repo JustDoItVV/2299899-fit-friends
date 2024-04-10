@@ -77,15 +77,18 @@ export class AccountUserService {
       return balanceRecord;
     }
 
-    await this.orderRepository.save(new OrderEntity().populate({
-      type: OrderType.Subscription,
-      trainingId: training.id,
-      price: training.price,
-      amount: dto.available,
-      paymentMethod: dto.paymentMethod,
-      orderSum: training.price * dto.available,
-      training,
-    }));
+    if (dto.paymentMethod) {
+      await this.orderRepository.save(new OrderEntity().populate({
+        type: OrderType.Subscription,
+        trainingId: training.id,
+        price: training.price,
+        amount: dto.available,
+        paymentMethod: dto.paymentMethod,
+        orderSum: training.price * dto.available,
+        training,
+      }));
+    }
+
     return await this.balanceRepository.update(balanceRecord.id, balanceRecord);
   }
 
