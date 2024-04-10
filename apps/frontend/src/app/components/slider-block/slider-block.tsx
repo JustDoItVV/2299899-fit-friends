@@ -4,7 +4,6 @@ import 'slick-carousel/slick/slick-theme.css';
 
 import classnames from 'classnames';
 import { MouseEvent, useEffect, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
 import Slider from 'react-slick';
 
 import { CardPlaceholderPreviewImage, SliderBlockItems } from '@2299899-fit-friends/consts';
@@ -16,12 +15,16 @@ import CardPlaceholder from '../cards/card-placeholder/card-placeholder';
 
 type SliderBlockProps = {
   fetch: AsyncThunk<Pagination<CatalogItem>, QueryPagination, Record<string, unknown>>,
-  component: React.ComponentType<{ item: CatalogItem, key?: string }>;
+  component: React.ComponentType<{
+    item: CatalogItem,
+    index?: number,
+    key?: string
+  }>;
   queryParams?: QueryPagination;
   title?: string;
   showTitle?: boolean;
   classNamePrefix?: string;
-  buttonAllPath?: string;
+  headerAdditionalElement?: JSX.Element;
   itemsPerPage?: number;
   itemsToScroll?: number;
   maxItems?: number;
@@ -35,10 +38,10 @@ type SliderBlockProps = {
 };
 
 export default function SliderBlock(props: SliderBlockProps): JSX.Element {
-  const { fetch, component: Card, title, maxItems, buttonAllPath, children } = props;
+  const { fetch, component: Card, title, maxItems, headerAdditionalElement, children } = props;
   const classNamePrefix = props.classNamePrefix ?? '';
   const itemsPerPage = props.itemsPerPage ?? SliderBlockItems.DefaultPerPage;
-  const itemsToScroll = props.itemsToScroll ?? SliderBlockItems.DefaultToSCroll;
+  const itemsToScroll = props.itemsToScroll ?? SliderBlockItems.DefaultToScroll;
   const preload = props.preload ?? false;
   const placeholderInfix = props.placeholderInfix ?? 'preview';
   const outlinedButtons = props.outlinedButtons ?? false;
@@ -118,18 +121,7 @@ export default function SliderBlock(props: SliderBlockProps): JSX.Element {
                 {title}
               </h2>
             }
-            {
-              buttonAllPath &&
-              <Link
-                className={`btn-flat ${classNamePrefix}__button ${outlinedButtons && 'btn-flat--light'}`}
-                to={buttonAllPath}
-              >
-                <span>Смотреть всё</span>
-                <svg width='14' height ='10' aria-hidden>
-                  <use xlinkHref='#arrow-right'></use>
-                </svg>
-              </Link>
-            }
+            { headerAdditionalElement }
             {
               controls &&
               <div className={`${classNamePrefix}__controls`}>

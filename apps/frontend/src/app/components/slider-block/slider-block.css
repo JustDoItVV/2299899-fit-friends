@@ -135,3 +135,8 @@
 .look-for-company .look-for-company__item {
   height: 235px;
 }
+
+/* Account trainer certificates */
+.personal-account-coach__list .slick-track {
+  background-color: #f2f2f2;
+}

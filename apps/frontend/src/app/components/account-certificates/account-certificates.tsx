@@ -4,6 +4,7 @@ import 'slick-carousel/slick/slick-theme.css';
 import { useRef } from 'react';
 import Slider from 'react-slick';
 
+import { SliderBlockItems } from '@2299899-fit-friends/consts';
 import { selectUser, useAppSelector } from '@2299899-fit-friends/frontend-core';
 
 import CardCertificate from '../cards/card-certificate/card-certificate';
@@ -11,17 +12,24 @@ import CardCertificate from '../cards/card-certificate/card-certificate';
 export default function AccountCertificates(): JSX.Element {
   const slickSliderRef = useRef<Slider | null>(null);
   const currentUser = useAppSelector(selectUser);
+  const currentItemRef = useRef<number>(0);
 
   const handleLeftButtonClick = () => {
-    slickSliderRef.current?.slickPrev();
+    if (currentItemRef.current > 0) {
+      currentItemRef.current++;
+      slickSliderRef.current?.slickPrev();
+    }
   };
 
   const handleRightButtonClick = () => {
-    slickSliderRef.current?.slickNext();
+    if (currentUser?.certificates && currentItemRef.current < currentUser?.certificates?.length - SliderBlockItems.AccountTrainerCertificatesVisible) {
+      currentItemRef.current--;
+      slickSliderRef.current?.slickNext();
+    }
   };
 
   const certificateCards = currentUser?.certificates?.map((path, index) =>
-    <CardCertificate item={currentUser} key={`certificate_card_${index}`} />
+    <CardCertificate item={currentUser} path={path} key={`certificate_card_${index}`} />
   );
 
   return (
@@ -45,6 +53,14 @@ export default function AccountCertificates(): JSX.Element {
             type="button"
             aria-label="previous"
             onClick={handleLeftButtonClick}
+            disabled={
+              !(
+              !!currentUser &&
+              !!currentUser?.certificates &&
+              !!currentUser?.certificates?.length &&
+              currentItemRef.current !== 0
+              )
+            }
           >
             <svg width={16} height={14} aria-hidden="true">
               <use xlinkHref="#arrow-left" />
@@ -55,6 +71,14 @@ export default function AccountCertificates(): JSX.Element {
             type="button"
             aria-label="next"
             onClick={handleRightButtonClick}
+            disabled={
+              !(
+              !!currentUser &&
+              !!currentUser?.certificates &&
+              !!currentUser?.certificates?.length &&
+              currentItemRef.current < currentUser?.certificates?.length - SliderBlockItems.AccountTrainerCertificatesVisible
+              )
+            }
           >
             <svg width={16} height={14} aria-hidden="true">
               <use xlinkHref="#arrow-right" />
@@ -65,9 +89,8 @@ export default function AccountCertificates(): JSX.Element {
         <Slider
           ref={slickSliderRef}
           className="personal-account-coach__list"
-          infinite
-          slidesToShow={3}
-          slidesToScroll={3}
+          slidesToShow={SliderBlockItems.AccountTrainerCertificatesVisible}
+          slidesToScroll={SliderBlockItems.DefaultToScroll}
         >
           {certificateCards}
         </Slider>

@@ -34,7 +34,7 @@ export const ResponseErrorMessage = new Map([
 
 export const SliderBlockItems = {
   DefaultPerPage: 1,
-  DefaultToSCroll: 1,
+  DefaultToScroll: 1,
   ForYouMax: 9,
   ForYouVisible: 3,
   SpecialMax: 3,
@@ -43,6 +43,7 @@ export const SliderBlockItems = {
   PopularMax: 8,
   SeekCompanyMax: 8,
   SeekCompanyVisible: 4,
+  AccountTrainerCertificatesVisible: 3,
 } as const;
 
 export enum CardPlaceholderPreviewImage {

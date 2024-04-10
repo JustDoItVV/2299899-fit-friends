@@ -11,11 +11,12 @@ pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/b
 
 type CardCertificateProps = {
   item: CatalogItem;
+  path: string;
 };
 
-export default memo(function CardCertificate({ item }: CardCertificateProps): JSX.Element {
+export default memo(function CardCertificate({ item, path }: CardCertificateProps): JSX.Element {
   const user = item as User;
-  const fileUrl = useFetchFileUrl(fetchCertificate, { id: user.id }, 'img/content/placeholder.png');
+  const fileUrl = useFetchFileUrl(fetchCertificate, { id: user.id, path }, 'img/content/placeholder.png');
   const [isEditing, setIsEditing] = useState<boolean>(false);
 
   const handleChangeButtonClick = () => {

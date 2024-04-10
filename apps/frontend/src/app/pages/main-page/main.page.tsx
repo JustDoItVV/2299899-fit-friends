@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom';
+
 import {
     CardPlaceholderPreviewImage, RatingLimit, SliderBlockItems
 } from '@2299899-fit-friends/consts';
@@ -69,7 +71,17 @@ export default function MainPage(): JSX.Element {
           maxItems={SliderBlockItems.PopularMax}
           preload={true}
           dots={false}
-          buttonAllPath={`/${FrontendRoute.Trainings}`}
+          headerAdditionalElement={
+            <Link
+              className={`btn-flat look-for-company__button`}
+              to={`/${FrontendRoute.Trainings}`}
+            >
+              <span>Смотреть всё</span>
+              <svg width='14' height ='10' aria-hidden>
+                <use xlinkHref='#arrow-right'></use>
+              </svg>
+            </Link>
+          }
         />
         <SLiderBlock
           title='Ишут компанию для тренировки'
@@ -84,7 +96,17 @@ export default function MainPage(): JSX.Element {
           preload={true}
           outlinedButtons={true}
           dots={false}
-          buttonAllPath={`/${FrontendRoute.Users}`}
+          headerAdditionalElement={
+            <Link
+              className={`btn-flat look-for-company__button btn-flat--light`}
+              to={`/${FrontendRoute.Users}`}
+            >
+              <span>Смотреть всё</span>
+              <svg width='14' height ='10' aria-hidden>
+                <use xlinkHref='#arrow-right'></use>
+              </svg>
+            </Link>
+          }
         />
       </main>
     </div>
