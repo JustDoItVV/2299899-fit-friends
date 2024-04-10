@@ -1,7 +1,7 @@
 import { Balance, NameSpace, Review, Training } from '@2299899-fit-friends/types';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import { fetchTraining } from '../../api-actions/account-trainer-actions';
+import { fetchTraining, updateTraining } from '../../api-actions/account-trainer-actions';
 import { fetchBalanceCatalog, updateBalance } from '../../api-actions/account-user-actions';
 import { createReview, fetchReviews } from '../../api-actions/reviews-actions';
 import { TrainingProcess } from '../../types/training-process.type';
@@ -48,6 +48,9 @@ export const trainingProcess = createSlice({
       })
       .addCase(fetchBalanceCatalog.fulfilled, (state, action) => {
         state.balance = action.payload.entities[0] ? action.payload.entities[0] as Balance : null;
+      })
+      .addCase(updateTraining.fulfilled, (state, action) => {
+        state.training = action.payload;
       })
       ;
   },

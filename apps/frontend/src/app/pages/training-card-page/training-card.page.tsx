@@ -1,14 +1,17 @@
-import { useEffect, useState } from 'react';
+import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import ReactPlayer from 'react-player/lazy';
 import { useParams } from 'react-router-dom';
 
+import { DISCOUNT, TrainingVideoAllowedExtensions } from '@2299899-fit-friends/consts';
 import {
     fetchBalanceCatalog, fetchReviews, fetchTraining, fetchTrainingBackgroundPicture,
-    fetchTrainingVideo, fetchUserAction, fetchUserAvatar, selectBalance, selectReviews,
-    selectTraining, updateBalance, useAppDispatch, useAppSelector, useFetchFileUrl
+    fetchTrainingVideo, fetchUserAction, fetchUserAvatar, selectBalance, selectCurrentUser,
+    selectResponseError, selectReviews, selectTraining, updateBalance, updateTraining,
+    useAppDispatch, useAppSelector, useFetchFileUrl
 } from '@2299899-fit-friends/frontend-core';
-import { FrontendRoute, User } from '@2299899-fit-friends/types';
+import { getResponseErrorMessage } from '@2299899-fit-friends/helpers';
+import { FrontendRoute, User, UserRole } from '@2299899-fit-friends/types';
 import { unwrapResult } from '@reduxjs/toolkit';
 
 import AsideLeftBlock from '../../components/aside-left-block/aside-left-block';
@@ -20,15 +23,26 @@ import PopupReview from '../../components/popups/popup-review/popup-review';
 export default function TrainingCardPage(): JSX.Element {
   const { id } = useParams();
   const dispatch = useAppDispatch();
+  const currentUser = useAppSelector(selectCurrentUser);
   const training = useAppSelector(selectTraining);
   const reviews = useAppSelector(selectReviews);
   const balance = useAppSelector(selectBalance);
+  const responseError = useAppSelector(selectResponseError);
   const [reviewsElements, setReviewsElements] = useState<JSX.Element[]>([]);
   const [trainer, setTrainer] = useState<User | null>(null);
   const avatarUrl = useFetchFileUrl(fetchUserAvatar, { id: training?.userId }, 'img/content/placeholder.png', [trainer]);
   const videoUrl = useFetchFileUrl(fetchTrainingVideo, { id: training?.id }, 'img/content/placeholder.png', [training]);
   const thumbnailUrl = useFetchFileUrl(fetchTrainingBackgroundPicture, { id: training?.id }, 'img/content/placeholder.png', [training]);
   const [isTrainingActive, setIsTrainingActive] = useState<boolean>(false);
+  const [isEditing, setIsEditing] = useState<boolean>(false);
+  const titleRef = useRef<string | null>(null);
+  const descriptionRef = useRef<string | null>(null);
+  const priceRef = useRef<string | null>(null);
+  const [isVideoUpdating, setIsVideoUpdating] = useState<boolean>(false);
+  const videoInputRef = useRef<HTMLInputElement | null>(null);
+  const [filename, setFilename] = useState<string>(`Загрузите сюда файлы формата ${
+    Object.keys(TrainingVideoAllowedExtensions).map(((extention) => extention.toLocaleUpperCase())).join(', ')
+  }`)
 
   useEffect(() => {
     if (id) {
@@ -64,6 +78,16 @@ export default function TrainingCardPage(): JSX.Element {
     )));
   }, [reviews]);
 
+  useEffect(() => {
+    if (responseError) {
+      setIsEditing(true);
+    } else {
+      titleRef.current = null;
+      descriptionRef.current = null;
+      priceRef.current = null;
+    }
+  }, [responseError])
+
   const handleStartTrainingButtonClick = () => {
     if (training?.id) {
       dispatch(updateBalance({ trainingId: training.id, available: balance.available - 1 }));
@@ -73,6 +97,68 @@ export default function TrainingCardPage(): JSX.Element {
 
   const handleStopTrainingButtonClick = () => {
     setIsTrainingActive(false);
+  };
+
+  const handleEditButtonClick = () => {
+    if (isEditing) {
+      setIsEditing(false);
+      setIsVideoUpdating(false);
+      if (id) {
+        const formData = new FormData();
+        if (titleRef.current) {
+          formData.append('title', titleRef.current);
+        }
+        if (descriptionRef.current) {
+          formData.append('description', descriptionRef.current);
+        }
+        if (priceRef.current) {
+          formData.append('price', priceRef.current);
+        }
+        if (videoInputRef.current?.files && videoInputRef.current.files.length > 0) {
+          formData.append('video', videoInputRef.current.files[0]);
+        }
+        dispatch(updateTraining({ id, data: formData }));
+      }
+    } else {
+      setIsEditing(true);
+      setIsVideoUpdating(true);
+    }
+  };
+
+  const handleDiscountButtonClick = () => {
+    if (id && training) {
+      const formData = new FormData();
+      formData.append('isSpecialOffer', training?.isSpecialOffer ? '' : 'true');
+      dispatch(updateTraining({ id, data: formData }))
+    }
+  };
+
+  const handleTitleInputChange = (evt: ChangeEvent<HTMLInputElement>) => {
+    if (evt.currentTarget) {
+      titleRef.current = evt.currentTarget.value;
+    }
+  };
+
+  const handleDescriptionInputChange = (evt: ChangeEvent<HTMLTextAreaElement>) => {
+    if (evt.currentTarget) {
+      descriptionRef.current = evt.currentTarget.value;
+    }
+  };
+
+  const handlePriceInputChange = (evt: ChangeEvent<HTMLInputElement>) => {
+    if (evt.currentTarget) {
+      priceRef.current = evt.currentTarget.value;
+    }
+  };
+
+  const handleDeleteVideoButtonClick = () => {
+    setIsVideoUpdating((old) => !old);
+  };
+
+  const handleVideoInputChange = (evt: ChangeEvent<HTMLInputElement>) => {
+    if (evt.currentTarget?.files && evt.currentTarget.files.length > 0) {
+      setFilename(evt.currentTarget.files[0].name);
+    }
   };
 
   const videoPreviewElement = (
@@ -107,6 +193,7 @@ export default function TrainingCardPage(): JSX.Element {
                   <button
                     className="btn btn--medium reviews-side-bar__button"
                     type="button"
+                    disabled={currentUser?.role === UserRole.Trainer}
                   >
                     Оставить отзыв
                   </button>
@@ -132,9 +219,21 @@ export default function TrainingCardPage(): JSX.Element {
                         <span className="training-info__name">{trainer?.name}</span>
                       </div>
                     </div>
+                    {
+                      currentUser?.id === trainer?.id &&
+                      <button
+                        className='btn-flat btn-flat--light btn-flat--underlined training-info__edit'
+                        onClick={handleEditButtonClick}
+                      >
+                        <svg width='12' height='12' aria-hidden={true}>
+                          <use xlinkHref='#icon-edit'/>
+                        </svg>
+                        <span>{isEditing ? 'Сохранить' : 'Редактировать'}</span>
+                      </button>
+                    }
                   </div>
                   <div className="training-info__main-content">
-                    <form action="#" method="get">
+                    <form>
                       <div className="training-info__form-wrapper">
                         <div className="training-info__info-wrapper">
                           <div className="training-info__input training-info__input--training">
@@ -146,7 +245,8 @@ export default function TrainingCardPage(): JSX.Element {
                                 type="text"
                                 name="training"
                                 defaultValue={training?.title}
-                                disabled
+                                disabled={currentUser?.role === UserRole.User || !isEditing}
+                                onChange={handleTitleInputChange}
                               />
                             </label>
                             <div className="training-info__error">Обязательное поле</div>
@@ -158,8 +258,9 @@ export default function TrainingCardPage(): JSX.Element {
                               </span>
                               <textarea
                                 name="description"
-                                disabled
+                                disabled={currentUser?.role === UserRole.User || !isEditing}
                                 defaultValue={training?.description}
+                                onChange={handleDescriptionInputChange}
                               />
                             </label>
                           </div>
@@ -215,21 +316,38 @@ export default function TrainingCardPage(): JSX.Element {
                               <input
                                 type="text"
                                 name="price"
-                                value={`${training?.price} ₽`}
-                                disabled
+                                value={`${training?.price && training?.price * (1 - DISCOUNT * +!!training?.isSpecialOffer)} ₽`}
+                                disabled={currentUser?.role === UserRole.User || !isEditing}
+                                onChange={handlePriceInputChange}
                               />
                             </label>
                             <div className="training-info__error">Введите число</div>
                           </div>
-                          <PopupBuy trainingId={id} trainingTitle={training?.title} trainingPrice={training?.price} trigger={
+                          {
+                            currentUser?.id === trainer?.id &&
                             <button
-                              className="btn training-info__buy"
-                              type="button"
-                              disabled={balance && !!balance.available}
+                              className='btn-flat btn-flat--light btn-flat--underlined'
+                              type='button'
+                              onClick={handleDiscountButtonClick}
                             >
-                              Купить
+                              <svg width='14' height='14' aria-hidden={true}>
+                                <use xlinkHref='#icon-discount'/>
+                              </svg>
+                              <span>{training?.isSpecialOffer ? 'Отменить скидку' : 'Сделать скидку 10%'}</span>
                             </button>
-                          } />
+                          }
+                          {
+                            currentUser?.role === UserRole.User &&
+                            <PopupBuy trainingId={id} trainingTitle={training?.title} trainingPrice={training?.price} trigger={
+                              <button
+                                className="btn training-info__buy"
+                                type="button"
+                                disabled={balance && !!balance.available}
+                              >
+                                Купить
+                              </button>
+                            } />
+                          }
                         </div>
                       </div>
                     </form>
@@ -238,20 +356,48 @@ export default function TrainingCardPage(): JSX.Element {
                 <div className="training-video">
                   <h2 className="training-video__title">Видео</h2>
                   <div className="training-video__video">
-                    <div className="training-video__thumbnail">
-                      <ReactPlayer
-                        url={videoUrl}
-                        controls={isTrainingActive}
-                        light={true}
-                        width='100%'
-                        height='100%'
-                        playIcon={videoPreviewElement}
-                        onEnded={handleStopTrainingButtonClick}
-                      />
-                    </div>
+                    {
+                      !isVideoUpdating
+                      ?
+                      <div className="training-video__thumbnail">
+                        <ReactPlayer
+                          url={videoUrl}
+                          controls={isTrainingActive}
+                          light={true}
+                          width='100%'
+                          height='100%'
+                          playIcon={videoPreviewElement}
+                          onEnded={handleStopTrainingButtonClick}
+                        />
+                      </div>
+                      :
+                      <div className="drag-and-drop create-training__drag-and-drop">
+                        <label>
+                          <span className="drag-and-drop__label" tabIndex={0}>
+                            {filename}
+                            <svg width={20} height={20} aria-hidden="true">
+                              <use xlinkHref="#icon-import-video" />
+                            </svg>
+                          </span>
+                          <input
+                            ref={videoInputRef}
+                            type="file"
+                            name="import"
+                            tabIndex={-1}
+                            accept={Object.keys(TrainingVideoAllowedExtensions).map(((extention) => `.${extention}`)).join(', ')}
+                            onChange={handleVideoInputChange}
+                          />
+                          <span className="custom-input__error">
+                            {getResponseErrorMessage(responseError, 'video')}
+                          </span>
+                        </label>
+                      </div>
+                    }
                   </div>
                   <div className="training-video__buttons-wrapper">
                     {
+                      currentUser?.role === UserRole.User &&
+                      (
                       isTrainingActive
                       ?
                       <button
@@ -270,6 +416,31 @@ export default function TrainingCardPage(): JSX.Element {
                       >
                         Приступить
                       </button>
+                      )
+                    }
+                    {
+                      currentUser?.id === training?.userId && isEditing &&
+                      <div className='training-video__edit-buttons'>
+                        {
+                          isVideoUpdating
+                          ?
+                          <button
+                            className='btn'
+                            type='button'
+                            onClick={handleDeleteVideoButtonClick}
+                          >
+                            Отменить
+                          </button>
+                          :
+                          <button
+                            className='btn btn--outlined'
+                            type='button'
+                            onClick={handleDeleteVideoButtonClick}
+                          >
+                            Удалить
+                          </button>
+                        }
+                      </div>
                     }
                   </div>
                 </div>

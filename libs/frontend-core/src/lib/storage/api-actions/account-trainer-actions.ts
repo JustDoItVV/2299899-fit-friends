@@ -114,3 +114,27 @@ export const fetchTraining = createAsyncThunk<
   const { data } = await api.get<Training>(`${ApiRoute.Training}/${id}`);
   return data;
 });
+
+export const updateTraining = createAsyncThunk<
+  Training,
+  { id: string; data: FormData },
+  { dispatch: AppDispatch; state: State; extra: AxiosInstance }
+>('accountTrainer/updateTraining', async ({ id, data }, { dispatch, extra: api, rejectWithValue }) => {
+    try {
+      const { data: training } = await api.patch<Training>(
+        `${ApiRoute.Training}/${id}`,
+        data
+      );
+      console.log(data, training);
+      dispatch(setResponseError(null));
+      return training;
+    } catch (error) {
+      if (!error.response) {
+        throw new Error(error);
+      }
+
+      dispatch(setResponseError(error.response.data));
+      return rejectWithValue(error.response.data);
+    }
+  }
+);

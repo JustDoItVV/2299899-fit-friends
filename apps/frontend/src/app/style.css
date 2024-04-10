@@ -4439,7 +4439,7 @@ input:active + .custom-textarea__text {
 }
 
 .training-video__edit-buttons {
-  display: none;
+  display: block;
   -ms-grid-columns: 256px 256px;
   grid-template-columns: 256px 256px;
   -webkit-column-gap: 30px;
