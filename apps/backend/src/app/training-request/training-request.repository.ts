@@ -1,12 +1,8 @@
-import { DefaultPagination } from '@2299899-fit-friends/consts';
 import { BasePostgresRepository } from '@2299899-fit-friends/backend-core';
+import { DefaultPagination } from '@2299899-fit-friends/consts';
 import { PaginationQuery } from '@2299899-fit-friends/dtos';
 import { PrismaClientService } from '@2299899-fit-friends/models';
-import {
-  Pagination,
-  SortOption,
-  TrainingRequest,
-} from '@2299899-fit-friends/types';
+import { Pagination, SortOption, TrainingRequest } from '@2299899-fit-friends/types';
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 
@@ -61,11 +57,11 @@ export class TrainingRequestRepository extends BasePostgresRepository<
     const where: Prisma.TrainingRequestWhereInput = {};
     where.targetId = userId;
 
-    const orderBy: Prisma.TrainingRequestOrderByWithRelationAndSearchRelevanceInput =
-      {};
+    const orderBy: Prisma.TrainingRequestOrderByWithRelationAndSearchRelevanceInput[] = [];
     if (query.sortOption === SortOption.CreatedAt) {
-      orderBy.createdAt = query.sortDirection;
+      orderBy.push({ createdAt: query.sortDirection });
     }
+    orderBy.push({ id: query.sortDirection });
 
     const usersCount = await this.getTrainingRequestsCount(where);
     const totalPages = this.calculatePage(usersCount, limit);

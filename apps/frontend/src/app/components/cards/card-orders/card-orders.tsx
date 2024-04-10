@@ -12,7 +12,8 @@ type OrderCatalogCardProps = {
 
 export default memo(function OrderCatalogCard({ item }: OrderCatalogCardProps): JSX.Element {
   const order = item as Order;
-  const thumbnailUrl = useFetchFileUrl(fetchTrainingBackgroundPicture, { id: order.id }, 'img/content/placeholder.png');
+  const thumbnailUrl = useFetchFileUrl(fetchTrainingBackgroundPicture, { id: order.trainingId }, 'img/content/placeholder.png');
+  const rating = order.training?.rating;
 
   return (
     <li className="my-orders__item">
@@ -50,7 +51,14 @@ export default memo(function OrderCatalogCard({ item }: OrderCatalogCardProps): 
               <svg width={16} height={16} aria-hidden="true">
                 <use xlinkHref="#icon-star" />
               </svg>
-              <span className="thumbnail-training__rate-value">4</span>
+              <span className="thumbnail-training__rate-value">
+                {
+                  rating &&
+                  (rating - Math.floor(rating)) > 0
+                  ? rating.toFixed(1)
+                  : rating
+                }
+              </span>
             </div>
           </div>
           <div className="thumbnail-training__text-wrapper">

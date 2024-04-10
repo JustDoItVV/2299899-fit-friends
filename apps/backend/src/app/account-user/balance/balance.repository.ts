@@ -59,7 +59,7 @@ export class BalanceRepository extends BasePostgresRepository<
       where.trainingId = query.trainingId;
     }
 
-    const orderBy: Prisma.BalanceOrderByWithRelationAndSearchRelevanceInput[] = [{}];
+    const orderBy: Prisma.BalanceOrderByWithRelationAndSearchRelevanceInput[] = [];
     if (query.sortOption === SortOption.CreatedAt) {
       orderBy.push({ createdAt: query.sortDirection });
     }

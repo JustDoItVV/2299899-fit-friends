@@ -32,8 +32,8 @@ export class MailNotificationRepository extends BasePostgresRepository<
     const where: Prisma.MailNotificationWhereInput = {
       createdAt: { gt: dateAfter },
     };
-    const orderBy: Prisma.MailNotificationOrderByWithRelationAndSearchRelevanceInput =
-      { createdAt: SortDirection.Desc };
+    const orderBy: Prisma.MailNotificationOrderByWithRelationAndSearchRelevanceInput[] =
+      [{ createdAt: SortDirection.Desc }];
     const documents = await this.clientService.mailNotification.findMany({
       where,
       orderBy,

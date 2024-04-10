@@ -72,7 +72,7 @@ export const fetchTrainingVideo = createAsyncThunk<
 });
 
 export const fetchTrainerFriends = createAsyncThunk<
-  Pagination<User>,
+  Pagination<CatalogItem>,
   QueryPagination,
   { dispatch: AppDispatch; state: State; extra: AxiosInstance }
 >('accountTrainer/fetchFriends', async (query, { extra: api }) => {
@@ -83,7 +83,7 @@ export const fetchTrainerFriends = createAsyncThunk<
 });
 
 export const fetchTrainerOrders = createAsyncThunk<
-  Pagination<Order>,
+  Pagination<CatalogItem>,
   QueryPagination,
   { dispatch: AppDispatch; state: State; extra: AxiosInstance }
 >('accountTrainer/fetchFriends', async (query, { extra: api }) => {

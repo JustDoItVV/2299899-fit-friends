@@ -57,14 +57,15 @@ export class OrderRepository extends BasePostgresRepository<OrderEntity, Order> 
       where.training = { userId };
     }
 
-    const orderBy: Prisma.OrderOrderByWithRelationAndSearchRelevanceInput = {};
+    const orderBy: Prisma.OrderOrderByWithRelationAndSearchRelevanceInput[] = [];
     if (query.sortOption === OrderSortOption.CreatedAt) {
-      orderBy.createdAt = query.sortDirection;
+      orderBy.push({ createdAt: query.sortDirection });
     } else if (query.sortOption === OrderSortOption.Amount) {
-      orderBy.amount = query.sortDirection;
+      orderBy.push({ amount: query.sortDirection });
     } else if (query.sortOption === OrderSortOption.OrderSum) {
-      orderBy.orderSum = query.sortDirection;
+      orderBy.push({ orderSum: query.sortDirection });
     }
+    orderBy.push({ id: query.sortDirection });
 
     const documentsCount = await this.getOrdersCount(where);
     const totalPages = this.calculatePage(documentsCount, limit);
