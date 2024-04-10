@@ -13,6 +13,7 @@ export * from './lib/query/user-pagination.query';
 export * from './lib/query/training-pagination.query';
 export * from './lib/query/order-pagination.query';
 export * from './lib/query/get-file.query';
+export * from './lib/query/balance-pagination.query';
 
 export * from './lib/rdo/logged-user.rdo';
 export * from './lib/rdo/user.rdo';

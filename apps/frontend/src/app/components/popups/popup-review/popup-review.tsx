@@ -12,10 +12,10 @@ import { getResponseErrorMessage } from '@2299899-fit-friends/helpers';
 
 type PopupReviewProps = {
   trainingId: string | undefined;
-  children: JSX.Element,
+  trigger: JSX.Element,
 };
 
-export default function PopupReview({ trainingId, children }: PopupReviewProps): JSX.Element {
+export default function PopupReview({ trainingId, trigger }: PopupReviewProps): JSX.Element {
   const dispatch = useAppDispatch();
   const responseError = useAppSelector(selectResponseError);
   const popupRef = useRef<PopupActions | null>(null);
@@ -71,7 +71,7 @@ export default function PopupReview({ trainingId, children }: PopupReviewProps):
     <Popup
       ref={popupRef}
       modal
-      trigger={children}
+      trigger={trigger}
       lockScroll={true}
     >
         <Helmet><title>Попап оставить отзыв — FitFriends</title></Helmet>

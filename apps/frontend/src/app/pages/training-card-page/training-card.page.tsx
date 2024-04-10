@@ -3,8 +3,8 @@ import { Helmet } from 'react-helmet-async';
 import { useParams } from 'react-router-dom';
 
 import {
-    fetchReviews, fetchTraining, fetchUserAction, fetchUserAvatar, selectReviews, selectTraining,
-    useAppDispatch, useAppSelector, useFetchFileUrl
+    fetchBalanceCatalog, fetchReviews, fetchTraining, fetchUserAction, fetchUserAvatar,
+    selectBalance, selectReviews, selectTraining, useAppDispatch, useAppSelector, useFetchFileUrl
 } from '@2299899-fit-friends/frontend-core';
 import { FrontendRoute, User } from '@2299899-fit-friends/types';
 import { unwrapResult } from '@reduxjs/toolkit';
@@ -12,6 +12,7 @@ import { unwrapResult } from '@reduxjs/toolkit';
 import AsideLeftBlock from '../../components/aside-left-block/aside-left-block';
 import CardReview from '../../components/cards/card-review/card-review';
 import Header from '../../components/header/header';
+import PopupBuy from '../../components/popups/popup-buy/popup-buy';
 import PopupReview from '../../components/popups/popup-review/popup-review';
 
 export default function TrainingCardPage(): JSX.Element {
@@ -19,6 +20,7 @@ export default function TrainingCardPage(): JSX.Element {
   const dispatch = useAppDispatch();
   const training = useAppSelector(selectTraining);
   const reviews = useAppSelector(selectReviews);
+  const balance = useAppSelector(selectBalance);
   const [reviewsElements, setReviewsElements] = useState<JSX.Element[]>([]);
   const [trainer, setTrainer] = useState<User | null>(null);
   const avatarUrl = useFetchFileUrl(fetchUserAvatar, { id: training?.userId }, 'img/content/placeholder.png', [trainer]);
@@ -32,6 +34,7 @@ export default function TrainingCardPage(): JSX.Element {
   useEffect(() => {
     if (id) {
       dispatch(fetchTraining(id));
+      dispatch(fetchBalanceCatalog({ trainingId: id }))
     }
   }, [dispatch, id, reviews]);
 
@@ -70,7 +73,7 @@ export default function TrainingCardPage(): JSX.Element {
                 <ul className="reviews-side-bar__list">
                   {reviewsElements.length > 0 ? reviewsElements : 'Нет отзывов'}
                 </ul>
-                <PopupReview trainingId={id} children={
+                <PopupReview trainingId={id} trigger={
                   <button
                     className="btn btn--medium reviews-side-bar__button"
                     type="button"
@@ -188,9 +191,15 @@ export default function TrainingCardPage(): JSX.Element {
                             </label>
                             <div className="training-info__error">Введите число</div>
                           </div>
-                          <button className="btn training-info__buy" type="button">
-                            Купить
-                          </button>
+                          <PopupBuy trainingId={id} trainingTitle={training?.title} trainingPrice={training?.price} trigger={
+                            <button
+                              className="btn training-info__buy"
+                              type="button"
+                              disabled={balance && !!balance.available}
+                            >
+                              Купить
+                            </button>
+                          } />
                         </div>
                       </div>
                     </form>
@@ -224,7 +233,7 @@ export default function TrainingCardPage(): JSX.Element {
                     <button
                       className="btn training-video__button training-video__button--start"
                       type="button"
-                      disabled
+                      disabled={balance && !balance.available}
                     >
                       Приступить
                     </button>

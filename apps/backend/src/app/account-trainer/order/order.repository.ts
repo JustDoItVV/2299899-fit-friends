@@ -30,6 +30,20 @@ export class OrderRepository extends BasePostgresRepository<OrderEntity, Order> 
     return Math.ceil(totalCount / limit);
   }
 
+  public async save(entity: OrderEntity): Promise<OrderEntity> {
+    const pojoEntity = entity.toPOJO();
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { trainingId: _, ...data} = pojoEntity;
+    const document = await this.clientService.order.create({
+      data: {
+        ...data,
+        training: { connect: { id: pojoEntity.trainingId } },
+      },
+    });
+    entity.id = document.id;
+    return entity;
+  }
+
   public async find(query: OrderPaginationQuery, userId?: string): Promise<Pagination<OrderEntity>> {
     let limit = query.limit;
     if (query.limit < 1) {

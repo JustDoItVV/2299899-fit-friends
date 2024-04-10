@@ -9,6 +9,7 @@ export * from './lib/services/token';
 export * from './lib/storage/index';
 export * from './lib/storage/actions/redirect-to-route';
 export * from './lib/storage/api-actions/account-trainer-actions';
+export * from './lib/storage/api-actions/account-user-actions';
 export * from './lib/storage/api-actions/reviews-actions';
 export * from './lib/storage/api-actions/trainings-catalog-actions';
 export * from './lib/storage/api-actions/user-actions';

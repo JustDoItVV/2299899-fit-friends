@@ -1,44 +1,17 @@
+import { JwtAuthGuard, UserParam, UserRolesGuard } from '@2299899-fit-friends/backend-core';
+import { ApiAccountUserMessage, ApiTag, ApiUserMessage } from '@2299899-fit-friends/consts';
 import {
-  ApiAccountUserMessage,
-  ApiTag,
-  ApiTrainingMessage,
-  ApiUserMessage,
-} from '@2299899-fit-friends/consts';
-import {
-  JwtAuthGuard,
-  UserParam,
-  UserRolesGuard,
-} from '@2299899-fit-friends/backend-core';
-import {
-  ApiOkResponsePaginated,
-  BalanceRdo,
-  PaginationQuery,
-  PaginationRdo,
-  UpdateBalanceDto,
-  UserRdo,
+    ApiOkResponsePaginated, BalancePaginationQuery, BalanceRdo, PaginationQuery, PaginationRdo,
+    UpdateBalanceDto, UserRdo
 } from '@2299899-fit-friends/dtos';
 import { fillDto } from '@2299899-fit-friends/helpers';
 import { TokenPayload, UserRole } from '@2299899-fit-friends/types';
 import {
-  Body,
-  Controller,
-  Get,
-  HttpCode,
-  HttpStatus,
-  Patch,
-  Post,
-  Query,
-  UseGuards,
+    Body, Controller, Get, HttpCode, HttpStatus, Patch, Post, Query, UseGuards
 } from '@nestjs/common';
 import {
-  ApiBadRequestResponse,
-  ApiBearerAuth,
-  ApiForbiddenResponse,
-  ApiNotFoundResponse,
-  ApiOkResponse,
-  ApiOperation,
-  ApiTags,
-  ApiUnauthorizedResponse,
+    ApiBadRequestResponse, ApiBearerAuth, ApiForbiddenResponse, ApiOkResponse, ApiOperation,
+    ApiTags, ApiUnauthorizedResponse
 } from '@nestjs/swagger';
 
 import { AccountUserService } from './account-user.service';
@@ -74,7 +47,7 @@ export class AccountUserController {
   @Get('balance')
   public async showBalance(
     @UserParam() payload: TokenPayload,
-    @Query() query: PaginationQuery
+    @Query() query: BalancePaginationQuery
   ) {
     const result = await this.accountUserService.getBalance(
       query,
@@ -84,11 +57,7 @@ export class AccountUserController {
   }
 
   @ApiOperation({ summary: 'Обновление баланса пользователя' })
-  @ApiOkResponsePaginated(
-    BalanceRdo,
-    ApiAccountUserMessage.BalanceUpdateSuccess
-  )
-  @ApiNotFoundResponse({ description: ApiTrainingMessage.NotFound })
+  @ApiOkResponse({ description: ApiAccountUserMessage.BalanceUpdateSuccess, type: BalanceRdo })
   @ApiBadRequestResponse({ description: ApiUserMessage.ValidationError })
   @ApiForbiddenResponse({ description: ApiUserMessage.ForbiddenExceptUser })
   @ApiUnauthorizedResponse({ description: ApiUserMessage.Unauthorized })
@@ -97,7 +66,6 @@ export class AccountUserController {
     @Body() dto: UpdateBalanceDto,
     @UserParam() payload: TokenPayload
   ) {
-    console.log(dto);
     const updatedDocument = await this.accountUserService.updateBalanceRecord(
       dto,
       payload.userId
