@@ -10,7 +10,7 @@ export class OrderEntity implements Order, BaseEntity<string, Order> {
   public amount: number;
   public orderSum: number;
   public paymentMethod: OrderPaymentMethod;
-  public training: TrainingEntity;
+  public training?: TrainingEntity;
 
   public populate(data: Order): OrderEntity {
     this.id = data.id || undefined;
