@@ -2,13 +2,11 @@ import './card-user-info.css';
 
 import classnames from 'classnames';
 import { ChangeEvent, useEffect, useState } from 'react';
-import Popup from 'reactjs-popup';
 
 import { SliderBlockItems } from '@2299899-fit-friends/consts';
 import {
-    addFriend, deleteFriend, fetchTrainingsCatalog, fetchUserAvatar, fetchUsersCatalog,
-    selectCurrentUser, selectUser, subscribeToTrainer, unsubscribeFromTrainer, useAppDispatch,
-    useAppSelector, useFetchFileUrl
+    addFriend, deleteFriend, fetchTrainingsCatalog, fetchUserAvatar, selectCurrentUser, selectUser,
+    subscribeToTrainer, unsubscribeFromTrainer, useAppDispatch, useAppSelector, useFetchFileUrl
 } from '@2299899-fit-friends/frontend-core';
 import { QueryPagination, UserRole } from '@2299899-fit-friends/types';
 
@@ -120,7 +118,7 @@ export default function CardUserInfo(): JSX.Element {
             </div>
             {
               user?.role === UserRole.Trainer &&
-              <PopupCertificates children={
+              <PopupCertificates trigger={
                 <button className="btn-flat user-card-coach__sertificate" type="button">
                   <svg width={12} height={13} aria-hidden="true">
                     <use xlinkHref="#icon-teacher" />

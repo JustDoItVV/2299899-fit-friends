@@ -93,6 +93,8 @@ export default function AccountCertificates(): JSX.Element {
             className="personal-account-coach__list"
             slidesToShow={SliderBlockItems.AccountTrainerCertificatesVisible}
             slidesToScroll={SliderBlockItems.DefaultToScroll}
+            infinite={false}
+            draggable={false}
           >
             {certificateCards}
           </Slider>

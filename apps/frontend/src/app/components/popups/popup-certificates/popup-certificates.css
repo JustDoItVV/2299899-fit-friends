@@ -1,0 +1,21 @@
+.popup__content--purchases .slick-list {
+  max-width: 334px;
+  max-height: 473px;
+}
+
+.popup__content--purchases .slick-track {
+  background-color: #f2f2f2;
+}
+
+.popup__content--purchases .slider-block-wrapper {
+  margin-bottom: 50px;
+  height: 473px;
+}
+
+.popup__content--purchases .slick-slide {
+  min-width: 334px;
+}
+
+.popup__content--purchases .slick-slide:last-child {
+  margin-right: 0px;
+}

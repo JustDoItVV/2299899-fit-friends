@@ -12,10 +12,13 @@ pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/b
 type CardCertificateProps = {
   item: CatalogItem;
   path: string;
+  changeable?: boolean;
 };
 
-export default memo(function CardCertificate({ item, path }: CardCertificateProps): JSX.Element {
-  const user = item as User;
+export default memo(function CardCertificate(props: CardCertificateProps): JSX.Element {
+  const { path } = props;
+  const user = props.item as User;
+  const changeable = props.changeable ?? false;
   const fileUrl = useFetchFileUrl(fetchCertificate, { id: user.id, path }, 'img/content/placeholder.png');
   const [isEditing, setIsEditing] = useState<boolean>(false);
 
@@ -70,16 +73,19 @@ export default memo(function CardCertificate({ item, path }: CardCertificateProp
               </div>
             </div>
         : <div className="certificate-card__buttons">
-            <button
-              className="btn-flat btn-flat--underlined"
-              type="button"
-              onClick={handleChangeButtonClick}
-            >
-              <svg width={12} height={12} aria-hidden="true">
-                <use xlinkHref="#icon-edit" />
-              </svg>
-              <span>Изменить</span>
-            </button>
+            {
+              changeable &&
+              <button
+                className="btn-flat btn-flat--underlined"
+                type="button"
+                onClick={handleChangeButtonClick}
+              >
+                <svg width={12} height={12} aria-hidden="true">
+                  <use xlinkHref="#icon-edit" />
+                </svg>
+                <span>Изменить</span>
+              </button>
+            }
           </div>
         }
       </div>

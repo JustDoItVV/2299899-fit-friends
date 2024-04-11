@@ -174,6 +174,7 @@ export default function SliderBlock(props: SliderBlockProps): JSX.Element {
             dots={false}
             autoplay={autoplay}
             infinite={autoplay}
+            draggable={false}
           >
             {itemsElements}
           </Slider>
