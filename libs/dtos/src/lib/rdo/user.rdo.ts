@@ -86,4 +86,8 @@ export class UserRdo {
   @ApiPropertyOptional({ description: 'Дата регистрации пользователя' })
   @Expose()
   public createdAt?: Date;
+
+  @ApiPropertyOptional({ description: 'Дата регистрации пользователя' })
+  @Expose()
+  public friends?: string[];
 }

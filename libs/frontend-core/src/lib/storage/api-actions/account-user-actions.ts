@@ -2,9 +2,11 @@ import { AxiosInstance } from 'axios';
 import { stringify } from 'qs';
 
 import { ApiRoute } from '@2299899-fit-friends/consts';
-import { Balance, Pagination, QueryPagination } from '@2299899-fit-friends/types';
+import { Balance, Pagination, QueryPagination, User } from '@2299899-fit-friends/types';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
+import { setResponseError } from '../reducers/app-process/app-process.slice';
+import { setUser } from '../reducers/user-process/user-process.slice';
 import { AppDispatch } from '../types/app-dispatch.type';
 import { CatalogItem } from '../types/catalog-item.type';
 import { State } from '../types/state.type';
@@ -30,4 +32,42 @@ export const fetchBalanceCatalog = createAsyncThunk<
     `${ApiRoute.Account}${ApiRoute.User}${ApiRoute.Balance}?${stringify(query)}`
   );
   return pagination;
+});
+
+export const addFriend = createAsyncThunk<
+  void,
+  string,
+  { dispatch: AppDispatch; state: State; extra: AxiosInstance }
+>('accountUser/addFriend', async (id, { dispatch, extra: api, rejectWithValue }) => {
+  try {
+    await api.post(`${ApiRoute.User}/${id}${ApiRoute.Friend}`);
+    const { data } = await api.get<User>(`${ApiRoute.User}/${id}`);
+    dispatch(setUser(data));
+  } catch (error) {
+    if (!error.response) {
+      throw new Error(error);
+    }
+
+    dispatch(setResponseError(error.response.data));
+    return rejectWithValue(error.response.data);
+  }
+});
+
+export const deleteFriend = createAsyncThunk<
+  void,
+  string,
+  { dispatch: AppDispatch; state: State; extra: AxiosInstance }
+>('accountUser/deleteFriend', async (id, { dispatch, extra: api, rejectWithValue }) => {
+  try {
+    await api.delete(`${ApiRoute.User}/${id}${ApiRoute.Friend}`);
+    const { data } = await api.get<User>(`${ApiRoute.User}/${id}`);
+    dispatch(setUser(data));
+  } catch (error) {
+    if (!error.response) {
+      throw new Error(error);
+    }
+
+    dispatch(setResponseError(error.response.data));
+    return rejectWithValue(error.response.data);
+  }
 });

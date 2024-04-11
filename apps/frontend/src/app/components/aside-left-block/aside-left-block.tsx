@@ -1,6 +1,4 @@
-import { useLocation, useNavigate } from 'react-router-dom';
-
-import { FrontendRoute } from '@2299899-fit-friends/types';
+import { useBackButton } from '@2299899-fit-friends/frontend-core';
 
 type AsideLeftBlockProps = {
   className?: string;
@@ -11,17 +9,7 @@ type AsideLeftBlockProps = {
 export default function AsideLeftBlock(props: AsideLeftBlockProps): JSX.Element {
   const { backButtonPath, children } = props;
   const className = props.className ?? '';
-
-  const location = useLocation();
-  const navigate = useNavigate();
-
-  const handleBackButtonClick = () => {
-    if (location.key === 'default') {
-      navigate(`/${FrontendRoute.Main}`);
-    } else {
-      navigate(-1);
-    }
-  };
+  const handleBackButtonClick = useBackButton();
 
   return (
     <aside className={className}>

@@ -1,6 +1,7 @@
 export * from './lib/hooks/index';
 export * from './lib/hooks/use-fetch-file';
 export * from './lib/hooks/use-fetch-pagination';
+export * from './lib/hooks/use-back-button';
 
 export * from './lib/services/api';
 export * from './lib/services/browser-history';
