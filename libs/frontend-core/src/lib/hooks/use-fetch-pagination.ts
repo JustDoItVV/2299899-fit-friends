@@ -4,7 +4,7 @@ import { Pagination, QueryPagination } from '@2299899-fit-friends/types';
 import { AsyncThunk, unwrapResult } from '@reduxjs/toolkit';
 
 import { CatalogItem } from '../storage/types/catalog-item.type';
-import { useAppDispatch } from './';
+import { useAppDispatch } from './use-app-dispatch';
 
 export function useFetchPagination<T extends CatalogItem>(
   fetch: AsyncThunk<Pagination<T>, QueryPagination, Record<string, unknown>>,

@@ -4,7 +4,7 @@ import { FetchFileParams } from '@2299899-fit-friends/types';
 import { AsyncThunk, unwrapResult } from '@reduxjs/toolkit';
 import { AsyncThunkConfig } from '@reduxjs/toolkit/dist/createAsyncThunk';
 
-import { useAppDispatch } from './';
+import { useAppDispatch } from './use-app-dispatch';
 
 export function useFetchFileUrl(
   fetch: AsyncThunk<string, FetchFileParams, AsyncThunkConfig>,

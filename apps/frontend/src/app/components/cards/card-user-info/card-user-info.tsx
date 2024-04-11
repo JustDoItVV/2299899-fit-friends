@@ -23,7 +23,9 @@ export default function CardUserInfo(): JSX.Element {
   const [query, setQuery] = useState<QueryPagination>({});
 
   useEffect(() => {
-    setQuery({ userId: user?.id });
+    if (user?.id) {
+      setQuery({ userId: user?.id });
+    }
   }, [user]);
 
   const handleAddFriendButtonClick = () => {
