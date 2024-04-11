@@ -1,5 +1,5 @@
 import { Transform } from 'class-transformer';
-import { IsBoolean, IsEnum, IsNumber, IsOptional } from 'class-validator';
+import { IsBoolean, IsEnum, IsNumber, IsOptional, IsUUID } from 'class-validator';
 
 import { PriceLimit, RatingLimit, TrainingCaloriesLimit } from '@2299899-fit-friends/consts';
 import {
@@ -59,4 +59,9 @@ export class TrainingPaginationQuery extends PaginationQuery {
   @IsEnum(TrainingSortOption)
   @Transform(({ value }) => value ? value : SortOption.CreatedAt)
   public sortOption: TrainingSortOption;
+
+  @ApiPropertyOptional({ description: 'ID конкретного тренера', type: String })
+  @IsUUID()
+  @IsOptional()
+  public userId?: string;
 }

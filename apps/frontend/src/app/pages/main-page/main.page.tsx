@@ -26,88 +26,98 @@ export default function MainPage(): JSX.Element {
         <h1 className="visually-hidden">
           FitFriends — Время находить тренировки, спортзалы и друзей спортсменов
         </h1>
-        <SLiderBlock
-          title='Специально подобрано для вас'
-          classNamePrefix='special-for-you'
-          fetch={fetchTrainingsCatalog}
-          queryParams={{
-            type: currentUser?.trainingType,
-            duration: currentUser?.trainingDuration,
-            caloriesMin: currentUser?.caloriesPerDay,
-          }}
-          component={CardTrainingThumbnail}
-          itemsPerPage={SliderBlockItems.ForYouVisible}
-          preload={true}
-          maxItems={SliderBlockItems.ForYouMax}
-          dots={false}
-        />
-        <SLiderBlock
-          title='Специальные предложения'
-          showTitle={false}
-          classNamePrefix='special-offers'
-          fetch={fetchTrainingsCatalog}
-          queryParams={{
-            isSpecialOffer: true,
-          }}
-          component={CardSpecialOffer}
-          maxItems={SliderBlockItems.SpecialMax}
-          itemsPerPage={SliderBlockItems.SpecialVisible}
-          preload={true}
-          controls={false}
-          autoplay={true}
-          children={
-            <CardPlaceholder classNameInfix='spec-gym' imagePath={CardPlaceholderPreviewImage.Special} />
-          }
-        />
-        <SLiderBlock
-          title='Популярные новинки'
-          classNamePrefix='popular-trainings'
-          fetch={fetchTrainingsCatalog}
-          queryParams={{
-            ratingMin: RatingLimit.Max
-          }}
-          component={CardTraining}
-          itemsPerPage={SliderBlockItems.PopularVisible}
-          maxItems={SliderBlockItems.PopularMax}
-          preload={true}
-          dots={false}
-          headerAdditionalElement={
-            <Link
-              className={`btn-flat look-for-company__button`}
-              to={`/${FrontendRoute.Trainings}`}
-            >
-              <span>Смотреть всё</span>
-              <svg width='14' height ='10' aria-hidden>
-                <use xlinkHref='#arrow-right'></use>
-              </svg>
-            </Link>
-          }
-        />
-        <SLiderBlock
-          title='Ишут компанию для тренировки'
-          classNamePrefix='look-for-company'
-          fetch={fetchUsersCatalog}
-          queryParams={{
-            isReadyToTraining: true,
-          }}
-          component={CardLookCompany}
-          itemsPerPage={SliderBlockItems.SeekCompanyVisible}
-          maxItems={SliderBlockItems.SeekCompanyMax}
-          preload={true}
-          outlinedButtons={true}
-          dots={false}
-          headerAdditionalElement={
-            <Link
-              className={`btn-flat look-for-company__button btn-flat--light`}
-              to={`/${FrontendRoute.Users}`}
-            >
-              <span>Смотреть всё</span>
-              <svg width='14' height ='10' aria-hidden>
-                <use xlinkHref='#arrow-right'></use>
-              </svg>
-            </Link>
-          }
-        />
+        <section className='special-for-you'>
+          <div className="container">
+            <SLiderBlock
+              title='Специально подобрано для вас'
+              classNamePrefix='special-for-you'
+              fetch={fetchTrainingsCatalog}
+              query={{
+                type: currentUser?.trainingType,
+                duration: currentUser?.trainingDuration,
+                caloriesMin: currentUser?.caloriesPerDay,
+              }}
+              component={CardTrainingThumbnail}
+              itemsPerPage={SliderBlockItems.ForYouVisible}
+              preload={true}
+              maxItems={SliderBlockItems.ForYouMax}
+              dots={false}
+            />
+          </div>
+        </section>
+        <section className='special-offers'>
+          <div className="container">
+            <SLiderBlock
+              title='Специальные предложения'
+              showTitle={false}
+              classNamePrefix='special-offers'
+              fetch={fetchTrainingsCatalog}
+              query={{ isSpecialOffer: true }}
+              component={CardSpecialOffer}
+              maxItems={SliderBlockItems.SpecialMax}
+              itemsPerPage={SliderBlockItems.SpecialVisible}
+              preload={true}
+              controls={false}
+              autoplay={true}
+              children={
+                <CardPlaceholder classNameInfix='spec-gym' imagePath={CardPlaceholderPreviewImage.Special} />
+              }
+            />
+          </div>
+        </section>
+        <section className='popular-trainings'>
+          <div className="container">
+            <SLiderBlock
+              title='Популярные новинки'
+              classNamePrefix='popular-trainings'
+              fetch={fetchTrainingsCatalog}
+              query={{ ratingMin: RatingLimit.Max }}
+              component={CardTraining}
+              itemsPerPage={SliderBlockItems.PopularVisible}
+              maxItems={SliderBlockItems.PopularMax}
+              preload={true}
+              dots={false}
+              headerAdditionalElement={
+                <Link
+                  className={`btn-flat look-for-company__button`}
+                  to={`/${FrontendRoute.Trainings}`}
+                >
+                  <span>Смотреть всё</span>
+                  <svg width='14' height ='10' aria-hidden>
+                    <use xlinkHref='#arrow-right'></use>
+                  </svg>
+                </Link>
+              }
+            />
+          </div>
+        </section>
+        <section className='look-for-company'>
+          <div className="container">
+            <SLiderBlock
+              title='Ишут компанию для тренировки'
+              classNamePrefix='look-for-company'
+              fetch={fetchUsersCatalog}
+              query={{ isReadyToTraining: true }}
+              component={CardLookCompany}
+              itemsPerPage={SliderBlockItems.SeekCompanyVisible}
+              maxItems={SliderBlockItems.SeekCompanyMax}
+              preload={true}
+              outlinedButtons={true}
+              dots={false}
+              headerAdditionalElement={
+                <Link
+                  className={`btn-flat look-for-company__button btn-flat--light`}
+                  to={`/${FrontendRoute.Users}`}
+                >
+                  <span>Смотреть всё</span>
+                  <svg width='14' height ='10' aria-hidden>
+                    <use xlinkHref='#arrow-right'></use>
+                  </svg>
+                </Link>
+              }
+            />
+          </div>
+        </section>
       </main>
     </div>
   );

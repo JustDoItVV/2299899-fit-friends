@@ -51,6 +51,9 @@ export class TrainingRepository extends BasePostgresRepository<TrainingEntity, T
     if (userId) {
       where.userId = userId;
     }
+    if (query.userId) {
+      where.userId = query.userId;
+    }
     if (query.duration) {
       if (Array.isArray(query.duration)) {
         where.duration = { in: query.duration };

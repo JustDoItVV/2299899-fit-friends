@@ -20,7 +20,7 @@ type SliderBlockProps = {
     index?: number,
     key?: string
   }>;
-  queryParams?: QueryPagination;
+  query: QueryPagination;
   title?: string;
   showTitle?: boolean;
   classNamePrefix?: string;
@@ -49,13 +49,13 @@ export default function SliderBlock(props: SliderBlockProps): JSX.Element {
   const dots = props.dots ?? true;
   const showTitle = props.showTitle ?? true;
   const autoplay = props.autoplay ?? false;
-  const queryParams = props.queryParams ?? {};
+  const query = props.query ?? {};
 
   const slickSliderRef = useRef<Slider | null>(null);
   const [currentItem, setCurrentItem] = useState<number>(0);
   const [itemsElements, setItemsElements] = useState<JSX.Element[]>([]);
 
-  const { items, fetchNextPage, fetchAll } = useFetchPagination<CatalogItem>(fetch, queryParams, maxItems);
+  const { items, fetchNextPage, fetchAll } = useFetchPagination<CatalogItem>(fetch, query, maxItems);
 
   useEffect(() => {
     if (!preload) {
@@ -77,6 +77,10 @@ export default function SliderBlock(props: SliderBlockProps): JSX.Element {
     ));
     setItemsElements(newElements);
   }, [items, Card, classNamePrefix]);
+
+  useEffect(() => {
+    slickSliderRef.current?.slickGoTo(0);
+  }, [itemsElements]);
 
   const handleLeftButtonClick = () => {
     slickSliderRef.current?.slickPrev();
@@ -108,89 +112,85 @@ export default function SliderBlock(props: SliderBlockProps): JSX.Element {
   ));
 
   return (
-    <section className={classNamePrefix}>
-      <div className="container">
-        <div className={`${classNamePrefix}__wrapper`}>
-          <div className={`${classNamePrefix}__title-wrapper`}>
-            {
-              title &&
-              <h2 className={classnames(
-                `${classNamePrefix}__title`,
-                { 'visually-hidden': !showTitle }
-              )}>
-                {title}
-              </h2>
-            }
-            { headerAdditionalElement }
-            {
-              controls &&
-              <div className={`${classNamePrefix}__controls`}>
-                <button
-                  className={classnames(
-                    'btn-icon',
-                    { 'btn-icon--outlined': outlinedButtons },
-                    `${classNamePrefix}__control`,
-                  )}
-                  type="button"
-                  aria-label="previous"
-                  onClick={handleLeftButtonClick}
-                  disabled={items.length === 0 || currentItem === 0}
-                >
-                  <svg width={16} height={14} aria-hidden="true">
-                    <use xlinkHref="#arrow-left" />
-                  </svg>
-                </button>
-                <button
-                  className={classnames(
-                    'btn-icon',
-                    { 'btn-icon--outlined': outlinedButtons },
-                    `${classNamePrefix}__control`,
-                  )}
-                  type="button"
-                  aria-label="next"
-                  onClick={handleRightButtonClick}
-                  disabled={items.length === 0 || currentItem === items.length - itemsPerPage}
-                >
-                  <svg width={16} height={14} aria-hidden="true">
-                    <use xlinkHref="#arrow-right" />
-                  </svg>
-                </button>
-              </div>
-            }
+    <div className={`${classNamePrefix}__wrapper`}>
+      <div className={`${classNamePrefix}__title-wrapper`}>
+        {
+          title &&
+          <h2 className={classnames(
+            `${classNamePrefix}__title`,
+            { 'visually-hidden': !showTitle }
+          )}>
+            {title}
+          </h2>
+        }
+        { headerAdditionalElement }
+        {
+          controls &&
+          <div className={`${classNamePrefix}__controls`}>
+            <button
+              className={classnames(
+                'btn-icon',
+                { 'btn-icon--outlined': outlinedButtons },
+                `${classNamePrefix}__control`,
+              )}
+              type="button"
+              aria-label="previous"
+              onClick={handleLeftButtonClick}
+              disabled={items.length === 0 || currentItem === 0}
+            >
+              <svg width={16} height={14} aria-hidden="true">
+                <use xlinkHref="#arrow-left" />
+              </svg>
+            </button>
+            <button
+              className={classnames(
+                'btn-icon',
+                { 'btn-icon--outlined': outlinedButtons },
+                `${classNamePrefix}__control`,
+              )}
+              type="button"
+              aria-label="next"
+              onClick={handleRightButtonClick}
+              disabled={items.length === 0 || currentItem >= items.length - itemsPerPage}
+            >
+              <svg width={16} height={14} aria-hidden="true">
+                <use xlinkHref="#arrow-right" />
+              </svg>
+            </button>
           </div>
-          <ul className={`${items.length !== 0 ? 'slider-block-wrapper' : ''} ${classNamePrefix}__list`}>
-            {
-              items.length !== 0
-              ?
-              <Slider
-                ref={slickSliderRef}
-                slidesToShow={itemsPerPage}
-                slidesToScroll={itemsToScroll}
-                arrows={false}
-                variableWidth={true}
-                adaptiveHeight={true}
-                dots={false}
-                autoplay={autoplay}
-                infinite={autoplay}
-              >
-                {itemsElements}
-              </Slider>
-              :
-              <li className={`${classNamePrefix}__item`}>
-                <CardPlaceholder classNameInfix={placeholderInfix} imagePath={CardPlaceholderPreviewImage.ForYou} />
-              </li>
-            }
-            {
-              dots &&
-              <div className={`${classNamePrefix}__slider-dots`} style={{ display: "flex" }}>
-                {dotsElements}
-              </div>
-            }
-          </ul>
-
-          { children }
-        </div>
+        }
       </div>
-    </section>
+      <ul className={`${items.length !== 0 ? 'slider-block-wrapper' : ''} ${classNamePrefix}__list`}>
+        {
+          items.length !== 0
+          ?
+          <Slider
+            ref={slickSliderRef}
+            slidesToShow={itemsPerPage}
+            slidesToScroll={itemsToScroll}
+            arrows={false}
+            variableWidth={true}
+            adaptiveHeight={true}
+            dots={false}
+            autoplay={autoplay}
+            infinite={autoplay}
+          >
+            {itemsElements}
+          </Slider>
+          :
+          <li className={`${classNamePrefix}__item`}>
+            <CardPlaceholder classNameInfix={placeholderInfix} imagePath={CardPlaceholderPreviewImage.ForYou} />
+          </li>
+        }
+        {
+          dots &&
+          <div className={`${classNamePrefix}__slider-dots`} style={{ display: "flex" }}>
+            {dotsElements}
+          </div>
+        }
+      </ul>
+
+      { children }
+    </div>
   );
 }

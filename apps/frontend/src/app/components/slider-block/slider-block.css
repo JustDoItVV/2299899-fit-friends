@@ -1,3 +1,4 @@
+.slick-slider,
 .slick-list {
   max-width: 1396px;
 }
@@ -82,61 +83,84 @@
   background: #c5ec2a;
 }
 
-/* Main popular */
+/*
+Main popular
+Training page
+*/
 
-.popular-trainings .slick-track {
+.popular-trainings__wrapper .slick-track {
   background-color: #f2f2f2;
 }
 
-.popular-trainings .slider-block-wrapper {
+.popular-trainings__wrapper .slider-block-wrapper {
   margin-bottom: 50px;
   height: 450px;
 }
 
-.popular-trainings .slick-slide {
+.popular-trainings__wrapper .slick-slide {
   min-width: 334px;
   margin-right: 15px;
 }
 
-.popular-trainings .slick-slide:last-child {
+.popular-trainings__wrapper .slick-slide:last-child {
   margin-right: 0px;
 }
 
 /* Main look for company */
 
-.look-for-company .slick-track {
+.look-for-company__wrapper .slick-track {
   background-color: #333333;
 }
 
-.look-for-company .slider-block-wrapper {
+.look-for-company__wrapper .slider-block-wrapper {
   margin-top: 25px;
   height: 235px;
 }
 
-.look-for-company .slick-slide {
+.look-for-company__wrapper .slick-slide {
   width: 334px;
   margin-right: 15px;
   height: 235px;
 }
 
-.look-for-company .slick-slide:last-child {
+.look-for-company__wrapper .slick-slide:last-child {
   margin-right: 0px;
 }
 
-.look-for-company .slick-slide li {
+.look-for-company__wrapper .slick-slide li {
   padding: 0;
   margin: 0;
 }
 
-.look-for-company .slick-slide a {
+.look-for-company__wrapper .slick-slide a {
   margin-top: 0;
 }
 
-.look-for-company .look-for-company__item {
+.look-for-company__wrapper .look-for-company__item {
   height: 235px;
 }
 
 /* Account trainer certificates */
 .personal-account-coach__list .slick-track {
   background-color: #f2f2f2;
+}
+
+
+
+.popular-trainings__wrapper .slick-track {
+  background-color: #f2f2f2;
+}
+
+.popular-trainings__wrapper .slider-block-wrapper {
+  margin-bottom: 50px;
+  height: 450px;
+}
+
+.popular-trainings__wrapper .slick-slide {
+  min-width: 334px;
+  margin-right: 15px;
+}
+
+.popular-trainings__wrapper .slick-slide:last-child {
+  margin-right: 0px;
 }

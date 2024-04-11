@@ -86,14 +86,18 @@ export default function AccountCertificates(): JSX.Element {
           </button>
         </div>
       </div>
-        <Slider
-          ref={slickSliderRef}
-          className="personal-account-coach__list"
-          slidesToShow={SliderBlockItems.AccountTrainerCertificatesVisible}
-          slidesToScroll={SliderBlockItems.DefaultToScroll}
-        >
-          {certificateCards}
-        </Slider>
+      <section className='personal-account-coach'>
+        <div className="container">
+          <Slider
+            ref={slickSliderRef}
+            className="personal-account-coach__list"
+            slidesToShow={SliderBlockItems.AccountTrainerCertificatesVisible}
+            slidesToScroll={SliderBlockItems.DefaultToScroll}
+          >
+            {certificateCards}
+          </Slider>
+        </div>
+      </section>
     </div>
   );
 }

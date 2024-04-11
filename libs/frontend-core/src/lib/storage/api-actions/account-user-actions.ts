@@ -71,3 +71,41 @@ export const deleteFriend = createAsyncThunk<
     return rejectWithValue(error.response.data);
   }
 });
+
+export const subscribeToTrainer = createAsyncThunk<
+  void,
+  string,
+  { dispatch: AppDispatch; state: State; extra: AxiosInstance }
+>('accountUser/subscribeToTrainer', async (id, { dispatch, extra: api, rejectWithValue }) => {
+  try {
+    await api.post(`${ApiRoute.User}/${id}${ApiRoute.Subscribe}`);
+    const { data } = await api.get<User>(`${ApiRoute.User}/${id}`);
+    dispatch(setUser(data));
+  } catch (error) {
+    if (!error.response) {
+      throw new Error(error);
+    }
+
+    dispatch(setResponseError(error.response.data));
+    return rejectWithValue(error.response.data);
+  }
+});
+
+export const unsubscribeFromTrainer = createAsyncThunk<
+  void,
+  string,
+  { dispatch: AppDispatch; state: State; extra: AxiosInstance }
+>('accountUser/unsubscribeFromTrainer', async (id, { dispatch, extra: api, rejectWithValue }) => {
+  try {
+    await api.delete(`${ApiRoute.User}/${id}${ApiRoute.Subscribe}`);
+    const { data } = await api.get<User>(`${ApiRoute.User}/${id}`);
+    dispatch(setUser(data));
+  } catch (error) {
+    if (!error.response) {
+      throw new Error(error);
+    }
+
+    dispatch(setResponseError(error.response.data));
+    return rejectWithValue(error.response.data);
+  }
+});

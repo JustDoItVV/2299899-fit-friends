@@ -87,7 +87,15 @@ export class UserRdo {
   @Expose()
   public createdAt?: Date;
 
-  @ApiPropertyOptional({ description: 'Дата регистрации пользователя' })
+  @ApiPropertyOptional({ description: 'Друзья пользователя' })
   @Expose()
   public friends?: string[];
+
+  @ApiPropertyOptional({ description: 'Подписки пользователя' })
+  @Expose()
+  public emailSubscriptions?: string[];
+
+  @ApiPropertyOptional({ description: 'Время последней рассылки' })
+  @Expose()
+  public emailLastDate?: Date;
 }

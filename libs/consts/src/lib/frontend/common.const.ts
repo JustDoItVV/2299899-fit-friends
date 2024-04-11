@@ -44,6 +44,7 @@ export const SliderBlockItems = {
   SeekCompanyMax: 8,
   SeekCompanyVisible: 4,
   AccountTrainerCertificatesVisible: 3,
+  TrainingPageVisible: 4,
 } as const;
 
 export enum CardPlaceholderPreviewImage {
