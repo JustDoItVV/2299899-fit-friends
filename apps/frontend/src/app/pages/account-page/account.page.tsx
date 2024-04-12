@@ -9,6 +9,7 @@ import AccountAbout from '../../components/account-about/account-about';
 import AccountCertificates from '../../components/account-certificates/account-certificates';
 import AccountPanelTrainer from '../../components/account-panel-trainer/account-panel-trainer';
 import AccountPanelUser from '../../components/account-panel-user/account-panel-user';
+import AccountUserSchedule from '../../components/account-user-schedule/account-user-schedule';
 import Header from '../../components/header/header';
 
 export default function AccountPage(): JSX.Element {
@@ -33,13 +34,14 @@ export default function AccountPage(): JSX.Element {
               <div className="inner-page__content">
                 {
                   currentUser?.role === UserRole.Trainer
-                    ? <div className="personal-account-coach">
-                        <AccountPanelTrainer />
-                        <AccountCertificates />
-                      </div>
-                    : <div className="personal-account-user">
-                        <AccountPanelUser />
-                      </div>
+                  ? <div className="personal-account-coach">
+                      <AccountPanelTrainer />
+                      <AccountCertificates />
+                    </div>
+                  : <div className="personal-account-user">
+                      <AccountUserSchedule />
+                      <AccountPanelUser />
+                    </div>
                 }
               </div>
             </div>
