@@ -1,11 +1,36 @@
+import { MouseEvent, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { Link } from 'react-router-dom';
 
-import { FrontendRoute } from '@2299899-fit-friends/types';
+import { fetchBalanceCatalog, useBackButton } from '@2299899-fit-friends/frontend-core';
+import { FrontendRoute, QueryPagination } from '@2299899-fit-friends/types';
 
+import CardTrainingBalance from '../../components/cards/card-training-balance/card-training-balance';
+import ExpandingCatalog from '../../components/expanding-catalog/expanding-catalog';
 import Header from '../../components/header/header';
 
 export default function AccountPurchasesPage(): JSX.Element {
+  const [query, setQuery] = useState<QueryPagination>({ limit: 4 });
+
+  const handleBackButtonClick = useBackButton();
+
+  const handleFilterButtonClick = (evt: MouseEvent<HTMLInputElement>) => {
+    if (evt.currentTarget) {
+      if (evt.currentTarget.checked) {
+        setQuery((oldQuery) => {
+          console.log(oldQuery);
+          const newQuery = { ...oldQuery };
+          delete newQuery.availableMin;
+          return newQuery;
+        });
+      } else {
+        setQuery((oldQuery) => ({
+          ...oldQuery,
+          availableMin: 1,
+        }));
+      }
+    }
+  };
+
   return (
     <div className="wrapper">
       <Helmet><title>Мои покупки — FitFriends</title></Helmet>
@@ -14,7 +39,11 @@ export default function AccountPurchasesPage(): JSX.Element {
         <section className="my-purchases">
           <div className="container">
             <div className="my-purchases__wrapper">
-              <button className="btn-flat my-purchases__back" type="button">
+              <button
+                className="btn-flat my-purchases__back"
+                type="button"
+                onClick={handleBackButtonClick}
+              >
                 <svg width={14} height={10} aria-hidden="true">
                   <use xlinkHref="#arrow-left" />
                 </svg>
@@ -32,6 +61,8 @@ export default function AccountPurchasesPage(): JSX.Element {
                         type="checkbox"
                         defaultValue="user-agreement-1"
                         name="user-agreement"
+                        defaultChecked={false}
+                        onClick={handleFilterButtonClick}
                       />
                       <span className="custom-toggle__icon">
                         <svg width={9} height={6} aria-hidden="true">
@@ -43,226 +74,12 @@ export default function AccountPurchasesPage(): JSX.Element {
                   </div>
                 </div>
               </div>
-              <ul className="my-purchases__list">
-                <li className="my-purchases__item">
-                  <div className="thumbnail-training">
-                    <div className="thumbnail-training__inner">
-                      <div className="thumbnail-training__image">
-                        <picture>
-                          <source
-                            type="image/webp"
-                            srcSet="img/content/thumbnails/training-01.webp, img/content/thumbnails/training-01@2x.webp 2x"
-                          />
-                          <img
-                            src="img/content/thumbnails/training-01.jpg"
-                            srcSet="img/content/thumbnails/training-01@2x.jpg 2x"
-                            width={330}
-                            height={190}
-                            alt=""
-                          />
-                        </picture>
-                      </div>
-                      <p className="thumbnail-training__price">
-                        <span className="thumbnail-training__price-value">800</span>
-                        <span>₽</span>
-                      </p>
-                      <h2 className="thumbnail-training__title">energy</h2>
-                      <div className="thumbnail-training__info">
-                        <ul className="thumbnail-training__hashtags-list">
-                          <li className="thumbnail-training__hashtags-item">
-                            <div className="hashtag thumbnail-training__hashtag">
-                              <span>#пилатес</span>
-                            </div>
-                          </li>
-                          <li className="thumbnail-training__hashtags-item">
-                            <div className="hashtag thumbnail-training__hashtag">
-                              <span>#320ккал</span>
-                            </div>
-                          </li>
-                        </ul>
-                        <div className="thumbnail-training__rate">
-                          <svg width={16} height={16} aria-hidden="true">
-                            <use xlinkHref="#icon-star" />
-                          </svg>
-                          <span className="thumbnail-training__rate-value">4</span>
-                        </div>
-                      </div>
-                      <div className="thumbnail-training__text-wrapper">
-                        <p className="thumbnail-training__text">
-                          Упражнения укрепляют мышечный корсет, делают суставы более
-                          гибкими, улучшают осанку и&nbsp;координацию.
-                        </p>
-                      </div>
-                      <div className="thumbnail-training__button-wrapper">
-                        <Link
-                          className="btn btn--small thumbnail-training__button-catalog"
-                          to="*"
-                        >
-                          Подробнее
-                        </Link>
-                        <Link
-                          className="btn btn--small btn--outlined thumbnail-training__button-catalog"
-                          to="*"
-                        >
-                          Отзывы
-                        </Link>
-                      </div>
-                    </div>
-                  </div>
-                </li>
-                <li className="my-purchases__item">
-                  <div className="thumbnail-training">
-                    <div className="thumbnail-training__inner">
-                      <div className="thumbnail-training__image">
-                        <picture>
-                          <source
-                            type="image/webp"
-                            srcSet="img/content/thumbnails/training-03.webp, img/content/thumbnails/training-03@2x.webp 2x"
-                          />
-                          <img
-                            src="img/content/thumbnails/training-03.jpg"
-                            srcSet="img/content/thumbnails/training-03@2x.jpg 2x"
-                            width={330}
-                            height={190}
-                            alt=""
-                          />
-                        </picture>
-                      </div>
-                      <p className="thumbnail-training__price">
-                        <span className="thumbnail-training__price-value">
-                          1000
-                        </span>
-                        <span>₽</span>
-                      </p>
-                      <h2 className="thumbnail-training__title">boxing</h2>
-                      <div className="thumbnail-training__info">
-                        <ul className="thumbnail-training__hashtags-list">
-                          <li className="thumbnail-training__hashtags-item">
-                            <div className="hashtag thumbnail-training__hashtag">
-                              <span>#бокс</span>
-                            </div>
-                          </li>
-                          <li className="thumbnail-training__hashtags-item">
-                            <div className="hashtag thumbnail-training__hashtag">
-                              <span>#800ккал</span>
-                            </div>
-                          </li>
-                        </ul>
-                        <div className="thumbnail-training__rate">
-                          <svg width={16} height={16} aria-hidden="true">
-                            <use xlinkHref="#icon-star" />
-                          </svg>
-                          <span className="thumbnail-training__rate-value">5</span>
-                        </div>
-                      </div>
-                      <div className="thumbnail-training__text-wrapper">
-                        <p className="thumbnail-training__text">
-                          Тренировка на&nbsp;отработку правильных ударов,
-                          координации и&nbsp;оптимальной механики защитных движений.
-                        </p>
-                      </div>
-                      <div className="thumbnail-training__button-wrapper">
-                        <Link
-                          className="btn btn--small thumbnail-training__button-catalog"
-                          to="*"
-                        >
-                          Подробнее
-                        </Link>
-                        <Link
-                          className="btn btn--small btn--outlined thumbnail-training__button-catalog"
-                          to="*"
-                        >
-                          Отзывы
-                        </Link>
-                      </div>
-                    </div>
-                  </div>
-                </li>
-                <li className="my-purchases__item">
-                  <div className="thumbnail-training">
-                    <div className="thumbnail-training__inner">
-                      <div className="thumbnail-training__image">
-                        <picture>
-                          <source
-                            type="image/webp"
-                            srcSet="img/content/thumbnails/training-06.webp, img/content/thumbnails/training-06@2x.webp 2x"
-                          />
-                          <img
-                            src="img/content/thumbnails/training-06.jpg"
-                            srcSet="img/content/thumbnails/training-06@2x.jpg 2x"
-                            width={330}
-                            height={190}
-                            alt=""
-                          />
-                        </picture>
-                      </div>
-                      <p className="thumbnail-training__price">
-                        <span className="thumbnail-training__price-value">
-                          1600
-                        </span>
-                        <span>₽</span>
-                      </p>
-                      <h2 className="thumbnail-training__title">
-                        run, forrest, run
-                      </h2>
-                      <div className="thumbnail-training__info">
-                        <ul className="thumbnail-training__hashtags-list">
-                          <li className="thumbnail-training__hashtags-item">
-                            <div className="hashtag thumbnail-training__hashtag">
-                              <span>#бег</span>
-                            </div>
-                          </li>
-                          <li className="thumbnail-training__hashtags-item">
-                            <div className="hashtag thumbnail-training__hashtag">
-                              <span>#500ккал</span>
-                            </div>
-                          </li>
-                        </ul>
-                        <div className="thumbnail-training__rate">
-                          <svg width={16} height={16} aria-hidden="true">
-                            <use xlinkHref="#icon-star" />
-                          </svg>
-                          <span className="thumbnail-training__rate-value">5</span>
-                        </div>
-                      </div>
-                      <div className="thumbnail-training__text-wrapper">
-                        <p className="thumbnail-training__text">
-                          Узнайте правильную технику бега, развивайте выносливость
-                          и&nbsp;откройте для себя все секреты длительных пробежек.
-                        </p>
-                      </div>
-                      <div className="thumbnail-training__button-wrapper">
-                        <Link
-                          className="btn btn--small thumbnail-training__button-catalog"
-                          to="*"
-                        >
-                          Подробнее
-                        </Link>
-                        <Link
-                          className="btn btn--small btn--outlined thumbnail-training__button-catalog"
-                          to="*"
-                        >
-                          Отзывы
-                        </Link>
-                      </div>
-                    </div>
-                  </div>
-                </li>
-              </ul>
-              <div className="show-more my-purchases__show-more">
-                <button
-                  className="btn show-more__button show-more__button--more"
-                  type="button"
-                >
-                  Показать еще
-                </button>
-                <button
-                  className="btn show-more__button show-more__button--to-top"
-                  type="button"
-                >
-                  Вернуться в начало
-                </button>
-              </div>
+              <ExpandingCatalog
+                fetch={fetchBalanceCatalog}
+                component={CardTrainingBalance}
+                classNamePrefix='my-purchases'
+                query={query}
+              />
             </div>
           </div>
         </section>
