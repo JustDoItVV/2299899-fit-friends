@@ -20,7 +20,7 @@ export default memo(function FriendsCatalogCard({ item }: FriendsCatalogCardProp
   ));
 
   return (
-    <li className="friends-list__item">
+    <div className="friends-list__item">
       <div className="thumbnail-friend">
         <div className="thumbnail-friend__info thumbnail-friend__info--theme-light">
           <div className="thumbnail-friend__image-status">
@@ -75,6 +75,6 @@ export default memo(function FriendsCatalogCard({ item }: FriendsCatalogCardProp
           </div>
         </div> */}
       </div>
-    </li>
+    </div>
   );
 });

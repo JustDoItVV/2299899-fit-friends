@@ -111,3 +111,14 @@ export const unsubscribeFromTrainer = createAsyncThunk<
     return rejectWithValue(error.response.data);
   }
 });
+
+export const fetchUserFriends = createAsyncThunk<
+  Pagination<CatalogItem>,
+  QueryPagination,
+  { dispatch: AppDispatch; state: State; extra: AxiosInstance }
+>('accountUser/fetchFriends', async (query, { extra: api }) => {
+  const { data: pagination } = await api.get<Pagination<User>>(
+    `${ApiRoute.Account}${ApiRoute.User}${ApiRoute.Friends}?${stringify(query)}`
+  );
+  return pagination;
+});
