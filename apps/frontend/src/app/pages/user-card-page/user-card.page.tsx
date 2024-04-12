@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useParams } from 'react-router-dom';
 
-import { fetchUserAction, useAppDispatch, useBackButton } from '@2299899-fit-friends/frontend-core';
+import { fetchUser, useAppDispatch, useBackButton } from '@2299899-fit-friends/frontend-core';
 import { FrontendRoute } from '@2299899-fit-friends/types';
 
 import CardUserInfo from '../../components/cards/card-user-info/card-user-info';
@@ -15,7 +15,7 @@ export default function UserCardPage(): JSX.Element {
 
   useEffect(() => {
     if (id) {
-      dispatch(fetchUserAction(id));
+      dispatch(fetchUser(id));
     }
   }, [dispatch, id]);
 

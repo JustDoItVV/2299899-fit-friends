@@ -1,20 +1,18 @@
 import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 
 import {
-    selectResponseError, updateUserAction, useAppDispatch, useAppSelector
+    selectResponseError, updateUser, useAppDispatch, useAppSelector
 } from '@2299899-fit-friends/frontend-core';
 import { getResponseErrorMessage } from '@2299899-fit-friends/helpers';
 import { TrainingDuration, TrainingLevel, TrainingType, User } from '@2299899-fit-friends/types';
 
-import Loading from '../loading/loading';
+import Loading from '../../loading/loading';
 
-type QuestionnaireFormUserProps = {
+type FormQuestionnaireUserProps = {
   user: User | null;
 };
 
-export default function QuestionnaireFormUser(
-  props: QuestionnaireFormUserProps
-): JSX.Element {
+export default function QuestionnaireFormUser(props: FormQuestionnaireUserProps): JSX.Element {
   const { user } = props;
   const dispatch = useAppDispatch();
   const responseError = useAppSelector(selectResponseError);
@@ -104,7 +102,7 @@ export default function QuestionnaireFormUser(
         updatedCaloriesPerDay ? updatedCaloriesPerDay.toString() : ''
       );
 
-      dispatch(updateUserAction({ id: user.id, data: formData }));
+      dispatch(updateUser({ id: user.id, data: formData }));
     }
   };
 

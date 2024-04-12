@@ -6,7 +6,7 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class LoginUserDto {
   @ApiProperty({ description: 'Уникальный email', example: 'email@local.local' })
-  @IsEmail({}, { message: getDtoMessageCallback(UserErrorMessage.EmailNotValid) })
+  @IsEmail({}, { message: getDtoMessageCallback(UserErrorMessage.NotValid) })
   @IsNotEmpty({ message: getDtoMessageCallback(UserErrorMessage.Required) })
   public email: string;
 

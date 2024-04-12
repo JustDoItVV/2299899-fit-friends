@@ -5,9 +5,9 @@ import { Route, Routes } from 'react-router-dom';
 
 import { FrontendRoute, UserRole } from '@2299899-fit-friends/types';
 
-import AnonymousRoute from './components/anonymous-route/anonymous-route';
-import AuthorizedRoute from './components/authorized-route/authorized-route';
-import RoleRoute from './components/role-route/role-route';
+import RouteAnonymous from './components/routes/route-anonymous/route-anonymous';
+import RouteAuthorized from './components/routes/route-authorized/route-authorized';
+import RouteRole from './components/routes/route-role/route-role';
 import AccountFriendsPage from './pages/account-friends-page/account-friends.page';
 import AccountOrdersPage from './pages/account-orders-page/account-orders.page';
 import AccountPage from './pages/account-page/account.page';
@@ -28,65 +28,65 @@ import UsersPage from './pages/users-page/users.page';
 export default function App() {
   return (
     <HelmetProvider>
-      <Routes>
+      <Routes location={''}>
         <Route path={''} element={<IntroPage />} />
-        <Route path={FrontendRoute.Login} element={<AnonymousRoute children={
+        <Route path={FrontendRoute.Login} element={<RouteAnonymous children={
           <LoginPage />
         } />} />
-        <Route path={FrontendRoute.Registration} element={<AnonymousRoute children={
+        <Route path={FrontendRoute.Registration} element={<RouteAnonymous children={
           <RegistrationPage />
         } />} />
-        <Route path={FrontendRoute.Questionnaire} element={<AuthorizedRoute children={
+        <Route path={FrontendRoute.Questionnaire} element={<RouteAuthorized children={
           <QuestionnairePage />
         } />} />
-        <Route path={FrontendRoute.Main} element={<AuthorizedRoute children={
-          <RoleRoute role={UserRole.User} redirect={`/${FrontendRoute.Account}`} children={
+        <Route path={FrontendRoute.Main} element={<RouteAuthorized children={
+          <RouteRole role={UserRole.User} redirect={`/${FrontendRoute.Account}`} children={
             <MainPage />
           } />
         } />} />
         <Route path={FrontendRoute.Account}>
-          <Route path={''} element={<AuthorizedRoute children={
+          <Route path={''} element={<RouteAuthorized children={
             <AccountPage />
           } />} />
-          <Route path={FrontendRoute.Friends} element={<AuthorizedRoute children={
+          <Route path={FrontendRoute.Friends} element={<RouteAuthorized children={
             <AccountFriendsPage />
           } />} />
-          <Route path={FrontendRoute.Create} element={<AuthorizedRoute children={
-            <RoleRoute role={UserRole.Trainer} children={
+          <Route path={FrontendRoute.Create} element={<RouteAuthorized children={
+            <RouteRole role={UserRole.Trainer} children={
               <TrainingsCreatePage />
             } />
           } /> } />
-          <Route path={FrontendRoute.Trainings} element={<AuthorizedRoute children={
-            <RoleRoute role={UserRole.Trainer} children={
+          <Route path={FrontendRoute.Trainings} element={<RouteAuthorized children={
+            <RouteRole role={UserRole.Trainer} children={
               <AccountTrainingsPage />
             } />
           } />} />
-          <Route path={FrontendRoute.Orders} element={<AuthorizedRoute children={
-            <RoleRoute role={UserRole.Trainer} children={
+          <Route path={FrontendRoute.Orders} element={<RouteAuthorized children={
+            <RouteRole role={UserRole.Trainer} children={
               <AccountOrdersPage />
             } />
           } />} />
-          <Route path={FrontendRoute.Purchases} element={<AuthorizedRoute children={
-            <RoleRoute role={UserRole.User} children={
+          <Route path={FrontendRoute.Purchases} element={<RouteAuthorized children={
+            <RouteRole role={UserRole.User} children={
               <AccountPurchasesPage />
             } />
           } />} />
         </Route>
         <Route path={FrontendRoute.Trainings}>
-          <Route path='' element={<AuthorizedRoute children={
-            <RoleRoute role={UserRole.User} children={
+          <Route path='' element={<RouteAuthorized children={
+            <RouteRole role={UserRole.User} children={
               <TrainingsPage />
             } />
           } />} />
-          <Route path=':id' element={<AuthorizedRoute children={
+          <Route path=':id' element={<RouteAuthorized children={
             <TrainingCardPage />
           } />} />
         </Route>
         <Route path={FrontendRoute.Users}>
-          <Route path='' element={<AuthorizedRoute children={
+          <Route path='' element={<RouteAuthorized children={
             <UsersPage />
           } />} />
-          <Route path=':id' element={<AuthorizedRoute children={
+          <Route path=':id' element={<RouteAuthorized children={
             <UserCardPage />
           } />} />
         </Route>

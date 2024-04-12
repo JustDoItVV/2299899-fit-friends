@@ -3,7 +3,7 @@ import './card-review.css';
 import { memo, useEffect, useState } from 'react';
 
 import {
-    CatalogItem, fetchUserAction, fetchUserAvatar, useAppDispatch, useFetchFileUrl
+    CatalogItem, fetchUser, fetchUserAvatar, useAppDispatch, useFetchFileUrl
 } from '@2299899-fit-friends/frontend-core';
 import { Review, User } from '@2299899-fit-friends/types';
 import { unwrapResult } from '@reduxjs/toolkit';
@@ -20,7 +20,7 @@ export default memo(function CardReview({ item }: CardReviewProps): JSX.Element 
 
   useEffect(() => {
     const fetch = async () => {
-      const data = unwrapResult(await dispatch(fetchUserAction(review.userId)));
+      const data = unwrapResult(await dispatch(fetchUser(review.userId)));
       setUser(data);
     };
 

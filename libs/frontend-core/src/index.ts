@@ -16,7 +16,7 @@ export * from './lib/storage/api-actions/account-user-actions';
 export * from './lib/storage/api-actions/reviews-actions';
 export * from './lib/storage/api-actions/training-requests-actions';
 export * from './lib/storage/api-actions/trainings-catalog-actions';
-export * from './lib/storage/api-actions/user-actions';
+export * from './lib/storage/api-actions/users-actions';
 export * from './lib/storage/reducers/app-process/app-process.selector';
 export * from './lib/storage/reducers/app-process/app-process.slice';
 export * from './lib/storage/reducers/training-process/training-process.selector';

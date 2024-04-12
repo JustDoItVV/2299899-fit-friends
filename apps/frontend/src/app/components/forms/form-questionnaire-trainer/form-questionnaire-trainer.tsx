@@ -1,15 +1,15 @@
 import { ChangeEvent, FormEvent, useEffect, useRef, useState } from 'react';
 
-import { updateUserAction, useAppDispatch } from '@2299899-fit-friends/frontend-core';
+import { updateUser, useAppDispatch } from '@2299899-fit-friends/frontend-core';
 import { TrainingLevel, TrainingType, User } from '@2299899-fit-friends/types';
 
-import Loading from '../loading/loading';
+import Loading from '../../loading/loading';
 
-type QuestionnaireFormTrainerProps = {
+type FormQuestionnaireTrainerProps = {
   user: User | null;
 };
 
-export default function QuestionnaireFormTrainer(props: QuestionnaireFormTrainerProps): JSX.Element {
+export default function FormQuestionnaireTrainer(props: FormQuestionnaireTrainerProps): JSX.Element {
   const { user } = props;
   const dispatch = useAppDispatch();
   const [updatedTrainingTypes, setUpdatedTrainingTypes] = useState<TrainingType[]>([]);
@@ -76,7 +76,7 @@ export default function QuestionnaireFormTrainer(props: QuestionnaireFormTrainer
       formData.append('merits', updatedMerits);
       formData.append('isReadyToPersonal', updatedIsReadyToPersonal.toString());
 
-      dispatch(updateUserAction({ id: user.id, data: formData }));
+      dispatch(updateUser({ id: user.id, data: formData }));
     }
   };
 

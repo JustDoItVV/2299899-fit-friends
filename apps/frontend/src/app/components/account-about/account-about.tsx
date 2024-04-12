@@ -3,7 +3,7 @@ import { ChangeEvent, FormEvent, MouseEvent, useEffect, useRef, useState } from 
 import { METRO_STATIONS } from '@2299899-fit-friends/consts';
 import {
     dropToken, fetchUserAvatar, selectResponseError, selectUser, setAuthStatus, setCurrentUser,
-    updateUserAction, useAppDispatch, useAppSelector
+    updateUser, useAppDispatch, useAppSelector
 } from '@2299899-fit-friends/frontend-core';
 import { getResponseErrorMessage } from '@2299899-fit-friends/helpers';
 import {
@@ -114,7 +114,7 @@ export default function AccountAbout(): JSX.Element {
     formData.append('gender', genderRef.current);
     formData.append('trainingLevel', levelRef.current);
 
-    dispatch(updateUserAction({ id: user?.id || '', data: formData }))
+    dispatch(updateUser({ id: user?.id || '', data: formData }))
   }
 
   const handleLogoutButtonCLick = (evt: MouseEvent<HTMLButtonElement>) => {

@@ -1,13 +1,8 @@
 import {
-  ValidationArguments,
-  ValidatorConstraint,
-  ValidatorConstraintInterface,
+    ValidationArguments, ValidatorConstraint, ValidatorConstraintInterface
 } from 'class-validator';
 
-import {
-  TRAINING_TYPE_LIMIT,
-  UserErrorMessage,
-} from '@2299899-fit-friends/consts';
+import { TRAINING_TYPE_LIMIT, UserErrorMessage } from '@2299899-fit-friends/consts';
 import { UserRole } from '@2299899-fit-friends/types';
 import { BadRequestException, Injectable } from '@nestjs/common';
 
@@ -16,7 +11,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 export class ArrayMinLengthByUserRole implements ValidatorConstraintInterface {
   validate(values: string[], validationArguments: ValidationArguments) {
     if (!values) {
-      throw new BadRequestException(UserErrorMessage.TrainingTypeRequired);
+      throw new BadRequestException(UserErrorMessage.Required);
     }
     const uniqueValues = [...new Set(values)];
     const min =
@@ -31,6 +26,6 @@ export class ArrayMinLengthByUserRole implements ValidatorConstraintInterface {
       validationArguments.object['role'] === UserRole.Trainer
         ? TRAINING_TYPE_LIMIT
         : 0;
-    return `${validationArguments.property} unique values array min length is ${min}`;
+    return `${validationArguments.property} минимальный размер массива уникальных значений ${min}`;
   }
 }

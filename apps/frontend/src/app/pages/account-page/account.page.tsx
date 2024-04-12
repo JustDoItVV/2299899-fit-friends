@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 
 import {
-    fetchUserAction, selectCurrentUser, useAppDispatch, useAppSelector
+    fetchUser, selectCurrentUser, useAppDispatch, useAppSelector
 } from '@2299899-fit-friends/frontend-core';
 import { FrontendRoute, UserRole } from '@2299899-fit-friends/types';
 
@@ -18,7 +18,7 @@ export default function AccountPage(): JSX.Element {
 
   useEffect(() => {
     if (currentUser?.id) {
-      dispatch(fetchUserAction(currentUser?.id));
+      dispatch(fetchUser(currentUser?.id));
     }
   }, [dispatch, currentUser]);
 

@@ -2,7 +2,7 @@ import { FormEvent, useRef } from 'react';
 import { Helmet } from 'react-helmet-async';
 
 import {
-    loginUserAction, selectResponseError, useAppDispatch, useAppSelector
+    loginUser, selectResponseError, useAppDispatch, useAppSelector
 } from '@2299899-fit-friends/frontend-core';
 import { getResponseErrorMessage } from '@2299899-fit-friends/helpers';
 
@@ -15,12 +15,10 @@ export default function LoginPage(): JSX.Element {
   const handleFormSubmit = (evt: FormEvent<HTMLFormElement>) => {
     evt.preventDefault();
     if (emailRef.current !== null && passwordRef.current !== null) {
-      dispatch(
-        loginUserAction({
-          email: emailRef.current.value,
-          password: passwordRef.current.value,
-        })
-      );
+      dispatch(loginUser({
+        email: emailRef.current.value,
+        password: passwordRef.current.value,
+      }));
     }
   };
 

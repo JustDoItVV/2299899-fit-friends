@@ -1,7 +1,7 @@
 import { NameSpace, User } from '@2299899-fit-friends/types';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import { fetchUserAction } from '../../api-actions/user-actions';
+import { fetchUser } from '../../api-actions/users-actions';
 import { UserProcess } from '../../types/user-process.type';
 
 const initialState: UserProcess = {
@@ -18,10 +18,10 @@ export const userProcess = createSlice({
   },
   extraReducers(builder) {
     builder
-      .addCase(fetchUserAction.fulfilled, (state, action) => {
+      .addCase(fetchUser.fulfilled, (state, action) => {
         state.user = action.payload;
       })
-      .addCase(fetchUserAction.rejected, (state) => {
+      .addCase(fetchUser.rejected, (state) => {
         state.user = null;
       });
   },
