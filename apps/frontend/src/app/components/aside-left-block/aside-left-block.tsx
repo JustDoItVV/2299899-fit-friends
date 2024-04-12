@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { useBackButton } from '@2299899-fit-friends/frontend-core';
 
 type AsideLeftBlockProps = {
   className?: string;
@@ -9,12 +9,7 @@ type AsideLeftBlockProps = {
 export default function AsideLeftBlock(props: AsideLeftBlockProps): JSX.Element {
   const { backButtonPath, children } = props;
   const className = props.className ?? '';
-
-  const navigate = useNavigate();
-
-  const handleBackButtonClick = () => {
-    navigate(-1);
-  };
+  const handleBackButtonClick = useBackButton();
 
   return (
     <aside className={className}>

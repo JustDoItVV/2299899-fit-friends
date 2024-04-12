@@ -48,11 +48,12 @@ export class TrainingRepository extends BasePostgresRepository<TrainingEntity, T
     where.price = { gte: query.priceMin, lte: query.priceMax };
     where.calories = { gte: query.caloriesMin, lte: query.caloriesMax };
     where.rating = { gte: query.ratingMin, lte: query.ratingMax };
-
     if (userId) {
       where.userId = userId;
     }
-
+    if (query.userId) {
+      where.userId = query.userId;
+    }
     if (query.duration) {
       if (Array.isArray(query.duration)) {
         where.duration = { in: query.duration };
@@ -67,19 +68,16 @@ export class TrainingRepository extends BasePostgresRepository<TrainingEntity, T
         where.type = query.type;
       }
     }
-
     if (query.isSpecialOffer) {
       where.isSpecialOffer = query.isSpecialOffer;
     }
 
-    const orderBy: Prisma.TrainingOrderByWithRelationAndSearchRelevanceInput[] = [{}];
-
+    const orderBy: Prisma.TrainingOrderByWithRelationAndSearchRelevanceInput[] = [];
     if (query.sortOption === TrainingSortOption.CreatedAt) {
       orderBy.push({ createdAt: query.sortDirection });
     } else if (query.sortOption === TrainingSortOption.Price) {
       orderBy.push({ price: query.sortDirection });
     }
-
     orderBy.push({ id: SortDirection.Asc });
 
     const documentsCount = await this.getTrainingsCount(where);

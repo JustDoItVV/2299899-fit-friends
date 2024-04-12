@@ -12,7 +12,7 @@ import Header from '../../components/header/header';
 
 export default function AccountOrdersPage(): JSX.Element {
   const dispatch = useAppDispatch();
-  const [queryParams,] = useState<QueryPagination>({ page: 1, limit: 4 });
+  const [query,] = useState<QueryPagination>({ page: 1, limit: 4 });
 
   const handleBackButtonClick = () => {
     dispatch(redirectToRoute(`/${FrontendRoute.Account}`));
@@ -59,8 +59,8 @@ export default function AccountOrdersPage(): JSX.Element {
               <ExpandingCatalog
                 fetch={fetchTrainerOrders}
                 component={CardOrders}
-                classNameList='my-orders__list'
-                queryParams={queryParams}
+                classNamePrefix='my-orders'
+                query={query}
               />
             </div>
           </div>

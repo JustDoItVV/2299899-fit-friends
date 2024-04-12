@@ -74,10 +74,11 @@ export class ReviewRepository extends BasePostgresRepository<
     const where: Prisma.ReviewWhereInput = {};
     where.trainingId = trainingId;
 
-    const orderBy: Prisma.ReviewOrderByWithRelationAndSearchRelevanceInput = {};
+    const orderBy: Prisma.ReviewOrderByWithRelationAndSearchRelevanceInput[] = [];
     if (query.sortOption === SortOption.CreatedAt) {
-      orderBy.createdAt = query.sortDirection;
+      orderBy.push({ createdAt: query.sortDirection });
     }
+    orderBy.push({ id: query.sortDirection });
 
     const documentsCount = await this.getReviewsCount(where);
     const totalPages = this.calculatePage(documentsCount, limit);

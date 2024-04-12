@@ -3,13 +3,11 @@ import { DefaultPagination } from '@2299899-fit-friends/consts';
 import { OrderPaginationQuery } from '@2299899-fit-friends/dtos';
 import { PrismaClientService } from '@2299899-fit-friends/models';
 import {
-    Order, OrderPaymentMethod, OrderSortOption, OrderType, Pagination, TrainingAuditory,
-    TrainingDuration, TrainingLevel, TrainingType
+    Order, OrderPaymentMethod, OrderSortOption, OrderType, Pagination, Training
 } from '@2299899-fit-friends/types';
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 
-import { TrainingEntity } from '../../training/training.entity';
 import { OrderEntity } from './order.entity';
 
 @Injectable()
@@ -57,16 +55,26 @@ export class OrderRepository extends BasePostgresRepository<OrderEntity, Order> 
       where.training = { userId };
     }
 
-    const orderBy: Prisma.OrderOrderByWithRelationAndSearchRelevanceInput = {};
+    const orderBy: Prisma.OrderOrderByWithAggregationInput[] = [];
     if (query.sortOption === OrderSortOption.CreatedAt) {
-      orderBy.createdAt = query.sortDirection;
+      orderBy.push({ createdAt: query.sortDirection });
     } else if (query.sortOption === OrderSortOption.Amount) {
-      orderBy.amount = query.sortDirection;
+      orderBy.push({ amount: query.sortDirection });
     } else if (query.sortOption === OrderSortOption.OrderSum) {
-      orderBy.orderSum = query.sortDirection;
+      orderBy.push({ orderSum: query.sortDirection });
     }
+    orderBy.push({ id: query.sortDirection });
 
-    const documentsCount = await this.getOrdersCount(where);
+    const allItems: unknown[] = await this.clientService.$queryRaw`
+      SELECT COUNT(*)
+      FROM public.orders
+      JOIN public.trainings
+      ON public.orders.training_id = public.trainings.id
+      WHERE public.trainings.user_id = ${userId}
+      GROUP BY public.orders.training_id, public.orders.price, public.trainings.id
+      ORDER BY public.orders.training_id
+    `;
+    const documentsCount = allItems.length;
     const totalPages = this.calculatePage(documentsCount, limit);
     let currentPage = query.page;
     if (query.page < 1) {
@@ -74,29 +82,48 @@ export class OrderRepository extends BasePostgresRepository<OrderEntity, Order> 
     } else if (query.page > totalPages) {
       currentPage = totalPages;
     }
-
     const skip = (currentPage - 1) * limit;
-    const documents = await this.clientService.order.findMany({
-      where,
-      orderBy,
-      skip,
-      take: limit,
-      include: { training: true },
-    });
+
+    const documents: {
+      training_id: string,
+      price: number,
+      amount: bigint,
+      order_sum: bigint,
+      traininig?: Training,
+    }[] = await this.clientService.$queryRaw`
+      SELECT
+        public.orders.training_id,
+        public.orders.price,
+        SUM(public.orders.amount) AS amount,
+        SUM(public.orders.order_sum) AS order_sum
+      FROM public.orders
+      JOIN public.trainings
+      ON public.orders.training_id = public.trainings.id
+      WHERE public.trainings.user_id = ${userId}
+      GROUP BY public.orders.training_id, public.orders.price, public.trainings.id
+      ORDER BY public.orders.training_id
+      OFFSET ${skip} ROWS
+      FETCH NEXT ${limit} ROWS ONLY;
+    `;
+
+    for (const document of documents) {
+      const training = await this.clientService.training.findFirst({
+        where: { id: document.training_id }
+      }) as Training;
+      document.traininig = training;
+    }
 
     return {
       entities: documents.map((document) => {
         const entity = this.createEntityFromDocument({
-          ...document,
-          type: document.type as OrderType,
-          paymentMethod: document.paymentMethod as OrderPaymentMethod,
-          training: new TrainingEntity().populate({
-            ...document.training,
-            level: document.training.level as TrainingLevel,
-            type: document.training.type as TrainingType,
-            duration: document.training.duration as TrainingDuration,
-            gender: document.training.gender as TrainingAuditory,
-          }),
+          id: document.training_id,
+          type: OrderType.Subscription,
+          trainingId: document.training_id,
+          price: document.price,
+          amount: Number(document.amount),
+          orderSum: Number(document.order_sum),
+          paymentMethod: OrderPaymentMethod.Mir,
+          training: document.traininig
         });
         return entity;
       }),

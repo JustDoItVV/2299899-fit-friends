@@ -1,0 +1,19 @@
+.user-card__label button {
+  background-color: transparent;
+  color: #333;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+}
+
+.user-card-coach__label button {
+  background-color: transparent;
+  color: #333;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+}
+
+.user-card-coach__wrapper {
+  display: block;
+}

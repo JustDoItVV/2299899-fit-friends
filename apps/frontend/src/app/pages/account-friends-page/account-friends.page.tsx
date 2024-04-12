@@ -12,7 +12,7 @@ import Header from '../../components/header/header';
 
 export default function AccountFriendsPage(): JSX.Element {
   const dispatch = useAppDispatch();
-  const [queryParams,] = useState<QueryPagination>({ page: 1, limit: 3 });
+  const [query,] = useState<QueryPagination>({ page: 1, limit: 3 });
 
   const handleBackButtonClick = () => {
     dispatch(redirectToRoute(`/${FrontendRoute.Account}`));
@@ -38,8 +38,8 @@ export default function AccountFriendsPage(): JSX.Element {
               <ExpandingCatalog
                 fetch={fetchTrainerFriends}
                 component={CardFriendsTrainer}
-                classNameList='friends-list__list'
-                queryParams={queryParams}
+                classNamePrefix='friends-list'
+                query={query}
               />
               {/* <ul className="friends-list__list">
                 <li className="friends-list__item">

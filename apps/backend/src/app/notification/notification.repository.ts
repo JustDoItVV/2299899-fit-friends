@@ -1,12 +1,8 @@
-import { DefaultPagination } from '@2299899-fit-friends/consts';
 import { BasePostgresRepository } from '@2299899-fit-friends/backend-core';
+import { DefaultPagination } from '@2299899-fit-friends/consts';
 import { PaginationQuery } from '@2299899-fit-friends/dtos';
 import { PrismaClientService } from '@2299899-fit-friends/models';
-import {
-  Notification,
-  Pagination,
-  SortOption,
-} from '@2299899-fit-friends/types';
+import { Notification, Pagination, SortOption } from '@2299899-fit-friends/types';
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 
@@ -65,11 +61,11 @@ export class NotificationRepository extends BasePostgresRepository<
     const where: Prisma.NotificationWhereInput = {};
     where.userId = userId;
 
-    const orderBy: Prisma.NotificationOrderByWithRelationAndSearchRelevanceInput =
-      {};
+    const orderBy: Prisma.NotificationOrderByWithRelationAndSearchRelevanceInput[] = [];
     if (query.sortOption === SortOption.CreatedAt) {
-      orderBy.createdAt = query.sortDirection;
+      orderBy.push({ createdAt: query.sortDirection });
     }
+    orderBy.push({ id: query.sortDirection });
 
     const documentsCount = await this.getNotificationsCount(where);
     const totalPages = this.calculatePage(documentsCount, limit);

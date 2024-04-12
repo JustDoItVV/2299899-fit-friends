@@ -1,6 +1,9 @@
-export * from './lib/hooks/index';
+export * from './lib/hooks/use-app-dispatch';
+export * from './lib/hooks/use-app-selector';
 export * from './lib/hooks/use-fetch-file';
 export * from './lib/hooks/use-fetch-pagination';
+export * from './lib/hooks/use-back-button';
+export * from './lib/hooks/use-map';
 
 export * from './lib/services/api';
 export * from './lib/services/browser-history';
@@ -11,6 +14,7 @@ export * from './lib/storage/actions/redirect-to-route';
 export * from './lib/storage/api-actions/account-trainer-actions';
 export * from './lib/storage/api-actions/account-user-actions';
 export * from './lib/storage/api-actions/reviews-actions';
+export * from './lib/storage/api-actions/training-requests-actions';
 export * from './lib/storage/api-actions/trainings-catalog-actions';
 export * from './lib/storage/api-actions/user-actions';
 export * from './lib/storage/reducers/app-process/app-process.selector';

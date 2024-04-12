@@ -50,3 +50,4 @@ export * from './lib/user-with-tokens.interface';
 export * from './lib/response-error.interface';
 export * from './lib/query-pagination.interface';
 export * from './lib/fetch-fileparams.interface';
+export * from './lib/location.interface';

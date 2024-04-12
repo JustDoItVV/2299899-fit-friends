@@ -15,7 +15,7 @@ export enum ApiRoute {
   Friends = '/friends',
   Subscribe = '/subscribe',
   Balance = '/balance',
-  SendNewTrainingsEmail = '/send-new-trainings-email',
+  SendNewTrainingsMail = '/send-new-trainings-mail',
   Notification = '/notification',
   Training = '/training',
   BackgroundPicture = '/backgroundPicture',
@@ -34,7 +34,7 @@ export const ResponseErrorMessage = new Map([
 
 export const SliderBlockItems = {
   DefaultPerPage: 1,
-  DefaultToSCroll: 1,
+  DefaultToScroll: 1,
   ForYouMax: 9,
   ForYouVisible: 3,
   SpecialMax: 3,
@@ -43,6 +43,8 @@ export const SliderBlockItems = {
   PopularMax: 8,
   SeekCompanyMax: 8,
   SeekCompanyVisible: 4,
+  AccountTrainerCertificatesVisible: 3,
+  TrainingPageVisible: 4,
 } as const;
 
 export enum CardPlaceholderPreviewImage {
