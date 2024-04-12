@@ -15,7 +15,7 @@ export enum ApiRoute {
   Friends = '/friends',
   Subscribe = '/subscribe',
   Balance = '/balance',
-  SendNewTrainingsEmail = '/send-new-trainings-email',
+  SendNewTrainingsMail = '/send-new-trainings-mail',
   Notification = '/notification',
   Training = '/training',
   BackgroundPicture = '/backgroundPicture',

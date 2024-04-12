@@ -1,12 +1,13 @@
 import './card-user-info.css';
 
 import classnames from 'classnames';
-import { ChangeEvent, useEffect, useState } from 'react';
+import { ChangeEvent, MouseEvent, useEffect, useState } from 'react';
 
 import { SliderBlockItems } from '@2299899-fit-friends/consts';
 import {
-    addFriend, deleteFriend, fetchTrainingsCatalog, fetchUserAvatar, selectCurrentUser, selectUser,
-    subscribeToTrainer, unsubscribeFromTrainer, useAppDispatch, useAppSelector, useFetchFileUrl
+    addFriend, createRequest, deleteFriend, fetchTrainingsCatalog, fetchUserAvatar,
+    selectCurrentUser, selectUser, subscribeToTrainer, unsubscribeFromTrainer, useAppDispatch,
+    useAppSelector, useFetchFileUrl
 } from '@2299899-fit-friends/frontend-core';
 import { QueryPagination, UserRole } from '@2299899-fit-friends/types';
 
@@ -38,9 +39,13 @@ export default function CardUserInfo(): JSX.Element {
     }
   };
 
-  // const handleWantPersonalButtonClick = () => {
-
-  // };
+  const handleWantPersonalButtonClick = (evt: MouseEvent<HTMLButtonElement>) => {
+    if (user?.id) {
+      evt.currentTarget.disabled = true;
+      dispatch(createRequest(user?.id));
+      evt.currentTarget.innerText = 'Запрос отправлен';
+    }
+  };
 
   const handleSubscribeInputChange = (evt: ChangeEvent<HTMLInputElement>) => {
     if (user?.id) {
@@ -103,14 +108,14 @@ export default function CardUserInfo(): JSX.Element {
                   'user-card-coach__status',
                   { 'user-card-coach__status--check': user.isReadyToTraining }
                 )}>
-                  <span>{user.isReadyToTraining ? 'Г' : 'Не г'}Готов тренировать</span>
+                  <span>{user.isReadyToPersonal ? 'Г' : 'Не г'}Готов тренировать</span>
                 </div>
               </div>
             }
             {
               user?.role === UserRole.User &&
               <div className="user-card__status">
-                <span>{user.isReadyToPersonal ? 'Г' : 'Не г'}отов к тренировке</span>
+                <span>{user.isReadyToTraining ? 'Г' : 'Не г'}отов к тренировке</span>
               </div>
             }
             <div className='user-card-coach__text'>
@@ -190,7 +195,7 @@ export default function CardUserInfo(): JSX.Element {
             <button
               className="btn user-card-coach__btn-training"
               type="button"
-              // onClick={handleWantPersonalButtonClick}
+              onClick={handleWantPersonalButtonClick}
               disabled={!currentUser?.id || !user.friends?.includes(currentUser.id) || !user.isReadyToPersonal}
             >
               Хочу персональную тренировку

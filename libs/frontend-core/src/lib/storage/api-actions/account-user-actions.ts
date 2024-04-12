@@ -79,8 +79,10 @@ export const subscribeToTrainer = createAsyncThunk<
 >('accountUser/subscribeToTrainer', async (id, { dispatch, extra: api, rejectWithValue }) => {
   try {
     await api.post(`${ApiRoute.User}/${id}${ApiRoute.Subscribe}`);
+    await api.post(`${ApiRoute.Account}${ApiRoute.User}${ApiRoute.SendNewTrainingsMail}`);
     const { data } = await api.get<User>(`${ApiRoute.User}/${id}`);
     dispatch(setUser(data));
+    dispatch(setResponseError(null));
   } catch (error) {
     if (!error.response) {
       throw new Error(error);
