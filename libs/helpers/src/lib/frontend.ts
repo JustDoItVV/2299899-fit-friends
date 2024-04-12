@@ -11,8 +11,17 @@ export const getResponseErrorMessage = (
   }
 
   if (!Array.isArray(message)) {
-    return message;
+    if (message.split(' ')[0] === field) {
+      return message.split(' ').slice(1).join(' ');
+    }
+    return null;
   }
 
-  return message.filter((item) => item.toLowerCase().includes(field))[0];
+  const fieldMessage = message.filter((item) => item.toLowerCase().includes(field))[0];
+
+  if (!fieldMessage) {
+    return null;
+  }
+
+  return fieldMessage.split(' ').slice(1).join(' ');
 };

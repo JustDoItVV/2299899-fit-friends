@@ -55,18 +55,17 @@ export enum MeritsLength {
 }
 
 export enum UserErrorMessage {
+  Required  ='Обязательное поле',
   Nan = 'Must be a number',
   NotBoolString = 'Must be "true" or "false" string',
-  NotString = 'Must be a string',
-  EmailRequired = 'Email required',
-  EmailNotValid = 'Email not valid',
+  NotString = 'Должно быть строкой',
+  EmailNotValid = 'Невалидное значение',
   EmailUpdateForbidden = 'Email updating forbidden',
-  PasswordRequired = 'Password required',
   PasswordMinLength = `Password min length is ${PasswordLength.Min} symbols`,
   PasswordMaxLength = `Password max length is ${PasswordLength.Max} symbols`,
-  PasswordWrong = 'Wrong password',
+  PasswordWrong = 'password Неверный пароль',
   PasswordUpdateForbidden = 'Password updating forbidden',
-  NotFound = 'User not found',
+  NotFound = 'email Пользователь не найден',
   OnlyAnonymous = 'Forbidden. Allowed only for unauthorized',
   TokenCreationError = 'Token creation error',
   NameRequired = 'User\'s name required',

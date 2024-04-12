@@ -8,6 +8,7 @@ import {
     CaloriesPerDayLimit, CaloriesTargetLimit, MeritsLength, METRO_STATIONS, NameLength,
     PasswordLength, TRAINING_TYPE_LIMIT, UserDescriptionLength, UserErrorMessage
 } from '@2299899-fit-friends/consts';
+import { getDtoMessageCallback } from '@2299899-fit-friends/helpers';
 import {
     TrainingDuration, TrainingLevel, TrainingType, UserGender, UserRole
 } from '@2299899-fit-friends/types';
@@ -32,7 +33,7 @@ export class CreateUserDto {
     example: 'email@local.local',
   })
   @IsEmail({}, { message: UserErrorMessage.EmailNotValid })
-  @IsNotEmpty({ message: UserErrorMessage.EmailRequired })
+  @IsNotEmpty({ message: getDtoMessageCallback(UserErrorMessage.Required) })
   public email: string;
 
   @ApiProperty({ description: 'Пароль', example: '123456' })
@@ -43,7 +44,7 @@ export class CreateUserDto {
     message: UserErrorMessage.PasswordMinLength,
   })
   @IsString({ message: UserErrorMessage.NotString })
-  @IsNotEmpty({ message: UserErrorMessage.PasswordRequired })
+  @IsNotEmpty({ message: getDtoMessageCallback(UserErrorMessage.Required) })
   public password: string;
 
   @ApiPropertyOptional({
