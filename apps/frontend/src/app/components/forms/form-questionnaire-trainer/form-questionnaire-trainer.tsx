@@ -48,7 +48,6 @@ export default function FormQuestionnaireTrainer(): JSX.Element {
       }
       return newValues;
     });
-
   };
 
   const handleTrainingLevelChange = (evt: ChangeEvent<HTMLInputElement>) => {
