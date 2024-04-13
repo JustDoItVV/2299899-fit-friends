@@ -23,14 +23,16 @@ export default function AccountPage(): JSX.Element {
               <div className="inner-page__content">
                 {
                   currentUser?.role === UserRole.Trainer
-                  ? <div className="personal-account-coach">
-                      <AccountPanelTrainer />
-                      <AccountCertificates />
-                    </div>
-                  : <div className="personal-account-user">
-                      <AccountUserSchedule />
-                      <AccountPanelUser />
-                    </div>
+                  ?
+                  <div className="personal-account-coach">
+                    <AccountPanelTrainer />
+                    <AccountCertificates />
+                  </div>
+                  :
+                  <div className="personal-account-user">
+                    <AccountUserSchedule />
+                    <AccountPanelUser />
+                  </div>
                 }
               </div>
             </div>

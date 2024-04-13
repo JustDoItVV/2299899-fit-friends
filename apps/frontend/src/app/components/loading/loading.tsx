@@ -1,7 +1,10 @@
+import { RotatingLines } from 'react-loader-spinner';
+
 export default function Loading(): JSX.Element {
   return (
-    <div>
-      Loading...
-    </div>
+    <RotatingLines
+      visible={true}
+      width='40'
+    />
   );
 }
