@@ -1,6 +1,6 @@
 import {
     ArrayMaxSize, IsArray, IsBoolean, IsDate, IsEmpty, IsEnum, IsIn, IsNotEmpty, IsNotEmptyObject,
-    IsOptional, IsString, Matches, Max, MaxLength, Min, MinLength, Validate
+    IsNumber, IsOptional, IsString, Matches, Max, MaxLength, Min, MinLength, Validate
 } from 'class-validator';
 
 import { ArrayMinLengthByUserRole } from '@2299899-fit-friends/backend-core';
@@ -143,8 +143,18 @@ export class UpdateUserDto {
   @IsOptional()
   public isReadyToPersonal?: boolean;
 
-  @ApiPropertyOptional({ description: `Флаг удаления аватара"`, enum: ['true', 'false'] })
+  @ApiPropertyOptional({ description: `Флаг удаления аватара` })
   @IsBoolean()
   @IsOptional()
   public deleteAvatar?: boolean;
+
+  @ApiPropertyOptional({ description: `Индекс сертификата в массиве для обновления` })
+  @IsNumber({}, { message: getDtoMessageCallback(UserErrorMessage.Nan) })
+  @IsOptional()
+  public certificateIndex?: number;
+
+  @ApiPropertyOptional({ description: `Флаг удаления сертификата` })
+  @IsBoolean()
+  @IsOptional()
+  public deleteCertificate?: boolean;
 }

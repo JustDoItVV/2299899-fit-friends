@@ -179,7 +179,7 @@ export default function AccountAbout(): JSX.Element {
           type="checkbox"
           name="trainingType"
           value={type}
-          checked={trainingTypes.includes(type)}
+          checked={trainingTypes ? trainingTypes.includes(type) : false}
           onChange={hadleTrainingTypeInputChange}
           disabled={isFormDisabled}
         />

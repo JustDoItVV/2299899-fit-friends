@@ -15,7 +15,7 @@ export default function FormQuestionnaireTrainer(): JSX.Element {
   const currentUser = useAppSelector(selectCurrentUser);
   const responseError = useAppSelector(selectResponseError);
 
-  const certificateRef = useRef<HTMLInputElement | null>(null);
+  const certificateInputRef = useRef<HTMLInputElement | null>(null);
 
   const [trainingTypes, setTrainingTypes] = useState<TrainingType[]>([]);
   const [trainingLevel, setTrainingLevel] = useState<TrainingLevel>(TrainingLevel.Beginner);
@@ -58,7 +58,7 @@ export default function FormQuestionnaireTrainer(): JSX.Element {
     setMerits(evt.currentTarget.value);
   };
 
-  const handleCertificateChange = (evt: ChangeEvent<HTMLInputElement>) => {
+  const handleCertificateInputChange = (evt: ChangeEvent<HTMLInputElement>) => {
     if (
       evt.currentTarget.files &&
       evt.currentTarget.files.length !== 0
@@ -84,10 +84,10 @@ export default function FormQuestionnaireTrainer(): JSX.Element {
         formData.append('trainingLevel', trainingLevel);
 
         if (
-          certificateRef.current?.files &&
-          certificateRef.current?.files.length !== 0
+          certificateInputRef.current?.files &&
+          certificateInputRef.current?.files.length !== 0
         ) {
-          formData.append('certificate', certificateRef.current.files[0]);
+          formData.append('certificate', certificateInputRef.current.files[0]);
         }
 
         formData.append('merits', merits);
@@ -175,12 +175,12 @@ export default function FormQuestionnaireTrainer(): JSX.Element {
                   </svg>
                 </span>
                 <input
-                  ref={certificateRef}
+                  ref={certificateInputRef}
                   type="file"
                   name="certificate"
                   tabIndex={-1}
                   accept=".pdf"
-                  onChange={handleCertificateChange}
+                  onChange={handleCertificateInputChange}
                 />
                 <span className="custom-input__error">
                   {getResponseErrorMessage(responseError, 'file')}
@@ -230,7 +230,7 @@ export default function FormQuestionnaireTrainer(): JSX.Element {
         <button
           className="btn questionnaire-coach__button"
           type="submit"
-          disabled={certificateRef.current?.files?.length === 0 && !!merits}
+          disabled={certificateInputRef.current?.files?.length === 0 && !!merits}
         >
           Продолжить
         </button>

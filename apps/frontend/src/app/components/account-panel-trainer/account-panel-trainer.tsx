@@ -1,3 +1,5 @@
+import './account-panel-trainer.css';
+
 import { Link } from 'react-router-dom';
 
 import { FrontendRoute } from '@2299899-fit-friends/types';
