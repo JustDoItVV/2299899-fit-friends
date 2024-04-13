@@ -1,0 +1,11 @@
+.input-load-avatar__avatar {
+  width: 98px;
+  height: 98px;
+}
+
+.input-load-avatar__avatar img {
+  overflow: hidden;
+  border-radius: 50%;
+  min-width: 100%;
+  min-height: 100%;
+}

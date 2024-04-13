@@ -35,5 +35,5 @@ export function useFetchFileUrl(
     fetchFile();
   }, [dispatch, ...dependencies]);
 
-  return { fileUrl, loading };
+  return { fileUrl, setFileUrl, loading };
 }

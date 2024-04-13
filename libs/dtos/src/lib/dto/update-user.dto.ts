@@ -142,4 +142,9 @@ export class UpdateUserDto {
   @IsNotEmpty({ message: getDtoMessageCallback(UserErrorMessage.Required) })
   @IsOptional()
   public isReadyToPersonal?: boolean;
+
+  @ApiPropertyOptional({ description: `Флаг удаления аватара"`, enum: ['true', 'false'] })
+  @IsBoolean()
+  @IsOptional()
+  public deleteAvatar?: boolean;
 }

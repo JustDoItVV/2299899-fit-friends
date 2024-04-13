@@ -1,6 +1,8 @@
+import './account-about.css';
+
 import { ChangeEvent, FormEvent, MouseEvent, useEffect, useRef, useState } from 'react';
 
-import { METRO_STATIONS, PlaceholderPath } from '@2299899-fit-friends/consts';
+import { AllowedImageFormat, METRO_STATIONS, PlaceholderPath } from '@2299899-fit-friends/consts';
 import {
     dropToken, fetchUserAvatar, selectCurrentUser, selectResponseError, setAuthStatus,
     setCurrentUser, updateUser, useAppDispatch, useAppSelector, useFetchFileUrl
@@ -17,7 +19,7 @@ export default function AccountAbout(): JSX.Element {
   const dispatch = useAppDispatch();
   const currentUser = useAppSelector(selectCurrentUser);
   const responseError = useAppSelector(selectResponseError);
-  const { fileUrl: avatar, loading } = useFetchFileUrl(
+  const { fileUrl: avatar, setFileUrl: setAvatar, loading } = useFetchFileUrl(
     fetchUserAvatar,
     { id: currentUser?.id },
     PlaceholderPath.Image,
@@ -32,7 +34,9 @@ export default function AccountAbout(): JSX.Element {
   const [location, setLocation] = useState<string | null>(null);
   const [gender, setGender] = useState<UserGender | null>(null);
   const [level, setLevel] = useState<TrainingLevel | null>(null);
+  const [deleteAvatar, setDeleteAvatar] = useState<boolean>(false);
 
+  const avatarInputRef = useRef<HTMLInputElement | null>(null);
   const statusElementRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
@@ -63,7 +67,29 @@ export default function AccountAbout(): JSX.Element {
 
   const handleEditButtonClick = () => {
     setIsFormDisabled(!isFormDisabled);
-  }
+  };
+
+  const handleUpdateAvatarButtonClick = () => {
+    if (avatarInputRef.current) {
+      avatarInputRef.current.click();
+    }
+  };
+
+  const handleAvatarInputChange = (evt: ChangeEvent<HTMLInputElement>) => {
+    if (evt.currentTarget.files) {
+      const file = evt.currentTarget.files[0];
+      const url = URL.createObjectURL(file);
+      setAvatar(url);
+    }
+  };
+
+  const handleDeleteAvatarButtonClick = () => {
+    if (avatarInputRef.current) {
+      avatarInputRef.current.files = null;
+    }
+    setAvatar(PlaceholderPath.Image);
+    setDeleteAvatar(true);
+  };
 
   const getInputChangeHandler = <T, V extends HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>(
     setState: React.Dispatch<React.SetStateAction<T>>
@@ -98,6 +124,10 @@ export default function AccountAbout(): JSX.Element {
       evt.preventDefault();
       const formData = new FormData();
 
+      if (avatarInputRef.current?.files && avatarInputRef.current?.files.length > 0) {
+        formData.append('avatar', avatarInputRef.current.files[0]);
+      }
+
       if (name) {
         formData.append('name', name);
       }
@@ -122,12 +152,17 @@ export default function AccountAbout(): JSX.Element {
         formData.append('trainingLevel', level);
       }
 
+      if (deleteAvatar) {
+        formData.append('deleteAvatar', deleteAvatar.toString());
+      }
+
       unwrapResult(await dispatch(updateUser({ id: currentUser?.id || '', data: formData })));
       setIsFormDisabled(true);
+      setDeleteAvatar(false);
     } catch {
       setIsFormDisabled(false);
     }
-  }
+  };
 
   const handleLogoutButtonCLick = (evt: MouseEvent<HTMLButtonElement>) => {
     evt.preventDefault();
@@ -172,33 +207,39 @@ export default function AccountAbout(): JSX.Element {
         <div className="input-load-avatar">
           <label>
             <input
+              ref={avatarInputRef}
               className="visually-hidden"
               type="file"
               name="user-photo-1"
-              accept="image/png, image/jpeg"
+              accept={Object.values(AllowedImageFormat).join(', ')}
+              onChange={handleAvatarInputChange}
             />
             <span className="input-load-avatar__avatar">
               {
                 loading
                 ? <Loading />
-                : <img
-                    src={avatar}
-                    width={98}
-                    height={98}
-                    alt="user avatar"
-                  />
+                : <img src={avatar} alt="user avatar"/>
               }
             </span>
           </label>
         </div>
         {!isFormDisabled &&
           <div className="user-info-edit__controls">
-            <button className="user-info-edit__control-btn" aria-label="обновить">
+            <button
+              className="user-info-edit__control-btn"
+              aria-label="обновить"
+              onClick={handleUpdateAvatarButtonClick}
+            >
               <svg width={16} height={16} aria-hidden="true">
                 <use xlinkHref="#icon-change" />
               </svg>
             </button>
-            <button className="user-info-edit__control-btn" aria-label="удалить">
+            <button
+              className="user-info-edit__control-btn"
+              aria-label="удалить"
+              disabled={!currentUser.avatar}
+              onClick={handleDeleteAvatarButtonClick}
+            >
               <svg width={14} height={16} aria-hidden="true">
                 <use xlinkHref="#icon-trash" />
               </svg>
@@ -206,6 +247,9 @@ export default function AccountAbout(): JSX.Element {
           </div>
         }
       </div>
+      <span className="custom-input__error">
+        {getResponseErrorMessage(responseError, 'avatar')}
+      </span>
       <form
         className="user-info-edit__form"
         action="#"

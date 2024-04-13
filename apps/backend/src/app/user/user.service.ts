@@ -176,6 +176,12 @@ export class UserService {
 
     let hasChanges = false;
 
+    if (dto.deleteAvatar) {
+      await this.uploaderService.deleteFile(user.avatar);
+      user.avatar = null;
+      hasChanges = true;
+    }
+
     for (const [key, value] of Object.entries(dto)) {
       if (value !== undefined && user[key] !== value) {
         user[key] = value;
