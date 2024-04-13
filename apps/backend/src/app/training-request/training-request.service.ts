@@ -1,6 +1,7 @@
 import { TrainingRequestErrorMessage } from '@2299899-fit-friends/consts';
 import {
-    CreateTrainingRequestDto, PaginationQuery, TrainingRequestRdo, UpdateTrainingRequestDto
+    CreateTrainingRequestDto, TrainingRequestRdo, TrainingRequestsPaginationQuery,
+    UpdateTrainingRequestDto
 } from '@2299899-fit-friends/dtos';
 import { fillDto } from '@2299899-fit-friends/helpers';
 import { Pagination, UserGender, UserRole } from '@2299899-fit-friends/types';
@@ -37,8 +38,8 @@ export class TrainingRequestService {
     return entity;
   }
 
-  public async getByQuery(query: PaginationQuery, userId: string): Promise<Pagination<TrainingRequestRdo>> {
-    const pagination = await this.trainingRequestRepository.find(query, userId);
+  public async getByQuery(query: TrainingRequestsPaginationQuery): Promise<Pagination<TrainingRequestRdo>> {
+    const pagination = await this.trainingRequestRepository.find(query);
     const paginationResult = {
       ...pagination,
       entities: pagination.entities.map((entity) => fillDto(TrainingRequestRdo, entity.toPOJO())),

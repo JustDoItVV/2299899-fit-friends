@@ -12,7 +12,7 @@ import CardSpecialOffer from '../../components/cards/card-special-offer/card-spe
 import CardTrainingThumbnail from '../../components/cards/card-training-thumbnail/card-training-thumbnail';
 import CardTraining from '../../components/cards/card-training/card-training';
 import Header from '../../components/header/header';
-import SLiderBlock from '../../components/slider-block/slider-block';
+import SliderBlock from '../../components/slider-block/slider-block';
 
 export default function MainPage(): JSX.Element {
   const currentUser = useAppSelector(selectCurrentUser);
@@ -26,7 +26,7 @@ export default function MainPage(): JSX.Element {
         </h1>
         <section className='special-for-you'>
           <div className="container">
-            <SLiderBlock
+            <SliderBlock
               title='Специально подобрано для вас'
               classNamePrefix='special-for-you'
               fetch={fetchTrainingsCatalog}
@@ -45,7 +45,7 @@ export default function MainPage(): JSX.Element {
         </section>
         <section className='special-offers'>
           <div className="container">
-            <SLiderBlock
+            <SliderBlock
               title='Специальные предложения'
               showTitle={false}
               classNamePrefix='special-offers'
@@ -65,7 +65,7 @@ export default function MainPage(): JSX.Element {
         </section>
         <section className='popular-trainings'>
           <div className="container">
-            <SLiderBlock
+            <SliderBlock
               title='Популярные новинки'
               classNamePrefix='popular-trainings'
               fetch={fetchTrainingsCatalog}
@@ -91,7 +91,7 @@ export default function MainPage(): JSX.Element {
         </section>
         <section className='look-for-company'>
           <div className="container">
-            <SLiderBlock
+            <SliderBlock
               title='Ишут компанию для тренировки'
               classNamePrefix='look-for-company'
               fetch={fetchUsersCatalog}

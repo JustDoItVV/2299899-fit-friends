@@ -24,7 +24,7 @@ export enum ApiRoute {
   Trainer = '/trainer',
   Orders = '/orders',
   Reviews = '/reviews',
-  TriningRequest = '/training-request',
+  TrainingRequest = '/training-request',
 }
 
 export const ResponseErrorMessage = new Map([
