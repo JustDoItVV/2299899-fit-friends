@@ -9,7 +9,7 @@ import {
     TrainingAuditory, TrainingDuration, TrainingLevel, TrainingType
 } from '@2299899-fit-friends/types';
 
-import ErrorPopup from '../error-popup/error-popup';
+import ErrorPopup from '../../error-popup/error-popup';
 
 export default function TrainingsCreateForm(): JSX.Element {
   const dispatch = useAppDispatch();

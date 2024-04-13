@@ -67,6 +67,10 @@ export default function RegistrationForm(): JSX.Element {
     dispatch(registerUser(formData));
   };
 
+  const locationOptionElements = METRO_STATIONS.map((location, index) => (
+    <option key={`location_${index}`}>{location}</option>
+  ));
+
   return (
     <form method="post" onSubmit={handleFormSubmit}>
       <div className="sign-up">
@@ -152,11 +156,7 @@ export default function RegistrationForm(): JSX.Element {
                   id="location_select"
                   onChange={getInputChangeHandler(setLocation)}
                 >
-                  <option>Пионерская</option>
-                  <option>Петроградская</option>
-                  <option>Удельная</option>
-                  <option>Звёздная</option>
-                  <option>Спортивная</option>
+                  {locationOptionElements}
                 </select>
               </span>
               <span className="custom-input__error">

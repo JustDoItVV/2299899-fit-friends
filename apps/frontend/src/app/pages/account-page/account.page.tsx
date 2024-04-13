@@ -1,8 +1,4 @@
-import { useEffect } from 'react';
-
-import {
-    fetchUser, selectCurrentUser, useAppDispatch, useAppSelector
-} from '@2299899-fit-friends/frontend-core';
+import { selectCurrentUser, useAppSelector } from '@2299899-fit-friends/frontend-core';
 import { FrontendRoute, UserRole } from '@2299899-fit-friends/types';
 
 import AccountAbout from '../../components/account-about/account-about';
@@ -13,14 +9,7 @@ import AccountUserSchedule from '../../components/account-user-schedule/account-
 import Header from '../../components/header/header';
 
 export default function AccountPage(): JSX.Element {
-  const dispatch = useAppDispatch();
   const currentUser = useAppSelector(selectCurrentUser);
-
-  useEffect(() => {
-    if (currentUser?.id) {
-      dispatch(fetchUser(currentUser?.id));
-    }
-  }, [dispatch, currentUser]);
 
   return (
     <div className="wrapper">

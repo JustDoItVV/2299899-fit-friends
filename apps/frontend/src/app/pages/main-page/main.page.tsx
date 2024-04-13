@@ -1,8 +1,6 @@
 import { Link } from 'react-router-dom';
 
-import {
-    CardPlaceholderPreviewImage, RatingLimit, SliderBlockItems
-} from '@2299899-fit-friends/consts';
+import { PlaceholderPath, RatingLimit, SliderBlockItems } from '@2299899-fit-friends/consts';
 import {
     fetchTrainingsCatalog, fetchUsersCatalog, selectCurrentUser, useAppSelector
 } from '@2299899-fit-friends/frontend-core';
@@ -60,7 +58,7 @@ export default function MainPage(): JSX.Element {
               controls={false}
               autoplay={true}
               children={
-                <CardPlaceholder classNameInfix='spec-gym' imagePath={CardPlaceholderPreviewImage.Special} />
+                <CardPlaceholder classNameInfix='spec-gym' imagePath={PlaceholderPath.CardSpecial} />
               }
             />
           </div>
