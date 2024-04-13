@@ -1,4 +1,4 @@
-import { MouseEvent, useState } from 'react';
+import { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 
 import { fetchBalanceCatalog, useBackButton } from '@2299899-fit-friends/frontend-core';
@@ -10,24 +10,21 @@ import Header from '../../components/header/header';
 
 export default function AccountPurchasesPage(): JSX.Element {
   const [query, setQuery] = useState<QueryPagination>({ limit: 4 });
+  const [active, setActive] = useState<boolean>(false);
 
   const handleBackButtonClick = useBackButton();
 
-  const handleFilterButtonClick = (evt: MouseEvent<HTMLInputElement>) => {
-    if (evt.currentTarget) {
-      if (evt.currentTarget.checked) {
-        setQuery((oldQuery) => {
-          console.log(oldQuery);
-          const newQuery = { ...oldQuery };
-          delete newQuery.availableMin;
-          return newQuery;
-        });
-      } else {
-        setQuery((oldQuery) => ({
-          ...oldQuery,
-          availableMin: 1,
-        }));
-      }
+  const handleFilterInputChange = () => {
+    if (active) {
+      setActive(false);
+      setQuery((oldQuery) => {
+        const newQuery = { ...oldQuery };
+        delete newQuery.availableMin;
+        return newQuery;
+      });
+    } else {
+      setActive(true);
+      setQuery((oldQuery) => ({ ...oldQuery, availableMin: 1 }));
     }
   };
 
@@ -61,8 +58,8 @@ export default function AccountPurchasesPage(): JSX.Element {
                         type="checkbox"
                         defaultValue="user-agreement-1"
                         name="user-agreement"
-                        defaultChecked={false}
-                        onClick={handleFilterButtonClick}
+                        checked={active}
+                        onChange={handleFilterInputChange}
                       />
                       <span className="custom-toggle__icon">
                         <svg width={9} height={6} aria-hidden="true">
