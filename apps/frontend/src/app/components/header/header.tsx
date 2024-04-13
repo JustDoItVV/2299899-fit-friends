@@ -1,6 +1,11 @@
+import { MouseEvent, useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import { FrontendRoute } from '@2299899-fit-friends/types';
+import {
+    deleteNotification, fetchNotifications, useAppDispatch
+} from '@2299899-fit-friends/frontend-core';
+import { FrontendRoute, Notification, TrainingType } from '@2299899-fit-friends/types';
+import { unwrapResult } from '@reduxjs/toolkit';
 
 type HeaderProps = {
   page: string;
@@ -8,6 +13,52 @@ type HeaderProps = {
 
 export default function Header(props: HeaderProps): JSX.Element {
   const { page } = props;
+  const dispatch = useAppDispatch();
+  const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [notificationsElements, setNotificationsElements] = useState<JSX.Element[]>([]);
+
+  useEffect(() => {
+    const fetch = async () => {
+      const data = unwrapResult(await dispatch(fetchNotifications()));
+      setNotifications(data);
+    };
+
+    fetch();
+  }, [dispatch]);
+
+  const handleNotificationButtonClick = useCallback((evt: MouseEvent<HTMLAnchorElement>) => {
+    evt.preventDefault();
+    if (evt.currentTarget.dataset.id) {
+      dispatch(deleteNotification(evt.currentTarget.dataset.id));
+      evt.currentTarget.classList.toggle('is-active');
+    }
+  }, [dispatch]);
+
+  useEffect(() => {
+    setNotificationsElements(notifications.map((notification, index) => (
+      <li className="main-nav__subitem" key={`notification_item_${index}`}>
+        <Link className="notification is-active" to="*" data-id={notification.id} onClick={handleNotificationButtonClick}>
+          <p className="notification__text">
+            {notification.text}
+          </p>
+          <time
+            className="notification__time"
+            dateTime={notification.createdAt?.toString() ?? ''}
+          >
+            {notification.createdAt?.toString() ?? ''}
+          </time>
+        </Link>
+      </li>
+    )));
+  }, [page, notifications, handleNotificationButtonClick]);
+
+  const searchItemsElements = Object.values(TrainingType).map((type, index) => (
+    <li className="search__item" key={`search_item_${index}`}>
+      <span className="search__link">
+        Бокс
+      </span>
+    </li>
+  ));
 
   return (
     <header className="header">
@@ -41,58 +92,26 @@ export default function Header(props: HeaderProps): JSX.Element {
               </Link>
             </li>
             <li className="main-nav__item main-nav__item--notifications">
-              <Link className="main-nav__link" to={`/${FrontendRoute.Account}/${FrontendRoute.Notifications}`} aria-label="Уведомления">
+              <button className="main-nav__link" aria-label="Уведомления">
                 <svg width={14} height={18} aria-hidden="true">
                   <use xlinkHref="#icon-notification" />
                 </svg>
-              </Link>
+              </button>
               <div className="main-nav__dropdown">
                 <p className="main-nav__label">Оповещения</p>
                 <ul className="main-nav__sublist">
-                  <li className="main-nav__subitem">
-                    <button className="notification is-active">
-                      <p className="notification__text">
-                        Катерина пригласила вас на&nbsp;тренировку
-                      </p>
-                      <time
-                        className="notification__time"
-                        dateTime="2023-12-23 12:35"
-                      >
-                        23 декабря, 12:35
-                      </time>
-                    </button>
-                  </li>
-                  <li className="main-nav__subitem">
-                    <button className="notification is-active">
-                      <p className="notification__text">
-                        Никита отклонил приглашение на&nbsp;совместную тренировку
-                      </p>
-                      <time className="notification__time" dateTime="2023-12-22 09:22">
-                        22 декабря, 09:22
-                      </time>
-                    </button>
-                  </li>
-                  <li className="main-nav__subitem">
-                    <button className="notification is-active">
-                      <p className="notification__text">Татьяна добавила вас в&nbsp;друзья</p>
-                      <time className="notification__time" dateTime="2023-12-18 18:50">
-                        18 декабря, 18:50
-                      </time>
-                    </button>
-                  </li>
-                  <li className="main-nav__subitem">
-                    <button className="notification">
-                      <p className="notification__text">Наталья приняла приглашение на&nbsp;совместную тренировку</p>
-                      <time className="notification__time" dateTime="2023-12-14 08:15">14 декабря, 08:15</time>
-                    </button>
-                  </li>
+                  {
+                    notificationsElements.length > 0
+                    ? notificationsElements
+                    : <p>Нет оповещений</p>
+                  }
                 </ul>
               </div>
             </li>
           </ul>
         </nav>
         <div className="search">
-          <form action="#" method="get">
+          <form action='*'>
             <label>
               <span className="search__label">Поиск</span>
               <input type="search" name="search" />
@@ -106,71 +125,7 @@ export default function Header(props: HeaderProps): JSX.Element {
               </svg>
             </label>
             <ul className="search__list">
-              <li className="search__item">
-                <span className="search__link">
-                  Бокс
-                </span>
-              </li>
-              <li className="search__item">
-                <span className="search__link is-active">
-                  Бег
-                </span>
-              </li>
-              <li className="search__item">
-                <span className="search__link">
-                  Аэробика
-                </span>
-              </li>
-              <li className="search__item">
-                <span className="search__link">
-                  Text
-                </span>
-              </li>
-              <li className="search__item">
-                <span className="search__link">
-                  Text
-                </span>
-              </li>
-              <li className="search__item">
-                <span className="search__link">
-                  Text
-                </span>
-              </li>
-              <li className="search__item">
-                <span className="search__link">
-                  Text
-                </span>
-              </li>
-              <li className="search__item">
-                <span className="search__link">
-                  Text
-                </span>
-              </li>
-              <li className="search__item">
-                <span className="search__link">
-                  Text
-                </span>
-              </li>
-              <li className="search__item">
-                <span className="search__link">
-                  Text
-                </span>
-              </li>
-              <li className="search__item">
-                <span className="search__link">
-                  Text
-                </span>
-              </li>
-              <li className="search__item">
-                <span className="search__link">
-                  Text
-                </span>
-              </li>
-              <li className="search__item">
-                <span className="search__link">
-                  Text
-                </span>
-              </li>
+              {searchItemsElements}
             </ul>
           </form>
         </div>
