@@ -4,9 +4,7 @@ import { join } from 'node:path';
 
 import { FilesPayload } from '@2299899-fit-friends/backend-core';
 import { BackendConfig } from '@2299899-fit-friends/config';
-import {
-    MockTrainingBackgroundPicture, TRAINING_TYPE_LIMIT, UserErrorMessage
-} from '@2299899-fit-friends/consts';
+import { MockTrainingBackgroundPicture, UserErrorMessage } from '@2299899-fit-friends/consts';
 import {
     CreateUserDto, LoginUserDto, PaginationQuery, UpdateUserDto, UserPaginationQuery, UserRdo
 } from '@2299899-fit-friends/dtos';
@@ -204,19 +202,14 @@ export class UserService {
           );
           user.pageBackground = pageBackgroundPath;
         }
-      }
-    }
 
-    if (user.role === UserRole.Trainer) {
-      user.isQuestionnaireFilled =
-        user.trainingLevel && user.trainingType.length === TRAINING_TYPE_LIMIT;
-    } else if (user.role === UserRole.User) {
-      user.isQuestionnaireFilled =
-        user.trainingLevel &&
-        user.trainingType.length <= TRAINING_TYPE_LIMIT &&
-        !!user.trainingDuration &&
-        !!user.caloriesTarget &&
-        !!user.caloriesPerDay;
+        if (files.certificate && files.certificate.length > 0) {
+          const certificatePath = await this.uploaderService.saveFile(
+            files.certificate[0]
+          );
+          user.certificates.push(certificatePath);
+        }
+      }
     }
 
     if (!hasChanges) {

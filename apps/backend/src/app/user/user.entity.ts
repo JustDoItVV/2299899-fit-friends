@@ -34,7 +34,6 @@ export class UserEntity implements User, BaseEntity<string, User> {
   public subscribers: string[] = [];
   public emailSubscribtions: string[] = [];
   public emailLastDate: Date;
-  public isQuestionnaireFilled?: boolean;
 
   public toPOJO(): User {
     const userPojo = {
@@ -66,7 +65,6 @@ export class UserEntity implements User, BaseEntity<string, User> {
     Object.assign(userPojo, this.accessToken === null ? null : { accessToken: this.accessToken });
     Object.assign(userPojo, this.refreshToken === null ? null : { refreshToken: this.refreshToken });
     Object.assign(userPojo, this.createdAt === null ? null : { createdAt: this.createdAt });
-    Object.assign(userPojo, this.isQuestionnaireFilled === null ? null : { isQuestionnaireFilled: this.isQuestionnaireFilled });
     return userPojo;
   }
 
@@ -98,7 +96,6 @@ export class UserEntity implements User, BaseEntity<string, User> {
     this.subscribers = data.subscribers;
     this.emailSubscribtions = data.emailSubscribtions;
     this.emailLastDate = data.emailLastDate;
-    this.isQuestionnaireFilled = data.isQuestionnaireFilled;
   }
 
   public async setPassword(password: string): Promise<UserEntity> {

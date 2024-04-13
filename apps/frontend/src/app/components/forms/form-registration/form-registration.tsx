@@ -19,7 +19,7 @@ export default function RegistrationForm(): JSX.Element {
   const [location, setLocation] = useState<string>(METRO_STATIONS[0]);
   const [password, setPassword] = useState<string>('');
   const [gender, setGender] = useState<UserGender>(UserGender.Male);
-  const [role, setRole] = useState<UserRole>(UserRole.User);
+  const [role, setRole] = useState<UserRole>(UserRole.Trainer);
   const [agreement, setAgreement] = useState<boolean>(false);
 
   const handleAvatarInputChange = (evt: ChangeEvent<HTMLInputElement>) => {
