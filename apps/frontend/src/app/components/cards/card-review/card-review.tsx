@@ -2,11 +2,14 @@ import './card-review.css';
 
 import { memo, useEffect, useState } from 'react';
 
+import { PlaceholderPath } from '@2299899-fit-friends/consts';
 import {
     CatalogItem, fetchUser, fetchUserAvatar, useAppDispatch, useFetchFileUrl
 } from '@2299899-fit-friends/frontend-core';
 import { Review, User } from '@2299899-fit-friends/types';
 import { unwrapResult } from '@reduxjs/toolkit';
+
+import Loading from '../../loading/loading';
 
 type CardReviewProps = {
   item: CatalogItem;
@@ -15,7 +18,12 @@ type CardReviewProps = {
 export default memo(function CardReview({ item }: CardReviewProps): JSX.Element {
   const review = item as Review;
   const dispatch = useAppDispatch();
-  const avatarUrl = useFetchFileUrl(fetchUserAvatar, { id: review.userId }, 'img/content/placeholder.png');
+  const { fileUrl: avatarUrl, loading } = useFetchFileUrl(
+    fetchUserAvatar,
+    { id: review.userId },
+    PlaceholderPath.Image,
+    [review],
+  );
   const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
@@ -32,12 +40,18 @@ export default memo(function CardReview({ item }: CardReviewProps): JSX.Element 
       <div className="review__user-info">
         <div className="review__user-photo">
           <picture>
-            <img
-              src={avatarUrl}
-              width={64}
-              height={64}
-              alt={`user_${review.userId}`}
-            />
+            {
+              loading
+              ?
+              <Loading />
+              :
+              <img
+                src={avatarUrl}
+                width={64}
+                height={64}
+                alt={`user_${review.userId}`}
+              />
+            }
           </picture>
         </div>
         <span className="review__user-name">{user?.name}</span>

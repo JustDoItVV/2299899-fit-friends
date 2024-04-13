@@ -1,10 +1,13 @@
 import { memo } from 'react';
 import { Link } from 'react-router-dom';
 
+import { PlaceholderPath } from '@2299899-fit-friends/consts';
 import {
     CatalogItem, fetchTrainingBackgroundPicture, useFetchFileUrl
 } from '@2299899-fit-friends/frontend-core';
 import { FrontendRoute, Training } from '@2299899-fit-friends/types';
+
+import Loading from '../../loading/loading';
 
 type CardTrainingProps = {
   item: CatalogItem;
@@ -12,19 +15,30 @@ type CardTrainingProps = {
 
 export default memo(function CardTraining({ item }: CardTrainingProps): JSX.Element {
   const training = item as Training;
-  const thumbnailUrl = useFetchFileUrl(fetchTrainingBackgroundPicture, { id: training.id }, 'img/content/placeholder.png');
+  const { fileUrl: thumbnailUrl, loading } = useFetchFileUrl(
+    fetchTrainingBackgroundPicture,
+    { id: training.id },
+    PlaceholderPath.Image,
+    [training],
+  );
 
   return (
     <div className="thumbnail-training">
       <div className="thumbnail-training__inner">
         <div className="thumbnail-training__image">
           <picture>
-            <img
-              src={thumbnailUrl}
-              width={330}
-              height={190}
-              alt={training.title}
-            />
+            {
+              loading
+              ?
+              <Loading />
+              :
+              <img
+                src={thumbnailUrl}
+                width={330}
+                height={190}
+                alt={training.title}
+              />
+            }
           </picture>
         </div>
         <p className="thumbnail-training__price">{!training.price ? 'Бесплатно': training.price} ₽</p>

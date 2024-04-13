@@ -1,10 +1,13 @@
 import { memo } from 'react';
 import { Link } from 'react-router-dom';
 
+import { PlaceholderPath } from '@2299899-fit-friends/consts';
 import {
     CatalogItem, fetchTrainingBackgroundPicture, useFetchFileUrl
 } from '@2299899-fit-friends/frontend-core';
 import { FrontendRoute, Training } from '@2299899-fit-friends/types';
+
+import Loading from '../../loading/loading';
 
 type CardTrainingThumbnailProps = {
   item: CatalogItem;
@@ -12,18 +15,29 @@ type CardTrainingThumbnailProps = {
 
 export default memo(function CardTrainingThumbnail(props: CardTrainingThumbnailProps): JSX.Element {
   const training = props.item as Training;
-  const thumbnailUrl = useFetchFileUrl(fetchTrainingBackgroundPicture, { id: training.id }, 'img/content/placeholder.png');
+  const { fileUrl: thumbnailUrl, loading } = useFetchFileUrl(
+    fetchTrainingBackgroundPicture,
+    { id: training.id },
+    PlaceholderPath.Image,
+    [training],
+  );
 
   return (
     <div className="thumbnail-preview">
       <div className="thumbnail-preview__image">
         <picture>
-          <img
-            src={thumbnailUrl}
-            width={452}
-            height={191}
-            alt={training.title}
-          />
+          {
+            loading
+            ?
+            <Loading />
+            :
+            <img
+              src={thumbnailUrl}
+              width={452}
+              height={191}
+              alt={training.title}
+            />
+          }
         </picture>
       </div>
       <div className="thumbnail-preview__inner">

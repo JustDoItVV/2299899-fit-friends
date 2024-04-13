@@ -6,13 +6,15 @@ import {
 } from '@2299899-fit-friends/frontend-core';
 import { FrontendRoute, Order } from '@2299899-fit-friends/types';
 
+import Loading from '../../loading/loading';
+
 type OrderCatalogCardProps = {
   item: CatalogItem;
 };
 
 export default memo(function OrderCatalogCard({ item }: OrderCatalogCardProps): JSX.Element {
   const order = item as Order;
-  const thumbnailUrl = useFetchFileUrl(fetchTrainingBackgroundPicture, { id: order.trainingId }, 'img/content/placeholder.png');
+  const { fileUrl: thumbnailUrl, loading } = useFetchFileUrl(fetchTrainingBackgroundPicture, { id: order.trainingId }, 'img/content/placeholder.png');
   const rating = order.training?.rating;
 
   return (
@@ -20,12 +22,18 @@ export default memo(function OrderCatalogCard({ item }: OrderCatalogCardProps): 
       <div className="thumbnail-training__inner">
         <div className="thumbnail-training__image">
           <picture>
-            <img
-              src={thumbnailUrl}
-              width={330}
-              height={190}
-              alt="training"
-            />
+            {
+              loading
+              ?
+              <Loading />
+              :
+              <img
+                src={thumbnailUrl}
+                width={330}
+                height={190}
+                alt="training"
+              />
+            }
           </picture>
         </div>
         <p className="thumbnail-training__price">

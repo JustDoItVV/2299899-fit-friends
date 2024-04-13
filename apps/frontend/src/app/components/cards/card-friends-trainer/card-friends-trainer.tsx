@@ -1,7 +1,10 @@
 import { memo } from 'react';
 
+import { PlaceholderPath } from '@2299899-fit-friends/consts';
 import { CatalogItem, fetchUserAvatar, useFetchFileUrl } from '@2299899-fit-friends/frontend-core';
 import { User } from '@2299899-fit-friends/types';
+
+import Loading from '../../loading/loading';
 
 type FriendsCatalogCardProps = {
   item: CatalogItem;
@@ -9,7 +12,12 @@ type FriendsCatalogCardProps = {
 
 export default memo(function FriendsCatalogCard({ item }: FriendsCatalogCardProps): JSX.Element {
   const user = item as User;
-  const thumbnailUrl = useFetchFileUrl(fetchUserAvatar, { id: user.id }, 'img/content/placeholder.png');
+  const { fileUrl: thumbnailUrl, loading } = useFetchFileUrl(
+    fetchUserAvatar,
+    { id: user.id },
+    PlaceholderPath.Image,
+    [user],
+  );
 
   const hashtagElements = user.trainingType.map((type, index) => (
     <li key={`${user.id}_hashtag_${index}`}>
@@ -26,12 +34,18 @@ export default memo(function FriendsCatalogCard({ item }: FriendsCatalogCardProp
           <div className="thumbnail-friend__image-status">
             <div className="thumbnail-friend__image">
               <picture>
-                <img
-                  src={thumbnailUrl}
-                  width={78}
-                  height={78}
-                  alt={user.name}
-                />
+                {
+                  loading
+                  ?
+                  <Loading />
+                  :
+                  <img
+                    src={thumbnailUrl}
+                    width={78}
+                    height={78}
+                    alt={user.name}
+                  />
+                }
               </picture>
             </div>
           </div>

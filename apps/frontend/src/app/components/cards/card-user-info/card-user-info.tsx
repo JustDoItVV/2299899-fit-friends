@@ -3,7 +3,7 @@ import './card-user-info.css';
 import classnames from 'classnames';
 import { ChangeEvent, MouseEvent, useEffect, useState } from 'react';
 
-import { SliderBlockItems } from '@2299899-fit-friends/consts';
+import { PlaceholderPath, SliderBlockItems } from '@2299899-fit-friends/consts';
 import {
     addFriend, createRequest, deleteFriend, fetchTrainingsCatalog, fetchUserAvatar,
     selectCurrentUser, selectUser, subscribeToTrainer, unsubscribeFromTrainer, useAppDispatch,
@@ -11,6 +11,7 @@ import {
 } from '@2299899-fit-friends/frontend-core';
 import { QueryPagination, UserRole } from '@2299899-fit-friends/types';
 
+import Loading from '../../loading/loading';
 import PopupCertificates from '../../popups/popup-certificates/popup-certificates';
 import PopupUserMap from '../../popups/popup-user-map/popup-user-map';
 import SliderBlock from '../../slider-block/slider-block';
@@ -20,7 +21,12 @@ export default function CardUserInfo(): JSX.Element {
   const dispatch = useAppDispatch();
   const user = useAppSelector(selectUser);
   const currentUser = useAppSelector(selectCurrentUser);
-  const avatarUrl = useFetchFileUrl(fetchUserAvatar, { id: user?.id }, 'img/content/placeholder.png', [user]);
+  const { fileUrl: avatarUrl, loading } = useFetchFileUrl(
+    fetchUserAvatar,
+    { id: user?.id },
+    PlaceholderPath.Image,
+    [user],
+  );
   const [query, setQuery] = useState<QueryPagination>({});
 
   useEffect(() => {
@@ -156,20 +162,32 @@ export default function CardUserInfo(): JSX.Element {
           <div className='user-card-coach__gallary'>
             <ul className='user-card-coach__gallary-list'>
               <li className='user-card-coach__gallary-item'>
-                <img
-                  src={avatarUrl}
-                  width={334}
-                  height={573}
-                  alt="photo1"
-                />
+                {
+                  loading
+                  ?
+                  <Loading />
+                  :
+                  <img
+                    src={avatarUrl}
+                    width={334}
+                    height={573}
+                    alt="photo1"
+                  />
+                }
               </li>
               <li className='user-card-coach__gallary-item'>
-                <img
-                  src={avatarUrl}
-                  width={334}
-                  height={573}
-                  alt="photo2"
-                />
+                {
+                  loading
+                  ?
+                  <Loading />
+                  :
+                  <img
+                    src={avatarUrl}
+                    width={334}
+                    height={573}
+                    alt="photo1"
+                  />
+                }
               </li>
             </ul>
           </div>

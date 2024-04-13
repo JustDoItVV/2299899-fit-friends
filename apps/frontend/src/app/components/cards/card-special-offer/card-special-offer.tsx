@@ -1,11 +1,13 @@
 import { memo } from 'react';
 import { Link } from 'react-router-dom';
 
-import { DISCOUNT } from '@2299899-fit-friends/consts';
+import { DISCOUNT, PlaceholderPath } from '@2299899-fit-friends/consts';
 import {
     CatalogItem, fetchTrainingBackgroundPicture, useFetchFileUrl
 } from '@2299899-fit-friends/frontend-core';
 import { FrontendRoute, Training } from '@2299899-fit-friends/types';
+
+import Loading from '../../loading/loading';
 
 type CardSpecialOfferProps = {
   item: CatalogItem;
@@ -13,18 +15,29 @@ type CardSpecialOfferProps = {
 
 export default memo(function CardSpecialOffer({ item }: CardSpecialOfferProps): JSX.Element {
   const training = item as Training;
-  const thumbnailUrl = useFetchFileUrl(fetchTrainingBackgroundPicture, { id: training.id }, 'img/content/placeholder.png');
+  const { fileUrl: thumbnailUrl, loading } = useFetchFileUrl(
+    fetchTrainingBackgroundPicture,
+    { id: training.id },
+    PlaceholderPath.Image,
+    [training],
+  );
 
   return (
     <Link className="promo-slider" to={`/${FrontendRoute.Trainings}/${training.id}`}>
       <div className="promo-slider__overlay" />
       <div className="promo-slider__image">
-        <img
-          src={thumbnailUrl}
-          width={1040}
-          height={469}
-          alt="promo"
-        />
+        {
+          loading
+          ?
+          <Loading />
+          :
+          <img
+            src={thumbnailUrl}
+            width={1040}
+            height={469}
+            alt="promo"
+          />
+        }
       </div>
       <div className="promo-slider__header">
         <h3 className="promo-slider__title">{training.title}</h3>
