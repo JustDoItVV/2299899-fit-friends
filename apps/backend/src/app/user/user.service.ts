@@ -4,9 +4,7 @@ import { join } from 'node:path';
 
 import { FilesPayload } from '@2299899-fit-friends/backend-core';
 import { BackendConfig } from '@2299899-fit-friends/config';
-import {
-    MockTrainingBackgroundPicture, TRAINING_TYPE_LIMIT, UserErrorMessage
-} from '@2299899-fit-friends/consts';
+import { MockTrainingBackgroundPicture, UserErrorMessage } from '@2299899-fit-friends/consts';
 import {
     CreateUserDto, LoginUserDto, PaginationQuery, UpdateUserDto, UserPaginationQuery, UserRdo
 } from '@2299899-fit-friends/dtos';
@@ -178,45 +176,60 @@ export class UserService {
 
     let hasChanges = false;
 
+    if (dto.deleteAvatar) {
+      await this.uploaderService.deleteFile(user.avatar);
+      user.avatar = null;
+      hasChanges = true;
+    }
+
     for (const [key, value] of Object.entries(dto)) {
       if (value !== undefined && user[key] !== value) {
         user[key] = value;
         hasChanges = true;
       }
-
-      if (files) {
-        if (files.avatar && files.avatar.length > 0) {
-          if (user.avatar) {
-            await this.uploaderService.deleteFile(user.avatar);
-          }
-          const avatarPath = await this.uploaderService.saveFile(
-            files.avatar[0]
-          );
-          user.avatar = avatarPath;
-        }
-
-        if (files.pageBackground && files.pageBackground.length > 0) {
-          if (user.pageBackground) {
-            await this.uploaderService.deleteFile(user.pageBackground);
-          }
-          const pageBackgroundPath = await this.uploaderService.saveFile(
-            files.pageBackground[0]
-          );
-          user.pageBackground = pageBackgroundPath;
-        }
-      }
     }
 
-    if (user.role === UserRole.Trainer) {
-      user.isQuestionnaireFilled =
-        user.trainingLevel && user.trainingType.length === TRAINING_TYPE_LIMIT;
-    } else if (user.role === UserRole.User) {
-      user.isQuestionnaireFilled =
-        user.trainingLevel &&
-        user.trainingType.length <= TRAINING_TYPE_LIMIT &&
-        !!user.trainingDuration &&
-        !!user.caloriesTarget &&
-        !!user.caloriesPerDay;
+    if (dto.deleteCertificate && dto.certificateIndex) {
+      const path = user.certificates.at(dto.certificateIndex);
+      await this.uploaderService.deleteFile(path);
+      user.certificates.splice(dto.certificateIndex, 1);
+      hasChanges = true;
+    }
+
+    if (files) {
+      if (files.avatar && files.avatar.length > 0) {
+        if (user.avatar) {
+          await this.uploaderService.deleteFile(user.avatar);
+        }
+        const avatarPath = await this.uploaderService.saveFile(
+          files.avatar[0]
+        );
+        user.avatar = avatarPath;
+        hasChanges = true;
+      }
+
+      if (files.pageBackground && files.pageBackground.length > 0) {
+        if (user.pageBackground) {
+          await this.uploaderService.deleteFile(user.pageBackground);
+        }
+        const pageBackgroundPath = await this.uploaderService.saveFile(
+          files.pageBackground[0]
+        );
+        user.pageBackground = pageBackgroundPath;
+        hasChanges = true;
+      }
+
+      if (files.certificate && files.certificate.length > 0) {
+        const certificatePath = await this.uploaderService.saveFile(
+          files.certificate[0]
+        );
+        if (dto.certificateIndex) {
+          user.certificates.splice(dto.certificateIndex, 1, certificatePath);
+        } else {
+          user.certificates.push(certificatePath);
+        }
+        hasChanges = true;
+      }
     }
 
     if (!hasChanges) {

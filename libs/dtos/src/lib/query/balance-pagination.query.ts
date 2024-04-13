@@ -1,4 +1,4 @@
-import { IsOptional, IsUUID } from 'class-validator';
+import { IsNumber, IsOptional, IsUUID } from 'class-validator';
 
 import { ApiPropertyOptional } from '@nestjs/swagger';
 
@@ -9,4 +9,9 @@ export class BalancePaginationQuery extends PaginationQuery {
   @IsUUID()
   @IsOptional()
   public trainingId?: string;
+
+  @ApiPropertyOptional({ description: 'Количество доступных тренировок', type: String })
+  @IsNumber()
+  @IsOptional()
+  public availableMin?: number;
 }

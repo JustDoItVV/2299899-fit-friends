@@ -14,21 +14,26 @@ export function useFetchFileUrl(
 ) {
   const dispatch = useAppDispatch();
   const [fileUrl, setFileUrl] = useState<string>(defaultValue);
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
-    const fetchAvatar = async () => {
+    const fetchFile = async () => {
       if (params && (params.id || params.path)) {
+        let url: string;
+        setLoading(true);
         try {
-          const url = unwrapResult(await dispatch(fetch(params)));
-          setFileUrl(url);
+          url = unwrapResult(await dispatch(fetch(params)));
         } catch {
-          setFileUrl(defaultValue);
+          url = defaultValue;
+        } finally {
+          setFileUrl(url);
+          setLoading(false);
         }
       }
     };
 
-    fetchAvatar();
+    fetchFile();
   }, [dispatch, ...dependencies]);
 
-  return fileUrl;
+  return { fileUrl, setFileUrl, loading };
 }

@@ -6,7 +6,7 @@ import { useParams } from 'react-router-dom';
 import { DISCOUNT, TrainingVideoAllowedExtensions } from '@2299899-fit-friends/consts';
 import {
     fetchBalanceCatalog, fetchReviews, fetchTraining, fetchTrainingBackgroundPicture,
-    fetchTrainingVideo, fetchUserAction, fetchUserAvatar, selectBalance, selectCurrentUser,
+    fetchTrainingVideo, fetchUser, fetchUserAvatar, selectBalance, selectCurrentUser,
     selectResponseError, selectReviews, selectTraining, updateBalance, updateTraining,
     useAppDispatch, useAppSelector, useFetchFileUrl
 } from '@2299899-fit-friends/frontend-core';
@@ -61,7 +61,7 @@ export default function TrainingCardPage(): JSX.Element {
     const fetch = async () => {
       if (training?.userId) {
         const data = unwrapResult(
-          await dispatch(fetchUserAction(training?.userId))
+          await dispatch(fetchUser(training?.userId))
         );
         setTrainer(data);
       }

@@ -2,8 +2,9 @@ import { ChangeEvent, FormEvent, useRef, useState } from 'react';
 
 import { METRO_STATIONS } from '@2299899-fit-friends/consts';
 import {
-    registerUserAction, selectResponseError, useAppDispatch, useAppSelector
+    registerUser, selectResponseError, useAppDispatch, useAppSelector
 } from '@2299899-fit-friends/frontend-core';
+import { getResponseErrorMessage } from '@2299899-fit-friends/helpers';
 import { UserGender, UserRole } from '@2299899-fit-friends/types';
 
 export default function RegistrationForm(): JSX.Element {
@@ -18,7 +19,7 @@ export default function RegistrationForm(): JSX.Element {
   const [location, setLocation] = useState<string>(METRO_STATIONS[0]);
   const [password, setPassword] = useState<string>('');
   const [gender, setGender] = useState<UserGender>(UserGender.Male);
-  const [role, setRole] = useState<UserRole>(UserRole.User);
+  const [role, setRole] = useState<UserRole>(UserRole.Trainer);
   const [agreement, setAgreement] = useState<boolean>(false);
 
   const handleAvatarInputChange = (evt: ChangeEvent<HTMLInputElement>) => {
@@ -63,27 +64,12 @@ export default function RegistrationForm(): JSX.Element {
     formData.append('gender', gender);
     formData.append('role', role);
 
-    dispatch(registerUserAction(formData));
+    dispatch(registerUser(formData));
   };
 
-  const getResponseErrorMessage = (
-    codes: number[],
-    statusCode: number | undefined,
-    message: string | string[] | undefined,
-    field: string
-  ) => {
-    if (!statusCode || !message || !codes.includes(statusCode)) {
-      return ' ';
-    }
-
-    if (!Array.isArray(message)) {
-      return message;
-    }
-
-    return message
-      .filter((item) => item.toLowerCase().includes(field))
-      .join(', ');
-  };
+  const locationOptionElements = METRO_STATIONS.map((location, index) => (
+    <option key={`location_${index}`}>{location}</option>
+  ));
 
   return (
     <form method="post" onSubmit={handleFormSubmit}>
@@ -126,12 +112,7 @@ export default function RegistrationForm(): JSX.Element {
                 />
               </span>
               <span className="custom-input__error">
-                {getResponseErrorMessage(
-                  [400],
-                  responseError?.statusCode,
-                  responseError?.message,
-                  'name'
-                )}
+                {getResponseErrorMessage(responseError, 'name')}
               </span>
             </label>
           </div>
@@ -146,12 +127,7 @@ export default function RegistrationForm(): JSX.Element {
                 />
               </span>
               <span className="custom-input__error">
-                {getResponseErrorMessage(
-                  [400],
-                  responseError?.statusCode,
-                  responseError?.message,
-                  'email'
-                )}
+                {getResponseErrorMessage(responseError, 'email')}
               </span>
             </label>
           </div>
@@ -167,12 +143,7 @@ export default function RegistrationForm(): JSX.Element {
                 />
               </span>
               <span className="custom-input__error">
-                {getResponseErrorMessage(
-                  [400],
-                  responseError?.statusCode,
-                  responseError?.message,
-                  'birthdate'
-                )}
+                {getResponseErrorMessage(responseError, 'birthdate')}
               </span>
             </label>
           </div>
@@ -185,20 +156,11 @@ export default function RegistrationForm(): JSX.Element {
                   id="location_select"
                   onChange={getInputChangeHandler(setLocation)}
                 >
-                  <option>Пионерская</option>
-                  <option>Петроградская</option>
-                  <option>Удельная</option>
-                  <option>Звёздная</option>
-                  <option>Спортивная</option>
+                  {locationOptionElements}
                 </select>
               </span>
               <span className="custom-input__error">
-                {getResponseErrorMessage(
-                  [400],
-                  responseError?.statusCode,
-                  responseError?.message,
-                  'location'
-                )}
+                {getResponseErrorMessage(responseError, 'location')}
               </span>
             </label>
           </div>
@@ -214,12 +176,7 @@ export default function RegistrationForm(): JSX.Element {
                 />
               </span>
               <span className="custom-input__error">
-                {getResponseErrorMessage(
-                  [400],
-                  responseError?.statusCode,
-                  responseError?.message,
-                  'password'
-                )}
+                {getResponseErrorMessage(responseError, 'password')}
               </span>
             </label>
           </div>

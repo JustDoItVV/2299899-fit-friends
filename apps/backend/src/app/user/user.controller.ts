@@ -136,7 +136,7 @@ export class UserController {
           pageBackground: { formats: AllowedImageFormat },
           certificate: { formats: AllowedCertificateFormat },
         },
-        UserErrorMessage.ImageFormatForbidden
+        UserErrorMessage.FileFormatForbidden
       )
     )
     files: FilesPayload
@@ -186,7 +186,7 @@ export class UserController {
           pageBackground: { formats: AllowedImageFormat },
           certificate: { formats: AllowedCertificateFormat },
         },
-        UserErrorMessage.ImageFormatForbidden
+        UserErrorMessage.FileFormatForbidden
       )
     )
     files: FilesPayload

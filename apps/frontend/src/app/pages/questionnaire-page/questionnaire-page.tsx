@@ -1,24 +1,13 @@
-import { useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 
-import {
-    fetchUserAction, selectCurrentUser, selectUser, useAppDispatch, useAppSelector
-} from '@2299899-fit-friends/frontend-core';
+import { selectCurrentUser, useAppSelector } from '@2299899-fit-friends/frontend-core';
 import { UserRole } from '@2299899-fit-friends/types';
 
-import QuestionnaireFormTrainer from '../../components/questionnaire-form-trainer/questionnaire-form-trainer';
-import QuestionnaireFormUser from '../../components/questionnaire-form-user/questionnaire-form-user';
+import FormQuestionnaireTrainer from '../../components/forms/form-questionnaire-trainer/form-questionnaire-trainer';
+import FormQuestionnaireUser from '../../components/forms/form-questionnaire-user/form-questionnaire-user';
 
 export default function QuestionnairePage(): JSX.Element {
-  const dispatch = useAppDispatch();
   const currentUser = useAppSelector(selectCurrentUser);
-  const user = useAppSelector(selectUser);
-
-  useEffect(() => {
-    if (currentUser?.id) {
-      dispatch(fetchUserAction(currentUser?.id));
-    }
-  }, [dispatch, currentUser]);
 
   return (
     <div className="wrapper">
@@ -49,9 +38,9 @@ export default function QuestionnairePage(): JSX.Element {
             <div className="popup-form__content">
               <div className="popup-form__form">
                 {currentUser?.role === UserRole.Trainer ? (
-                  <QuestionnaireFormTrainer user={user} />
+                  <FormQuestionnaireTrainer user={currentUser} />
                 ) : (
-                  <QuestionnaireFormUser user={user} />
+                  <FormQuestionnaireUser user={currentUser} />
                 )}
               </div>
             </div>

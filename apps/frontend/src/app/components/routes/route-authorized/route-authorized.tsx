@@ -2,23 +2,22 @@ import { useEffect } from 'react';
 import { Navigate } from 'react-router-dom';
 
 import {
-    checkAuthAction, selectAuthStatus, useAppDispatch, useAppSelector
+    checkAuth, selectAuthStatus, useAppDispatch, useAppSelector
 } from '@2299899-fit-friends/frontend-core';
 import { AuthStatus, FrontendRoute } from '@2299899-fit-friends/types';
 
-import Loading from '../loading/loading';
+import Loading from '../../loading/loading';
 
-type AuthorizedRouteProps = {
+type RouteAuthorizedProps = {
   children: JSX.Element | JSX.Element[];
 };
 
-export default function AuthorizedRoute(props: AuthorizedRouteProps): JSX.Element | JSX.Element[] {
-  const { children } = props;
+export default function RouteAuthorized({ children }: RouteAuthorizedProps): JSX.Element | JSX.Element[] {
   const dispatch = useAppDispatch();
   const authStatus = useAppSelector(selectAuthStatus);
 
   useEffect(() => {
-    dispatch(checkAuthAction());
+    dispatch(checkAuth());
   }, [dispatch]);
 
   if (authStatus === AuthStatus.Unknown) {

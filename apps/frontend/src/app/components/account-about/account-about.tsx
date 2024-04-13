@@ -1,9 +1,11 @@
+import './account-about.css';
+
 import { ChangeEvent, FormEvent, MouseEvent, useEffect, useRef, useState } from 'react';
 
-import { METRO_STATIONS } from '@2299899-fit-friends/consts';
+import { AllowedImageFormat, METRO_STATIONS, PlaceholderPath } from '@2299899-fit-friends/consts';
 import {
-    dropToken, fetchUserAvatar, selectResponseError, selectUser, setAuthStatus, setCurrentUser,
-    updateUserAction, useAppDispatch, useAppSelector
+    dropToken, fetchUserAvatar, selectCurrentUser, selectResponseError, setAuthStatus,
+    setCurrentUser, updateUser, useAppDispatch, useAppSelector, useFetchFileUrl
 } from '@2299899-fit-friends/frontend-core';
 import { getResponseErrorMessage } from '@2299899-fit-friends/helpers';
 import {
@@ -15,41 +17,39 @@ import Loading from '../loading/loading';
 
 export default function AccountAbout(): JSX.Element {
   const dispatch = useAppDispatch();
-  const user = useAppSelector(selectUser);
+  const currentUser = useAppSelector(selectCurrentUser);
   const responseError = useAppSelector(selectResponseError);
+  const { fileUrl: avatar, setFileUrl: setAvatar, loading } = useFetchFileUrl(
+    fetchUserAvatar,
+    { id: currentUser?.id },
+    PlaceholderPath.Image,
+    [currentUser],
+  );
 
   const [isFormDisabled, setIsFormDisabled] = useState<boolean>(true);
-  const [avatarUrl, setAvatarUrl] = useState<string>('');
-  const nameRef = useRef<string>(user ? user.name : '');
-  const descriptionRef = useRef<string>(user?.description || '');
-  const statusRef = useRef<boolean>(user && user.role === UserRole.Trainer ? !!user.isReadyToPersonal : !!user?.isReadyToTraining);
+  const [name, setName] = useState<string | null>(null);
+  const [description, setDescription] = useState<string | null>(null);
+  const [status, setStatus] = useState<boolean>(false);
+  const [trainingTypes, setTrainingTypes] = useState<TrainingType[]>([]);
+  const [location, setLocation] = useState<string | null>(null);
+  const [gender, setGender] = useState<UserGender | null>(null);
+  const [level, setLevel] = useState<TrainingLevel | null>(null);
+  const [deleteAvatar, setDeleteAvatar] = useState<boolean>(false);
+
+  const avatarInputRef = useRef<HTMLInputElement | null>(null);
   const statusElementRef = useRef<HTMLInputElement | null>(null);
-  const trainigTypesRef = useRef<TrainingType[]>(user ? user.trainingType : []);
-  const locationRef = useRef<string>(user ? user.location : METRO_STATIONS[0]);
-  const genderRef = useRef<UserGender>(user ? user.gender : UserGender.Other);
-  const levelRef = useRef<TrainingLevel>(user ? user.trainingLevel : TrainingLevel.Beginner);
 
   useEffect(() => {
-    if (user) {
-      nameRef.current = user.name;
-      descriptionRef.current = user.description || '';
-      statusRef.current = user.role === UserRole.Trainer ? !!user.isReadyToPersonal : !!user.isReadyToTraining;
-      if (statusElementRef.current) {
-        statusElementRef.current.checked = statusRef.current;
-      }
-      trainigTypesRef.current = user.trainingType;
-      locationRef.current = user.location;
-      genderRef.current = user.gender;
-      levelRef.current = user.trainingLevel;
-
-      const fetchAvatar = async () => {
-        const avatar = unwrapResult(await dispatch(fetchUserAvatar({ id: user.id })));
-        setAvatarUrl(avatar);
-      };
-
-      fetchAvatar();
+    if (currentUser) {
+      setName(currentUser.name);
+      setDescription(currentUser.description ?? '');
+      setStatus(currentUser.role === UserRole.Trainer ? !!currentUser.isReadyToPersonal : !!currentUser.isReadyToTraining);
+      setTrainingTypes(currentUser.trainingType);
+      setLocation(currentUser.location);
+      setGender(currentUser.gender);
+      setLevel(currentUser.trainingLevel);
     }
-  }, [dispatch, user]);
+  }, [dispatch, currentUser]);
 
   useEffect(() => {
     if (responseError) {
@@ -57,7 +57,7 @@ export default function AccountAbout(): JSX.Element {
     }
   }, [responseError]);
 
-  if (!user) {
+  if (!currentUser) {
     return (
       <section className="user-info-edit">
         <Loading />
@@ -67,55 +67,102 @@ export default function AccountAbout(): JSX.Element {
 
   const handleEditButtonClick = () => {
     setIsFormDisabled(!isFormDisabled);
-  }
+  };
 
-  const getInputChangeHandler = <T, V extends HTMLInputElement | HTMLSelectElement>(ref: React.MutableRefObject<T>) =>
-  (evt: ChangeEvent<V>) => {
-    if (evt.currentTarget) {
-      ref.current = evt.currentTarget.value as T;
+  const handleUpdateAvatarButtonClick = () => {
+    if (avatarInputRef.current) {
+      avatarInputRef.current.click();
     }
   };
 
-  const getCheckboxChangeHadnler = (ref: React.MutableRefObject<boolean>) =>
-  (evt: ChangeEvent<HTMLInputElement>) => {
+  const handleAvatarInputChange = (evt: ChangeEvent<HTMLInputElement>) => {
+    if (evt.currentTarget.files) {
+      const file = evt.currentTarget.files[0];
+      const url = URL.createObjectURL(file);
+      setAvatar(url);
+    }
+  };
+
+  const handleDeleteAvatarButtonClick = () => {
+    if (avatarInputRef.current) {
+      avatarInputRef.current.files = null;
+    }
+    setAvatar(PlaceholderPath.Image);
+    setDeleteAvatar(true);
+  };
+
+  const getInputChangeHandler = <T, V extends HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>(
+    setState: React.Dispatch<React.SetStateAction<T>>
+  ) => (evt: ChangeEvent<V>) => {
     if (evt.currentTarget) {
-      ref.current = evt.currentTarget.checked;
-      evt.currentTarget.defaultChecked = ref.current;
+      setState(evt.currentTarget.value as T);
+    }
+  };
+
+  const handleStatusCheckboxChange = (evt: ChangeEvent<HTMLInputElement>) => {
+    if (evt.currentTarget) {
+      setStatus(evt.currentTarget.checked);
     }
   };
 
   const hadleTrainingTypeInputChange = (evt: ChangeEvent<HTMLInputElement>) => {
     const trainingType = evt.currentTarget.value as TrainingType;
-
-    if (!trainigTypesRef.current.includes(trainingType)) {
-      trainigTypesRef.current = [...trainigTypesRef.current, trainingType];
-    } else {
-      const elementIndex = trainigTypesRef.current.indexOf(trainingType)
-      trainigTypesRef.current = [
-        ...trainigTypesRef.current.slice(0, elementIndex),
-        ...trainigTypesRef.current.slice(elementIndex + 1),
-      ];
-    }
+    setTrainingTypes((old) => {
+      let newValues;
+      if (!old.includes(trainingType)) {
+        newValues = [...old, trainingType];
+      } else {
+        const elementIndex = old.indexOf(trainingType);
+        newValues = [...old.slice(0, elementIndex), ...old.slice(elementIndex + 1)];
+      }
+      return newValues;
+    });
   };
 
-  const handleFormSubmit = (evt: FormEvent) => {
-    evt.preventDefault();
-    const formData = new FormData();
+  const handleFormSubmit = async (evt: FormEvent) => {
+    try {
+      evt.preventDefault();
+      const formData = new FormData();
 
-    formData.append('name', nameRef.current);
-    formData.append('description', descriptionRef.current);
-    formData.append(`${user?.role === UserRole.Trainer ? 'isReadyToPersonal' : 'isReadyToTraining'}`, statusRef.current.toString());
+      if (avatarInputRef.current?.files && avatarInputRef.current?.files.length > 0) {
+        formData.append('avatar', avatarInputRef.current.files[0]);
+      }
 
-    trainigTypesRef.current.forEach((type) => {
-      formData.append('trainingType', type);
-    });
+      if (name) {
+        formData.append('name', name);
+      }
+      if (description) {
+        formData.append('description', description);
+      }
+      if (status) {
+        formData.append(`${currentUser?.role === UserRole.Trainer ? 'isReadyToPersonal' : 'isReadyToTraining'}`, status.toString());
+      }
 
-    formData.append('location', locationRef.current);
-    formData.append('gender', genderRef.current);
-    formData.append('trainingLevel', levelRef.current);
+      trainingTypes.forEach((type) => {
+        formData.append('trainingType', type);
+      });
 
-    dispatch(updateUserAction({ id: user?.id || '', data: formData }))
-  }
+      if (location) {
+        formData.append('location', location);
+      }
+      if (gender) {
+        formData.append('gender', gender);
+      }
+      if (level) {
+        formData.append('trainingLevel', level);
+      }
+
+      if (deleteAvatar) {
+        formData.append('deleteAvatar', deleteAvatar.toString());
+      }
+
+      unwrapResult(await dispatch(updateUser({ id: currentUser?.id || '', data: formData })));
+      setIsFormDisabled(true);
+      setDeleteAvatar(false);
+    } catch {
+      setIsFormDisabled(false);
+    }
+  };
 
   const handleLogoutButtonCLick = (evt: MouseEvent<HTMLButtonElement>) => {
     evt.preventDefault();
@@ -132,7 +179,7 @@ export default function AccountAbout(): JSX.Element {
           type="checkbox"
           name="trainingType"
           value={type}
-          defaultChecked={trainigTypesRef.current.includes(type)}
+          checked={trainingTypes ? trainingTypes.includes(type) : false}
           onChange={hadleTrainingTypeInputChange}
           disabled={isFormDisabled}
         />
@@ -141,16 +188,16 @@ export default function AccountAbout(): JSX.Element {
     </div>
   ));
 
-  const locationOptionElements = METRO_STATIONS.map((location, index) => (
-    <option key={`location_${index}`}>{location}</option>
+  const locationOptionElements = METRO_STATIONS.map((value, index) => (
+    <option key={`location_${index}`} value={value}>{value}</option>
   ));
 
-  const genderOptionElements = Object.values(UserGender).map((gender, index) => (
-    <option key={`gender_${index}`}>{gender}</option>
+  const genderOptionElements = Object.values(UserGender).map((value, index) => (
+    <option key={`gender_${index}`} value={value}>{value}</option>
   ));
 
-  const levelOptionElements = Object.values(TrainingLevel).map((level, index) => (
-    <option key={`level_${index}`}>{level}</option>
+  const levelOptionElements = Object.values(TrainingLevel).map((value, index) => (
+    <option key={`level_${index}`} value={value}>{value}</option>
   ));
 
   return (
@@ -160,29 +207,39 @@ export default function AccountAbout(): JSX.Element {
         <div className="input-load-avatar">
           <label>
             <input
+              ref={avatarInputRef}
               className="visually-hidden"
               type="file"
               name="user-photo-1"
-              accept="image/png, image/jpeg"
+              accept={Object.values(AllowedImageFormat).join(', ')}
+              onChange={handleAvatarInputChange}
             />
             <span className="input-load-avatar__avatar">
-              <img
-                src={avatarUrl}
-                width={98}
-                height={98}
-                alt="user avatar"
-              />
+              {
+                loading
+                ? <Loading />
+                : <img src={avatar} alt="user avatar"/>
+              }
             </span>
           </label>
         </div>
         {!isFormDisabled &&
           <div className="user-info-edit__controls">
-            <button className="user-info-edit__control-btn" aria-label="обновить">
+            <button
+              className="user-info-edit__control-btn"
+              aria-label="обновить"
+              onClick={handleUpdateAvatarButtonClick}
+            >
               <svg width={16} height={16} aria-hidden="true">
                 <use xlinkHref="#icon-change" />
               </svg>
             </button>
-            <button className="user-info-edit__control-btn" aria-label="удалить">
+            <button
+              className="user-info-edit__control-btn"
+              aria-label="удалить"
+              disabled={!currentUser.avatar}
+              onClick={handleDeleteAvatarButtonClick}
+            >
               <svg width={14} height={16} aria-hidden="true">
                 <use xlinkHref="#icon-trash" />
               </svg>
@@ -190,6 +247,9 @@ export default function AccountAbout(): JSX.Element {
           </div>
         }
       </div>
+      <span className="custom-input__error">
+        {getResponseErrorMessage(responseError, 'avatar')}
+      </span>
       <form
         className="user-info-edit__form"
         action="#"
@@ -220,8 +280,8 @@ export default function AccountAbout(): JSX.Element {
                 <input
                   type="text"
                   name="name"
-                  value={nameRef.current}
-                  onChange={getInputChangeHandler<string, HTMLInputElement>(nameRef)}
+                  value={name ?? ''}
+                  onChange={getInputChangeHandler<string | null, HTMLInputElement>(setName)}
                   disabled={isFormDisabled}
                 />
               </span>
@@ -236,8 +296,9 @@ export default function AccountAbout(): JSX.Element {
               <textarea
                 name="description"
                 placeholder=" "
-                defaultValue={descriptionRef.current}
+                value={description ?? ''}
                 disabled={isFormDisabled}
+                onChange={getInputChangeHandler<string | null, HTMLTextAreaElement>(setDescription)}
               />
               <span className="custom-input__error">
                 {getResponseErrorMessage(responseError, 'description')}
@@ -255,9 +316,9 @@ export default function AccountAbout(): JSX.Element {
                 ref={statusElementRef}
                 type="checkbox"
                 name="ready-for-training"
-                defaultChecked={statusRef.current}
+                checked={status}
                 disabled={isFormDisabled}
-                onChange={getCheckboxChangeHadnler(statusRef)}
+                onChange={handleStatusCheckboxChange}
               />
               <span className="custom-toggle__icon">
                 <svg width={9} height={6} aria-hidden="true">
@@ -265,7 +326,7 @@ export default function AccountAbout(): JSX.Element {
                 </svg>
               </span>
               <span className="custom-toggle__label">
-                {user?.role && user.role === UserRole.Trainer ? 'Готов тренировать' : 'Готов к тренировке'}
+                {currentUser?.role && currentUser.role === UserRole.Trainer ? 'Готов тренировать' : 'Готов к тренировке'}
               </span>
             </label>
           </div>
@@ -286,6 +347,8 @@ export default function AccountAbout(): JSX.Element {
           <select
             className="custom-select__button"
             id="location_select"
+            value={location ?? ''}
+            onChange={getInputChangeHandler<string | null, HTMLSelectElement>(setLocation)}
             disabled={isFormDisabled}
           >
             {locationOptionElements}
@@ -299,6 +362,8 @@ export default function AccountAbout(): JSX.Element {
           <select
             className="custom-select__button"
             id="gender_select"
+            value={gender ?? ''}
+            onChange={getInputChangeHandler<UserGender | null, HTMLSelectElement>(setGender)}
             disabled={isFormDisabled}
           >
             {genderOptionElements}
@@ -311,7 +376,9 @@ export default function AccountAbout(): JSX.Element {
           <span className="custom-select__label">Уровень</span>
           <select
             className="custom-select__button"
-            id="gender_select"
+            id="level_select"
+            value={level ?? ''}
+            onChange={getInputChangeHandler<TrainingLevel | null, HTMLSelectElement>(setLevel)}
             disabled={isFormDisabled}
           >
             {levelOptionElements}

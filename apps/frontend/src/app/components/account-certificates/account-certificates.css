@@ -1,0 +1,25 @@
+.personal-account-coach__list .slick-slider,
+.personal-account-coach__list .slick-list {
+  max-width: 1042px;
+  max-height: 473px;
+}
+
+.personal-account-coach__list .slick-track {
+  background-color: #f2f2f2;
+}
+
+.personal-account-coach__list .slider-block-wrapper {
+  margin-bottom: 50px;
+}
+
+.personal-account-coach__list .slick-slide {
+  max-width: 334px;
+  max-height: 473px;
+  width: 334px;
+  height: 473px;
+  margin-right: 14px;
+}
+
+.personal-account-coach__list .slick-slide:last-child {
+  margin-right: 0px;
+}

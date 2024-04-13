@@ -2,8 +2,11 @@ import classnames from 'classnames';
 import { memo } from 'react';
 import { Link } from 'react-router-dom';
 
+import { PlaceholderPath } from '@2299899-fit-friends/consts';
 import { CatalogItem, fetchUserAvatar, useFetchFileUrl } from '@2299899-fit-friends/frontend-core';
 import { FrontendRoute, User, UserRole } from '@2299899-fit-friends/types';
+
+import Loading from '../../loading/loading';
 
 type CardUserProps = {
   item: CatalogItem;
@@ -11,7 +14,12 @@ type CardUserProps = {
 
 export default memo(function CardUser({ item }: CardUserProps): JSX.Element {
   const user = item as User;
-  const thumbnailUrl = useFetchFileUrl(fetchUserAvatar, { id: user.id }, 'img/content/placeholder.png');
+  const { fileUrl: thumbnailUrl, loading } = useFetchFileUrl(
+    fetchUserAvatar,
+    { id: user.id },
+    PlaceholderPath.Image,
+    [user],
+  );
 
   const hashtagElements = user.trainingType.map((type, index) => (
     <li className="thumbnail-user__hashtags-item" key={`user_type_hashtag_${index}`}>
@@ -32,12 +40,18 @@ export default memo(function CardUser({ item }: CardUserProps): JSX.Element {
       )}>
         <div className="thumbnail-user__image">
           <picture>
-            <img
-              src={thumbnailUrl}
-              width={82}
-              height={82}
-              alt={user.name}
-            />
+            {
+              loading
+              ?
+              <Loading />
+              :
+              <img
+                src={thumbnailUrl}
+                width={82}
+                height={82}
+                alt={user.name}
+              />
+            }
           </picture>
         </div>
         <div className="thumbnail-user__header">

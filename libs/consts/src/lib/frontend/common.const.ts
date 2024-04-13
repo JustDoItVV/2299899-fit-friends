@@ -24,7 +24,7 @@ export enum ApiRoute {
   Trainer = '/trainer',
   Orders = '/orders',
   Reviews = '/reviews',
-  TriningRequest = '/training-request',
+  TrainingRequest = '/training-request',
 }
 
 export const ResponseErrorMessage = new Map([
@@ -47,14 +47,15 @@ export const SliderBlockItems = {
   TrainingPageVisible: 4,
 } as const;
 
-export enum CardPlaceholderPreviewImage {
-  ForYou = 'img/content/thumbnails/preview-01',
-  Special = 'img/content/thumbnails/nearest-gym-01',
-}
-
 export const DISCOUNT = 0.1;
 
 export const FormQueryParams = {
   TrainingsCatalogLimit: 12,
   UsersCatalogLimit: 12,
 } as const;
+
+export enum PlaceholderPath {
+  Image = 'img/content/placeholder.png',
+  CardForYou = 'img/content/thumbnails/preview-01',
+  CardSpecial = 'img/content/thumbnails/nearest-gym-01',
+}

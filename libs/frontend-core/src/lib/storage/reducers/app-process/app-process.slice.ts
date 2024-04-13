@@ -2,7 +2,7 @@ import { AuthStatus, NameSpace, ResponseError, User } from '@2299899-fit-friends
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import { dropToken } from '../../../services/token';
-import { checkAuthAction, loginUserAction } from '../../api-actions/user-actions';
+import { checkAuth, loginUser } from '../../api-actions/users-actions';
 import { AppProcess } from '../../types/app-process.type';
 
 const initialState: AppProcess = {
@@ -27,20 +27,20 @@ export const appProcess = createSlice({
   },
   extraReducers(builder) {
     builder
-      .addCase(checkAuthAction.fulfilled, (state, action) => {
+      .addCase(checkAuth.fulfilled, (state, action) => {
         state.authStatus = AuthStatus.Auth;
         state.currentUser = action.payload;
       })
-      .addCase(checkAuthAction.rejected, (state) => {
+      .addCase(checkAuth.rejected, (state) => {
         state.authStatus = AuthStatus.NoAuth;
         state.currentUser = null;
         dropToken();
       })
-      .addCase(loginUserAction.fulfilled, (state, action) => {
+      .addCase(loginUser.fulfilled, (state, action) => {
         state.authStatus = AuthStatus.Auth;
         state.currentUser = action.payload;
       })
-      .addCase(loginUserAction.rejected, (state) => {
+      .addCase(loginUser.rejected, (state) => {
         state.authStatus = AuthStatus.NoAuth;
       })
       ;

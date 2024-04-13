@@ -1,114 +1,96 @@
 import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 
 import {
-    selectResponseError, updateUserAction, useAppDispatch, useAppSelector
+    redirectToRoute, selectCurrentUser, selectResponseError, updateUser, useAppDispatch,
+    useAppSelector
 } from '@2299899-fit-friends/frontend-core';
-import { getResponseErrorMessage } from '@2299899-fit-friends/helpers';
-import { TrainingDuration, TrainingLevel, TrainingType, User } from '@2299899-fit-friends/types';
+import { getResponseErrorMessage, pass } from '@2299899-fit-friends/helpers';
+import {
+    FrontendRoute, TrainingDuration, TrainingLevel, TrainingType
+} from '@2299899-fit-friends/types';
+import { unwrapResult } from '@reduxjs/toolkit';
 
-import Loading from '../loading/loading';
+import Loading from '../../loading/loading';
 
-type QuestionnaireFormUserProps = {
-  user: User | null;
-};
-
-export default function QuestionnaireFormUser(
-  props: QuestionnaireFormUserProps
-): JSX.Element {
-  const { user } = props;
+export default function QuestionnaireFormUser(): JSX.Element {
   const dispatch = useAppDispatch();
+  const currentUser = useAppSelector(selectCurrentUser);
   const responseError = useAppSelector(selectResponseError);
-  const [updatedTrainingTypes, setUpdatedTrainingTypes] = useState<
-    TrainingType[]
-  >([]);
-  const [updatedTrainingDuration, setUpdatedTrainingDuration] =
-    useState<TrainingDuration>(TrainingDuration.Thirty);
-  const [updatedTrainingLevel, setUpdatedTrainingLevel] =
-    useState<TrainingLevel>(TrainingLevel.Beginner);
-  const [updatedCaloriesTarget, setUpdatedCaloriesTarget] = useState<
-    number | null
-  >(null);
-  const [updatedCaloriesPerDay, setUpdatedCaloriesPerDay] = useState<
-    number | null
-  >(null);
+
+  const [trainingTypes, setTrainingTypes] = useState<TrainingType[]>([]);
+  const [trainingDuration, setTrainingDuration] = useState<TrainingDuration | null>(null);
+  const [trainingLevel, setTrainingLevel] = useState<TrainingLevel | null>(null);
+  const [caloriesTarget, setCaloriesTarget] = useState<number | null>(null);
+  const [caloriesPerDay, setCaloriesPerDay] = useState<number | null>(null);
 
   useEffect(() => {
-    if (user) {
-      setUpdatedTrainingTypes([...user.trainingType]);
-      setUpdatedTrainingDuration(
-        user.trainingDuration ? user.trainingDuration : TrainingDuration.Thirty
-      );
-      setUpdatedTrainingLevel(user.trainingLevel);
-      setUpdatedCaloriesTarget(
-        user.caloriesTarget ? user.caloriesTarget : null
-      );
-      setUpdatedCaloriesPerDay(
-        user.caloriesPerDay ? user.caloriesPerDay : null
-      );
+    if (currentUser) {
+      setTrainingTypes([...currentUser.trainingType]);
+      setTrainingDuration(currentUser.trainingDuration ? currentUser.trainingDuration : null);
+      setTrainingLevel(currentUser.trainingLevel);
+      setCaloriesTarget(currentUser.caloriesTarget ? currentUser.caloriesTarget : null);
+      setCaloriesPerDay(currentUser.caloriesPerDay ? currentUser.caloriesPerDay : null);
     }
-  }, [user]);
+  }, [currentUser]);
 
-  if (!user) {
+  if (!currentUser) {
     return <Loading />;
   }
 
   const hadleTrainingTypeInputChange = (evt: ChangeEvent<HTMLInputElement>) => {
     const trainingType = evt.currentTarget.value as TrainingType;
-
-    if (!updatedTrainingTypes.includes(trainingType)) {
-      setUpdatedTrainingTypes([...updatedTrainingTypes, trainingType]);
-    } else {
-      const elementIndex = updatedTrainingTypes.indexOf(trainingType);
-      setUpdatedTrainingTypes([
-        ...updatedTrainingTypes.slice(0, elementIndex),
-        ...updatedTrainingTypes.slice(elementIndex + 1),
-      ]);
-    }
+    setTrainingTypes((old) => {
+      let newValues;
+      if (!old.includes(trainingType)) {
+        newValues = [...old, trainingType];
+      } else {
+        const elementIndex = old.indexOf(trainingType);
+        newValues = [...old.slice(0, elementIndex), ...old.slice(elementIndex + 1)];
+      }
+      return newValues;
+    });
   };
 
   const handleTrainingDurationChange = (evt: ChangeEvent<HTMLInputElement>) => {
-    setUpdatedTrainingDuration(evt.currentTarget.value as TrainingDuration);
+    setTrainingDuration(evt.currentTarget.value as TrainingDuration);
   };
 
   const handleTrainingLevelChange = (evt: ChangeEvent<HTMLInputElement>) => {
-    setUpdatedTrainingLevel(evt.currentTarget.value as TrainingLevel);
+    setTrainingLevel(evt.currentTarget.value as TrainingLevel);
   };
 
-  const getCaloriesInputChangeHandler =
-    <T, V extends HTMLInputElement>(
+  const getCaloriesInputChangeHandler = <T, V extends HTMLInputElement>(
       setState: React.Dispatch<React.SetStateAction<T>>
-    ) =>
-    (evt: ChangeEvent<V>) => {
+    ) => (evt: ChangeEvent<V>) => {
       if (evt.currentTarget) {
         setState(evt.currentTarget.valueAsNumber as T);
       }
     };
 
-  const handleFormSubmit = (evt: FormEvent) => {
+  const handleFormSubmit = async (evt: FormEvent) => {
     evt.preventDefault();
-    if (user.id) {
-      const formData = new FormData();
+    if (currentUser.id) {
+      try {
+        const formData = new FormData();
 
-      updatedTrainingTypes.forEach((type) => {
-        formData.append('trainingType', type);
-      });
+        trainingTypes.forEach((type) => {
+          formData.append('trainingType', type);
+        });
 
-      formData.append('trainingDuration', updatedTrainingDuration);
-      formData.append('trainingLevel', updatedTrainingLevel);
-      formData.append(
-        'caloriesTarget',
-        updatedCaloriesTarget ? updatedCaloriesTarget.toString() : ''
-      );
-      formData.append(
-        'caloriesPerDay',
-        updatedCaloriesPerDay ? updatedCaloriesPerDay.toString() : ''
-      );
+        formData.append('trainingDuration', trainingDuration ?? '');
+        formData.append('trainingLevel', trainingLevel ?? '');
+        formData.append('caloriesTarget', caloriesTarget ? caloriesTarget.toString() : '');
+        formData.append('caloriesPerDay', caloriesPerDay ? caloriesPerDay.toString() : '');
 
-      dispatch(updateUserAction({ id: user.id, data: formData }));
+        unwrapResult(await dispatch(updateUser({ id: currentUser.id, data: formData })));
+        dispatch(redirectToRoute(`/${FrontendRoute.Main}`));
+      } catch {
+        pass();
+      }
     }
   };
 
-  const trainingTypes = Object.values(TrainingType).map((type, index) => (
+  const trainingTypesElements = Object.values(TrainingType).map((type, index) => (
     <div className="btn-checkbox" key={`training_type_${index}`}>
       <label>
         <input
@@ -116,7 +98,7 @@ export default function QuestionnaireFormUser(
           type="checkbox"
           name="trainingType"
           value={type}
-          checked={updatedTrainingTypes.includes(type)}
+          checked={trainingTypes.includes(type)}
           onChange={hadleTrainingTypeInputChange}
         />
         <span className="btn-checkbox__btn">
@@ -126,7 +108,7 @@ export default function QuestionnaireFormUser(
     </div>
   ));
 
-  const trainingDurations = Object.values(TrainingDuration).map(
+  const trainingDurationsElements = Object.values(TrainingDuration).map(
     (duration, index) => (
       <div
         className="custom-toggle-radio__block"
@@ -137,7 +119,7 @@ export default function QuestionnaireFormUser(
             type="radio"
             name="trainingDuration"
             value={duration}
-            checked={updatedTrainingDuration === duration}
+            checked={trainingDuration === duration}
             onChange={handleTrainingDurationChange}
           />
           <span className="custom-toggle-radio__icon" />
@@ -147,14 +129,14 @@ export default function QuestionnaireFormUser(
     )
   );
 
-  const trainingLevels = Object.values(TrainingLevel).map((level, index) => (
+  const trainingLevelsElements = Object.values(TrainingLevel).map((level, index) => (
     <div className="custom-toggle-radio__block" key={`training_level_${index}`}>
       <label>
         <input
           type="radio"
           name="trainingLevel"
           value={level}
-          checked={updatedTrainingLevel === level}
+          checked={trainingLevel === level}
           onChange={handleTrainingLevelChange}
         />
         <span className="custom-toggle-radio__icon" />
@@ -175,7 +157,7 @@ export default function QuestionnaireFormUser(
               Ваша специализация (тип) тренировок
             </span>
             <div className="specialization-checkbox questionnaire-user__specializations">
-              {trainingTypes}
+              {trainingTypesElements}
             </div>
             <span className="custom-input__error">
               {getResponseErrorMessage(responseError, 'type')}
@@ -186,7 +168,7 @@ export default function QuestionnaireFormUser(
               Сколько времени вы готовы уделять на тренировку в день
             </span>
             <div className="custom-toggle-radio custom-toggle-radio--big questionnaire-user__radio">
-              {trainingDurations}
+              {trainingDurationsElements}
             </div>
             <span className="custom-input__error">
               {getResponseErrorMessage(responseError, 'duration')}
@@ -195,10 +177,10 @@ export default function QuestionnaireFormUser(
           <div className="questionnaire-user__block">
             <span className="questionnaire-user__legend">Ваш уровень</span>
             <div className="custom-toggle-radio custom-toggle-radio--big questionnaire-user__radio">
-              {trainingLevels}
+              {trainingLevelsElements}
             </div>
             <span className="custom-input__error">
-              {getResponseErrorMessage(responseError, 'level')}
+              {getResponseErrorMessage(responseError, 'traininglevel')}
             </span>
           </div>
           <div className="questionnaire-user__block">
@@ -212,9 +194,7 @@ export default function QuestionnaireFormUser(
                     <input
                       type="number"
                       name="calories-lose"
-                      onChange={getCaloriesInputChangeHandler(
-                        setUpdatedCaloriesTarget
-                      )}
+                      onChange={getCaloriesInputChangeHandler(setCaloriesTarget)}
                       required
                     />
                     <span className="custom-input__text">ккал</span>
@@ -235,7 +215,7 @@ export default function QuestionnaireFormUser(
                     <input
                       type="number"
                       name="calories-waste"
-                      onChange={getCaloriesInputChangeHandler(setUpdatedCaloriesPerDay)}
+                      onChange={getCaloriesInputChangeHandler(setCaloriesPerDay)}
                       required
                     />
                     <span className="custom-input__text">ккал</span>

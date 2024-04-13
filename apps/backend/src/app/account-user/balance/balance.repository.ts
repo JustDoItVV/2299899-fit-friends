@@ -58,6 +58,9 @@ export class BalanceRepository extends BasePostgresRepository<
     if (query.trainingId) {
       where.trainingId = query.trainingId;
     }
+    if (query.availableMin) {
+      where.available = { gte: query.availableMin };
+    }
 
     const orderBy: Prisma.BalanceOrderByWithRelationAndSearchRelevanceInput[] = [];
     if (query.sortOption === SortOption.CreatedAt) {

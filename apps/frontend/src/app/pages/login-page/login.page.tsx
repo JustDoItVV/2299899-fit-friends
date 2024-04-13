@@ -1,10 +1,10 @@
 import { FormEvent, useRef } from 'react';
 import { Helmet } from 'react-helmet-async';
 
-import { EMAIL_ERROR_CODES, PASSWORD_ERROR_CODES } from '@2299899-fit-friends/consts';
 import {
-    loginUserAction, selectResponseError, useAppDispatch, useAppSelector
+    loginUser, selectResponseError, useAppDispatch, useAppSelector
 } from '@2299899-fit-friends/frontend-core';
+import { getResponseErrorMessage } from '@2299899-fit-friends/helpers';
 
 export default function LoginPage(): JSX.Element {
   const dispatch = useAppDispatch();
@@ -15,32 +15,11 @@ export default function LoginPage(): JSX.Element {
   const handleFormSubmit = (evt: FormEvent<HTMLFormElement>) => {
     evt.preventDefault();
     if (emailRef.current !== null && passwordRef.current !== null) {
-      dispatch(
-        loginUserAction({
-          email: emailRef.current.value,
-          password: passwordRef.current.value,
-        })
-      );
+      dispatch(loginUser({
+        email: emailRef.current.value,
+        password: passwordRef.current.value,
+      }));
     }
-  };
-
-  const getResponseErrorMessage = (
-    codes: number[],
-    statusCode: number | undefined,
-    message: string | string[] | undefined,
-    field: string
-  ) => {
-    if (!statusCode || !message || !codes.includes(statusCode)) {
-      return ' ';
-    }
-
-    if (!Array.isArray(message)) {
-      return message;
-    }
-
-    return message
-      .filter((item) => item.toLowerCase().includes(field))
-      .join(', ');
   };
 
   return (
@@ -83,12 +62,7 @@ export default function LoginPage(): JSX.Element {
                           <input ref={emailRef} type="email" name="email" />
                         </span>
                         <span className="custom-input__error">
-                          {getResponseErrorMessage(
-                            EMAIL_ERROR_CODES,
-                            responseError?.statusCode,
-                            responseError?.message,
-                            'email'
-                          )}
+                          {getResponseErrorMessage(responseError, 'email')}
                         </span>
                       </label>
                     </div>
@@ -103,12 +77,7 @@ export default function LoginPage(): JSX.Element {
                           />
                         </span>
                         <span className="custom-input__error">
-                          {getResponseErrorMessage(
-                            PASSWORD_ERROR_CODES,
-                            responseError?.statusCode,
-                            responseError?.message,
-                            'password'
-                          )}
+                          {getResponseErrorMessage(responseError, 'password')}
                         </span>
                       </label>
                     </div>

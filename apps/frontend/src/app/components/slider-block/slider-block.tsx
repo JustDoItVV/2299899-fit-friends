@@ -6,7 +6,7 @@ import classnames from 'classnames';
 import { MouseEvent, useEffect, useRef, useState } from 'react';
 import Slider from 'react-slick';
 
-import { CardPlaceholderPreviewImage, SliderBlockItems } from '@2299899-fit-friends/consts';
+import { PlaceholderPath, SliderBlockItems } from '@2299899-fit-friends/consts';
 import { CatalogItem, useFetchPagination } from '@2299899-fit-friends/frontend-core';
 import { Pagination, QueryPagination } from '@2299899-fit-friends/types';
 import { AsyncThunk } from '@reduxjs/toolkit';
@@ -180,7 +180,7 @@ export default function SliderBlock(props: SliderBlockProps): JSX.Element {
           </Slider>
           :
           <li className={`${classNamePrefix}__item`}>
-            <CardPlaceholder classNameInfix={placeholderInfix} imagePath={CardPlaceholderPreviewImage.ForYou} />
+            <CardPlaceholder classNameInfix={placeholderInfix} imagePath={PlaceholderPath.CardForYou} />
           </li>
         }
         {

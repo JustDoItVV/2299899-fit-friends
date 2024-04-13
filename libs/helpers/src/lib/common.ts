@@ -73,3 +73,7 @@ export function isEmptyObject(object): boolean {
   }
   return true;
 }
+
+export function pass() {
+  return undefined;
+}
