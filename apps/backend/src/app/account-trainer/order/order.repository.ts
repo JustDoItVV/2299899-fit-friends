@@ -50,21 +50,6 @@ export class OrderRepository extends BasePostgresRepository<OrderEntity, Order> 
       limit = DefaultPagination.Limit;
     }
 
-    const where: Prisma.OrderWhereInput = {};
-    if (userId) {
-      where.training = { userId };
-    }
-
-    const orderBy: Prisma.OrderOrderByWithAggregationInput[] = [];
-    if (query.sortOption === OrderSortOption.CreatedAt) {
-      orderBy.push({ createdAt: query.sortDirection });
-    } else if (query.sortOption === OrderSortOption.Amount) {
-      orderBy.push({ amount: query.sortDirection });
-    } else if (query.sortOption === OrderSortOption.OrderSum) {
-      orderBy.push({ orderSum: query.sortDirection });
-    }
-    orderBy.push({ id: query.sortDirection });
-
     const allItems: unknown[] = await this.clientService.$queryRaw`
       SELECT COUNT(*)
       FROM public.orders
@@ -84,13 +69,15 @@ export class OrderRepository extends BasePostgresRepository<OrderEntity, Order> 
     }
     const skip = (currentPage - 1) * limit;
 
-    const documents: {
-      training_id: string,
-      price: number,
-      amount: bigint,
-      order_sum: bigint,
-      traininig?: Training,
-    }[] = await this.clientService.$queryRaw`
+    let orderField = '';
+    if (query.sortOption === OrderSortOption.Amount) {
+      orderField = `amount ${query.sortDirection}`;
+    } else if (query.sortOption === OrderSortOption.OrderSum) {
+      orderField = `order_sum ${query.sortDirection}`;
+    }
+    const orderField2 = `public.orders.training_id ${query.sortDirection}`;
+
+    const ordersQueryRaw = `
       SELECT
         public.orders.training_id,
         public.orders.price,
@@ -99,12 +86,20 @@ export class OrderRepository extends BasePostgresRepository<OrderEntity, Order> 
       FROM public.orders
       JOIN public.trainings
       ON public.orders.training_id = public.trainings.id
-      WHERE public.trainings.user_id = ${userId}
+      WHERE public.trainings.user_id::text = '${userId}'
       GROUP BY public.orders.training_id, public.orders.price, public.trainings.id
-      ORDER BY public.orders.training_id
+      ORDER BY ${orderField ? orderField + ', ' : ''}${orderField2}
       OFFSET ${skip} ROWS
       FETCH NEXT ${limit} ROWS ONLY;
     `;
+
+    const documents: {
+      training_id: string,
+      price: number,
+      amount: bigint,
+      order_sum: bigint,
+      traininig?: Training,
+    }[] = await this.clientService.$queryRawUnsafe(ordersQueryRaw);
 
     for (const document of documents) {
       const training = await this.clientService.training.findFirst({
