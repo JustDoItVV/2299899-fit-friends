@@ -41,7 +41,7 @@ export default memo(function CardTraining({ item }: CardTrainingProps): JSX.Elem
             }
           </picture>
         </div>
-        <p className="thumbnail-training__price">{!training.price ? 'Бесплатно': training.price} ₽</p>
+        <p className="thumbnail-training__price">{!training.price ? 'Бесплатно': `${training.price} ₽`}</p>
         <h3 className="thumbnail-training__title">{training.title}</h3>
         <div className="thumbnail-training__info">
           <ul className="thumbnail-training__hashtags-list">

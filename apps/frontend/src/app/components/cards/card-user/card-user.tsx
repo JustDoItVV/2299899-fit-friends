@@ -1,3 +1,5 @@
+import './card-user.css';
+
 import classnames from 'classnames';
 import { memo } from 'react';
 import { Link } from 'react-router-dom';
@@ -45,12 +47,7 @@ export default memo(function CardUser({ item }: CardUserProps): JSX.Element {
               ?
               <Loading />
               :
-              <img
-                src={thumbnailUrl}
-                width={82}
-                height={82}
-                alt={user.name}
-              />
+              <img src={thumbnailUrl} alt={user.name} />
             }
           </picture>
         </div>
