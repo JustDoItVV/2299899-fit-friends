@@ -23,7 +23,7 @@ export default function AccountFriendsPage(): JSX.Element {
 
   useEffect(() => {
     if (currentUser) {
-      setQuery(currentUser?.role === UserRole.Trainer ? { targetId: currentUser.id } : { authorId: currentUser.id });
+      setQuery({ targetId: currentUser.id, authorId: currentUser.id });
     }
   }, [currentUser]);
 

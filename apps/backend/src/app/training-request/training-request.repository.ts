@@ -52,16 +52,16 @@ export class TrainingRequestRepository extends BasePostgresRepository<
     }
 
     const where: Prisma.TrainingRequestWhereInput = {};
-    if (query.authorId) {
-      where.authorId = query.authorId;
-    }
-    if (query.targetId) {
-      where.targetId = query.targetId;
+    if (query.authorId || query.targetId) {
+      where.OR = [
+        { authorId: query.authorId },
+        { targetId: query.targetId }
+      ];
     }
 
     const orderBy: Prisma.TrainingRequestOrderByWithRelationAndSearchRelevanceInput[] = [];
     if (query.sortOption === SortOption.CreatedAt) {
-      orderBy.push({ createdAt: query.sortDirection });
+      orderBy.push({ updatedAt: query.sortDirection });
     }
     orderBy.push({ id: query.sortDirection });
 

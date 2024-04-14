@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
+import { isEmptyObject } from '@2299899-fit-friends/helpers';
 import { Pagination, QueryPagination } from '@2299899-fit-friends/types';
 import { AsyncThunk, unwrapResult } from '@reduxjs/toolkit';
 
@@ -57,24 +58,28 @@ export function useFetchPagination<T extends CatalogItem>(
     let page = 1;
 
     do {
-      const { entities, totalPages, totalItems } = unwrapResult(
-        await dispatch(fetch(query))
-      );
+      if (!isEmptyObject(query)) {
+        const { entities, totalPages, totalItems } = unwrapResult(
+          await dispatch(fetch(query))
+        );
 
-      if (!totalPagesRef.current || !totalItemsRef.current) {
-        totalPagesRef.current = totalPages;
-        totalItemsRef.current = totalItems;
-      }
+        if (!totalPagesRef.current || !totalItemsRef.current) {
+          totalPagesRef.current = totalPages;
+          totalItemsRef.current = totalItems;
+        }
 
-      entities.forEach((item) => {
-        if (maxItems) {
-          if (result.length < maxItems) {
+        entities.forEach((item) => {
+          if (maxItems) {
+            if (result.length < maxItems) {
+              result.push(item);
+            }
+          } else {
             result.push(item);
           }
-        } else {
-          result.push(item);
-        }
-      });
+        });
+      } else {
+        totalPagesRef.current = 0;
+      }
 
       page++;
 
