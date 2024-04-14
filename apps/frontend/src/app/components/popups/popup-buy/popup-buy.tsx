@@ -1,3 +1,5 @@
+import './popup-buy.css';
+
 import { ChangeEvent, useRef, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import Popup from 'reactjs-popup';
@@ -7,6 +9,8 @@ import {
     fetchTrainingBackgroundPicture, updateBalance, useAppDispatch, useFetchFileUrl
 } from '@2299899-fit-friends/frontend-core';
 import { OrderPaymentMethod } from '@2299899-fit-friends/types';
+
+import Loading from '../../loading/loading';
 
 type PopupBuyProps = {
   trainingId: string | undefined;
@@ -18,17 +22,19 @@ type PopupBuyProps = {
 export default function PopupBuy(props: PopupBuyProps): JSX.Element {
   const { trainingId, trainingTitle, trainingPrice, trigger } = props;
   const dispatch = useAppDispatch();
-  const popupRef = useRef<PopupActions | null>(null);
-  const thumbnailUrl = useFetchFileUrl(fetchTrainingBackgroundPicture, { id: trainingId }, 'img/content/placeholder.png');
-  const amountInputRef = useRef<HTMLInputElement | null>(null);
+  const { fileUrl: thumbnailUrl, loading } = useFetchFileUrl(fetchTrainingBackgroundPicture, { id: trainingId }, 'img/content/placeholder.png');
+
   const [amount, setAmount] = useState<number>(1);
   const [paymentMethod, setPaymentMethod] = useState<string | null>(null);
+
+  const popupRef = useRef<PopupActions | null>(null);
+  const amountInputRef = useRef<HTMLInputElement | null>(null);
 
   const handleCloseButtonClick = () => {
     if (popupRef.current) {
       popupRef.current.close();
     }
-  }
+  };
 
   const handleMinusAmountButtonClick = () => {
     if (amount > 0) {
@@ -105,12 +111,13 @@ export default function PopupBuy(props: PopupBuyProps): JSX.Element {
           <div className="popup__product">
             <div className="popup__product-image">
               <picture>
-                <img
-                  src={thumbnailUrl}
-                  width={98}
-                  height={80}
-                  alt=""
-                />
+                {
+                  loading
+                  ?
+                  <Loading />
+                  :
+                  <img src={thumbnailUrl} alt="" />
+                }
               </picture>
             </div>
             <div className="popup__product-info">

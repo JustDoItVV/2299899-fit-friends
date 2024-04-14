@@ -1,6 +1,6 @@
 import './popup-review.css';
 
-import { ChangeEvent, useEffect, useRef, useState } from 'react';
+import { ChangeEvent, useRef, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import Popup from 'reactjs-popup';
 import { PopupActions } from 'reactjs-popup/dist/types';
@@ -8,7 +8,8 @@ import { PopupActions } from 'reactjs-popup/dist/types';
 import {
     createReview, selectResponseError, useAppDispatch, useAppSelector
 } from '@2299899-fit-friends/frontend-core';
-import { getResponseErrorMessage } from '@2299899-fit-friends/helpers';
+import { getResponseErrorMessage, pass } from '@2299899-fit-friends/helpers';
+import { unwrapResult } from '@reduxjs/toolkit';
 
 type PopupReviewProps = {
   trainingId: string | undefined;
@@ -21,14 +22,6 @@ export default function PopupReview({ trainingId, trigger }: PopupReviewProps): 
   const popupRef = useRef<PopupActions | null>(null);
   const [rating, setRating] = useState<number | null>(null);
   const [text, setText] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (!responseError) {
-      popupRef.current?.close();
-    } else {
-      popupRef.current?.open();
-    }
-  }, [responseError]);
 
   const handleRatingInputChange = (evt: ChangeEvent<HTMLInputElement>) => {
     setRating(parseInt(evt.currentTarget.value, 10));
@@ -44,9 +37,14 @@ export default function PopupReview({ trainingId, trigger }: PopupReviewProps): 
     }
   }
 
-  const handleCreateReviewButtonClick = () => {
+  const handleCreateReviewButtonClick = async () => {
     if (trainingId && rating && text) {
-      dispatch(createReview({ id: trainingId, data: { rating, text } }));
+      try {
+        unwrapResult(await dispatch(createReview({ id: trainingId, data: { rating, text } })));
+        popupRef.current?.close();
+      } catch {
+        pass();
+      }
     }
   };
 
