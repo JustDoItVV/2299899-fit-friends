@@ -17,11 +17,11 @@ export default function TrainingsCreateForm(): JSX.Element {
 
   const titleRef = useRef<string>('');
   const trainingTypeRef = useRef<TrainingType | ''>('');
-  const caloriesRef = useRef<string>('');
+  const caloriesRef = useRef<string | null>(null);
   const durationRef = useRef<TrainingDuration | ''>('');
-  const priceRef = useRef<string>('');
+  const priceRef = useRef<string | null>(null);
   const levelRef = useRef<TrainingLevel | ''>('');
-  const genderRef = useRef<TrainingAuditory>(TrainingAuditory.All);
+  const genderRef = useRef<TrainingAuditory | null>(null);
   const descriptionRef = useRef<string>('');
   const videoInputRef = useRef<HTMLInputElement | null>(null);
   const [filename, setFilename] = useState<string>(`Загрузите сюда файлы формата ${
@@ -38,11 +38,15 @@ export default function TrainingsCreateForm(): JSX.Element {
 
     formData.append('title', titleRef.current);
     formData.append('type', trainingTypeRef.current);
-    formData.append('calories', caloriesRef.current);
+    if (caloriesRef.current) {
+      formData.append('calories', caloriesRef.current);
+    }
     formData.append('duration', durationRef.current);
-    formData.append('price', priceRef.current);
+    if (priceRef.current) {
+      formData.append('price', priceRef.current);
+    }
     formData.append('level', levelRef.current);
-    formData.append('gender', genderRef.current);
+    formData.append('gender', genderRef.current ?? '');
     formData.append('description', descriptionRef.current);
     formData.append('isSpecialOffer', '');
 
@@ -83,8 +87,7 @@ export default function TrainingsCreateForm(): JSX.Element {
           type="radio"
           name="gender"
           value={gender}
-          defaultChecked={gender === TrainingAuditory.All}
-          onChange={getInputSelectTextareaChangeHandler<TrainingAuditory>(genderRef)}
+          onChange={getInputSelectTextareaChangeHandler<TrainingAuditory | null>(genderRef)}
         />
         <span className="custom-toggle-radio__icon" />
         <span className="custom-toggle-radio__label">
@@ -147,7 +150,7 @@ export default function TrainingsCreateForm(): JSX.Element {
                             Сколько калорий потратим
                           </span>
                           <span className="custom-input__wrapper">
-                            <input type="number" name="calories" onChange={getInputSelectTextareaChangeHandler<string>(caloriesRef)} />
+                            <input type="number" name="calories" onChange={getInputSelectTextareaChangeHandler<string | null>(caloriesRef)} />
                             <span className="custom-input__text">ккал</span>
                           </span>
                           <span className="custom-input__error">
@@ -177,7 +180,7 @@ export default function TrainingsCreateForm(): JSX.Element {
                             Стоимость тренировки
                           </span>
                           <span className="custom-input__wrapper">
-                            <input type="number" name="price" onChange={getInputSelectTextareaChangeHandler<string>(priceRef)} />
+                            <input type="number" name="price" onChange={getInputSelectTextareaChangeHandler<string | null>(priceRef)} />
                             <span className="custom-input__text">₽</span>
                           </span>
                           <span className="custom-input__error">

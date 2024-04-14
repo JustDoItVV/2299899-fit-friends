@@ -1,4 +1,6 @@
 export enum TrainingRequestErrorMessage {
-  NotFound = 'Request not found',
-  UpdateForbidden = 'Request doe not belong to user',
+  Enum = 'Должно быть одним из значений',
+  NotValid = 'Невалидное значение',
+  NotFound = 'Запись не найдена',
+  UpdateForbidden = 'Обновление запрещено, запись не принадлежит пользователю',
 }

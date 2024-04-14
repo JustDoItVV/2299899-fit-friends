@@ -88,6 +88,12 @@ export default function FormFilterSortCatalog(props: FormFilterSortCatalogProps)
     debouncedSetQueryParams({ priceMax: target.value ? target.value : null });
   };
 
+  const handleInputInput = (evt: ChangeEvent<HTMLInputElement>) => {
+    if (!evt.currentTarget.validity.valid) {
+      evt.currentTarget.value = '';
+    }
+  };
+
   const handlePriceMaxChange = useCallback((value: number) => {
     if (priceMaxInputRef.current) {
       priceMaxInputRef.current.value = value.toString();
@@ -352,7 +358,9 @@ export default function FormFilterSortCatalog(props: FormFilterSortCatalogProps)
                     type="number"
                     id="text-min"
                     name="text-min"
+                    min={PriceLimit.Min}
                     onChange={handlePriceMinInputChange}
+                    onInput={handleInputInput}
                   />
                   <label htmlFor="text-min">от</label>
                 </div>
@@ -390,7 +398,9 @@ export default function FormFilterSortCatalog(props: FormFilterSortCatalogProps)
                     type="number"
                     id="text-min-cal"
                     name="text-min-cal"
+                    min={1}
                     onChange={handleCaloriesMinInputChange}
+                    onInput={handleInputInput}
                   />
                   <label htmlFor="text-min-cal">от</label>
                 </div>

@@ -28,7 +28,7 @@ export class FilesValidationPipe
     for (const fileRuleKey of Object.keys(this.rules)) {
       if (this.rules[fileRuleKey].required && !(fileRuleKey in value)) {
         isBadRequest = true;
-        badRequestMessages.push(`${fileRuleKey} file required`);
+        badRequestMessages.push(`${fileRuleKey} Обязательное поле`);
       }
     }
 

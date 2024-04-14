@@ -150,7 +150,7 @@ export default function CardUserInfo(): JSX.Element {
               )}
               type="button"
               onClick={handleAddFriendButtonClick}
-              disabled={currentUser?.role === UserRole.Trainer || currentUser?.id === user?.id}
+              disabled={(currentUser?.id && currentUser?.role === UserRole.Trainer && !user?.friends?.includes(currentUser?.id)) || currentUser?.id === user?.id}
             >
               {
                 currentUser?.id && user?.friends?.includes(currentUser?.id)
