@@ -1,4 +1,6 @@
 import 'leaflet/dist/leaflet.css';
+import './popup-user-map.css';
+import 'reactjs-popup/dist/index.css';
 
 import { layerGroup, Marker } from 'leaflet';
 import { useEffect, useRef, useState } from 'react';
@@ -54,6 +56,7 @@ export default function PopupUserMap(props: PopupUserMapProps): JSX.Element {
       modal
       trigger={trigger}
       lockScroll={true}
+      className='popup-map'
     >
       <div className="">
         <div className="popup-head popup-head--address">

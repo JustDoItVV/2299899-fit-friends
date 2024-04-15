@@ -77,3 +77,6 @@ export function isEmptyObject(object): boolean {
 export function pass() {
   return undefined;
 }
+
+export const camelToSnakeCase = (str: string) =>
+  str.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`);

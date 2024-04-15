@@ -84,7 +84,9 @@ export default function App() {
         </Route>
         <Route path={FrontendRoute.Users}>
           <Route path='' element={<RouteAuthorized children={
-            <UsersPage />
+            <RouteRole role={UserRole.User} children={
+              <UsersPage />
+            }/>
           } />} />
           <Route path=':id' element={<RouteAuthorized children={
             <UserCardPage />

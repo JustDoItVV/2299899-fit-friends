@@ -1,13 +1,13 @@
 import './card-friends.css';
 
 import classnames from 'classnames';
-import { memo, useEffect, useState } from 'react';
+import { memo, MouseEvent, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import { PlaceholderPath } from '@2299899-fit-friends/consts';
 import {
-    CatalogItem, fetchUserAvatar, selectCurrentUser, updateRequest, useAppDispatch, useAppSelector,
-    useFetchFileUrl
+    CatalogItem, createRequest, fetchUserAvatar, selectCurrentUser, updateRequest, useAppDispatch,
+    useAppSelector, useFetchFileUrl
 } from '@2299899-fit-friends/frontend-core';
 import {
     FrontendRoute, TrainingRequest, TrainingRequestStatus, User, UserRole
@@ -35,7 +35,9 @@ export default memo(function FriendsCatalogCard({ item, additionalData }: Friend
 
   useEffect(() => {
     const requestFound = additionalData?.requests?.find((request) =>
-      currentUser?.role === UserRole.Trainer ? request.authorId === user.id : request.targetId === user.id);
+      (request.targetId === user.id && request.authorId === currentUser?.id) ||
+      (request.authorId === user.id && request.targetId === currentUser?.id)
+    );
     if (requestFound) {
       setRequest(requestFound);
     }
@@ -58,6 +60,21 @@ export default memo(function FriendsCatalogCard({ item, additionalData }: Friend
       setRequest((old) => {
         const newValue = { ...old } as TrainingRequest;
         newValue.status = TrainingRequestStatus.Rejected;
+        return newValue;
+      });
+    }
+  };
+
+  const handleInviteToTrainingButtonClick = (evt: MouseEvent<HTMLButtonElement>) => {
+    evt.preventDefault();
+    if (user?.id) {
+      evt.currentTarget.disabled = true;
+      dispatch(createRequest(user?.id));
+      setRequest((old) => {
+        const newValue = { ...old } as TrainingRequest;
+        newValue.authorId = currentUser?.id ?? '';
+        newValue.targetId = user.id ?? '';
+        newValue.status = TrainingRequestStatus.Consideration;
         return newValue;
       });
     }
@@ -128,6 +145,19 @@ export default memo(function FriendsCatalogCard({ item, additionalData }: Friend
               )}>
                 <span>{user.isReadyToTraining ? 'Г' : 'Не г'}отов к&nbsp;тренировке</span>
               </div>
+              {
+                user.role === UserRole.User && user.isReadyToTraining &&
+                <button
+                  className='thumbnail-friend__invite-button'
+                  type='button'
+                  onClick={handleInviteToTrainingButtonClick}
+                  disabled={request?.status === TrainingRequestStatus.Consideration}
+                >
+                  <svg width="43" height="46" aria-hidden={true} focusable={false}>
+                    <use xlinkHref='#icon-invite'></use>
+                  </svg>
+                </button>
+              }
             </div>
           </div>
         </Link>

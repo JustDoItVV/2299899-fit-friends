@@ -1,5 +1,8 @@
+import './header.css';
+
 import { MouseEvent, useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import Popup from 'reactjs-popup';
 
 import {
     deleteNotification, fetchNotifications, useAppDispatch
@@ -14,19 +17,16 @@ type HeaderProps = {
 export default function Header(props: HeaderProps): JSX.Element {
   const { page } = props;
   const dispatch = useAppDispatch();
+
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [notificationsElements, setNotificationsElements] = useState<JSX.Element[]>([]);
 
-  useEffect(() => {
-    const fetch = async () => {
-      const data = unwrapResult(await dispatch(fetchNotifications()));
-      setNotifications(data);
-    };
+  const handleNotificationsOpen = async () => {
+    const data = unwrapResult(await dispatch(fetchNotifications()));
+    setNotifications(data);
+  };
 
-    fetch();
-  }, [dispatch]);
-
-  const handleNotificationButtonClick = useCallback((evt: MouseEvent<HTMLAnchorElement>) => {
+  const handleNotificationClick = useCallback((evt: MouseEvent<HTMLAnchorElement>) => {
     evt.preventDefault();
     if (evt.currentTarget.dataset.id) {
       dispatch(deleteNotification(evt.currentTarget.dataset.id));
@@ -37,7 +37,7 @@ export default function Header(props: HeaderProps): JSX.Element {
   useEffect(() => {
     setNotificationsElements(notifications.map((notification, index) => (
       <li className="main-nav__subitem" key={`notification_item_${index}`}>
-        <Link className="notification is-active" to="*" data-id={notification.id} onClick={handleNotificationButtonClick}>
+        <Link className="notification is-active" to="*" data-id={notification.id} onClick={handleNotificationClick}>
           <p className="notification__text">
             {notification.text}
           </p>
@@ -50,7 +50,7 @@ export default function Header(props: HeaderProps): JSX.Element {
         </Link>
       </li>
     )));
-  }, [page, notifications, handleNotificationButtonClick]);
+  }, [page, notifications, handleNotificationClick]);
 
   const searchItemsElements = Object.values(TrainingType).map((type, index) => (
     <li className="search__item" key={`search_item_${index}`}>
@@ -92,21 +92,22 @@ export default function Header(props: HeaderProps): JSX.Element {
               </Link>
             </li>
             <li className="main-nav__item main-nav__item--notifications">
-              <button className="main-nav__link" aria-label="Уведомления">
-                <svg width={14} height={18} aria-hidden="true">
-                  <use xlinkHref="#icon-notification" />
-                </svg>
-              </button>
-              <div className="main-nav__dropdown">
-                <p className="main-nav__label">Оповещения</p>
-                <ul className="main-nav__sublist">
-                  {
-                    notificationsElements.length > 0
-                    ? notificationsElements
-                    : <p>Нет оповещений</p>
-                  }
-                </ul>
-              </div>
+              <Popup trigger={
+                <button className="main-nav__link" aria-label="Уведомления">
+                  <svg width={14} height={18} aria-hidden="true">
+                    <use xlinkHref="#icon-notification" />
+                  </svg>
+                </button>
+              } className='popup-notifications' onOpen={handleNotificationsOpen}>
+                  <p className="main-nav__label">Оповещения</p>
+                  <ul className="main-nav__sublist">
+                    {
+                      notificationsElements.length > 0
+                      ? notificationsElements
+                      : <p>Нет оповещений</p>
+                    }
+                  </ul>
+              </Popup>
             </li>
           </ul>
         </nav>

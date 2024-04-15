@@ -126,7 +126,6 @@ export const updateTraining = createAsyncThunk<
         `${ApiRoute.Training}/${id}`,
         data
       );
-      console.log(data, training);
       dispatch(setResponseError(null));
       return training;
     } catch (error) {

@@ -4,4 +4,5 @@ export type TrainingProcess = {
   training: Training | null;
   reviews: Review[];
   balance: Balance | null;
+  isLoading: boolean;
 };

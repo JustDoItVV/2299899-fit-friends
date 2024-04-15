@@ -5,7 +5,7 @@ import { ApiRoute } from '@2299899-fit-friends/consts';
 import { Balance, Pagination, QueryPagination, User } from '@2299899-fit-friends/types';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
-import { setResponseError } from '../reducers/app-process/app-process.slice';
+import { setCurrentUser, setResponseError } from '../reducers/app-process/app-process.slice';
 import { setUser } from '../reducers/user-process/user-process.slice';
 import { AppDispatch } from '../types/app-dispatch.type';
 import { CatalogItem } from '../types/catalog-item.type';
@@ -76,12 +76,13 @@ export const subscribeToTrainer = createAsyncThunk<
   void,
   string,
   { dispatch: AppDispatch; state: State; extra: AxiosInstance }
->('accountUser/subscribeToTrainer', async (id, { dispatch, extra: api, rejectWithValue }) => {
+>('accountUser/subscribeToTrainer', async (id, { dispatch, extra: api, rejectWithValue, getState }) => {
   try {
+    const state = getState();
     await api.post(`${ApiRoute.User}/${id}${ApiRoute.Subscribe}`);
     await api.post(`${ApiRoute.Account}${ApiRoute.User}${ApiRoute.SendNewTrainingsMail}`);
-    const { data } = await api.get<User>(`${ApiRoute.User}/${id}`);
-    dispatch(setUser(data));
+    const { data } = await api.get<User>(`${ApiRoute.User}/${state.APP.currentUser.id}`);
+    dispatch(setCurrentUser(data));
     dispatch(setResponseError(null));
   } catch (error) {
     if (!error.response) {
@@ -97,11 +98,12 @@ export const unsubscribeFromTrainer = createAsyncThunk<
   void,
   string,
   { dispatch: AppDispatch; state: State; extra: AxiosInstance }
->('accountUser/unsubscribeFromTrainer', async (id, { dispatch, extra: api, rejectWithValue }) => {
+>('accountUser/unsubscribeFromTrainer', async (id, { dispatch, extra: api, rejectWithValue, getState }) => {
   try {
+    const state = getState();
     await api.delete(`${ApiRoute.User}/${id}${ApiRoute.Subscribe}`);
-    const { data } = await api.get<User>(`${ApiRoute.User}/${id}`);
-    dispatch(setUser(data));
+    const { data } = await api.get<User>(`${ApiRoute.User}/${state.APP.currentUser.id}`);
+    dispatch(setCurrentUser(data));
   } catch (error) {
     if (!error.response) {
       throw new Error(error);
@@ -121,4 +123,12 @@ export const fetchUserFriends = createAsyncThunk<
     `${ApiRoute.Account}${ApiRoute.User}${ApiRoute.Friends}?${stringify(query)}`
   );
   return pagination;
+});
+
+export const sendNewTrainingsMail = createAsyncThunk<
+  void,
+  void,
+  { dispatch: AppDispatch; state: State; extra: AxiosInstance }
+>('accountUser/sendNewTrainingsMail', async (_, { extra: api }) => {
+    await api.post(`${ApiRoute.Account}${ApiRoute.User}${ApiRoute.SendNewTrainingsMail}`);
 });

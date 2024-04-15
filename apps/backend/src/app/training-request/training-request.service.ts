@@ -4,7 +4,9 @@ import {
     UpdateTrainingRequestDto
 } from '@2299899-fit-friends/dtos';
 import { fillDto } from '@2299899-fit-friends/helpers';
-import { Pagination, UserGender, UserRole } from '@2299899-fit-friends/types';
+import {
+    Pagination, TrainingRequestStatus, UserGender, UserRole
+} from '@2299899-fit-friends/types';
 import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 
 import { NotificationService } from '../notification/notification.service';
@@ -67,6 +69,15 @@ export class TrainingRequestService {
     if (!hasChanges) {
       return trainingRequest;
     }
+
+    const targetUser = await this.userService.getUserById(trainingRequest.targetId);
+    await this.notificationService.createNotification(trainingRequest.authorId, `${
+      targetUser.name
+    } ${trainingRequest.status === TrainingRequestStatus.Accepted ? 'принял' : ''}${trainingRequest.status === TrainingRequestStatus.Rejected ? 'отклонил' : ''}${
+      trainingRequest.status !== TrainingRequestStatus.Consideration && targetUser.gender === UserGender.Female ? 'а' : ''
+    } запрос на ${
+      targetUser.role === UserRole.Trainer ? 'персональную' : 'совместную'
+    } тренировку`);
 
     return await this.trainingRequestRepository.update(id, trainingRequest);
   }

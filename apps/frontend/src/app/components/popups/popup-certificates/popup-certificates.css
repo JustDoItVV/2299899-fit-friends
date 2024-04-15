@@ -1,21 +1,45 @@
-.popup__content--purchases .slick-list {
+.popup-certificates-content {
+  -webkit-box-shadow: 0 10px 30px rgba(51, 51, 51, 0.1);
+  box-shadow: 0 10px 30px rgba(51, 51, 51, 0.1);
+  border: 1px solid #c5ec2a;
+  border-radius: 60px;
+  overflow: hidden;
+  z-index: 2;
+  max-width: 600px;
+  max-height: 800px;
+}
+
+.popup-certificates-content .popup-head {
+  max-width: 585px;
+}
+
+.popup__content--purchases .slick-slider {
+  width: 334px;
   max-width: 334px;
   max-height: 473px;
 }
 
-.popup__content--purchases .slick-track {
+.personal-account-coach__list .slick-list {
+  min-width: 334px;
+  max-width: 334px;
+  max-height: 473px;
+  min-height: 473px;
+}
+
+.personal-account-coach__list .slick-track {
   background-color: #f2f2f2;
 }
 
-.popup__content--purchases .slider-block-wrapper {
+.personal-account-coach__list .slider-block-wrapper {
   margin-bottom: 50px;
   height: 473px;
 }
 
-.popup__content--purchases .slick-slide {
+.personal-account-coach__list .slick-slide {
   min-width: 334px;
+  margin: 0;
 }
 
-.popup__content--purchases .slick-slide:last-child {
+.personal-account-coach__list .slick-slide:last-child {
   margin-right: 0px;
 }

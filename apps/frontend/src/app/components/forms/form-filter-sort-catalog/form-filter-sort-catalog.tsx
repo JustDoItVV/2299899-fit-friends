@@ -1,5 +1,6 @@
+import classnames from 'classnames';
 import { debounce } from 'lodash';
-import { ChangeEvent, useCallback, useMemo, useRef } from 'react';
+import { ChangeEvent, MouseEvent, useCallback, useMemo, useRef, useState } from 'react';
 
 import {
     CaloriesTargetLimit, DEBOUNCE_THRESHOLD, METRO_STATIONS, PriceLimit, RatingLimit
@@ -31,6 +32,7 @@ export default function FormFilterSortCatalog(props: FormFilterSortCatalogProps)
   const debounceTreshold = props.debounceTreshold ?? DEBOUNCE_THRESHOLD;
 
   const dispatch = useAppDispatch();
+
   const priceMinInputRef = useRef<HTMLInputElement | null>(null);
   const priceMaxInputRef = useRef<HTMLInputElement | null>(null);
   const sliderPriceRef = useRef<MultiRangeSliderHandles | null>(null);
@@ -41,6 +43,9 @@ export default function FormFilterSortCatalog(props: FormFilterSortCatalogProps)
   const typeRef = useRef<string[]>([]);
   const specializationRef = useRef<string[]>([]);
   const durationRef = useRef<string[]>([]);
+
+  const [locationsShowAll, setLocationsShowAll] = useState<boolean>(false);
+  const [typesShowAll, setTypesShowAll] = useState<boolean>(false);
 
   const debouncedSetQueryParams = useMemo(() =>
     debounce((params: Record<string, string[] | string | null>) => {
@@ -86,6 +91,12 @@ export default function FormFilterSortCatalog(props: FormFilterSortCatalogProps)
       slider.setMaxValue(target.valueAsNumber || PriceLimit.MockMax);
     }
     debouncedSetQueryParams({ priceMax: target.value ? target.value : null });
+  };
+
+  const handleInputInput = (evt: ChangeEvent<HTMLInputElement>) => {
+    if (!evt.currentTarget.validity.valid) {
+      evt.currentTarget.value = '';
+    }
   };
 
   const handlePriceMaxChange = useCallback((value: number) => {
@@ -212,6 +223,16 @@ export default function FormFilterSortCatalog(props: FormFilterSortCatalogProps)
     debouncedSetQueryParams({ sortOption: 'role', sortDirection: evt.currentTarget.value });
   };
 
+  const handleLocationsShowAllButtonClick = (evt: MouseEvent<HTMLButtonElement>) => {
+    evt.currentTarget.classList.add('visually-hidden');
+    setLocationsShowAll(true);
+  };
+
+  const handleTypesShowAllButtonClick = (evt: MouseEvent<HTMLButtonElement>) => {
+    evt.currentTarget.classList.add('visually-hidden');
+    setTypesShowAll(true);
+  };
+
   const durationFilterElements = Object.values(TrainingDuration).map((duration, index) => (
     <li className={`${classNamePrefix}-form__check-list-item`} key={`duration_filter_${index}`}>
       <div className="custom-toggle custom-toggle--checkbox">
@@ -236,7 +257,10 @@ export default function FormFilterSortCatalog(props: FormFilterSortCatalogProps)
   ));
 
   const locationElements = METRO_STATIONS.map((location, index) => (
-    <li className={`${classNamePrefix}-form__check-list-item`} key={`filter_location_${index}`}>
+    <li className={classnames(
+      `${classNamePrefix}-form__check-list-item`,
+      { 'visually-hidden': !locationsShowAll && index > 3 },
+    )} key={`filter_location_${index}`}>
       <div className="custom-toggle custom-toggle--checkbox">
         <label>
           <input
@@ -280,7 +304,10 @@ export default function FormFilterSortCatalog(props: FormFilterSortCatalogProps)
   ));
 
   const specializationFilterElements = Object.values(TrainingType).map((specialization, index) => (
-    <li className={`${classNamePrefix}__check-list-item`} key={`type_filter_${index}`}>
+    <li className={classnames(
+      `${classNamePrefix}-form__check-list-item`,
+      { 'visually-hidden': !typesShowAll && index > 3 }
+    )} key={`type_filter_${index}`}>
       <div className="custom-toggle custom-toggle--checkbox">
         <label>
           <input
@@ -352,7 +379,9 @@ export default function FormFilterSortCatalog(props: FormFilterSortCatalogProps)
                     type="number"
                     id="text-min"
                     name="text-min"
+                    min={PriceLimit.Min}
                     onChange={handlePriceMinInputChange}
+                    onInput={handleInputInput}
                   />
                   <label htmlFor="text-min">от</label>
                 </div>
@@ -390,7 +419,9 @@ export default function FormFilterSortCatalog(props: FormFilterSortCatalogProps)
                     type="number"
                     id="text-min-cal"
                     name="text-min-cal"
+                    min={1}
                     onChange={handleCaloriesMinInputChange}
+                    onInput={handleInputInput}
                   />
                   <label htmlFor="text-min-cal">от</label>
                 </div>
@@ -443,6 +474,7 @@ export default function FormFilterSortCatalog(props: FormFilterSortCatalogProps)
               <button
                 className={`btn-show-more ${classNamePrefix}-form__btn-show`}
                 type="button"
+                onClick={handleLocationsShowAllButtonClick}
               >
                 <span>Посмотреть все</span>
                 <svg
@@ -476,6 +508,21 @@ export default function FormFilterSortCatalog(props: FormFilterSortCatalogProps)
               <ul className={`${classNamePrefix}-form__check-list`}>
                 {specializationFilterElements}
               </ul>
+              <button
+                className={`btn-show-more ${classNamePrefix}-form__btn-show`}
+                type="button"
+                onClick={handleTypesShowAllButtonClick}
+              >
+                <span>Посмотреть все</span>
+                <svg
+                  className="btn-show-more__icon"
+                  width={10}
+                  height={4}
+                  aria-hidden="true"
+                >
+                  <use xlinkHref="#arrow-down" />
+                </svg>
+              </button>
             </div>
           }
           {

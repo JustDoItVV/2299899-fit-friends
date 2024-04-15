@@ -127,25 +127,27 @@ export class TrainingService {
         training[key] = value;
         hasChanges = true;
       }
+    }
 
-      if (files) {
-        if (files.backgroundPicture && files.backgroundPicture.length > 0) {
-          if (training.backgroundPicture) {
-            await this.uploaderService.deleteFile(training.backgroundPicture);
-          }
-          const backgroundPicturePath = await this.uploaderService.saveFile(
-            files.backgroundPicture[0]
-          );
-          training.backgroundPicture = backgroundPicturePath;
+    if (files) {
+      if (files.backgroundPicture && files.backgroundPicture.length > 0) {
+        if (training.backgroundPicture) {
+          await this.uploaderService.deleteFile(training.backgroundPicture);
         }
+        const backgroundPicturePath = await this.uploaderService.saveFile(
+          files.backgroundPicture[0]
+        );
+        training.backgroundPicture = backgroundPicturePath;
+        hasChanges = true;
+      }
 
-        if (files.video && files.video.length > 0) {
-          if (training.video) {
-            await this.uploaderService.deleteFile(training.video);
-          }
-          const videoPath = await this.uploaderService.saveFile(files.video[0]);
-          training.video = videoPath;
+      if (files.video && files.video.length > 0) {
+        if (training.video) {
+          await this.uploaderService.deleteFile(training.video);
         }
+        const videoPath = await this.uploaderService.saveFile(files.video[0]);
+        training.video = videoPath;
+        hasChanges = true;
       }
     }
 

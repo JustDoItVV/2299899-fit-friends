@@ -264,7 +264,7 @@ export class UserController {
   @ApiUnauthorizedResponse({ description: ApiUserMessage.Unauthorized })
   @HttpCode(HttpStatus.OK)
   @Delete(':id/friend')
-  @UseGuards(JwtAuthGuard, new UserRolesGuard([UserRole.User]))
+  @UseGuards(JwtAuthGuard)
   public async removeFromFriends(
     @Param('id') friendId: string,
     @UserParam() payload: TokenPayload

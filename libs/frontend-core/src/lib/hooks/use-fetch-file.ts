@@ -14,7 +14,7 @@ export function useFetchFileUrl(
 ) {
   const dispatch = useAppDispatch();
   const [fileUrl, setFileUrl] = useState<string>(defaultValue);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const fetchFile = async () => {
