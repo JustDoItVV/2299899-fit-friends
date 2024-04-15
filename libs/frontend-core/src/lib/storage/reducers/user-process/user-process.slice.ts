@@ -6,6 +6,7 @@ import { UserProcess } from '../../types/user-process.type';
 
 const initialState: UserProcess = {
   user: null,
+  isLoading: false,
 };
 
 export const userProcess = createSlice({
@@ -20,10 +21,16 @@ export const userProcess = createSlice({
     builder
       .addCase(fetchUser.fulfilled, (state, action) => {
         state.user = action.payload;
+        state.isLoading = false;
+      })
+      .addCase(fetchUser.pending, (state) => {
+        state.isLoading = true;
       })
       .addCase(fetchUser.rejected, (state) => {
         state.user = null;
-      });
+        state.isLoading = false;
+      })
+      ;
   },
 });
 

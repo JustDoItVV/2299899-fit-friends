@@ -79,7 +79,7 @@ export class UpdateTrainingDto {
     properties: { file: { type: 'string', format: 'binary' } },
     required: false,
   })
-  @IsNotEmptyObject()
+  @IsNotEmptyObject({}, { message: getDtoMessageCallback(TrainingErrorMessage.Required) })
   @IsOptional()
   public video: Express.Multer.File;
 

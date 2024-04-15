@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { useBeforeUnload, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 import {
     fetchBalanceCatalog, fetchReviews, fetchTraining, redirectToRoute, selectBalance,
-    selectCurrentUser, selectReviews, selectTraining, setTraining, useAppDispatch, useAppSelector
+    selectCurrentUser, selectReviews, selectTraining, selectTrainingDataIsLoading, useAppDispatch,
+    useAppSelector
 } from '@2299899-fit-friends/frontend-core';
 import { FrontendRoute, UserRole } from '@2299899-fit-friends/types';
 
@@ -12,6 +13,7 @@ import AsideLeftBlock from '../../components/aside-left-block/aside-left-block';
 import CardReview from '../../components/cards/card-review/card-review';
 import CardTrainingInfo from '../../components/cards/card-training-info/card-training-info';
 import Header from '../../components/header/header';
+import Loading from '../../components/loading/loading';
 import PopupReview from '../../components/popups/popup-review/popup-review';
 
 export default function TrainingCardPage(): JSX.Element {
@@ -21,12 +23,15 @@ export default function TrainingCardPage(): JSX.Element {
   const reviews = useAppSelector(selectReviews);
   const training = useAppSelector(selectTraining);
   const balance = useAppSelector(selectBalance);
+  const isLoading = useAppSelector(selectTrainingDataIsLoading);
 
   const [reviewsElements, setReviewsElements] = useState<JSX.Element[]>([]);
 
   useEffect(() => {
-    if (currentUser?.role === UserRole.Trainer && training?.userId !== currentUser.id) {
-      dispatch(redirectToRoute(`/${FrontendRoute.Account}`));
+    if (currentUser && training) {
+      if (currentUser?.role === UserRole.Trainer && training?.userId !== currentUser.id) {
+        dispatch(redirectToRoute(`/${FrontendRoute.Account}`));
+      }
     }
   }, [training, dispatch, currentUser]);
 
@@ -39,9 +44,11 @@ export default function TrainingCardPage(): JSX.Element {
   useEffect(() => {
     if (id) {
       dispatch(fetchTraining(id));
-      dispatch(fetchBalanceCatalog({ trainingId: id }))
+      if (currentUser?.role === UserRole.User) {
+        dispatch(fetchBalanceCatalog({ trainingId: id }))
+      }
     }
-  }, [dispatch, id, reviews]);
+  }, [dispatch, id, reviews, currentUser]);
 
   useEffect(() => {
     setReviewsElements(reviews.map((review, index) => (
@@ -51,9 +58,9 @@ export default function TrainingCardPage(): JSX.Element {
     )));
   }, [reviews]);
 
-  useBeforeUnload(() => {
-    dispatch(setTraining(null));
-  });
+  if (isLoading) {
+    return <Loading />
+  }
 
   return (
     <div className="wrapper">

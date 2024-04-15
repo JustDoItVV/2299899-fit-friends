@@ -1,6 +1,6 @@
 import './card-training-info.css';
 
-import { ChangeEvent, MouseEvent, useEffect, useRef, useState } from 'react';
+import React, { ChangeEvent, MouseEvent, useEffect, useRef, useState } from 'react';
 import ReactPlayer from 'react-player/lazy';
 
 import {
@@ -8,11 +8,11 @@ import {
 } from '@2299899-fit-friends/consts';
 import {
     fetchTrainingBackgroundPicture, fetchTrainingVideo, fetchUser, fetchUserAvatar, selectBalance,
-    selectCurrentUser, selectResponseError, selectTraining, updateBalance, updateTraining,
-    useAppDispatch, useAppSelector, useFetchFileUrl
+    selectCurrentUser, selectResponseError, selectTraining, selectUser, updateBalance,
+    updateTraining, useAppDispatch, useAppSelector, useFetchFileUrl
 } from '@2299899-fit-friends/frontend-core';
-import { getResponseErrorMessage } from '@2299899-fit-friends/helpers';
-import { User, UserRole } from '@2299899-fit-friends/types';
+import { getResponseErrorMessage, pass } from '@2299899-fit-friends/helpers';
+import { UserRole } from '@2299899-fit-friends/types';
 import { unwrapResult } from '@reduxjs/toolkit';
 
 import Loading from '../../loading/loading';
@@ -28,19 +28,19 @@ export default function CardTrainingInfo({ id }: CardTrainingInfoProps): JSX.Ele
   const balance = useAppSelector(selectBalance);
   const responseError = useAppSelector(selectResponseError);
   const currentUser = useAppSelector(selectCurrentUser);
+  const trainer = useAppSelector(selectUser);
 
   const [isTrainingActive, setIsTrainingActive] = useState<boolean>(false);
   const [isEditing, setIsEditing] = useState<boolean>(false);
-  const [trainer, setTrainer] = useState<User | null>(null);
+  const [title, setTitle] = useState<string>('');
+  const [description, setDescription] = useState<string>('');
+  const [price, setPrice] = useState<string>('');
   const [isVideoUpdating, setIsVideoUpdating] = useState<boolean>(false);
   const [filename, setFilename] = useState<string>(`Загрузите сюда файлы формата ${
     Object.keys(TrainingVideoAllowedExtensions).map(((extention) => extention.toLocaleUpperCase())).join(', ')
   }`);
 
   const videoInputRef = useRef<HTMLInputElement | null>(null);
-  const titleRef = useRef<string | null>(null);
-  const descriptionRef = useRef<string | null>(null);
-  const priceRef = useRef<string | null>(null);
   const playerRef = useRef<ReactPlayer | null>(null);
 
   const { fileUrl: avatarUrl, loading: avatarLoading } = useFetchFileUrl(
@@ -63,27 +63,13 @@ export default function CardTrainingInfo({ id }: CardTrainingInfoProps): JSX.Ele
   );
 
   useEffect(() => {
-    const fetch = async () => {
-      if (training?.userId) {
-        const data = unwrapResult(
-          await dispatch(fetchUser(training?.userId))
-        );
-        setTrainer(data);
-      }
-    };
-
-    fetch();
-  }, [dispatch, training]);
-
-  useEffect(() => {
-    if (responseError) {
-      setIsEditing(true);
-    } else {
-      titleRef.current = null;
-      descriptionRef.current = null;
-      priceRef.current = null;
+    if (training?.userId) {
+      dispatch(fetchUser(training?.userId));
+      setTitle(training.title);
+      setDescription(training.description);
+      setPrice(Math.ceil(training.price * (1 - DISCOUNT * +!!training?.isSpecialOffer)).toString());
     }
-  }, [responseError])
+  }, [dispatch, training]);
 
   const handleStartTrainingButtonClick = () => {
     if (training?.id) {
@@ -97,29 +83,34 @@ export default function CardTrainingInfo({ id }: CardTrainingInfoProps): JSX.Ele
     playerRef.current?.showPreview();
   };
 
-  const handleEditButtonClick = () => {
+  const handleEditButtonClick = async () => {
     if (isEditing) {
-      setIsEditing(false);
-      setIsVideoUpdating(false);
       if (id) {
-        const formData = new FormData();
-        if (titleRef.current) {
-          formData.append('title', titleRef.current);
+        try {
+          const formData = new FormData();
+          formData.append('title', title);
+          formData.append('description', description);
+
+          let newPrice = price;
+          if (training?.isSpecialOffer) {
+            newPrice = Math.ceil(Number(newPrice) / 0.9).toString();
+          }
+          formData.append('price', newPrice);
+          if (isVideoUpdating) {
+            formData.append('video', videoInputRef.current?.files ? videoInputRef.current?.files[0] : '');
+          }
+          unwrapResult(await dispatch(updateTraining({ id, data: formData })));
+          setIsEditing(false);
+          setIsVideoUpdating(false);
+          setFilename(`Загрузите сюда файлы формата ${
+            Object.keys(TrainingVideoAllowedExtensions).map(((extention) => extention.toLocaleUpperCase())).join(', ')
+          }`);
+        } catch {
+          pass();
         }
-        if (descriptionRef.current) {
-          formData.append('description', descriptionRef.current);
-        }
-        if (priceRef.current) {
-          formData.append('price', priceRef.current);
-        }
-        if (videoInputRef.current?.files && videoInputRef.current.files.length > 0) {
-          formData.append('video', videoInputRef.current.files[0]);
-        }
-        dispatch(updateTraining({ id, data: formData }));
       }
     } else {
       setIsEditing(true);
-      setIsVideoUpdating(true);
     }
   };
 
@@ -131,21 +122,16 @@ export default function CardTrainingInfo({ id }: CardTrainingInfoProps): JSX.Ele
     }
   };
 
-  const handleTitleInputChange = (evt: ChangeEvent<HTMLInputElement>) => {
-    if (evt.currentTarget) {
-      titleRef.current = evt.currentTarget.value;
-    }
-  };
+  const getInputChangeHandler = (setState: React.Dispatch<React.SetStateAction<string>>) =>
+    (evt: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      if (evt.currentTarget) {
+        setState(evt.currentTarget.value);
+      }
+    };
 
-  const handleDescriptionInputChange = (evt: ChangeEvent<HTMLTextAreaElement>) => {
+  const handleEditPriceInputChange = (evt: ChangeEvent<HTMLInputElement>) => {
     if (evt.currentTarget) {
-      descriptionRef.current = evt.currentTarget.value;
-    }
-  };
-
-  const handlePriceInputChange = (evt: ChangeEvent<HTMLInputElement>) => {
-    if (evt.currentTarget) {
-      priceRef.current = evt.currentTarget.value;
+      setPrice(evt.currentTarget.value.split(' ')[0]);
     }
   };
 
@@ -160,7 +146,7 @@ export default function CardTrainingInfo({ id }: CardTrainingInfoProps): JSX.Ele
   };
 
   const handleVideoPreviewClick = (evt: MouseEvent<HTMLDivElement>) => {
-    if (!balance || !balance.available) {
+    if (currentUser?.role !== UserRole.Trainer && (!balance || !balance.available)) {
       evt.preventDefault();
       playerRef.current?.showPreview();
     }
@@ -236,12 +222,14 @@ export default function CardTrainingInfo({ id }: CardTrainingInfoProps): JSX.Ele
                     <input
                       type="text"
                       name="training"
-                      defaultValue={training?.title}
+                      value={title}
                       disabled={currentUser?.role === UserRole.User || !isEditing}
-                      onChange={handleTitleInputChange}
+                      onChange={getInputChangeHandler(setTitle)}
                     />
                   </label>
-                  <div className="training-info__error">Обязательное поле</div>
+                  <span className="custom-input__error">
+                    {getResponseErrorMessage(responseError, 'title')}
+                  </span>
                 </div>
                 <div className="training-info__textarea">
                   <label>
@@ -251,10 +239,13 @@ export default function CardTrainingInfo({ id }: CardTrainingInfoProps): JSX.Ele
                     <textarea
                       name="description"
                       disabled={currentUser?.role === UserRole.User || !isEditing}
-                      defaultValue={training?.description}
-                      onChange={handleDescriptionInputChange}
+                      value={description}
+                      onChange={getInputChangeHandler(setDescription)}
                     />
                   </label>
+                  <span className="custom-input__error">
+                    {getResponseErrorMessage(responseError, 'description')}
+                  </span>
                 </div>
               </div>
               <div className="training-info__rating-wrapper">
@@ -308,9 +299,9 @@ export default function CardTrainingInfo({ id }: CardTrainingInfoProps): JSX.Ele
                     <input
                       type="text"
                       name="price"
-                      value={`${training?.price && training?.price * (1 - DISCOUNT * +!!training?.isSpecialOffer)} ₽`}
+                      value={`${price} ₽`}
                       disabled={currentUser?.role === UserRole.User || !isEditing}
-                      onChange={handlePriceInputChange}
+                      onChange={handleEditPriceInputChange}
                     />
                   </label>
                   <div className="training-info__error">Введите число</div>
@@ -328,6 +319,9 @@ export default function CardTrainingInfo({ id }: CardTrainingInfoProps): JSX.Ele
                     <span>{training?.isSpecialOffer ? 'Отменить скидку' : 'Сделать скидку 10%'}</span>
                   </button>
                 }
+                <span className="custom-input__error">
+                  {getResponseErrorMessage(responseError, 'price')}
+                </span>
                 {
                   currentUser?.role === UserRole.User &&
                   <PopupBuy trainingId={id} trainingTitle={training?.title} trainingPrice={training?.price} trigger={
@@ -355,7 +349,7 @@ export default function CardTrainingInfo({ id }: CardTrainingInfoProps): JSX.Ele
               <ReactPlayer
                 ref={playerRef}
                 url={videoUrl}
-                controls={isTrainingActive}
+                controls={isTrainingActive || currentUser?.role === UserRole.Trainer}
                 light={true}
                 width='100%'
                 height='100%'
