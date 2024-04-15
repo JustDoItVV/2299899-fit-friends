@@ -1,0 +1,18 @@
+.reviews-side-bar__list {
+  overflow-y: auto;
+}
+
+.reviews-side-bar__list::-webkit-scrollbar {
+  width: 8px;
+  margin-left: 2px;
+}
+
+.reviews-side-bar__list::-webkit-scrollbar-track {
+  background: white;
+}
+
+.reviews-side-bar__list::-webkit-scrollbar-thumb {
+  background-color: grey;
+  border-radius: 20px;
+  border: 1px solid grey;
+}

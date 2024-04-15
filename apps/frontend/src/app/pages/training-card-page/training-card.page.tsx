@@ -1,3 +1,5 @@
+import './training-card.page.css';
+
 import { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useParams } from 'react-router-dom';
@@ -82,7 +84,11 @@ export default function TrainingCardPage(): JSX.Element {
                     type="button"
                     disabled={!balance || currentUser?.role === UserRole.Trainer || !!reviews.find((review) => review.userId === currentUser?.id)}
                   >
-                    Оставить отзыв
+                    {
+                      reviews.find((review) => review.userId === currentUser?.id)
+                      ? 'Отзыв оставлен'
+                      : 'Оставить отзыв'
+                    }
                   </button>
                 } />
               </AsideLeftBlock>
