@@ -13,7 +13,10 @@ export function useFetchPagination<T extends CatalogItem>(
   maxItems?: number | undefined,
 ) {
   const dispatch = useAppDispatch();
+
   const [items, setItems] = useState<T[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+
   const totalItemsRef = useRef<number | null>(null);
   const totalPagesRef = useRef<number | null>(null);
   const nextPageRef = useRef<number>(1);
@@ -23,6 +26,7 @@ export function useFetchPagination<T extends CatalogItem>(
   }, [query]);
 
   const fetchNextPage = useCallback(async () => {
+    setLoading(true);
     const { entities, totalPages, currentPage, totalItems } = unwrapResult(
       await dispatch(fetch({ ...query, page: nextPageRef.current }))
     );
@@ -51,9 +55,11 @@ export function useFetchPagination<T extends CatalogItem>(
       });
       nextPageRef.current++;
     }
+    setLoading(false);
   }, [dispatch, fetch, query]);
 
   const fetchAll = useCallback(async () => {
+    setLoading(true);
     const result = [];
     let page = 1;
 
@@ -89,6 +95,7 @@ export function useFetchPagination<T extends CatalogItem>(
     } while (page <= totalPagesRef.current);
 
     setItems(result);
+    setLoading(false);
   }, [dispatch, fetch, query]);
 
   return {
@@ -98,5 +105,6 @@ export function useFetchPagination<T extends CatalogItem>(
     totalPages: totalPagesRef.current,
     fetchNextPage,
     fetchAll,
+    loading,
   };
 }

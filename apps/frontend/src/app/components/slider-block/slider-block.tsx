@@ -12,6 +12,7 @@ import { Pagination, QueryPagination } from '@2299899-fit-friends/types';
 import { AsyncThunk } from '@reduxjs/toolkit';
 
 import CardPlaceholder from '../cards/card-placeholder/card-placeholder';
+import Loading from '../loading/loading';
 
 type SliderBlockProps = {
   fetch: AsyncThunk<Pagination<CatalogItem>, QueryPagination, Record<string, unknown>>,
@@ -55,7 +56,7 @@ export default function SliderBlock(props: SliderBlockProps): JSX.Element {
   const [currentItem, setCurrentItem] = useState<number>(0);
   const [itemsElements, setItemsElements] = useState<JSX.Element[]>([]);
 
-  const { items, fetchNextPage, fetchAll } = useFetchPagination<CatalogItem>(fetch, query, maxItems);
+  const { items, fetchNextPage, fetchAll, loading } = useFetchPagination<CatalogItem>(fetch, query, maxItems);
 
   useEffect(() => {
     if (!preload) {
@@ -160,37 +161,42 @@ export default function SliderBlock(props: SliderBlockProps): JSX.Element {
           </div>
         }
       </div>
-      <ul className={`${items.length !== 0 ? 'slider-block-wrapper' : ''} ${classNamePrefix}__list`}>
-        {
-          items.length !== 0
-          ?
-          <Slider
-            ref={slickSliderRef}
-            slidesToShow={itemsPerPage}
-            slidesToScroll={itemsToScroll}
-            arrows={false}
-            variableWidth={true}
-            adaptiveHeight={true}
-            dots={false}
-            autoplay={autoplay}
-            infinite={autoplay}
-            draggable={false}
-          >
-            {itemsElements}
-          </Slider>
-          :
-          <li className={`${classNamePrefix}__item`}>
-            <CardPlaceholder classNameInfix={placeholderInfix} imagePath={PlaceholderPath.CardForYou} />
-          </li>
-        }
-        {
-          dots &&
-          <div className={`${classNamePrefix}__slider-dots`} style={{ display: "flex" }}>
-            {dotsElements}
-          </div>
-        }
-      </ul>
-
+      {
+        !loading
+        ?
+        <ul className={`${items.length !== 0 ? 'slider-block-wrapper' : ''} ${classNamePrefix}__list`}>
+          {
+            items.length !== 0
+            ?
+            <Slider
+              ref={slickSliderRef}
+              slidesToShow={itemsPerPage}
+              slidesToScroll={itemsToScroll}
+              arrows={false}
+              variableWidth={true}
+              adaptiveHeight={true}
+              dots={false}
+              autoplay={autoplay}
+              infinite={autoplay}
+              draggable={false}
+            >
+              {itemsElements}
+            </Slider>
+            :
+            <li className={`${classNamePrefix}__item`}>
+              <CardPlaceholder classNameInfix={placeholderInfix} imagePath={PlaceholderPath.CardForYou} />
+            </li>
+          }
+          {
+            dots &&
+            <div className={`${classNamePrefix}__slider-dots`} style={{ display: "flex" }}>
+              {dotsElements}
+            </div>
+          }
+        </ul>
+        :
+        <Loading />
+      }
       { children }
     </div>
   );

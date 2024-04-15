@@ -38,8 +38,12 @@
 
 /* Main special offers */
 
+.special-offers .slick-slider,
 .special-offers .slick-list {
   max-height: 471px;
+  min-height: 471px;
+  min-width: 1040px;
+  max-width: 1040px;
 }
 
 .special-offers .special-offers__list,
@@ -100,7 +104,7 @@ Training page
 */
 
 .popular-trainings__wrapper .slick-list {
-  max-height: 450px;
+  max-height: 468px;
 }
 
 .popular-trainings__wrapper .slick-track {
