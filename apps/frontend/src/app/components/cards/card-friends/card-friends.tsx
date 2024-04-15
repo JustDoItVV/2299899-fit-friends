@@ -72,6 +72,8 @@ export default memo(function FriendsCatalogCard({ item, additionalData }: Friend
       dispatch(createRequest(user?.id));
       setRequest((old) => {
         const newValue = { ...old } as TrainingRequest;
+        newValue.authorId = currentUser?.id ?? '';
+        newValue.targetId = user.id ?? '';
         newValue.status = TrainingRequestStatus.Consideration;
         return newValue;
       });
