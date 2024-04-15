@@ -1,5 +1,6 @@
 import 'leaflet/dist/leaflet.css';
 import './popup-user-map.css';
+import 'reactjs-popup/dist/index.css';
 
 import { layerGroup, Marker } from 'leaflet';
 import { useEffect, useRef, useState } from 'react';

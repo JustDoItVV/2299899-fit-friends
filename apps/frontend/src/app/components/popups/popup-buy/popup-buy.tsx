@@ -1,4 +1,5 @@
 import './popup-buy.css';
+import 'reactjs-popup/dist/index.css';
 
 import { ChangeEvent, useRef, useState } from 'react';
 import { Helmet } from 'react-helmet-async';

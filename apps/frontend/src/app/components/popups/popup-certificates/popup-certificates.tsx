@@ -115,6 +115,7 @@ export default function PopupCertificates({ trigger }: PopupCertificatesProps): 
             slidesToScroll={SliderBlockItems.DefaultToScroll}
             infinite={false}
             draggable={false}
+            accessibility={false}
           >
             {certificateCards}
           </Slider>
