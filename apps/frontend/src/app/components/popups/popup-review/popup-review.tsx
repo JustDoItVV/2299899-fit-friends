@@ -71,6 +71,7 @@ export default function PopupReview({ trainingId, trigger }: PopupReviewProps): 
       modal
       trigger={trigger}
       lockScroll={true}
+      className='popup-review'
     >
         <Helmet><title>Попап оставить отзыв — FitFriends</title></Helmet>
         <div className="">

@@ -134,9 +134,8 @@ export default function AccountAbout(): JSX.Element {
       if (description) {
         formData.append('description', description);
       }
-      if (status) {
-        formData.append(`${currentUser?.role === UserRole.Trainer ? 'isReadyToPersonal' : 'isReadyToTraining'}`, status.toString());
-      }
+
+      formData.append(`${currentUser?.role === UserRole.Trainer ? 'isReadyToPersonal' : 'isReadyToTraining'}`, status ? '1' : '');
 
       trainingTypes.forEach((type) => {
         formData.append('trainingType', type);

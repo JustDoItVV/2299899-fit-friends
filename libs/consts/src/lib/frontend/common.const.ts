@@ -59,3 +59,5 @@ export enum PlaceholderPath {
   CardForYou = 'img/content/thumbnails/preview-01',
   CardSpecial = 'img/content/thumbnails/nearest-gym-01',
 }
+
+export const SEND_NEWSLETTER_EMAIL_EVERY_SECONDS = 5;

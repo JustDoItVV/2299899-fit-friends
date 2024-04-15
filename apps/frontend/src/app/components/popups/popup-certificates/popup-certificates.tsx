@@ -52,6 +52,7 @@ export default function PopupCertificates({ trigger }: PopupCertificatesProps): 
       modal
       trigger={trigger}
       lockScroll={true}
+      className='popup-certificates'
     >
       <Helmet><title>Попап сертификатов — FitFriends</title></Helmet>
       <div className="popup__wrapper">

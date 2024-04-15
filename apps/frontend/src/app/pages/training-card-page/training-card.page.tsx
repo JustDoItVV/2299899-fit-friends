@@ -17,6 +17,7 @@ import CardTrainingInfo from '../../components/cards/card-training-info/card-tra
 import Header from '../../components/header/header';
 import Loading from '../../components/loading/loading';
 import PopupReview from '../../components/popups/popup-review/popup-review';
+import NotFoundPage from '../not-found-page/not-found.page';
 
 export default function TrainingCardPage(): JSX.Element {
   const { id } = useParams();
@@ -62,6 +63,10 @@ export default function TrainingCardPage(): JSX.Element {
 
   if (isLoading) {
     return <Loading />
+  }
+
+  if (!training) {
+    return <NotFoundPage />
   }
 
   return (

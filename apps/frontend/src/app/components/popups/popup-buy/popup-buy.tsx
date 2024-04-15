@@ -91,6 +91,7 @@ export default function PopupBuy(props: PopupBuyProps): JSX.Element {
       trigger={trigger}
       lockScroll={true}
       onClose={handleClosePopup}
+      className='popup-buy'
     >
       <Helmet><title>Попап покупки — FitFriends</title></Helmet>
       <div className="">

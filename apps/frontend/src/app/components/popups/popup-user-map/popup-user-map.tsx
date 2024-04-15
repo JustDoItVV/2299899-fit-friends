@@ -55,6 +55,7 @@ export default function PopupUserMap(props: PopupUserMapProps): JSX.Element {
       modal
       trigger={trigger}
       lockScroll={true}
+      className='popup-map'
     >
       <div className="">
         <div className="popup-head popup-head--address">

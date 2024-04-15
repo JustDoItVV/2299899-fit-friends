@@ -1,6 +1,7 @@
 .slick-slider,
 .slick-list {
   max-width: 1396px;
+  min-width: 1396px;
 }
 
 .slick-track {
@@ -8,6 +9,12 @@
 }
 
 /* Main special for you */
+
+.special-for-you .slick-slider,
+.special-for-you .slick-list {
+  max-height: 291px;
+  min-height: 291px;
+}
 
 .special-for-you .slick-track {
   background-color: #f2f2f2;
@@ -30,6 +37,10 @@
 }
 
 /* Main special offers */
+
+.special-offers .slick-list {
+  max-height: 471px;
+}
 
 .special-offers .special-offers__list,
 .special-offers .slick-list {
@@ -88,6 +99,10 @@ Main popular
 Training page
 */
 
+.popular-trainings__wrapper .slick-list {
+  max-height: 450px;
+}
+
 .popular-trainings__wrapper .slick-track {
   background-color: #f2f2f2;
 }
@@ -107,6 +122,10 @@ Training page
 }
 
 /* Main look for company */
+
+.look-for-company__wrapper .slick-list {
+  max-height: 235px;
+}
 
 .look-for-company__wrapper .slick-track {
   background-color: #333333;

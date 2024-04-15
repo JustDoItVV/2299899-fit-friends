@@ -93,7 +93,7 @@ export class UserRdo {
 
   @ApiPropertyOptional({ description: 'Подписки пользователя' })
   @Expose()
-  public emailSubscriptions?: string[];
+  public emailSubscribtions?: string[];
 
   @ApiPropertyOptional({ description: 'Время последней рассылки' })
   @Expose()

@@ -1,10 +1,13 @@
-import { ResponseErrorMessage } from '@2299899-fit-friends/consts';
+import { Link } from 'react-router-dom';
 
-type ErrorPopupProps = {
+import { ResponseErrorMessage } from '@2299899-fit-friends/consts';
+import { FrontendRoute } from '@2299899-fit-friends/types';
+
+type PopupErrorProps = {
   statusCode: number;
 };
 
-export default function ErrorPopup({ statusCode }: ErrorPopupProps): JSX.Element {
+export default function PopupError({ statusCode }: PopupErrorProps): JSX.Element {
   return (
     <div className="popup-form popup-form--sign-in">
       <div className="popup-form__wrapper">
@@ -14,6 +17,9 @@ export default function ErrorPopup({ statusCode }: ErrorPopupProps): JSX.Element
           </div>
           <div className="popup-form__form">
             <h1 className="">{ResponseErrorMessage.get(statusCode)}</h1>
+            <Link className='btn' to={`/${FrontendRoute.Main}`}>
+              Вернуться на главную
+            </Link>
           </div>
         </div>
       </div>

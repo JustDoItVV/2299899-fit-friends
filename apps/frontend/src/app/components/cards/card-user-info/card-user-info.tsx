@@ -27,13 +27,21 @@ export default function CardUserInfo(): JSX.Element {
     PlaceholderPath.Image,
     [user],
   );
+
   const [query, setQuery] = useState<QueryPagination>({});
+  const [subscribed, setSubscribed] = useState<boolean>(false);
 
   useEffect(() => {
     if (user?.id) {
       setQuery({ userId: user?.id });
     }
   }, [user]);
+
+  useEffect(() => {
+    if (currentUser?.emailSubscribtions && user?.id) {
+      setSubscribed(currentUser.emailSubscribtions.includes(user.id));
+    }
+  }, [user, currentUser]);
 
   const handleAddFriendButtonClick = () => {
     if (user?.id) {
@@ -55,11 +63,10 @@ export default function CardUserInfo(): JSX.Element {
 
   const handleSubscribeInputChange = (evt: ChangeEvent<HTMLInputElement>) => {
     if (user?.id) {
-      const checked = evt.currentTarget.checked;
-      if (checked) {
-        dispatch(unsubscribeFromTrainer(user.id));
-      } else {
+      if (evt.currentTarget.checked) {
         dispatch(subscribeToTrainer(user.id));
+      } else {
+        dispatch(unsubscribeFromTrainer(user.id));
       }
     }
   };
@@ -225,7 +232,7 @@ export default function CardUserInfo(): JSX.Element {
                     type="checkbox"
                     defaultValue="user-agreement-1"
                     name="user-agreement"
-                    defaultChecked={!!currentUser?.id && user.emailSubscribtions?.includes(currentUser?.id)}
+                    checked={subscribed}
                     onChange={handleSubscribeInputChange}
                   />
                   <span className="custom-toggle__icon">

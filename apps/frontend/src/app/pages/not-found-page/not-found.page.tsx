@@ -1,6 +1,6 @@
 import { Helmet } from 'react-helmet-async';
 
-import ErrorPopup from '../../components/error-popup/error-popup';
+import PopupError from '../../components/popups/popup-error/popup-error';
 
 export default function NotFoundPage(): JSX.Element {
   return (
@@ -15,7 +15,7 @@ export default function NotFoundPage(): JSX.Element {
             <use xlinkHref="#icon-logotype" />
           </svg>
         </div>
-        <ErrorPopup statusCode={404} />
+        <PopupError statusCode={404} />
       </main>
     </div>
   );
