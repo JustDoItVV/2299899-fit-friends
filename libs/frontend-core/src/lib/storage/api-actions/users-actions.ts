@@ -124,7 +124,7 @@ export const fetchUsersCatalog = createAsyncThunk<
   Pagination<CatalogItem>,
   QueryPagination,
   { dispatch: AppDispatch; state: State; extra: AxiosInstance }
->('users/fetchUsers', async (query, { extra: api }) => {
+>('users/fetchUsersCatalog', async (query, { extra: api }) => {
     const { data: pagination } = await api.get<Pagination<User>>(
     `${ApiRoute.User}?${stringify(query)}`
   );

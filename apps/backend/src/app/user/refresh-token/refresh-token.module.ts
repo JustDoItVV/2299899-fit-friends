@@ -6,8 +6,16 @@ import { RefreshTokenRepository } from './refresh-token.repository';
 import { RefreshTokenService } from './refresh-token.service';
 
 @Module({
-  imports: [PrismaClientModule, BackendConfigModule],
-  providers: [RefreshTokenService, RefreshTokenRepository],
-  exports: [RefreshTokenService],
+  imports: [
+    PrismaClientModule,
+    BackendConfigModule,
+  ],
+  providers: [
+    RefreshTokenService,
+    RefreshTokenRepository,
+  ],
+  exports: [
+    RefreshTokenService,
+  ],
 })
 export class RefreshTokenModule {}

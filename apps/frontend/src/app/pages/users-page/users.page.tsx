@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 
-import { FormQueryParams } from '@2299899-fit-friends/consts';
+import { QueryParameters } from '@2299899-fit-friends/consts';
 import { fetchUsersCatalog } from '@2299899-fit-friends/frontend-core';
 import { FrontendRoute, QueryPagination } from '@2299899-fit-friends/types';
 
@@ -12,7 +12,7 @@ import Header from '../../components/header/header';
 
 export default function UsersPage(): JSX.Element {
   const [query, setQuery] = useState<QueryPagination>({
-    limit: FormQueryParams.UsersCatalogLimit,
+    limit: QueryParameters.UsersCatalogLimit,
   });
 
   return (

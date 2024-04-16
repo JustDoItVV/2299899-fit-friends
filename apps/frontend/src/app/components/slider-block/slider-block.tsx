@@ -52,9 +52,10 @@ export default function SliderBlock(props: SliderBlockProps): JSX.Element {
   const autoplay = props.autoplay ?? false;
   const query = props.query ?? {};
 
-  const slickSliderRef = useRef<Slider | null>(null);
   const [currentItem, setCurrentItem] = useState<number>(0);
   const [itemsElements, setItemsElements] = useState<JSX.Element[]>([]);
+
+  const slickSliderRef = useRef<Slider | null>(null);
 
   const { items, fetchNextPage, fetchAll, loading } = useFetchPagination<CatalogItem>(fetch, query, maxItems);
 

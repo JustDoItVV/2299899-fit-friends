@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 
+import { QueryParameters } from '@2299899-fit-friends/consts';
 import { fetchTrainerOrders, useBackButton } from '@2299899-fit-friends/frontend-core';
 import {
     FrontendRoute, OrderSortOption, QueryPagination, SortDirection
@@ -11,9 +12,10 @@ import ExpandingCatalog from '../../components/expanding-catalog/expanding-catal
 import Header from '../../components/header/header';
 
 export default function AccountOrdersPage(): JSX.Element {
-  const [query, setQuery] = useState<QueryPagination>({ page: 1, limit: 4 });
+  const [query, setQuery] = useState<QueryPagination>({ limit: QueryParameters.OrdersLimit });
   const [sumOrder, setSumOrder] = useState<SortDirection>(SortDirection.Desc);
   const [amountOrder, setAmountOrder] = useState<SortDirection>(SortDirection.Desc);
+
   const sortFieldRef = useRef<OrderSortOption>(OrderSortOption.CreatedAt);
 
   const handleBackButtonClick = useBackButton(`/${FrontendRoute.Account}`);

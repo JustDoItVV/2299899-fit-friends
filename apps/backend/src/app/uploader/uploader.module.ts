@@ -4,8 +4,14 @@ import { Module } from '@nestjs/common';
 import { UploaderService } from './uploader.service';
 
 @Module({
-  imports: [BackendConfigModule],
-  providers: [UploaderService],
-  exports: [UploaderService],
+  imports: [
+    BackendConfigModule,
+  ],
+  providers: [
+    UploaderService,
+  ],
+  exports: [
+    UploaderService,
+  ],
 })
 export class UploaderModule {}

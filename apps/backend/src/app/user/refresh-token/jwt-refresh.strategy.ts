@@ -1,7 +1,7 @@
 import { ExtractJwt, Strategy } from 'passport-jwt';
 
-import { BackendConfig } from '@2299899-fit-friends/config';
 import { TokenNotExistsException } from '@2299899-fit-friends/backend-core';
+import { BackendConfig } from '@2299899-fit-friends/config';
 import { RefreshTokenPayload } from '@2299899-fit-friends/types';
 import { Inject, Injectable } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
@@ -11,10 +11,7 @@ import { UserService } from '../user.service';
 import { RefreshTokenService } from './refresh-token.service';
 
 @Injectable()
-export class JwtRefreshStrategy extends PassportStrategy(
-  Strategy,
-  'jwt-refresh'
-) {
+export class JwtRefreshStrategy extends PassportStrategy(Strategy, 'jwt-refresh') {
   constructor(
     @Inject(BackendConfig.KEY)
     private readonly config: ConfigType<typeof BackendConfig>,

@@ -49,9 +49,12 @@ export const SliderBlockItems = {
 
 export const DISCOUNT = 0.1;
 
-export const FormQueryParams = {
+export const QueryParameters = {
   TrainingsCatalogLimit: 12,
   UsersCatalogLimit: 12,
+  OrdersLimit: 4,
+  PurchasesLimit: 4,
+  AccountMyTrainingsLimit: 3,
 } as const;
 
 export enum PlaceholderPath {
@@ -61,3 +64,4 @@ export enum PlaceholderPath {
 }
 
 export const SEND_NEWSLETTER_EMAIL_EVERY_SECONDS = 5;
+

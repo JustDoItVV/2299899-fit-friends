@@ -36,9 +36,7 @@ export class UserRepository extends BasePostgresRepository<UserEntity, User> {
     return entity;
   }
 
-  public async find(
-    query: UserPaginationQuery
-  ): Promise<Pagination<UserEntity>> {
+  public async find(query: UserPaginationQuery): Promise<Pagination<UserEntity>> {
     let limit = query.limit;
 
     if (query.limit < 1) {
@@ -141,10 +139,7 @@ export class UserRepository extends BasePostgresRepository<UserEntity, User> {
       : null;
   }
 
-  public async findFriends(
-    query: PaginationQuery,
-    userId: string
-  ): Promise<Pagination<UserEntity>> {
+  public async findFriends(query: PaginationQuery, userId: string): Promise<Pagination<UserEntity>> {
     let limit = query.limit;
     if (query.limit < 1) {
       limit = 1;

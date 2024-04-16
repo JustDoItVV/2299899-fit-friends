@@ -79,9 +79,7 @@ export class UserService {
     return user;
   }
 
-  public async getUsersByQuery(
-    query: UserPaginationQuery
-  ): Promise<Pagination<UserRdo>> {
+  public async getUsersByQuery(query: UserPaginationQuery): Promise<Pagination<UserRdo>> {
     const pagination = await this.userRepository.find(query);
     const paginationResult = {
       ...pagination,
@@ -158,12 +156,7 @@ export class UserService {
     return document;
   }
 
-  public async update(
-    payload: TokenPayload,
-    id: string,
-    dto: UpdateUserDto,
-    files: FilesPayload
-  ) {
+  public async update(payload: TokenPayload, id: string, dto: UpdateUserDto, files: FilesPayload) {
     const user = await this.userRepository.findById(id);
 
     if (!user) {
@@ -264,10 +257,7 @@ export class UserService {
     return await this.uploaderService.getFile(path);
   }
 
-  public async addToFriends(
-    userId: string,
-    friendId: string
-  ): Promise<Pagination<UserRdo>> {
+  public async addToFriends(userId: string, friendId: string): Promise<Pagination<UserRdo>> {
     if (userId === friendId) {
       throw new BadRequestException(UserErrorMessage.UserSelfFriend);
     }
@@ -305,10 +295,7 @@ export class UserService {
     return paginationResult;
   }
 
-  public async removeFromFriends(
-    userId: string,
-    friendId: string
-  ): Promise<Pagination<UserRdo>> {
+  public async removeFromFriends(userId: string, friendId: string): Promise<Pagination<UserRdo>> {
     if (userId === friendId) {
       throw new BadRequestException(UserErrorMessage.UserSelfFriend);
     }

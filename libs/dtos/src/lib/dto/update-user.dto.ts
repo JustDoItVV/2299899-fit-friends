@@ -17,9 +17,7 @@ import { ApiPropertyOptional } from '@nestjs/swagger';
 import { TransformToArray } from '../decorators/transform-to-array.decorator';
 
 export class UpdateUserDto {
-  @ApiPropertyOptional({
-    description: 'Имя, одно слово, только английские и русские буквы',
-  })
+  @ApiPropertyOptional({ description: 'Имя, одно слово, только английские и русские буквы' })
   @MaxLength(NameLength.Max, { message: getDtoMessageCallback(UserErrorMessage.NameMaxLength) })
   @MinLength(NameLength.Min, { message: getDtoMessageCallback(UserErrorMessage.NameMinLength) })
   @Matches(/^[a-zа-я]+$/giu, { message: getDtoMessageCallback(UserErrorMessage.NameWrongPattern) })

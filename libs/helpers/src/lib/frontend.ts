@@ -1,9 +1,6 @@
 import { ResponseError } from '@2299899-fit-friends/types';
 
-export const getResponseErrorMessage = (
-  responseError: ResponseError | null,
-  field: string
-) => {
+export const getResponseErrorMessage = (responseError: ResponseError | null, field: string) => {
   const { statusCode, message } = responseError || {};
 
   if (!statusCode || !message) {

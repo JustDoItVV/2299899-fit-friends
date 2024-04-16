@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 
+import { QueryParameters } from '@2299899-fit-friends/consts';
 import { fetchTrainerCatalog } from '@2299899-fit-friends/frontend-core';
 import { FrontendRoute, QueryPagination } from '@2299899-fit-friends/types';
 
@@ -10,7 +11,7 @@ import FormFilterSortCatalog from '../../components/forms/form-filter-sort-catal
 import Header from '../../components/header/header';
 
 export default function AccountTrainingsPage(): JSX.Element {
-  const [query, setQuery] = useState<QueryPagination>({ page: 1, limit: 3 });
+  const [query, setQuery] = useState<QueryPagination>({ limit: QueryParameters.AccountMyTrainingsLimit });
 
   return (
     <div className="wrapper">

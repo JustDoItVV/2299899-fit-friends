@@ -3,9 +3,9 @@
  * This is only a minimal backend to get started.
  */
 
+import { LoggingErrorsInterceptor } from '@2299899-fit-friends/backend-core';
 import { BackendConfig } from '@2299899-fit-friends/config';
 import { BACKEND_GLOBAL_PREFIX } from '@2299899-fit-friends/consts';
-import { LoggingErrorsInterceptor } from '@2299899-fit-friends/backend-core';
 import { BackendLoggerService } from '@2299899-fit-friends/logger';
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
@@ -37,16 +37,12 @@ async function bootstrap() {
       transformOptions: { enableImplicitConversion: true },
     })
   );
-  app.useGlobalInterceptors(
-    new LoggingErrorsInterceptor(new BackendLoggerService())
-  );
+  app.useGlobalInterceptors(new LoggingErrorsInterceptor(new BackendLoggerService()));
 
   const host = BackendConfig().host;
   const port = BackendConfig().appPort;
   await app.listen(port);
-  Logger.log(
-    `🚀 Application is running on: http://${host}:${port}/${BACKEND_GLOBAL_PREFIX}`
-  );
+  Logger.log(`🚀 Application is running on: http://${host}:${port}/${BACKEND_GLOBAL_PREFIX}`);
 }
 
 bootstrap();

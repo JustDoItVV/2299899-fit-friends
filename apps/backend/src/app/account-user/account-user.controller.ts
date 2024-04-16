@@ -33,10 +33,7 @@ export class AccountUserController {
     @UserParam() payload: TokenPayload,
     @Query() query: PaginationQuery
   ) {
-    const result = await this.accountUserService.getUserFriends(
-      query,
-      payload.userId
-    );
+    const result = await this.accountUserService.getUserFriends(query, payload.userId);
     return fillDto(PaginationRdo<UserRdo>, result);
   }
 
@@ -49,10 +46,7 @@ export class AccountUserController {
     @UserParam() payload: TokenPayload,
     @Query() query: BalancePaginationQuery
   ) {
-    const result = await this.accountUserService.getBalance(
-      query,
-      payload.userId
-    );
+    const result = await this.accountUserService.getBalance(query, payload.userId);
     return fillDto(PaginationRdo<BalanceRdo>, result);
   }
 
@@ -66,17 +60,11 @@ export class AccountUserController {
     @Body() dto: UpdateBalanceDto,
     @UserParam() payload: TokenPayload
   ) {
-    const updatedDocument = await this.accountUserService.updateBalanceRecord(
-      dto,
-      payload.userId
-    );
+    const updatedDocument = await this.accountUserService.updateBalanceRecord(dto, payload.userId);
     return fillDto(BalanceRdo, updatedDocument.toPOJO());
   }
 
-  @ApiOperation({
-    summary:
-      'Запустить рассылку уведомлений по email о новых тренировках в подписках',
-  })
+  @ApiOperation({ summary: 'Запустить рассылку уведомлений по email о новых тренировках в подписках' })
   @ApiOkResponse({ description: ApiAccountUserMessage.SendNews })
   @ApiUnauthorizedResponse({ description: ApiUserMessage.Unauthorized })
   @HttpCode(HttpStatus.OK)
@@ -84,8 +72,6 @@ export class AccountUserController {
   public async sendNewTrainingsMailNotifications(
     @UserParam() payload: TokenPayload
   ) {
-    return await this.accountUserService.sendNewTrainingsMailNotifications(
-      payload.userId
-    );
+    return await this.accountUserService.sendNewTrainingsMailNotifications(payload.userId);
   }
 }
