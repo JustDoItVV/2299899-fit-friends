@@ -104,6 +104,7 @@ Training page
 */
 
 .popular-trainings__wrapper .slick-list {
+  min-height: 468px;
   max-height: 468px;
 }
 
