@@ -6,6 +6,7 @@ import { Helmet } from 'react-helmet-async';
 import Popup from 'reactjs-popup';
 import { PopupActions } from 'reactjs-popup/dist/types';
 
+import { PlaceholderPath } from '@2299899-fit-friends/consts';
 import {
     fetchTrainingBackgroundPicture, updateBalance, useAppDispatch, useFetchFileUrl
 } from '@2299899-fit-friends/frontend-core';
@@ -23,7 +24,12 @@ type PopupBuyProps = {
 export default function PopupBuy(props: PopupBuyProps): JSX.Element {
   const { trainingId, trainingTitle, trainingPrice, trigger } = props;
   const dispatch = useAppDispatch();
-  const { fileUrl: thumbnailUrl, loading } = useFetchFileUrl(fetchTrainingBackgroundPicture, { id: trainingId }, 'img/content/placeholder.png');
+  const { fileUrl: thumbnailUrl, loading } = useFetchFileUrl(
+    fetchTrainingBackgroundPicture,
+    { id: trainingId },
+    PlaceholderPath.Image,
+    [trainingId],
+  );
 
   const [amount, setAmount] = useState<number>(1);
   const [paymentMethod, setPaymentMethod] = useState<string | null>(null);

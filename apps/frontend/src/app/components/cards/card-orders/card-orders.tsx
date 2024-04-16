@@ -1,6 +1,7 @@
 import { memo } from 'react';
 import { Link } from 'react-router-dom';
 
+import { PlaceholderPath } from '@2299899-fit-friends/consts';
 import {
     CatalogItem, fetchTrainingBackgroundPicture, useFetchFileUrl
 } from '@2299899-fit-friends/frontend-core';
@@ -14,7 +15,12 @@ type OrderCatalogCardProps = {
 
 export default memo(function OrderCatalogCard({ item }: OrderCatalogCardProps): JSX.Element {
   const order = item as Order;
-  const { fileUrl: thumbnailUrl, loading } = useFetchFileUrl(fetchTrainingBackgroundPicture, { id: order.trainingId }, 'img/content/placeholder.png');
+  const { fileUrl: thumbnailUrl, loading } = useFetchFileUrl(
+    fetchTrainingBackgroundPicture,
+    { id: order.trainingId },
+    PlaceholderPath.Image,
+    [order],
+  );
   const rating = order.training?.rating;
 
   return (
