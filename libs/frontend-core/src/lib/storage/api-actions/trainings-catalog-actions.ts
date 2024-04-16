@@ -13,7 +13,7 @@ export const fetchTrainingsCatalog = createAsyncThunk<
   Pagination<CatalogItem>,
   QueryPagination,
   { dispatch: AppDispatch; state: State; extra: AxiosInstance }
->('accountTrainer/fetchTrainings', async (query, { extra: api }) => {
+>('trainingsCatalog/fetchTrainingsCatalog', async (query, { extra: api }) => {
     const { data: pagination } = await api.get<Pagination<Training>>(
     `${ApiRoute.Training}?${stringify(query)}`
   );

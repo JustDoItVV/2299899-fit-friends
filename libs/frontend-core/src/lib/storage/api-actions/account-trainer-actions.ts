@@ -13,11 +13,11 @@ import { AppDispatch } from '../types/app-dispatch.type';
 import { CatalogItem } from '../types/catalog-item.type';
 import { State } from '../types/state.type';
 
-export const createTrainingAction = createAsyncThunk<
+export const createTraining = createAsyncThunk<
   Training,
   FormData,
   { dispatch: AppDispatch; state: State; extra: AxiosInstance }
->('training/create', async (formData, { dispatch, extra: api, rejectWithValue }) => {
+>('accountTrainer/createTraining', async (formData, { dispatch, extra: api, rejectWithValue }) => {
   try {
     const { data: training } = await api.post<Training>(
       ApiRoute.Training,
@@ -40,7 +40,7 @@ export const fetchTrainerCatalog = createAsyncThunk<
   Pagination<CatalogItem>,
   QueryPagination,
   { dispatch: AppDispatch; state: State; extra: AxiosInstance }
->('accountTrainer/fetchTrainings', async (query, { extra: api }) => {
+>('accountTrainer/fetchTrainerCatalog', async (query, { extra: api }) => {
     const { data: pagination } = await api.get<Pagination<Training>>(
     `${ApiRoute.Account}${ApiRoute.Trainer}?${stringify(query)}`
   );
@@ -75,7 +75,7 @@ export const fetchTrainerFriends = createAsyncThunk<
   Pagination<CatalogItem>,
   QueryPagination,
   { dispatch: AppDispatch; state: State; extra: AxiosInstance }
->('accountTrainer/fetchFriends', async (query, { extra: api }) => {
+>('accountTrainer/fetchTrainerFriends', async (query, { extra: api }) => {
   const { data: pagination } = await api.get<Pagination<User>>(
     `${ApiRoute.Account}${ApiRoute.Trainer}${ApiRoute.Friends}?${stringify(query)}`
   );
@@ -86,7 +86,7 @@ export const fetchTrainerOrders = createAsyncThunk<
   Pagination<CatalogItem>,
   QueryPagination,
   { dispatch: AppDispatch; state: State; extra: AxiosInstance }
->('accountTrainer/fetchFriends', async (query, { extra: api }) => {
+>('accountTrainer/fetchTrainerOrders', async (query, { extra: api }) => {
   const { data: pagination } = await api.get<Pagination<Order>>(
     `${ApiRoute.Account}${ApiRoute.Trainer}${ApiRoute.Orders}?${stringify(query)}`
   );

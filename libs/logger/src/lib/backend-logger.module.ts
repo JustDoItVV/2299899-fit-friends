@@ -5,7 +5,11 @@ import { BackendLoggerService } from './backend-logger.service';
 export const ENV_FILE_PATH = '.env';
 
 @Module({
-  providers: [BackendLoggerService],
-  exports: [BackendLoggerService],
+  providers: [
+    BackendLoggerService,
+  ],
+  exports: [
+    BackendLoggerService,
+  ],
 })
 export class BackendLoggerModule {}

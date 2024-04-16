@@ -2,7 +2,7 @@ import React, { ChangeEvent, FormEvent, useRef, useState } from 'react';
 
 import { TrainingVideoAllowedExtensions } from '@2299899-fit-friends/consts';
 import {
-    createTrainingAction, selectResponseError, useAppDispatch, useAppSelector
+    createTraining, selectResponseError, useAppDispatch, useAppSelector
 } from '@2299899-fit-friends/frontend-core';
 import { getResponseErrorMessage } from '@2299899-fit-friends/helpers';
 import {
@@ -54,7 +54,7 @@ export default function TrainingsCreateForm(): JSX.Element {
       formData.append('video', videoInputRef.current.files[0]);
     }
 
-    dispatch(createTrainingAction(formData));
+    dispatch(createTraining(formData));
   };
 
   const getInputSelectTextareaChangeHandler = <T,>(ref: React.MutableRefObject<T>) =>

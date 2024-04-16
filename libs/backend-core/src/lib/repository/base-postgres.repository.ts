@@ -2,10 +2,7 @@ import { NOT_IMPLEMENTED_ERROR } from '@2299899-fit-friends/consts';
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { PrismaClientService } from '@2299899-fit-friends/models';
 import {
-  BaseEntity,
-  BaseRepository,
-  DefaultPojoType,
-  EntityIdType,
+    BaseEntity, BaseRepository, DefaultPojoType, EntityIdType
 } from '@2299899-fit-friends/types';
 
 export abstract class BasePostgresRepository<
@@ -18,9 +15,7 @@ export abstract class BasePostgresRepository<
     private readonly createEntity: (document: DocumentType) => EntityType
   ) {}
 
-  protected createEntityFromDocument(
-    document: DocumentType
-  ): EntityType | null {
+  protected createEntityFromDocument(document: DocumentType): EntityType | null {
     if (!document) {
       return null;
     }
@@ -35,10 +30,7 @@ export abstract class BasePostgresRepository<
     throw new Error(NOT_IMPLEMENTED_ERROR);
   }
 
-  public async update(
-    _id: EntityType['id'],
-    _entity: EntityType
-  ): Promise<EntityType> {
+  public async update(_id: EntityType['id'],_entity: EntityType): Promise<EntityType> {
     throw new Error(NOT_IMPLEMENTED_ERROR);
   }
 
