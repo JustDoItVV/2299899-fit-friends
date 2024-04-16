@@ -9,17 +9,12 @@ import { Prisma } from '@prisma/client';
 import { NotificationEntity } from './notification.entity';
 
 @Injectable()
-export class NotificationRepository extends BasePostgresRepository<
-  NotificationEntity,
-  Notification
-> {
+export class NotificationRepository extends BasePostgresRepository<NotificationEntity, Notification> {
   constructor(protected readonly clientService: PrismaClientService) {
     super(clientService, NotificationEntity.fromObject);
   }
 
-  private async getNotificationsCount(
-    where: Prisma.NotificationWhereInput
-  ): Promise<number> {
+  private async getNotificationsCount(where: Prisma.NotificationWhereInput): Promise<number> {
     return this.clientService.notification.count({ where });
   }
 
@@ -47,10 +42,7 @@ export class NotificationRepository extends BasePostgresRepository<
     return document ? this.createEntityFromDocument(document) : null;
   }
 
-  public async find(
-    query: PaginationQuery,
-    userId: string
-  ): Promise<Pagination<NotificationEntity>> {
+  public async find(query: PaginationQuery, userId: string): Promise<Pagination<NotificationEntity>> {
     let limit = query.limit;
     if (query.limit < 1) {
       limit = 1;

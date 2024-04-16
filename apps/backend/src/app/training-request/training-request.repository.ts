@@ -9,17 +9,12 @@ import { Prisma } from '@prisma/client';
 import { TrainingRequestEntity } from './training-request.entity';
 
 @Injectable()
-export class TrainingRequestRepository extends BasePostgresRepository<
-  TrainingRequestEntity,
-  TrainingRequest
-> {
+export class TrainingRequestRepository extends BasePostgresRepository<TrainingRequestEntity, TrainingRequest> {
   constructor(protected readonly clientService: PrismaClientService) {
     super(clientService, TrainingRequestEntity.fromObject);
   }
 
-  private async getTrainingRequestsCount(
-    where: Prisma.TrainingRequestWhereInput
-  ): Promise<number> {
+  private async getTrainingRequestsCount(where: Prisma.TrainingRequestWhereInput): Promise<number> {
     return this.clientService.trainingRequest.count({ where });
   }
 
@@ -31,9 +26,7 @@ export class TrainingRequestRepository extends BasePostgresRepository<
     return Math.ceil(totalCount / limit);
   }
 
-  public async save(
-    entity: TrainingRequestEntity
-  ): Promise<TrainingRequestEntity> {
+  public async save(entity: TrainingRequestEntity): Promise<TrainingRequestEntity> {
     const pojoEntity = entity.toPOJO();
     const document = await this.clientService.trainingRequest.create({
       data: pojoEntity,
@@ -101,10 +94,7 @@ export class TrainingRequestRepository extends BasePostgresRepository<
     return document ? this.createEntityFromDocument(document) : null;
   }
 
-  public async update(
-    id: string,
-    entity: TrainingRequestEntity
-  ): Promise<TrainingRequestEntity> {
+  public async update(id: string, entity: TrainingRequestEntity): Promise<TrainingRequestEntity> {
     const pojoEntity = entity.toPOJO();
     const updatedDocument = await this.clientService.trainingRequest.update({
       where: { id },

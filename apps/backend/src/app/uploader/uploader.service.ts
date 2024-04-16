@@ -15,6 +15,7 @@ import { ConfigType } from '@nestjs/config';
 @Injectable()
 export class UploaderService {
   private readonly DATE_FORMAT = 'YYYY MM';
+
   constructor(
     @Inject(BackendConfig.KEY)
     private readonly config: ConfigType<typeof BackendConfig>

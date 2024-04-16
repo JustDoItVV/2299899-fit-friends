@@ -1,41 +1,16 @@
+import { JwtAuthGuard, UserParam, UserRolesGuard } from '@2299899-fit-friends/backend-core';
 import {
-  ApiReviewMessage,
-  ApiTag,
-  ApiTrainingMessage,
-  ApiUserMessage,
+    ApiReviewMessage, ApiTag, ApiTrainingMessage, ApiUserMessage
 } from '@2299899-fit-friends/consts';
 import {
-  JwtAuthGuard,
-  UserParam,
-  UserRolesGuard,
-} from '@2299899-fit-friends/backend-core';
-import {
-  ApiOkResponsePaginated,
-  CreateReviewDto,
-  PaginationQuery,
-  PaginationRdo,
-  ReviewRdo,
+    ApiOkResponsePaginated, CreateReviewDto, PaginationQuery, PaginationRdo, ReviewRdo
 } from '@2299899-fit-friends/dtos';
 import { fillDto } from '@2299899-fit-friends/helpers';
 import { TokenPayload, UserRole } from '@2299899-fit-friends/types';
+import { Body, Controller, Get, Param, Post, Query, UseGuards } from '@nestjs/common';
 import {
-  Body,
-  Controller,
-  Get,
-  Param,
-  Post,
-  Query,
-  UseGuards,
-} from '@nestjs/common';
-import {
-  ApiBadRequestResponse,
-  ApiBearerAuth,
-  ApiCreatedResponse,
-  ApiForbiddenResponse,
-  ApiNotFoundResponse,
-  ApiOperation,
-  ApiTags,
-  ApiUnauthorizedResponse,
+    ApiBadRequestResponse, ApiBearerAuth, ApiCreatedResponse, ApiForbiddenResponse,
+    ApiNotFoundResponse, ApiOperation, ApiTags, ApiUnauthorizedResponse
 } from '@nestjs/swagger';
 
 import { ReviewService } from './review.service';
@@ -48,10 +23,7 @@ export class ReviewController {
   constructor(private readonly reviewService: ReviewService) {}
 
   @ApiOperation({ summary: 'Создание отзыва к тренировке' })
-  @ApiCreatedResponse({
-    description: ApiReviewMessage.CreateSuccess,
-    type: ReviewRdo,
-  })
+  @ApiCreatedResponse({ description: ApiReviewMessage.CreateSuccess, type: ReviewRdo })
   @ApiNotFoundResponse({ description: ApiTrainingMessage.NotFound })
   @ApiBadRequestResponse({ description: ApiTrainingMessage.ValidationError })
   @ApiForbiddenResponse({ description: ApiUserMessage.ForbiddenExceptUser })
@@ -63,11 +35,7 @@ export class ReviewController {
     @Body() dto: CreateReviewDto,
     @UserParam() payload: TokenPayload
   ) {
-    const newReview = await this.reviewService.create(
-      dto,
-      payload.userId,
-      trainingId
-    );
+    const newReview = await this.reviewService.create(dto, payload.userId, trainingId);
     return fillDto(ReviewRdo, newReview.toPOJO());
   }
 

@@ -10,10 +10,7 @@ import { TrainingRepository } from '../training/training.repository';
 import { ReviewEntity } from './review.entity';
 
 @Injectable()
-export class ReviewRepository extends BasePostgresRepository<
-  ReviewEntity,
-  Review
-> {
+export class ReviewRepository extends BasePostgresRepository<ReviewEntity, Review> {
   constructor(
     protected readonly clientService: PrismaClientService,
     private readonly trainingRepository: TrainingRepository
@@ -21,9 +18,7 @@ export class ReviewRepository extends BasePostgresRepository<
     super(clientService, ReviewEntity.fromObject);
   }
 
-  private async getReviewsCount(
-    where: Prisma.ReviewWhereInput
-  ): Promise<number> {
+  private async getReviewsCount(where: Prisma.ReviewWhereInput): Promise<number> {
     return this.clientService.review.count({ where });
   }
 
@@ -37,9 +32,7 @@ export class ReviewRepository extends BasePostgresRepository<
 
   public async save(entity: ReviewEntity): Promise<ReviewEntity> {
     const pojoEntity = entity.toPOJO();
-    const training = await this.trainingRepository.findById(
-      pojoEntity.trainingId
-    );
+    const training = await this.trainingRepository.findById(pojoEntity.trainingId);
 
     if (!training.rating) {
       training.rating = pojoEntity.rating;
@@ -60,10 +53,7 @@ export class ReviewRepository extends BasePostgresRepository<
     return entity;
   }
 
-  public async find(
-    query: PaginationQuery,
-    trainingId: string
-  ): Promise<Pagination<ReviewEntity>> {
+  public async find(query: PaginationQuery, trainingId: string): Promise<Pagination<ReviewEntity>> {
     let limit = query.limit;
     if (query.limit < 1) {
       limit = 1;
@@ -98,9 +88,7 @@ export class ReviewRepository extends BasePostgresRepository<
     });
 
     return {
-      entities: documents.map((review) =>
-        this.createEntityFromDocument(review)
-      ),
+      entities: documents.map((review) => this.createEntityFromDocument(review)),
       currentPage,
       totalPages,
       itemsPerPage: limit,

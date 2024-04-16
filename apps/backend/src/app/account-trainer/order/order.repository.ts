@@ -6,7 +6,6 @@ import {
     Order, OrderPaymentMethod, OrderSortOption, OrderType, Pagination, Training
 } from '@2299899-fit-friends/types';
 import { Injectable } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
 
 import { OrderEntity } from './order.entity';
 
@@ -14,10 +13,6 @@ import { OrderEntity } from './order.entity';
 export class OrderRepository extends BasePostgresRepository<OrderEntity, Order> {
   constructor(protected readonly clientService: PrismaClientService) {
     super(clientService, OrderEntity.fromObject);
-  }
-
-  private async getOrdersCount(where: Prisma.OrderWhereInput): Promise<number> {
-    return this.clientService.order.count({ where });
   }
 
   private calculatePage(totalCount: number, limit: number): number {
@@ -31,7 +26,7 @@ export class OrderRepository extends BasePostgresRepository<OrderEntity, Order> 
   public async save(entity: OrderEntity): Promise<OrderEntity> {
     const pojoEntity = entity.toPOJO();
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { trainingId: _, ...data} = pojoEntity;
+    const { trainingId: _, ...data } = pojoEntity;
     const document = await this.clientService.order.create({
       data: {
         ...data,

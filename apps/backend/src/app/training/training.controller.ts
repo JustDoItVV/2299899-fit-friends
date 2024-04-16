@@ -69,10 +69,7 @@ export class TrainingController {
 
   @ApiTags(ApiTag.AccountTrainer)
   @ApiOperation({ summary: 'Детальная информация о тренировке' })
-  @ApiOkResponse({
-    description: ApiTrainingMessage.TrainingInfo,
-    type: TrainingRdo,
-  })
+  @ApiOkResponse({ description: ApiTrainingMessage.TrainingInfo, type: TrainingRdo })
   @ApiNotFoundResponse({ description: ApiTrainingMessage.NotFound })
   @ApiUnauthorizedResponse({ description: ApiUserMessage.Unauthorized })
   @Get(':id')
@@ -84,10 +81,7 @@ export class TrainingController {
   @ApiTags(ApiTag.AccountTrainer)
   @ApiOperation({ summary: 'Редактирование тренировки' })
   @ApiConsumes('multipart/form-data', 'application/json')
-  @ApiOkResponse({
-    description: ApiTrainingMessage.UpdateSuccess,
-    type: TrainingRdo,
-  })
+  @ApiOkResponse({ description: ApiTrainingMessage.UpdateSuccess, type: TrainingRdo })
   @ApiNotFoundResponse({ description: ApiTrainingMessage.NotFound })
   @ApiBadRequestResponse({ description: ApiTrainingMessage.ValidationError })
   @ApiUnauthorizedResponse({ description: ApiUserMessage.Unauthorized })
@@ -106,9 +100,7 @@ export class TrainingController {
     @UploadedFiles(
       new FilesValidationPipe(
         {
-          backgroundPicture: {
-            formats: TrainingBackgroundPictureAllowedExtensions,
-          },
+          backgroundPicture: { formats: TrainingBackgroundPictureAllowedExtensions },
           video: { formats: TrainingVideoAllowedExtensions },
         },
         TrainingErrorMessage.FileFormatForbidden
@@ -116,21 +108,13 @@ export class TrainingController {
     )
     files: FilesPayload
   ) {
-    const updatedTraining = await this.trainingService.update(
-      payload,
-      id,
-      dto,
-      files
-    );
+    const updatedTraining = await this.trainingService.update(payload, id, dto, files);
     return fillDto(TrainingRdo, updatedTraining.toPOJO());
   }
 
   @ApiTags(ApiTag.AccountTrainer)
   @ApiOperation({ summary: 'Получение файла фоновой картинки тренировки' })
-  @ApiOkResponse({
-    description: ApiTrainingMessage.BackgroundPicture,
-    type: TrainingRdo,
-  })
+  @ApiOkResponse({ description: ApiTrainingMessage.BackgroundPicture, type: TrainingRdo })
   @ApiNotFoundResponse({ description: ApiTrainingMessage.NotFoundFile })
   @ApiUnauthorizedResponse({ description: ApiUserMessage.Unauthorized })
   @Get(':id/backgroundPicture')

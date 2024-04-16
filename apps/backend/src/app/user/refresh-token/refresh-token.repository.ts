@@ -6,10 +6,7 @@ import { Injectable } from '@nestjs/common';
 import { RefreshTokenEntity } from './refresh-token.entity';
 
 @Injectable()
-export class RefreshTokenRepository extends BasePostgresRepository<
-  RefreshTokenEntity,
-  RefreshToken
-> {
+export class RefreshTokenRepository extends BasePostgresRepository<RefreshTokenEntity, RefreshToken> {
   constructor(protected readonly clientService: PrismaClientService) {
     super(clientService, RefreshTokenEntity.fromObject);
   }
@@ -23,9 +20,7 @@ export class RefreshTokenRepository extends BasePostgresRepository<
     return entity;
   }
 
-  public async findByTokenId(
-    tokenId: string
-  ): Promise<RefreshTokenEntity | null> {
+  public async findByTokenId(tokenId: string): Promise<RefreshTokenEntity | null> {
     const document = await this.clientService.refreshToken.findFirst({
       where: { tokenId },
     });

@@ -23,17 +23,10 @@ export class TrainingRequestController {
     private readonly trainingRequestService: TrainingRequestService
   ) {}
 
-  @ApiOperation({
-    summary: 'Создание заявки на персональную/совместную тренировку',
-  })
-  @ApiCreatedResponse({
-    description: 'Заявка успешно создана',
-    type: TrainingRequestRdo,
-  })
+  @ApiOperation({ summary: 'Создание заявки на персональную/совместную тренировку' })
+  @ApiCreatedResponse({ description: 'Заявка успешно создана', type: TrainingRequestRdo })
   @ApiBadRequestResponse({ description: 'Ошибка валидации данных' })
-  @ApiForbiddenResponse({
-    description: `Запрещено кроме пользователей с ролью "${UserRole.User}"`,
-  })
+  @ApiForbiddenResponse({ description: `Запрещено кроме пользователей с ролью "${UserRole.User}"` })
   @ApiUnauthorizedResponse({ description: ApiUserMessage.Unauthorized })
   @Post('')
   @UseGuards(new UserRolesGuard([UserRole.User]))
@@ -41,18 +34,12 @@ export class TrainingRequestController {
     @Body() dto: CreateTrainingRequestDto,
     @UserParam() payload: TokenPayload
   ) {
-    const newRequest = await this.trainingRequestService.create(
-      dto,
-      payload.userId
-    );
+    const newRequest = await this.trainingRequestService.create(dto, payload.userId);
     return fillDto(TrainingRequestRdo, newRequest.toPOJO());
   }
 
   @ApiOperation({ summary: 'Список запросов на тренировки для текущего пользователя' })
-  @ApiOkResponse({
-    description: 'Список запросов на тренировки для текущего пользователя',
-    type: PaginationRdo<TrainingRequestRdo>,
-  })
+  @ApiOkResponse({ description: 'Список запросов на тренировки для текущего пользователя', type: PaginationRdo<TrainingRequestRdo> })
   @ApiBadRequestResponse({ description: 'Ошибка валидации данных' })
   @ApiUnauthorizedResponse({ description: ApiUserMessage.Unauthorized })
   @Get('')
@@ -73,11 +60,7 @@ export class TrainingRequestController {
     @Body() dto: UpdateTrainingRequestDto,
     @UserParam() payload: TokenPayload
   ) {
-    const updatedRequest = await this.trainingRequestService.update(
-      id,
-      dto,
-      payload.userId
-    );
+    const updatedRequest = await this.trainingRequestService.update(id, dto, payload.userId);
     return fillDto(TrainingRequestRdo, updatedRequest.toPOJO());
   }
 }

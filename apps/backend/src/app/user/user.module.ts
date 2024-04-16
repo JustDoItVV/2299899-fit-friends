@@ -1,8 +1,5 @@
-import {
-  BackendConfigModule,
-  getJwtOptions,
-} from '@2299899-fit-friends/config';
 import { JwtAccessStrategy } from '@2299899-fit-friends/backend-core';
+import { BackendConfigModule, getJwtOptions } from '@2299899-fit-friends/config';
 import { PrismaClientModule } from '@2299899-fit-friends/models';
 import { Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';

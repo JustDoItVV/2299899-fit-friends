@@ -16,7 +16,7 @@ import { fillDto } from '@2299899-fit-friends/helpers';
 import { TokenPayload, UserRole } from '@2299899-fit-friends/types';
 import {
     Body, Controller, Delete, Get, Header, HttpCode, HttpStatus, Param, Patch, Post, Query,
-    UploadedFiles, UseGuards, UseInterceptors, UsePipes, ValidationPipe
+    UploadedFiles, UseGuards, UseInterceptors
 } from '@nestjs/common';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import {
@@ -40,12 +40,6 @@ export class UserController {
   @ApiForbiddenResponse({ description: ApiUserMessage.ForbiddenExceptUser })
   @ApiUnauthorizedResponse({ description: ApiUserMessage.Unauthorized })
   @Get('/')
-  @UsePipes(
-    new ValidationPipe({
-      transform: true,
-      transformOptions: { enableImplicitConversion: true },
-    })
-  )
   @UseGuards(JwtAuthGuard, new UserRolesGuard([UserRole.User]))
   public async show(@Query() query: UserPaginationQuery) {
     const result = await this.userService.getUsersByQuery(query);
@@ -54,10 +48,7 @@ export class UserController {
 
   @ApiTags(ApiTag.Users)
   @ApiOperation({ summary: 'Вход в систему' })
-  @ApiCreatedResponse({
-    description: ApiUserMessage.Authorized,
-    type: LoggedUserRdo,
-  })
+  @ApiCreatedResponse({ description: ApiUserMessage.Authorized, type: LoggedUserRdo })
   @ApiBadRequestResponse({ description: ApiUserMessage.LoginWrong })
   @ApiUnauthorizedResponse({ description: ApiUserMessage.PasswordWrong })
   @ApiNotFoundResponse({ description: ApiUserMessage.NotFound })
@@ -72,10 +63,7 @@ export class UserController {
 
   @ApiTags(ApiTag.Users)
   @ApiOperation({ summary: 'Проверка токена' })
-  @ApiCreatedResponse({
-    description: ApiUserMessage.Authorized,
-    type: LoggedUserRdo,
-  })
+  @ApiCreatedResponse({ description: ApiUserMessage.Authorized, type: LoggedUserRdo })
   @ApiUnauthorizedResponse({ description: ApiUserMessage.Unauthorized })
   @Post('check')
   @UseGuards(JwtAuthGuard)
@@ -85,10 +73,7 @@ export class UserController {
 
   @ApiTags(ApiTag.Users)
   @ApiOperation({ summary: 'Получение новой пары токенов' })
-  @ApiCreatedResponse({
-    description: ApiUserMessage.TokenNew,
-    type: LoggedUserRdo,
-  })
+  @ApiCreatedResponse({ description: ApiUserMessage.TokenNew, type: LoggedUserRdo })
   @ApiUnauthorizedResponse({ description: ApiUserMessage.Unauthorized })
   @Post('refresh')
   @UseGuards(JwtRefreshGuard)
@@ -114,9 +99,7 @@ export class UserController {
   @ApiCreatedResponse({ description: ApiUserMessage.Registered, type: UserRdo })
   @ApiConflictResponse({ description: ApiUserMessage.EmailExists })
   @ApiBadRequestResponse({ description: ApiUserMessage.ValidationError })
-  @ApiUnsupportedMediaTypeResponse({
-    description: ApiUserMessage.UnsupportedMediaFiles,
-  })
+  @ApiUnsupportedMediaTypeResponse({ description: ApiUserMessage.UnsupportedMediaFiles })
   @ApiForbiddenResponse({ description: ApiUserMessage.ForbiddenAuthorized })
   @Post('register')
   @UseInterceptors(
@@ -146,9 +129,7 @@ export class UserController {
   }
 
   @ApiTags(ApiTag.Users)
-  @ApiOperation({
-    summary: 'Детальная информация о пользователе (Карточка пользователя)',
-  })
+  @ApiOperation({ summary: 'Детальная информация о пользователе (Карточка пользователя)' })
   @ApiOkResponse({ description: ApiUserMessage.Card, type: UserRdo })
   @ApiNotFoundResponse({ description: ApiUserMessage.NotFound })
   @ApiUnauthorizedResponse({ description: ApiUserMessage.Unauthorized })
@@ -207,9 +188,7 @@ export class UserController {
   }
 
   @ApiTags(ApiTag.Users)
-  @ApiOperation({
-    summary: 'Получение файла фоновой картинки карточки пользователя',
-  })
+  @ApiOperation({ summary: 'Получение файла фоновой картинки карточки пользователя' })
   @ApiOkResponse({ description: ApiUserMessage.FileImageUrl })
   @ApiNotFoundResponse({ description: ApiUserMessage.UserOrFileNotFound })
   @ApiUnauthorizedResponse({ description: ApiUserMessage.Unauthorized })
@@ -269,17 +248,12 @@ export class UserController {
     @Param('id') friendId: string,
     @UserParam() payload: TokenPayload
   ) {
-    const result = await this.userService.removeFromFriends(
-      payload.userId,
-      friendId
-    );
+    const result = await this.userService.removeFromFriends(payload.userId, friendId);
     return fillDto(PaginationRdo<UserRdo>, result);
   }
 
   @ApiTags(ApiTag.AccountUser)
-  @ApiOperation({
-    summary: 'Подписаться на уведомления о новых тренировках по email',
-  })
+  @ApiOperation({ summary: 'Подписаться на уведомления о новых тренировках по email' })
   @ApiOkResponse({ description: ApiUserMessage.SubscribeAddSuccess })
   @ApiConflictResponse({ description: ApiUserMessage.SubscribeAddAlready })
   @ApiForbiddenResponse({ description: ApiUserMessage.ForbiddenSubscribe })
@@ -297,9 +271,7 @@ export class UserController {
   }
 
   @ApiTags(ApiTag.AccountUser)
-  @ApiOperation({
-    summary: 'Отписаться от уведомлений о новых тренировках по email',
-  })
+  @ApiOperation({ summary: 'Отписаться от уведомлений о новых тренировках по email' })
   @ApiOkResponse({ description: ApiUserMessage.SubscribeDeleteSuccess })
   @ApiConflictResponse({ description: ApiUserMessage.SubscribeDeleteAlready })
   @ApiForbiddenResponse({ description: ApiUserMessage.ForbiddenSubscribe })

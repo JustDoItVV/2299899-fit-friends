@@ -27,11 +27,7 @@ export class TrainingService {
     private readonly userRepository: UserRepository
   ) {}
 
-  public async create(
-    dto: CreateTrainingDto,
-    userId: string,
-    files: FilesPayload
-  ): Promise<TrainingEntity> {
+  public async create(dto: CreateTrainingDto, userId: string, files: FilesPayload): Promise<TrainingEntity> {
     const entity = TrainingEntity.fromDto(dto, userId);
 
     for (const key of Object.keys(files)) {
@@ -49,8 +45,7 @@ export class TrainingService {
       mkdirSync(uploadPath, { recursive: true });
     }
 
-    const pictureNumber =
-      Math.floor(Math.random() * (MockTrainingBackgroundPicture.Count - 1)) + 1;
+    const pictureNumber = Math.floor(Math.random() * (MockTrainingBackgroundPicture.Count - 1)) + 1;
     const mockBackgroundPictureName = `${MockTrainingBackgroundPicture.Prefix}${pictureNumber}${MockTrainingBackgroundPicture.Suffix}`;
     const backgroundPictureName = `${randomUUID()}-${mockBackgroundPictureName}`;
     copyFileSync(
@@ -90,10 +85,7 @@ export class TrainingService {
     return document;
   }
 
-  public async getByQuery(
-    query: TrainingPaginationQuery,
-    userId?: string
-  ): Promise<Pagination<TrainingRdo>> {
+  public async getByQuery(query: TrainingPaginationQuery, userId?: string): Promise<Pagination<TrainingRdo>> {
     const pagination = await this.trainingRepository.find(query, userId);
     const paginationResult = {
       ...pagination,
@@ -104,12 +96,7 @@ export class TrainingService {
     return paginationResult;
   }
 
-  public async update(
-    payload: TokenPayload,
-    id: string,
-    dto: UpdateTrainingDto,
-    files: FilesPayload
-  ) {
+  public async update(payload: TokenPayload, id: string, dto: UpdateTrainingDto, files: FilesPayload) {
     const training = await this.trainingRepository.findById(id);
 
     if (!training) {

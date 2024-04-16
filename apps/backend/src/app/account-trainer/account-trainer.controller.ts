@@ -8,7 +8,7 @@ import {
 } from '@2299899-fit-friends/dtos';
 import { fillDto } from '@2299899-fit-friends/helpers';
 import { TokenPayload, UserRole } from '@2299899-fit-friends/types';
-import { Controller, Get, Query, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Controller, Get, Query, UseGuards } from '@nestjs/common';
 import {
     ApiBadRequestResponse, ApiBearerAuth, ApiForbiddenResponse, ApiOperation, ApiTags,
     ApiUnauthorizedResponse
@@ -33,10 +33,6 @@ export class AccountTrainerController {
   @ApiForbiddenResponse({ description: ApiUserMessage.ForbiddenExceptTrainer })
   @ApiUnauthorizedResponse({ description: ApiUserMessage.Unauthorized })
   @Get('')
-  @UsePipes(new ValidationPipe({
-    transform: true,
-    transformOptions: { enableImplicitConversion: true },
-  }))
   public async showTrainings(
     @UserParam() payload: TokenPayload,
     @Query() query: TrainingPaginationQuery
@@ -51,10 +47,6 @@ export class AccountTrainerController {
   @ApiForbiddenResponse({ description: ApiUserMessage.ForbiddenExceptTrainer })
   @ApiUnauthorizedResponse({ description: ApiUserMessage.Unauthorized })
   @Get('orders')
-  @UsePipes(new ValidationPipe({
-    transform: true,
-    transformOptions: { enableImplicitConversion: true },
-  }))
   public async showOrders(
     @UserParam() payload: TokenPayload,
     @Query() query: OrderPaginationQuery
@@ -69,10 +61,6 @@ export class AccountTrainerController {
   @ApiForbiddenResponse({ description: ApiUserMessage.ForbiddenExceptTrainer })
   @ApiUnauthorizedResponse({ description: ApiUserMessage.Unauthorized })
   @Get('friends')
-  @UsePipes(new ValidationPipe({
-    transform: true,
-    transformOptions: { enableImplicitConversion: true },
-  }))
   public async showFriends(
     @UserParam() payload: TokenPayload,
     @Query() query: PaginationQuery

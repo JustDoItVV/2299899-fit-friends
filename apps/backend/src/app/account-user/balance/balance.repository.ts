@@ -9,17 +9,12 @@ import { Prisma } from '@prisma/client';
 import { BalanceEntity } from './balance.entity';
 
 @Injectable()
-export class BalanceRepository extends BasePostgresRepository<
-  BalanceEntity,
-  Balance
-> {
+export class BalanceRepository extends BasePostgresRepository<BalanceEntity, Balance> {
   constructor(protected readonly clientService: PrismaClientService) {
     super(clientService, BalanceEntity.fromObject);
   }
 
-  private async getbalancesCount(
-    where: Prisma.BalanceWhereInput
-  ): Promise<number> {
+  private async getbalancesCount(where: Prisma.BalanceWhereInput): Promise<number> {
     return this.clientService.balance.count({ where });
   }
 
@@ -33,17 +28,12 @@ export class BalanceRepository extends BasePostgresRepository<
 
   public async save(entity: BalanceEntity): Promise<BalanceEntity> {
     const pojoEntity = entity.toPOJO();
-    const document = await this.clientService.balance.create({
-      data: pojoEntity,
-    });
+    const document = await this.clientService.balance.create({ data: pojoEntity });
     entity.id = document.id;
     return entity;
   }
 
-  public async find(
-    query: BalancePaginationQuery,
-    userId?: string
-  ): Promise<Pagination<BalanceEntity>> {
+  public async find(query: BalancePaginationQuery, userId?: string): Promise<Pagination<BalanceEntity>> {
     let limit = query.limit;
     if (query.limit < 1) {
       limit = 1;
@@ -86,9 +76,7 @@ export class BalanceRepository extends BasePostgresRepository<
     });
 
     return {
-      entities: documents.map((document) =>
-        this.createEntityFromDocument(document)
-      ),
+      entities: documents.map((document) => this.createEntityFromDocument(document)),
       currentPage,
       totalPages,
       itemsPerPage: limit,
@@ -97,25 +85,16 @@ export class BalanceRepository extends BasePostgresRepository<
   }
 
   public async findById(id: string): Promise<BalanceEntity | null> {
-    const document = await this.clientService.balance.findFirst({
-      where: { id },
-    });
+    const document = await this.clientService.balance.findFirst({ where: { id } });
     return document ? this.createEntityFromDocument(document) : null;
   }
 
-  public async findByTrainingId(
-    trainingId: string
-  ): Promise<BalanceEntity | null> {
-    const document = await this.clientService.balance.findFirst({
-      where: { trainingId },
-    });
+  public async findByTrainingId(trainingId: string): Promise<BalanceEntity | null> {
+    const document = await this.clientService.balance.findFirst({ where: { trainingId } });
     return document ? this.createEntityFromDocument(document) : null;
   }
 
-  public async update(
-    id: string,
-    entity: BalanceEntity
-  ): Promise<BalanceEntity> {
+  public async update(id: string, entity: BalanceEntity): Promise<BalanceEntity> {
     const pojoEntity = entity.toPOJO();
     const updatedDocument = await this.clientService.balance.update({
       where: { id },
