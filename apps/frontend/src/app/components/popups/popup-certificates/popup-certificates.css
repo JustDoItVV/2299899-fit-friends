@@ -19,27 +19,27 @@
   max-height: 473px;
 }
 
-.personal-account-coach__list .slick-list {
+.popup__content--purchases .slick-list {
   min-width: 334px;
   max-width: 334px;
   max-height: 473px;
   min-height: 473px;
 }
 
-.personal-account-coach__list .slick-track {
+.popup__content--purchases .slick-track {
   background-color: #f2f2f2;
 }
 
-.personal-account-coach__list .slider-block-wrapper {
+.popup__content--purchases .slider-block-wrapper {
   margin-bottom: 50px;
   height: 473px;
 }
 
-.personal-account-coach__list .slick-slide {
+.popup__content--purchases .slick-slide {
   min-width: 334px;
   margin: 0;
 }
 
-.personal-account-coach__list .slick-slide:last-child {
+.popup__content--purchases .slick-slide:last-child {
   margin-right: 0px;
 }

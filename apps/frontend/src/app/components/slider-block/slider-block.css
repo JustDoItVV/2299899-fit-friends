@@ -164,26 +164,37 @@ Training page
 }
 
 /* Account trainer certificates */
-.personal-account-coach__list .slick-track {
-  background-color: #f2f2f2;
+
+.personal-account-coach__additional-info {
+  min-width: 1042px;
+  max-width: 1042px;
 }
 
-
-
-.popular-trainings__wrapper .slick-track {
-  background-color: #f2f2f2;
+.personal-account-coach__additional-info .slick-slider {
+  min-width: 1042px;
+  max-width: 1042px;
 }
 
-.popular-trainings__wrapper .slider-block-wrapper {
+.personal-account-coach__additional-info .slick-list {
+  min-width: 1042px;
+  max-width: 1042px;
+}
+
+.personal-account-coach__additional-info .slick-track {
+  background-color: #f2f2f2;
+  min-width: 1042px;
+}
+
+.personal-account-coach__additional-info .slider-block-wrapper {
   margin-bottom: 50px;
   height: 450px;
 }
 
-.popular-trainings__wrapper .slick-slide {
+.personal-account-coach__additional-info .slick-slide {
   min-width: 334px;
   margin-right: 15px;
 }
 
-.popular-trainings__wrapper .slick-slide:last-child {
+.personal-account-coach__additional-info .slick-slide:last-child {
   margin-right: 0px;
 }
