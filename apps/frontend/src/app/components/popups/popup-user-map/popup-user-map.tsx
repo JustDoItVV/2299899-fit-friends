@@ -18,10 +18,13 @@ type PopupUserMapProps = {
 export default function PopupUserMap(props: PopupUserMapProps): JSX.Element {
   const { trigger } = props;
   const user = useAppSelector(selectUser);
-  const popupRef = useRef<PopupActions | null>(null);
-  const [mapRef, setMapRef] = useState<HTMLDivElement | null>(null);
+
   const [location, setLocation] = useState<Location>(LOCATIONS[0]);
+  const [mapRef, setMapRef] = useState<HTMLDivElement | null>(null);
+
   const map = useMap(mapRef, location, MAP_ZOOM);
+
+  const popupRef = useRef<PopupActions | null>(null);
 
   useEffect(() => {
     if (user) {

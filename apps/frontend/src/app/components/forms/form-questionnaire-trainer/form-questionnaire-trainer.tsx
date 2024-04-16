@@ -15,13 +15,13 @@ export default function FormQuestionnaireTrainer(): JSX.Element {
   const currentUser = useAppSelector(selectCurrentUser);
   const responseError = useAppSelector(selectResponseError);
 
-  const certificateInputRef = useRef<HTMLInputElement | null>(null);
-
   const [trainingTypes, setTrainingTypes] = useState<TrainingType[]>([]);
   const [trainingLevel, setTrainingLevel] = useState<TrainingLevel>(TrainingLevel.Beginner);
   const [merits, setMerits] = useState<string>('');
   const [certificateName, setCertificateName] = useState<string>('Загрузите сюда файл формата PDF');
   const [isReadyToPersonal, setIsReadyToPersonal] = useState<boolean>(false);
+
+  const certificateInputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
     if (currentUser) {

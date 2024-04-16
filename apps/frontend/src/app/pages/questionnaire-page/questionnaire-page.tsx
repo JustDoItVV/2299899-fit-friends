@@ -38,9 +38,9 @@ export default function QuestionnairePage(): JSX.Element {
             <div className="popup-form__content">
               <div className="popup-form__form">
                 {currentUser?.role === UserRole.Trainer ? (
-                  <FormQuestionnaireTrainer user={currentUser} />
+                  <FormQuestionnaireTrainer />
                 ) : (
-                  <FormQuestionnaireUser user={currentUser} />
+                  <FormQuestionnaireUser />
                 )}
               </div>
             </div>

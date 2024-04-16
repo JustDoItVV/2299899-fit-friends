@@ -8,9 +8,10 @@ import { getResponseErrorMessage } from '@2299899-fit-friends/helpers';
 
 export default function LoginPage(): JSX.Element {
   const dispatch = useAppDispatch();
+  const responseError = useAppSelector(selectResponseError);
+
   const emailRef = useRef<HTMLInputElement | null>(null);
   const passwordRef = useRef<HTMLInputElement | null>(null);
-  const responseError = useAppSelector(selectResponseError);
 
   const handleFormSubmit = (evt: FormEvent<HTMLFormElement>) => {
     evt.preventDefault();

@@ -14,6 +14,7 @@ export default function AccountOrdersPage(): JSX.Element {
   const [query, setQuery] = useState<QueryPagination>({ page: 1, limit: 4 });
   const [sumOrder, setSumOrder] = useState<SortDirection>(SortDirection.Desc);
   const [amountOrder, setAmountOrder] = useState<SortDirection>(SortDirection.Desc);
+
   const sortFieldRef = useRef<OrderSortOption>(OrderSortOption.CreatedAt);
 
   const handleBackButtonClick = useBackButton(`/${FrontendRoute.Account}`);

@@ -15,11 +15,14 @@ import Header from '../../components/header/header';
 
 export default function AccountFriendsPage(): JSX.Element {
   const currentUser = useAppSelector(selectCurrentUser);
-  const handleBackButtonClick = useBackButton();
+
   const [query, setQuery] = useState<QueryPagination>({});
+
   const { items: requests, fetchAll: fetch } = useFetchPagination(fetchRequests, query);
 
   const ref = useRef<HTMLDivElement | null>(null);
+
+  const handleBackButtonClick = useBackButton();
 
   useEffect(() => {
     if (currentUser) {
