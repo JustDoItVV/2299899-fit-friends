@@ -1,6 +1,6 @@
 import { TokenPayload, User } from '@2299899-fit-friends/types';
 
-export function createJWTPayload(user: User): TokenPayload {
+export function createJWTPayload(user: Required<User>): TokenPayload {
   return {
     userId: user.id,
     name: user.name,

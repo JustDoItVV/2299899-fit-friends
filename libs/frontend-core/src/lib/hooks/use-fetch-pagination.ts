@@ -60,7 +60,7 @@ export function useFetchPagination<T extends CatalogItem>(
 
   const fetchAll = useCallback(async () => {
     setLoading(true);
-    const result = [];
+    const result: T[] = [];
     let page = 1;
 
     do {
