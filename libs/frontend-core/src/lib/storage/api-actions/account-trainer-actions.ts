@@ -3,7 +3,8 @@ import { stringify } from 'qs';
 
 import { ApiRoute } from '@2299899-fit-friends/consts';
 import {
-    FetchFileParams, FrontendRoute, Order, Pagination, QueryPagination, Training, User
+    FetchFileParams, FrontendRoute, Order, Pagination, QueryPagination, ResponseError, Training,
+    User
 } from '@2299899-fit-friends/types';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
@@ -17,7 +18,7 @@ export const createTraining = createAsyncThunk<
   Training,
   FormData,
   { dispatch: AppDispatch; state: State; extra: AxiosInstance }
->('accountTrainer/createTraining', async (formData, { dispatch, extra: api, rejectWithValue }) => {
+>('accountTrainer/createTraining', async (formData, { dispatch, extra: api }) => {
   try {
     const { data: training } = await api.post<Training>(
       ApiRoute.Training,
@@ -27,12 +28,17 @@ export const createTraining = createAsyncThunk<
     dispatch(redirectToRoute(`/${FrontendRoute.Account}`));
     return training;
   } catch (error) {
-    if (!error.response) {
-      throw new Error(error);
+    if (
+      typeof error === 'object'
+      && error
+      && 'response' in error
+      && typeof error.response === 'object'
+      && error.response
+      && 'data' in error.response
+      && typeof error.response.data === 'object'
+    ) {
+      dispatch(setResponseError(error.response.data as ResponseError));
     }
-
-    dispatch(setResponseError(error.response.data));
-    return rejectWithValue(error.response.data);
   }
 });
 
@@ -120,7 +126,7 @@ export const updateTraining = createAsyncThunk<
   Training,
   { id: string; data: FormData },
   { dispatch: AppDispatch; state: State; extra: AxiosInstance }
->('accountTrainer/updateTraining', async ({ id, data }, { dispatch, extra: api, rejectWithValue }) => {
+>('accountTrainer/updateTraining', async ({ id, data }, { dispatch, extra: api }) => {
     try {
       const { data: training } = await api.patch<Training>(
         `${ApiRoute.Training}/${id}`,
@@ -129,12 +135,17 @@ export const updateTraining = createAsyncThunk<
       dispatch(setResponseError(null));
       return training;
     } catch (error) {
-      if (!error.response) {
-        throw new Error(error);
+      if (
+        typeof error === 'object'
+        && error
+        && 'response' in error
+        && typeof error.response === 'object'
+        && error.response
+        && 'data' in error.response
+        && typeof error.response.data === 'object'
+      ) {
+        dispatch(setResponseError(error.response.data as ResponseError));
       }
-
-      dispatch(setResponseError(error.response.data));
-      return rejectWithValue(error.response.data);
     }
   }
 );

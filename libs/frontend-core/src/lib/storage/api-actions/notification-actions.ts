@@ -12,7 +12,7 @@ export const fetchNotifications = createAsyncThunk<
   void,
   { dispatch: AppDispatch; state: State; extra: AxiosInstance }
 >('notification/fetchNotifications', async (_, { extra: api }) => {
-  const { data } = await api.get<Notification[]>(`${ApiRoute.Notification}`);
+  const { data } = await api.get<Notification[]>(ApiRoute.Notification);
   return data;
 });
 
@@ -20,6 +20,6 @@ export const deleteNotification = createAsyncThunk<
   void,
   string,
   { dispatch: AppDispatch; state: State; extra: AxiosInstance }
->('notification/fetchNotifications', async (id, { extra: api }) => {
+>('notification/deleteNotification', async (id, { extra: api }) => {
   await api.delete(`${ApiRoute.Notification}/${id}`);
 });

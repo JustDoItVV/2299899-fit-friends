@@ -3,20 +3,14 @@ import { join } from 'node:path';
 
 import {
     BalanceAvailable, CaloriesPerDayLimit, CaloriesTargetLimit, METRO_STATIONS, MOCK_EMAIL_OPTIONS,
-    MockCertificate, PriceLimit, RatingLimit, TRAINING_TYPE_LIMIT
+    MockCertificate, OrderAmountLimit, PriceLimit, RatingLimit, TRAINING_TYPE_LIMIT
 } from '@2299899-fit-friends/consts';
 import { randomArrayElement } from '@2299899-fit-friends/helpers';
 import {
-    AuthStatus, NameSpace, TrainingAuditory, TrainingDuration, TrainingLevel, TrainingType, User,
-    UserGender, UserRole
+    AuthStatus, NameSpace, OrderPaymentMethod, OrderType, TrainingAuditory, TrainingDuration,
+    TrainingLevel, TrainingRequestStatus, TrainingType, User, UserGender, UserRole
 } from '@2299899-fit-friends/types';
 import { faker } from '@faker-js/faker';
-import { Action, ThunkDispatch } from '@reduxjs/toolkit';
-
-import { createApiService } from '../services/api';
-import { State } from '../storage/types/state.type';
-
-export type AppThunkDispatch = ThunkDispatch<State, ReturnType<typeof createApiService>, Action>;
 
 export const makeFakeUser = (): User => {
   const role = randomArrayElement(Object.values(UserRole));
@@ -132,3 +126,29 @@ export const makeFakeState = () => {
     },
   };
 };
+
+export const makeFakeOrder = () => {
+  const training = makeFakeTraining();
+  const amount = faker.number.int({ min: OrderAmountLimit.Min, max: OrderAmountLimit.Max });
+
+  return {
+    type: OrderType.Subscription,
+    trainingId: randomUUID(),
+    price: training.price,
+    amount,
+    orderSum: training.price * amount,
+    paymentMethod: faker.helpers.arrayElement(Object.values(OrderPaymentMethod)),
+    training,
+  };
+};
+
+export const makeFakeNotification = () => ({
+  userId: randomUUID(),
+  text: faker.commerce.productDescription(),
+});
+
+export const makeFakeRequest = () => ({
+  authorId: randomUUID(),
+  targetId: randomUUID(),
+  status: faker.helpers.arrayElement(Object.values(TrainingRequestStatus)),
+});
