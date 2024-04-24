@@ -18,7 +18,7 @@ import { State } from '../storage/types/state.type';
 
 export type AppThunkDispatch = ThunkDispatch<State, ReturnType<typeof createApiService>, Action>;
 
-const makeFakeUser = (): User => {
+export const makeFakeUser = (): User => {
   const role = randomArrayElement(Object.values(UserRole));
 
   const avatarName = `${randomUUID()}-avatar`;
@@ -100,14 +100,14 @@ export const makeFakeTraining = () => {
   };
 };
 
-const makeFakeReview = () => ({
+export const makeFakeReview = () => ({
   userId: randomUUID(),
   trainingId: randomUUID(),
   rating: faker.number.int({ min: RatingLimit.Min, max: RatingLimit.Max }),
   text: faker.commerce.productDescription(),
 });
 
-const makeFakeBalance = () => ({
+export const makeFakeBalance = () => ({
   userId: randomUUID(),
   trainingId: randomUUID(),
   available: faker.number.int({ min: BalanceAvailable.Min, max: BalanceAvailable.Max }),
