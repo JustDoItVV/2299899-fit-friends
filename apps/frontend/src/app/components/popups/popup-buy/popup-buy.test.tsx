@@ -1,8 +1,7 @@
 import '@testing-library/jest-dom';
 
-import { randomUUID } from 'crypto';
-
 import { makeFakeState, makeFakeTraining } from '@2299899-fit-friends/frontend-core';
+import { faker } from '@faker-js/faker';
 import { act, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
@@ -11,7 +10,7 @@ import PopupBuy from './popup-buy';
 
 describe('Component PopupReview', () => {
   const mockState = makeFakeState();
-  const mockId = randomUUID();
+  const mockId = faker.string.uuid();
   const mockTraining = makeFakeTraining();
 
   test('should render correctly closed', async () => {

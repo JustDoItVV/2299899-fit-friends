@@ -72,7 +72,7 @@ export default function CardTrainingInfo({ id }: CardTrainingInfoProps): JSX.Ele
   }, [dispatch, training]);
 
   const handleStartTrainingButtonClick = () => {
-    if (training?.id) {
+    if (training?.id && balance) {
       dispatch(updateBalance({ trainingId: training.id, available: balance.available - 1 }));
       setIsTrainingActive(true);
     }
@@ -328,7 +328,7 @@ export default function CardTrainingInfo({ id }: CardTrainingInfoProps): JSX.Ele
                     <button
                       className="btn training-info__buy"
                       type="button"
-                      disabled={balance && !!balance.available}
+                      disabled={!!balance && !!balance.available}
                     >
                       Купить
                     </button>

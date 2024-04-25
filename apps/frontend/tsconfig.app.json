@@ -18,7 +18,9 @@
     "src/**/*.test.js",
     "src/**/*.spec.jsx",
     "src/**/*.test.jsx",
-    "vite.config.mts"
+    "vite.config.mts",
+    "src/app/test-mocks/",
+    "src/lib/test-mocks/"
   ],
   "include": ["src/**/*.js", "src/**/*.jsx", "src/**/*.ts", "src/**/*.tsx"]
 }

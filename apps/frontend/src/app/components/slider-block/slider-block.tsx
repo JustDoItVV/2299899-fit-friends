@@ -114,7 +114,7 @@ export default function SliderBlock(props: SliderBlockProps): JSX.Element {
   ));
 
   return (
-    <div className={`${classNamePrefix}__wrapper`}>
+    <div className={`${classNamePrefix}__wrapper`} data-testid={`main-slider-${classNamePrefix}`}>
       <div className={`${classNamePrefix}__title-wrapper`}>
         {
           title &&

@@ -1,6 +1,3 @@
-import { randomInt, randomUUID } from 'node:crypto';
-import { join } from 'node:path';
-
 import {
     BalanceAvailable, CaloriesPerDayLimit, CaloriesTargetLimit, METRO_STATIONS, MOCK_EMAIL_OPTIONS,
     MockCertificate, OrderAmountLimit, PriceLimit, RatingLimit, TRAINING_TYPE_LIMIT
@@ -15,34 +12,32 @@ import { faker } from '@faker-js/faker';
 export const makeFakeUser = (): User => {
   const role = randomArrayElement(Object.values(UserRole));
 
-  const avatarName = `${randomUUID()}-avatar`;
-  const avatar = join('uploads', avatarName);
+  const avatarName = `${faker.string.uuid()}-avatar`;
 
-  const pageBackgroundName = `${randomUUID()}-pageBackground`;
-  const pageBackground = join('uploads', pageBackgroundName);
+  const pageBackgroundName = `${faker.string.uuid()}-pageBackground`;
 
 
   const certificates = [];
   if (role === UserRole.Trainer) {
-    const certificatesCount = randomInt(1, MockCertificate.Count + 1);
+    const certificatesCount = faker.number.int({ min: 1, max: MockCertificate.Count + 1 });
     for (let i = 1; i <= certificatesCount; i++) {
       const mockCertificateName = `${MockCertificate.Prefix}${i}${MockCertificate.Suffix}`;
-      const certificateName = `${randomUUID()}-${mockCertificateName}`;
-      certificates.push(join('uploads', certificateName));
+      const certificateName = `${faker.string.uuid()}-${mockCertificateName}`;
+      certificates.push(certificateName);
     }
   }
 
   return {
     name: faker.person.fullName(),
     email: faker.internet.email(MOCK_EMAIL_OPTIONS),
-    avatar,
+    avatar: avatarName,
     passwordHash: 'mock',
     gender: faker.helpers.arrayElement(Object.values(UserGender)) as UserGender,
     birthdate: faker.date.birthdate(),
     role,
     description: faker.person.bio(),
     location: faker.helpers.arrayElement(METRO_STATIONS),
-    pageBackground,
+    pageBackground: pageBackgroundName,
     trainingLevel: faker.helpers.arrayElement(Object.values(TrainingLevel)) as TrainingLevel,
     trainingType: faker.helpers.arrayElements(Object.values(TrainingType), TRAINING_TYPE_LIMIT) as TrainingType[],
     trainingDuration:
@@ -71,15 +66,13 @@ export const makeFakeResponseError = () => ({
 });
 
 export const makeFakeTraining = () => {
-  const backgroundPictureName = `${randomUUID()}-mockBackgroundPicture`;
-  const backgroundPicture = join('uploads', backgroundPictureName);
+  const backgroundPictureName = `${faker.string.uuid()}-mockBackgroundPicture`;
 
-  const videoName = `${randomUUID()}-mockVideo`;
-  const video = join('uploads', videoName);
+  const videoName = `${faker.string.uuid()}-mockVideo`;
 
   return {
     title: faker.commerce.productName(),
-    backgroundPicture,
+    backgroundPicture: backgroundPictureName,
     level: faker.helpers.arrayElement(Object.values(TrainingLevel)) as TrainingLevel,
     type: faker.helpers.arrayElement(Object.values(TrainingType)) as TrainingType,
     duration: faker.helpers.arrayElement(Object.values(TrainingDuration)) as TrainingDuration,
@@ -87,23 +80,23 @@ export const makeFakeTraining = () => {
     calories: faker.number.int({ min: CaloriesTargetLimit.Min, max: CaloriesTargetLimit.Max }),
     description: faker.commerce.productDescription(),
     gender: faker.helpers.arrayElement(Object.values(TrainingAuditory)) as TrainingAuditory,
-    video,
+    video: videoName,
     rating: 0,
-    userId: randomUUID(),
+    userId: faker.string.uuid(),
     isSpecialOffer: faker.datatype.boolean(),
   };
 };
 
 export const makeFakeReview = () => ({
-  userId: randomUUID(),
-  trainingId: randomUUID(),
+  userId: faker.string.uuid(),
+  trainingId: faker.string.uuid(),
   rating: faker.number.int({ min: RatingLimit.Min, max: RatingLimit.Max }),
   text: faker.commerce.productDescription(),
 });
 
 export const makeFakeBalance = () => ({
-  userId: randomUUID(),
-  trainingId: randomUUID(),
+  userId: faker.string.uuid(),
+  trainingId: faker.string.uuid(),
   available: faker.number.int({ min: BalanceAvailable.Min, max: BalanceAvailable.Max }),
 })
 
@@ -133,7 +126,7 @@ export const makeFakeOrder = () => {
 
   return {
     type: OrderType.Subscription,
-    trainingId: randomUUID(),
+    trainingId: faker.string.uuid(),
     price: training.price,
     amount,
     orderSum: training.price * amount,
@@ -143,13 +136,13 @@ export const makeFakeOrder = () => {
 };
 
 export const makeFakeNotification = () => ({
-  userId: randomUUID(),
+  userId: faker.string.uuid(),
   text: faker.commerce.productDescription(),
 });
 
 export const makeFakeRequest = () => ({
-  authorId: randomUUID(),
-  targetId: randomUUID(),
+  authorId: faker.string.uuid(),
+  targetId: faker.string.uuid(),
   status: faker.helpers.arrayElement(Object.values(TrainingRequestStatus)),
 });
 

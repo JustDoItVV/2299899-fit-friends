@@ -45,5 +45,7 @@ export default defineConfig(({ mode }) => {
         provider: 'v8',
       },
     },
+
+    exclude: ['test-mocks'],
   };
 });
