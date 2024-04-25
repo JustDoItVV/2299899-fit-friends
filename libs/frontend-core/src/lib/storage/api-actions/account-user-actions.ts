@@ -45,6 +45,7 @@ export const addFriend = createAsyncThunk<
     await api.post(`${ApiRoute.User}/${id}${ApiRoute.Friend}`);
     const { data } = await api.get<User>(`${ApiRoute.User}/${id}`);
     dispatch(setUser(data));
+    dispatch(setResponseError(null));
   } catch (error) {
     if (
       typeof error === 'object'
@@ -69,6 +70,7 @@ export const deleteFriend = createAsyncThunk<
     await api.delete(`${ApiRoute.User}/${id}${ApiRoute.Friend}`);
     const { data } = await api.get<User>(`${ApiRoute.User}/${id}`);
     dispatch(setUser(data));
+    dispatch(setResponseError(null));
   } catch (error) {
     if (
       typeof error === 'object'
@@ -121,6 +123,7 @@ export const unsubscribeFromTrainer = createAsyncThunk<
     await api.delete(`${ApiRoute.User}/${id}${ApiRoute.Subscribe}`);
     const { data } = await api.get<User>(`${ApiRoute.User}/${state.APP.currentUser?.id}`);
     dispatch(setCurrentUser(data));
+    dispatch(setResponseError(null));
   } catch (error) {
     if (
       typeof error === 'object'

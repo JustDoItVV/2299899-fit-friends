@@ -68,17 +68,18 @@ export const registerUser = createAsyncThunk<
 
     dispatch(setAuthStatus(AuthStatus.Unknown));
     saveToken(loggedData.accessToken);
+    dispatch(setResponseError(null));
     dispatch(redirectToRoute(`/${FrontendRoute.Questionnaire}`));
     return loggedData;
   } catch (error) {
     if (
-      typeof error === 'object' &&
-      error &&
-      'response' in error &&
-      typeof error.response === 'object' &&
-      error.response &&
-      'data' in error.response &&
-      typeof error.response.data === 'object'
+      typeof error === 'object'
+      && error
+      && 'response' in error
+      && typeof error.response === 'object'
+      && error.response
+      && 'data' in error.response
+      && typeof error.response.data === 'object'
     ) {
       dispatch(setResponseError(error.response.data as ResponseError));
     }
@@ -95,7 +96,7 @@ export const fetchUser = createAsyncThunk<
 });
 
 export const updateUser = createAsyncThunk<
-  User | ResponseError | undefined,
+  User,
   { id: string; data: FormData },
   { dispatch: AppDispatch; state: State; extra: AxiosInstance }
 >(

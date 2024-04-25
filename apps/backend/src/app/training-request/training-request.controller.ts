@@ -24,7 +24,7 @@ export class TrainingRequestController {
   ) {}
 
   @ApiOperation({ summary: 'Создание заявки на персональную/совместную тренировку' })
-  @ApiCreatedResponse({ description: 'Заявка успешно создана', type: TrainingRequestRdo })
+  @ApiCreatedResponse({ description: 'Заявка успешно создана' })
   @ApiBadRequestResponse({ description: 'Ошибка валидации данных' })
   @ApiForbiddenResponse({ description: `Запрещено кроме пользователей с ролью "${UserRole.User}"` })
   @ApiUnauthorizedResponse({ description: ApiUserMessage.Unauthorized })

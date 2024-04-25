@@ -30,8 +30,6 @@ describe('Api account trainer actions', () => {
   let store: ReturnType<typeof mockStoreCreator>;
 
   beforeEach(() => {
-    mockAxiosAdapter.resetHistory();
-    mockAxiosAdapter.resetHandlers();
     store = mockStoreCreator(makeFakeState());
   });
 
@@ -113,8 +111,9 @@ describe('Api account trainer actions', () => {
   });
 
   describe('fetchTrainingBackgroundPicture', () => {
+    const mockId = randomUUID();
+
     test('should dispatch "fetchTrainingBackgroundPicture.pending", "fetchTrainingBackgroundPicture.fulfilled" with server response 200', async () => {
-      const mockId = randomUUID();
       const mockData = faker.image.dataUri();
       mockAxiosAdapter.onGet(`${ApiRoute.Training}/${mockId}${ApiRoute.BackgroundPicture}`).reply(200, mockData);
 
@@ -131,7 +130,6 @@ describe('Api account trainer actions', () => {
     });
 
     test('should dispatch "fetchTrainingBackgroundPicture.pending", "fetchTrainingBackgroundPicture.rejected" with server response 404', async () => {
-      const mockId = randomUUID();
       mockAxiosAdapter.onGet(`${ApiRoute.Training}/${mockId}${ApiRoute.BackgroundPicture}`).reply(404);
 
       await store.dispatch(fetchTrainingBackgroundPicture({ id: mockId }));
@@ -146,8 +144,9 @@ describe('Api account trainer actions', () => {
   });
 
   describe('fetchTrainingVideo', () => {
+    const mockId = randomUUID();
+
     test('should dispatch "fetchTrainingVideo.pending", "fetchTrainingVideo.fulfilled" with server response 200', async () => {
-      const mockId = randomUUID();
       const mockData = new Blob();
       global.URL.createObjectURL = jest.fn();
       mockAxiosAdapter.onGet(`${ApiRoute.Training}/${mockId}${ApiRoute.Video}`).reply(200, mockData);
@@ -165,7 +164,6 @@ describe('Api account trainer actions', () => {
     });
 
     test('should dispatch "fetchTrainingVideo.pending", "fetchTrainingVideo.rejected" with server response 404', async () => {
-      const mockId = randomUUID();
       mockAxiosAdapter.onGet(`${ApiRoute.Training}/${mockId}${ApiRoute.Video}`).reply(404);
 
       await store.dispatch(fetchTrainingVideo({ id: mockId }));
@@ -242,7 +240,7 @@ describe('Api account trainer actions', () => {
     });
 
     test('should dispatch "fetchTrainerOrders.pending", "fetchTrainerOrders.rejected" with server response 400', async () => {
-      mockAxiosAdapter.onGet(`${ApiRoute.Account}${ApiRoute.Trainer}${ApiRoute.Friends}?${stringify({})}`).reply(400);
+      mockAxiosAdapter.onGet(`${ApiRoute.Account}${ApiRoute.Trainer}${ApiRoute.Orders}?${stringify({})}`).reply(400);
 
       await store.dispatch(fetchTrainerOrders({}));
       const emittedActions = store.getActions();
@@ -256,9 +254,10 @@ describe('Api account trainer actions', () => {
   });
 
   describe('fetchCertificate', () => {
+    const mockId = randomUUID();
+    const mockPath = faker.system.filePath();
+
     test('should dispatch "fetchCertificate.pending", "fetchCertificate.fulfilled" with server response 200', async () => {
-      const mockId = randomUUID();
-      const mockPath = faker.system.filePath();
       const mockData = new Blob();
       global.URL.createObjectURL = jest.fn();
       mockAxiosAdapter.onPost(`${ApiRoute.User}/${mockId}${ApiRoute.Certificates}`).reply(200, mockData);
@@ -276,8 +275,6 @@ describe('Api account trainer actions', () => {
     });
 
     test('should dispatch "fetchCertificate.pending", "fetchCertificate.rejected" with server response 404', async () => {
-      const mockId = randomUUID();
-      const mockPath = faker.system.filePath();
       mockAxiosAdapter.onPost(`${ApiRoute.User}/${mockId}${ApiRoute.Certificates}`).reply(404);
 
       await store.dispatch(fetchCertificate({ id: mockId, path: mockPath }));
@@ -292,8 +289,9 @@ describe('Api account trainer actions', () => {
   });
 
   describe('fetchTraining', () => {
+    const mockId = randomUUID();
+
     test('should dispatch "fetchTraining.pending", "fetchTraining.fulfilled" with server response 200', async () => {
-      const mockId = randomUUID();
       const mockData = makeFakeTraining();
       mockAxiosAdapter.onGet(`${ApiRoute.Training}/${mockId}`).reply(200, mockData);
 
@@ -310,7 +308,6 @@ describe('Api account trainer actions', () => {
     });
 
     test('should dispatch "fetchTraining.pending", "fetchTraining.rejected" with server response 404', async () => {
-      const mockId = randomUUID();
       mockAxiosAdapter.onGet(`${ApiRoute.Training}/${mockId}`).reply(201);
 
       await store.dispatch(fetchTraining(mockId));
@@ -325,8 +322,9 @@ describe('Api account trainer actions', () => {
   });
 
   describe('updateTraining', () => {
+    const mockId = randomUUID();
+
     test('should dispatch "updateTraining.pending", "APP/setResponseError", "frontend/redirectToRoute", "updateTraining.fulfilled" with server response 200', async () => {
-      const mockId = randomUUID();
       const mockData = makeFakeTraining();
       mockAxiosAdapter.onPatch(`${ApiRoute.Training}/${mockId}`).reply(200, mockData);
 
@@ -346,7 +344,6 @@ describe('Api account trainer actions', () => {
     });
 
     test('should dispatch "updateTraining.pending", "APP/setResponseError", "updateTraining.fulfilled" with server response 400', async () => {
-      const mockId = randomUUID();
       const mockResponseError = makeFakeResponseError();
       mockAxiosAdapter.onPatch(`${ApiRoute.Training}/${mockId}`).reply(400, mockResponseError);
 

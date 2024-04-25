@@ -152,3 +152,8 @@ export const makeFakeRequest = () => ({
   targetId: randomUUID(),
   status: faker.helpers.arrayElement(Object.values(TrainingRequestStatus)),
 });
+
+export const makeFakeAuthData = () => ({
+  email: faker.internet.email(),
+  password: faker.internet.password(),
+});
