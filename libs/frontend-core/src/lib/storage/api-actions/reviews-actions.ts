@@ -21,7 +21,7 @@ export const fetchReviews = createAsyncThunk<
 });
 
 export const createReview = createAsyncThunk<
-  Review,
+  Review | null,
   { id: string, data: Pick<Review, 'rating' | 'text'> },
   { dispatch: AppDispatch; state: State; extra: AxiosInstance }
 >('reviews/createReview', async ({ id, data }, { dispatch, extra: api }) => {
@@ -44,5 +44,6 @@ export const createReview = createAsyncThunk<
     ) {
       dispatch(setResponseError(error.response.data as ResponseError));
     }
+    return null;
   }
 });

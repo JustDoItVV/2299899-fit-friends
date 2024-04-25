@@ -15,7 +15,7 @@ import { CatalogItem } from '../types/catalog-item.type';
 import { State } from '../types/state.type';
 
 export const createTraining = createAsyncThunk<
-  Training,
+  Training | null,
   FormData,
   { dispatch: AppDispatch; state: State; extra: AxiosInstance }
 >('accountTrainer/createTraining', async (formData, { dispatch, extra: api }) => {
@@ -39,6 +39,7 @@ export const createTraining = createAsyncThunk<
     ) {
       dispatch(setResponseError(error.response.data as ResponseError));
     }
+    return null;
   }
 });
 
@@ -123,7 +124,7 @@ export const fetchTraining = createAsyncThunk<
 });
 
 export const updateTraining = createAsyncThunk<
-  Training,
+  Training | null,
   { id: string; data: FormData },
   { dispatch: AppDispatch; state: State; extra: AxiosInstance }
 >('accountTrainer/updateTraining', async ({ id, data }, { dispatch, extra: api }) => {
@@ -146,6 +147,7 @@ export const updateTraining = createAsyncThunk<
       ) {
         dispatch(setResponseError(error.response.data as ResponseError));
       }
+      return null;
     }
   }
 );

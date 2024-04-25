@@ -26,7 +26,7 @@ export const checkAuth = createAsyncThunk<
 });
 
 export const loginUser = createAsyncThunk<
-  UserWithToken,
+  UserWithToken | null,
   AuthData,
   { dispatch: AppDispatch; state: State; extra: AxiosInstance }
 >('users/loginUser', async (authData, { dispatch, extra: api }) => {
@@ -51,11 +51,12 @@ export const loginUser = createAsyncThunk<
     ) {
       dispatch(setResponseError(error.response.data as ResponseError));
     }
+    return null;
   }
 });
 
 export const registerUser = createAsyncThunk<
-  UserWithToken,
+  UserWithToken | null,
   FormData,
   { dispatch: AppDispatch; state: State; extra: AxiosInstance }
 >('users/registerUser', async (userData, { dispatch, extra: api }) => {
@@ -83,6 +84,7 @@ export const registerUser = createAsyncThunk<
     ) {
       dispatch(setResponseError(error.response.data as ResponseError));
     }
+    return null;
   }
 });
 
@@ -96,7 +98,7 @@ export const fetchUser = createAsyncThunk<
 });
 
 export const updateUser = createAsyncThunk<
-  User,
+  User | null,
   { id: string; data: FormData },
   { dispatch: AppDispatch; state: State; extra: AxiosInstance }
 >(
@@ -121,6 +123,7 @@ export const updateUser = createAsyncThunk<
       ) {
         dispatch(setResponseError(error.response.data as ResponseError));
       }
+      return null;
     }
   }
 );

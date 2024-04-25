@@ -52,7 +52,7 @@ export const trainingProcess = createSlice({
         state.isLoading = false;
       })
       .addCase(createReview.fulfilled, (state, action) => {
-        state.reviews = [action.payload, ...state.reviews];
+        state.reviews = action.payload ? [action.payload, ...state.reviews] : state.reviews;
       })
       .addCase(updateBalance.fulfilled, (state, action) => {
         state.balance = action.payload;
