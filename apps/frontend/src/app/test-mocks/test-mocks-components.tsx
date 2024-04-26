@@ -8,7 +8,7 @@ import { AppThunkDispatch, createApiService, State } from '@2299899-fit-friends/
 import { configureMockStore, MockStore } from '@jedmao/redux-mock-store';
 import { Action } from '@reduxjs/toolkit';
 
-import HistoryRouter from '../components/history-router/history-router.component';
+import HistoryRouter from '../components/history-router/history-router';
 
 type ComponentWithMockStore = {
   withStoreComponent: JSX.Element;
