@@ -4,9 +4,12 @@ import { HelmetProvider } from 'react-helmet-async';
 import { Provider } from 'react-redux';
 import { withExtraArgument } from 'redux-thunk';
 
-import { AppThunkDispatch, createApiService, State } from '@2299899-fit-friends/frontend-core';
+import {
+    AppThunkDispatch, CatalogItem, createApiService, State
+} from '@2299899-fit-friends/frontend-core';
+import { Pagination, QueryPagination } from '@2299899-fit-friends/types';
 import { configureMockStore, MockStore } from '@jedmao/redux-mock-store';
-import { Action } from '@reduxjs/toolkit';
+import { Action, createAsyncThunk } from '@reduxjs/toolkit';
 
 import HistoryRouter from '../components/history-router/history-router';
 
@@ -39,4 +42,20 @@ export function withStore(component: JSX.Element, initialState: Partial<State> =
     mockStore,
     mockAxiosAdapter,
   };
+}
+
+export function MockCardComponent(props: { item: CatalogItem, index?: number, key?: string }): JSX.Element {
+  return (
+    <div>
+      {props.item.id}
+    </div>
+  );
+}
+
+export function makeMockFetchCatalog(replyData: Pagination<CatalogItem>) {
+  return createAsyncThunk<
+    Pagination<CatalogItem>,
+    QueryPagination,
+    { dispatch: AppThunkDispatch; state: State; }
+  >('mockFetch', async () => replyData);
 }

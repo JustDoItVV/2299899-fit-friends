@@ -74,10 +74,10 @@ describe('App routing', () => {
 
     await act(async () => render(withStoreComponent));
 
-    expect(screen.queryByTestId('main-slider-special-for-you')).toBeInTheDocument();
-    expect(screen.queryByTestId('main-slider-special-offers')).toBeInTheDocument();
-    expect(screen.queryByTestId('main-slider-popular-trainings')).toBeInTheDocument();
-    expect(screen.queryByTestId('main-slider-look-for-company')).toBeInTheDocument();
+    expect(screen.queryByTestId('slider-block-special-for-you')).toBeInTheDocument();
+    expect(screen.queryByTestId('slider-block-special-offers')).toBeInTheDocument();
+    expect(screen.queryByTestId('slider-block-popular-trainings')).toBeInTheDocument();
+    expect(screen.queryByTestId('slider-block-look-for-company')).toBeInTheDocument();
   });
 
   test('should render RegistrationPage when user navigates to "/registration" and not authorized', async () => {
@@ -106,10 +106,10 @@ describe('App routing', () => {
 
     await act(async () => render(withStoreComponent));
 
-    expect(screen.queryByTestId('main-slider-special-for-you')).toBeInTheDocument();
-    expect(screen.queryByTestId('main-slider-special-offers')).toBeInTheDocument();
-    expect(screen.queryByTestId('main-slider-popular-trainings')).toBeInTheDocument();
-    expect(screen.queryByTestId('main-slider-look-for-company')).toBeInTheDocument();
+    expect(screen.queryByTestId('slider-block-special-for-you')).toBeInTheDocument();
+    expect(screen.queryByTestId('slider-block-special-offers')).toBeInTheDocument();
+    expect(screen.queryByTestId('slider-block-popular-trainings')).toBeInTheDocument();
+    expect(screen.queryByTestId('slider-block-look-for-company')).toBeInTheDocument();
   });
 
   test('should render QuestionnairePage when user navigates to "/questionnaire" and authorized', async () => {
@@ -140,10 +140,10 @@ describe('App routing', () => {
 
     await act(async () => render(withStoreComponent));
 
-    expect(screen.queryByTestId('main-slider-special-for-you')).toBeInTheDocument();
-    expect(screen.queryByTestId('main-slider-special-offers')).toBeInTheDocument();
-    expect(screen.queryByTestId('main-slider-popular-trainings')).toBeInTheDocument();
-    expect(screen.queryByTestId('main-slider-look-for-company')).toBeInTheDocument();
+    expect(screen.queryByTestId('slider-block-special-for-you')).toBeInTheDocument();
+    expect(screen.queryByTestId('slider-block-special-offers')).toBeInTheDocument();
+    expect(screen.queryByTestId('slider-block-popular-trainings')).toBeInTheDocument();
+    expect(screen.queryByTestId('slider-block-look-for-company')).toBeInTheDocument();
   });
 
   test('should render AccountPage when user navigates to "/main" and authorized and role Trainer', async () => {
@@ -252,10 +252,10 @@ describe('App routing', () => {
 
     await act(async () => render(withStoreComponent));
 
-    expect(screen.queryByTestId('main-slider-special-for-you')).toBeInTheDocument();
-    expect(screen.queryByTestId('main-slider-special-offers')).toBeInTheDocument();
-    expect(screen.queryByTestId('main-slider-popular-trainings')).toBeInTheDocument();
-    expect(screen.queryByTestId('main-slider-look-for-company')).toBeInTheDocument();
+    expect(screen.queryByTestId('slider-block-special-for-you')).toBeInTheDocument();
+    expect(screen.queryByTestId('slider-block-special-offers')).toBeInTheDocument();
+    expect(screen.queryByTestId('slider-block-popular-trainings')).toBeInTheDocument();
+    expect(screen.queryByTestId('slider-block-look-for-company')).toBeInTheDocument();
   });
 
   test('should render LoginPage when user navigates to "/account/create" and not authorized', async () => {
@@ -287,10 +287,10 @@ describe('App routing', () => {
 
     await act(async () => render(withStoreComponent));
 
-    expect(screen.queryByTestId('main-slider-special-for-you')).toBeInTheDocument();
-    expect(screen.queryByTestId('main-slider-special-offers')).toBeInTheDocument();
-    expect(screen.queryByTestId('main-slider-popular-trainings')).toBeInTheDocument();
-    expect(screen.queryByTestId('main-slider-look-for-company')).toBeInTheDocument();
+    expect(screen.queryByTestId('slider-block-special-for-you')).toBeInTheDocument();
+    expect(screen.queryByTestId('slider-block-special-offers')).toBeInTheDocument();
+    expect(screen.queryByTestId('slider-block-popular-trainings')).toBeInTheDocument();
+    expect(screen.queryByTestId('slider-block-look-for-company')).toBeInTheDocument();
   });
 
   test('should render LoginPage when user navigates to "/account/trainings" and not authorized', async () => {
@@ -322,10 +322,10 @@ describe('App routing', () => {
 
     await act(async () => render(withStoreComponent));
 
-    expect(screen.queryByTestId('main-slider-special-for-you')).toBeInTheDocument();
-    expect(screen.queryByTestId('main-slider-special-offers')).toBeInTheDocument();
-    expect(screen.queryByTestId('main-slider-popular-trainings')).toBeInTheDocument();
-    expect(screen.queryByTestId('main-slider-look-for-company')).toBeInTheDocument();
+    expect(screen.queryByTestId('slider-block-special-for-you')).toBeInTheDocument();
+    expect(screen.queryByTestId('slider-block-special-offers')).toBeInTheDocument();
+    expect(screen.queryByTestId('slider-block-popular-trainings')).toBeInTheDocument();
+    expect(screen.queryByTestId('slider-block-look-for-company')).toBeInTheDocument();
   });
 
   test('should render LoginPage when user navigates to "/account/orders" and not authorized', async () => {

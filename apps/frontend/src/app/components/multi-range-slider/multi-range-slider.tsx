@@ -79,7 +79,7 @@ export default forwardRef<MultiRangeSliderHandles, MultiRangeSliderProps>(
     };
 
     return (
-      <div className="filter-range">
+      <div className="filter-range" data-testid='multi-range-slider'>
         <input
           type="range"
           min={min}

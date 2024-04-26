@@ -38,9 +38,9 @@ describe('Component MainPage', () => {
   test('should render correctly', async () => {
     await act(async () => render(withStoreComponent));
 
-    expect(screen.queryByTestId('main-slider-special-for-you')).toBeInTheDocument();
-    expect(screen.queryByTestId('main-slider-special-offers')).toBeInTheDocument();
-    expect(screen.queryByTestId('main-slider-popular-trainings')).toBeInTheDocument();
-    expect(screen.queryByTestId('main-slider-look-for-company')).toBeInTheDocument();
+    expect(screen.queryByTestId('slider-block-special-for-you')).toBeInTheDocument();
+    expect(screen.queryByTestId('slider-block-special-offers')).toBeInTheDocument();
+    expect(screen.queryByTestId('slider-block-popular-trainings')).toBeInTheDocument();
+    expect(screen.queryByTestId('slider-block-look-for-company')).toBeInTheDocument();
   });
 });
