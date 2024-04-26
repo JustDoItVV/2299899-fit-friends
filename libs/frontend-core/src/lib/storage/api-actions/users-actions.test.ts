@@ -83,8 +83,8 @@ describe('Api account user actions', () => {
 
       expect(actionsTypes).toEqual([
         loginUser.pending.type,
-        setResponseError().type,
-        redirectToRoute().type,
+        setResponseError.type,
+        redirectToRoute.type,
         loginUser.fulfilled.type,
       ]);
       expect(setResponseFulfilled.payload).toBeNull();
@@ -102,7 +102,7 @@ describe('Api account user actions', () => {
 
       expect(actionsTypes).toEqual([
         loginUser.pending.type,
-        setResponseError().type,
+        setResponseError.type,
         loginUser.fulfilled.type,
       ]);
       expect(setResponseFulfilled.payload).toEqual(mockResponseError);
@@ -129,9 +129,9 @@ describe('Api account user actions', () => {
 
       expect(actionsTypes).toEqual([
         registerUser.pending.type,
-        setAuthStatus().type,
-        setResponseError().type,
-        redirectToRoute().type,
+        setAuthStatus.type,
+        setResponseError.type,
+        redirectToRoute.type,
         registerUser.fulfilled.type,
       ]);
       expect(setResponseFulfilled.payload).toBeNull();
@@ -149,7 +149,7 @@ describe('Api account user actions', () => {
 
       expect(actionsTypes).toEqual([
         registerUser.pending.type,
-        setResponseError().type,
+        setResponseError.type,
         registerUser.fulfilled.type,
       ]);
       expect(setResponseFulfilled.payload).toEqual(mockResponseError);
@@ -207,7 +207,7 @@ describe('Api account user actions', () => {
 
       expect(actionsTypes).toEqual([
         updateUser.pending.type,
-        setResponseError().type,
+        setResponseError.type,
         updateUser.fulfilled.type,
       ]);
       expect(setResponseFulfilled.payload).toBeNull();
@@ -225,7 +225,7 @@ describe('Api account user actions', () => {
 
       expect(actionsTypes).toEqual([
         updateUser.pending.type,
-        setResponseError().type,
+        setResponseError.type,
         updateUser.fulfilled.type,
       ]);
       expect(setResponseFulfilled.payload).toEqual(mockResponseError);

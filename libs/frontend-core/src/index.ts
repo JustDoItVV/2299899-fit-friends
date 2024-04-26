@@ -30,3 +30,4 @@ export * from './lib/storage/types/state.type';
 
 export * from './lib/test-mocks/app-thunk-dispatch.type';
 export * from './lib/test-mocks/test-mocks';
+export * from './lib/test-mocks/extract-actions-types';

@@ -147,7 +147,7 @@ describe('Api account user actions', () => {
 
       expect(actionsTypes).toEqual([
         addFriend.pending.type,
-        setResponseError().type,
+        setResponseError.type,
         addFriend.fulfilled.type,
       ]);
       expect(setResponseFulfilled.payload).toEqual(mockResponseError);
@@ -178,8 +178,8 @@ describe('Api account user actions', () => {
 
       expect(actionsTypes).toEqual([
         deleteFriend.pending.type,
-        setUser().type,
-        setResponseError().type,
+        setUser.type,
+        setResponseError.type,
         deleteFriend.fulfilled.type,
       ]);
       expect(setUserFulfilled.payload).toEqual(mockUser);
@@ -197,7 +197,7 @@ describe('Api account user actions', () => {
 
       expect(actionsTypes).toEqual([
         deleteFriend.pending.type,
-        setResponseError().type,
+        setResponseError.type,
         deleteFriend.fulfilled.type,
       ]);
       expect(setResponseFulfilled.payload).toEqual(mockResponseError);
@@ -233,7 +233,7 @@ describe('Api account user actions', () => {
 
       expect(actionsTypes).toEqual([
         subscribeToTrainer.pending.type,
-        setResponseError().type,
+        setResponseError.type,
         subscribeToTrainer.fulfilled.type,
       ]);
       expect(setResponseFulfilled.payload).toEqual(mockResponseError);
@@ -268,7 +268,7 @@ describe('Api account user actions', () => {
 
       expect(actionsTypes).toEqual([
         unsubscribeFromTrainer.pending.type,
-        setResponseError().type,
+        setResponseError.type,
         unsubscribeFromTrainer.fulfilled.type,
       ]);
       expect(setResponseFulfilled.payload).toEqual(mockResponseError);

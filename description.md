@@ -79,6 +79,8 @@ npm run frontend
 - `backend` - запуск бэкэнд приложения
 - `frontend` - запуск фронтэнд приложения
 - `lint` - проверка EsLint директорий
+- `tests` - запуск тестов frontend, frontend-core без детализации
+- `tests-detailed` - запуск юнит тестов frontend, frontend-core с детализацией
 
 ## Переменные окружения
 

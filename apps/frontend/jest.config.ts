@@ -10,20 +10,28 @@ const config: Config = {
     '^.+\\.tsx?$': [
       'ts-jest',
       {
+        useESM: true,
         diagnostics: {
           ignoreCodes: [1343]
         },
         astTransformers: {
           before: [
             {
-              path: 'ts-jest-mock-import-meta',  // or, alternatively, 'ts-jest-mock-import-meta' directly, without node_modules.
-              options: { metaObjectReplacement: { url: 'https://www.url.com' } }
+              path: 'ts-jest-mock-import-meta',
+              options: { metaObjectReplacement: { url: 'file://' } }
             }
           ]
         }
       }
     ]
-  }
+  },
+  transformIgnorePatterns: [
+    `node_modules/(?!react-player|lodash-es)`,
+  ],
+  extensionsToTreatAsEsm: ['.ts', '.tsx'],
+  testEnvironmentOptions: {
+    NODE_OPTIONS: '--experimental-vm-modules',
+  },
 };
 
 export default config;

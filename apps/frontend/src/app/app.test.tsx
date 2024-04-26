@@ -29,8 +29,10 @@ describe('App routing', () => {
     withStoreComponent = withStoreResult.withStoreComponent;
     mockAxiosAdapter = withStoreResult.mockAxiosAdapter;
 
-    mockAxiosAdapter.onGet(new RegExp(`${ApiRoute.Training}?(.*)`, 'g')).reply(200, { entities: [makeFakeTraining()], totalPages: 1, totalItems: 1, itemsPerPage: 50, currentPage: 1 });
-    mockAxiosAdapter.onGet(new RegExp(`${ApiRoute.User}?(.*)`, 'g')).reply(200, { entities: [makeFakeUser()], totalPages: 1, totalItems: 1, itemsPerPage: 50, currentPage: 1 });
+    mockAxiosAdapter.onGet(new RegExp(`${ApiRoute.Training}?(.*)`, 'g'))
+      .reply(200, { entities: [makeFakeTraining()], totalPages: 1, totalItems: 1, itemsPerPage: 50, currentPage: 1 });
+    mockAxiosAdapter.onGet(new RegExp(`${ApiRoute.User}?(.*)`, 'g'))
+      .reply(200, { entities: [makeFakeUser()], totalPages: 1, totalItems: 1, itemsPerPage: 50, currentPage: 1 });
   });
 
   test('should render IntroPage when user navigates to "/"', async () => {
@@ -203,9 +205,9 @@ describe('App routing', () => {
     mockState.APP.currentUser = { ...makeFakeUser() };
     mockAxiosAdapter.onGet(new RegExp(`${ApiRoute.Account}${ApiRoute.Trainer}${ApiRoute.Friends}?(.*)`, 'g'))
       .reply(200, { entities: [makeFakeUser()], totalPages: 1, totalItems: 1, itemsPerPage: 50, currentPage: 1 });
-    mockAxiosAdapter.onGet(new RegExp(`${ApiRoute.Account}${ApiRoute.User}${ApiRoute.Friends}?$(.*)`, 'g'))
+    mockAxiosAdapter.onGet(new RegExp(`${ApiRoute.Account}${ApiRoute.User}${ApiRoute.Friends}?(.*)`, 'g'))
       .reply(200, { entities: [makeFakeUser()], totalPages: 1, totalItems: 1, itemsPerPage: 50, currentPage: 1 });
-    mockAxiosAdapter.onGet(new RegExp(`${ApiRoute.TrainingRequest}?$(.*)`, 'g'))
+    mockAxiosAdapter.onGet(new RegExp(`${ApiRoute.TrainingRequest}?(.*)`, 'g'))
       .reply(200, { entities: [makeFakeRequest()], totalPages: 1, totalItems: 1, itemsPerPage: 50, currentPage: 1 });
 
     await act(async () => render(withStoreComponent));
@@ -432,4 +434,14 @@ describe('App routing', () => {
     expect(screen.queryByText('E-mail')).toBeInTheDocument();
     expect(screen.queryByText('Пароль')).toBeInTheDocument();
   });
+
+  test('should render NotFoundPage when user navigates to non-existing route', async () => {
+    mockHistory.push(`/non-existing-route`);
+    mockState.APP.authStatus = AuthStatus.Auth;
+
+    await act(async () => render(withStoreComponent));
+
+    expect(screen.queryByText('404')).toBeInTheDocument();
+    expect(screen.queryByText('Вернуться на главную')).toBeInTheDocument();
+  })
 });

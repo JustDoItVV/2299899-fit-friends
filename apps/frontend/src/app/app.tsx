@@ -17,7 +17,7 @@ import IntroPage from './pages/intro-page/intro.page';
 import LoginPage from './pages/login-page/login.page';
 import MainPage from './pages/main-page/main.page';
 import NotFoundPage from './pages/not-found-page/not-found.page';
-import QuestionnairePage from './pages/questionnaire-page/questionnaire-page';
+import QuestionnairePage from './pages/questionnaire-page/questionnaire.page';
 import RegistrationPage from './pages/registration-page/registration.page';
 import TrainingCardPage from './pages/training-card-page/training-card.page';
 import TrainingsCreatePage from './pages/trainings-create-page/trainings-create.page';

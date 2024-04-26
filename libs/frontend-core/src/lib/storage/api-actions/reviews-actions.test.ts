@@ -36,7 +36,10 @@ describe('Api reviews actions', () => {
       const actionsTypes = extractActionsTypes(emittedActions);
       const fetchReviewsFulfilled = emittedActions.at(1) as ReturnType<typeof fetchReviews.fulfilled>;
 
-      expect(actionsTypes).toEqual([fetchReviews.pending.type, fetchReviews.fulfilled.type]);
+      expect(actionsTypes).toEqual([
+        fetchReviews.pending.type,
+        fetchReviews.fulfilled.type,
+      ]);
       expect(fetchReviewsFulfilled.payload).toEqual(mockData);
     });
 
@@ -63,7 +66,11 @@ describe('Api reviews actions', () => {
       const actionsTypes = extractActionsTypes(emittedActions);
       const createReviewsFulfilled = emittedActions.at(2) as ReturnType<typeof createReview.fulfilled>;
 
-      expect(actionsTypes).toEqual([createReview.pending.type, setResponseError().type, createReview.fulfilled.type]);
+      expect(actionsTypes).toEqual([
+        createReview.pending.type,
+        setResponseError.type,
+        createReview.fulfilled.type,
+      ]);
       expect(createReviewsFulfilled.payload).toEqual(mockData);
     });
 
@@ -78,7 +85,11 @@ describe('Api reviews actions', () => {
       const actionsTypes = extractActionsTypes(emittedActions);
       const createReviewsResponseError = emittedActions.at(1) as ReturnType<typeof createReview.rejected>;
 
-      expect(actionsTypes).toEqual([createReview.pending.type, setResponseError().type, createReview.fulfilled.type]);
+      expect(actionsTypes).toEqual([
+        createReview.pending.type,
+        setResponseError.type,
+        createReview.fulfilled.type,
+      ]);
       expect(createReviewsResponseError.payload).toEqual(mockFakeResponseError);
     });
   });

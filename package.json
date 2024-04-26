@@ -7,7 +7,8 @@
     "backend": "npx nx serve backend",
     "frontend": "npx nx serve frontend",
     "lint": "npx eslint",
-    "tests": "npx nx run-many --target=test"
+    "tests": "npx nx run-many --target=test",
+    "tests-detailed": "npx nx test frontend && npx nx test frontend-core"
   },
   "private": true,
   "dependencies": {

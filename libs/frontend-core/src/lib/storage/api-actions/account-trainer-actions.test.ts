@@ -46,8 +46,8 @@ describe('Api account trainer actions', () => {
 
       expect(actionsTypes).toEqual([
         createTraining.pending.type,
-        setResponseError().type,
-        redirectToRoute().type,
+        setResponseError.type,
+        redirectToRoute.type,
         createTraining.fulfilled.type,
       ]);
       expect(setResponseFulfilled.payload).toBeNull();
@@ -65,8 +65,8 @@ describe('Api account trainer actions', () => {
 
       expect(actionsTypes).toEqual([
         createTraining.pending.type,
-        setResponseError().type,
-        redirectToRoute().type,
+        setResponseError.type,
+        redirectToRoute.type,
         createTraining.fulfilled.type,
       ]);
       expect(setResponseFulfilled.payload).toEqual(mockResponseError);
@@ -336,7 +336,7 @@ describe('Api account trainer actions', () => {
 
       expect(actionsTypes).toEqual([
         updateTraining.pending.type,
-        setResponseError().type,
+        setResponseError.type,
         updateTraining.fulfilled.type,
       ]);
       expect(setResponseFulfilled.payload).toBeNull();
@@ -354,7 +354,7 @@ describe('Api account trainer actions', () => {
 
       expect(actionsTypes).toEqual([
         updateTraining.pending.type,
-        setResponseError().type,
+        setResponseError.type,
         updateTraining.fulfilled.type,
       ]);
       expect(setResponseFulfilled.payload).toEqual(mockResponseError);
