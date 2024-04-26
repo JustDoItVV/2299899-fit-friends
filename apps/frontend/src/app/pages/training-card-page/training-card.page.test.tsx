@@ -19,7 +19,7 @@ jest.mock('react-pdf', () => ({
   Document: () => <div>page</div>,
 }));
 
-// jest.mock('react-player');
+// jest.mock('react-player/lazy');
 
 describe('Component TrainingCardPage', () => {
   let mockState: State;

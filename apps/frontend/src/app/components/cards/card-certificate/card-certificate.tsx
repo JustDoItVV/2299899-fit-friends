@@ -86,7 +86,7 @@ export default memo(function CardCertificate(props: CardCertificateProps): JSX.E
   };
 
   return (
-    <div className="personal-account-coach__item">
+    <div className="personal-account-coach__item" data-testid='card-certificate'>
       <div className="certificate-card certificate-card--edit">
         <div className="certificate-card__image" style={{ overflow: 'hidden' }}>
           <Document file={fileUrl} className='certificate-card__pdf-page' loading={Loading}>
@@ -115,6 +115,7 @@ export default memo(function CardCertificate(props: CardCertificateProps): JSX.E
                   tabIndex={-1}
                   accept=".pdf"
                   onChange={handleUpdateCertificateInputChange}
+                  data-testid='change-certificate'
                 />
                 <button
                   className="btn-icon certificate-card__control"
@@ -131,6 +132,7 @@ export default memo(function CardCertificate(props: CardCertificateProps): JSX.E
                   type="button"
                   aria-label="next"
                   onClick={handleDeleteButtonClick}
+                  data-testid='delete-certificate'
                 >
                   <svg width={14} height={16} aria-hidden="true">
                     <use xlinkHref="#icon-trash" />
@@ -138,7 +140,7 @@ export default memo(function CardCertificate(props: CardCertificateProps): JSX.E
                 </button>
               </div>
             </div>
-        : <div className="certificate-card__buttons">
+          : <div className="certificate-card__buttons">
             {
               changeable &&
               <button
