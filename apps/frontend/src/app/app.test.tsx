@@ -13,6 +13,13 @@ import { act, render, screen } from '@testing-library/react';
 import App from './app';
 import { withHistory, withStore } from './test-mocks/test-mocks-components';
 
+jest.mock('react-pdf', () => ({
+  pdfjs: { GlobalWorkerOptions: { workerSrc: 'abc' } },
+  Outline: null,
+  Page: () => <div>page</div>,
+  Document: () => <div>page</div>,
+}));
+
 describe('App routing', () => {
   let mockHistory: MemoryHistory;
   let withStoreComponent: JSX.Element;

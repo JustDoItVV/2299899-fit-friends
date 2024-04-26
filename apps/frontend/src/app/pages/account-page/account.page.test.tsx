@@ -7,6 +7,13 @@ import { act, render, screen } from '@testing-library/react';
 import { withHistory, withStore } from '../../test-mocks/test-mocks-components';
 import AccountPage from './account.page';
 
+jest.mock('react-pdf', () => ({
+  pdfjs: { GlobalWorkerOptions: { workerSrc: 'abc' } },
+  Outline: null,
+  Page: () => <div>page</div>,
+  Document: () => <div>page</div>,
+}));
+
 describe('Component AccountPage', () => {
   let mockState: State;
   let withStoreComponent: JSX.Element;

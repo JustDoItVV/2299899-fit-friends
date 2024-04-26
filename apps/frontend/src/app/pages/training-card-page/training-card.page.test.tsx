@@ -12,14 +12,19 @@ import { act, render, screen } from '@testing-library/react';
 import { withHistory, withStore } from '../../test-mocks/test-mocks-components';
 import TrainingCardPage from './training-card.page';
 
+jest.mock('react-pdf', () => ({
+  pdfjs: { GlobalWorkerOptions: { workerSrc: 'abc' } },
+  Outline: null,
+  Page: () => <div>page</div>,
+  Document: () => <div>page</div>,
+}));
+
+// jest.mock('react-player');
+
 describe('Component TrainingCardPage', () => {
   let mockState: State;
   let mockAxiosAdapter: MockAdapter;
   let withStoreComponent: JSX.Element;
-
-  // jest.mock('react-player/lazy', () => ({
-  //   ReactPlayer: () => (<div>video</div>)
-  // }));
 
   beforeEach(() => {
     mockState = makeFakeState();
