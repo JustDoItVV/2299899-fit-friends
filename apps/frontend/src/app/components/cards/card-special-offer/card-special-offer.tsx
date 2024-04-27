@@ -36,6 +36,7 @@ export default memo(function CardSpecialOffer({ item }: CardSpecialOfferProps): 
             width={1040}
             height={469}
             alt="promo"
+            data-testid='card-image'
           />
         }
       </div>

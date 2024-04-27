@@ -9,6 +9,8 @@ import {
 } from '@2299899-fit-friends/types';
 import { faker } from '@faker-js/faker';
 
+import { State } from '../storage/types/state.type';
+
 export const makeFakeUser = (): User => {
   const role = randomArrayElement(Object.values(UserRole));
 
@@ -103,7 +105,7 @@ export const makeFakeBalance = () => ({
   available: faker.number.int({ min: BalanceAvailable.Min, max: BalanceAvailable.Max }),
 })
 
-export const makeFakeState = () => {
+export const makeFakeState = (): State => {
   return {
     [NameSpace.App]: {
       authStatus: AuthStatus.Unknown,

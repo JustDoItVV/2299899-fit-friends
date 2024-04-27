@@ -47,7 +47,11 @@ export default memo(function CardUser({ item }: CardUserProps): JSX.Element {
               ?
               <Loading />
               :
-              <img src={thumbnailUrl} alt={user.name} />
+              <img
+                src={thumbnailUrl}
+                alt={user.name}
+                data-testid='card-image'
+              />
             }
           </picture>
         </div>
