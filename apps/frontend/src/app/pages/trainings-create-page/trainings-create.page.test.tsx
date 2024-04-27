@@ -1,31 +1,26 @@
 import '@testing-library/jest-dom';
 
-import { makeFakeState, makeFakeUser, State } from '@2299899-fit-friends/frontend-core';
-import { AuthStatus, UserRole } from '@2299899-fit-friends/types';
 import { act, render, screen } from '@testing-library/react';
 
-import { withHistory, withStore } from '../../test-mocks/test-mocks-components';
+import { withHistory } from '../../test-mocks/test-mocks-components';
 import TrainingsCreatePage from './trainings-create.page';
 
+jest.mock('../../components/header/header', () => ({
+  ...jest.requireActual('../../components/header/header'),
+  __esModule: true,
+  default: jest.fn(() => <div>Header</div>),
+}));
+jest.mock('../../components/forms/form-trainings-create/form-trainings-create', () => ({
+  ...jest.requireActual('../../components/forms/form-trainings-create/form-trainings-create'),
+  __esModule: true,
+  default: jest.fn(() => <div>FormTrainingsCreate</div>),
+}));
+
 describe('Component TrainingsCreatePage', () => {
-  let mockState: State;
-  let withStoreComponent: JSX.Element;
-
-  beforeEach(() => {
-    mockState = makeFakeState();
-    const withStoreResult = withStore(
-      withHistory(<TrainingsCreatePage />),
-      mockState,
-    );
-    withStoreComponent = withStoreResult.withStoreComponent;
-
-    mockState.APP.authStatus = AuthStatus.Auth;
-    mockState.APP.currentUser = { ...makeFakeUser(), role: UserRole.Trainer };
-  });
-
   test('should render correctly', async () => {
-    await act(async () => render(withStoreComponent));
+    await act(async () => render(withHistory(<TrainingsCreatePage />)));
 
-    expect(screen.queryByText('Создание тренировки')).toBeInTheDocument();
+    expect(screen.queryByText('Header')).toBeInTheDocument();
+    expect(screen.queryByText('FormTrainingsCreate')).toBeInTheDocument();
   });
 });
