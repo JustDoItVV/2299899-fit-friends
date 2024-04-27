@@ -112,6 +112,7 @@ export default memo(function FriendsCatalogCard({ item, additionalData }: Friend
                       width={78}
                       height={78}
                       alt={user.name}
+                      data-testid='card-image'
                     />
                   }
                 </picture>
@@ -136,8 +137,8 @@ export default memo(function FriendsCatalogCard({ item, additionalData }: Friend
                 'thumbnail-friend__ready-status',
                 {
                   'thumbnail-friend__ready-status--is-ready':
-                  (user.isReadyToTraining && user.role === UserRole.User) ||
-                  (user.isReadyToPersonal && user.role === UserRole.Trainer),
+                    (user.isReadyToTraining && user.role === UserRole.User) ||
+                    (user.isReadyToPersonal && user.role === UserRole.Trainer),
                   'thumbnail-friend__ready-status--is-not-ready':
                     (!user.isReadyToTraining && user.role === UserRole.User) ||
                     (!user.isReadyToPersonal && user.role === UserRole.Trainer),
@@ -152,6 +153,7 @@ export default memo(function FriendsCatalogCard({ item, additionalData }: Friend
                   type='button'
                   onClick={handleInviteToTrainingButtonClick}
                   disabled={request?.status === TrainingRequestStatus.Consideration}
+                  data-testid='invite-training-button'
                 >
                   <svg width="43" height="46" aria-hidden={true} focusable={false}>
                     <use xlinkHref='#icon-invite'></use>

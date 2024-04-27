@@ -18,7 +18,16 @@ jest.mock('react-pdf', () => ({
   Page: () => <div>page</div>,
   Document: () => <div>page</div>,
 }));
-
+jest.mock('../../components/loading/loading', () => ({
+  ...jest.requireActual('../../components/loading/loading'),
+  __esModule: true,
+  default: jest.fn(() => <div>Loading</div>),
+}));
+jest.mock('../not-found-page/not-found.page', () => ({
+  ...jest.requireActual('../not-found-page/not-found.page'),
+  __esModule: true,
+  default: jest.fn(() => <div>NotFound</div>),
+}));
 // jest.mock('react-player/lazy');
 
 describe('Component TrainingCardPage', () => {
@@ -57,8 +66,7 @@ describe('Component TrainingCardPage', () => {
 
     await act(async () => render(withStoreComponent));
 
-    expect(screen.queryByText('404')).toBeInTheDocument();
-    expect(screen.queryByText('Вернуться на главную')).toBeInTheDocument();
+    expect(screen.queryByText('NotFound')).toBeInTheDocument();
   });
 
   test('should render with Loading component when fetch pending', async () => {
@@ -66,6 +74,6 @@ describe('Component TrainingCardPage', () => {
 
     await act(async () => render(withStoreComponent));
 
-    expect(screen.queryByTestId('loading-spinner')).toBeInTheDocument();
+    expect(screen.queryByText('Loading')).toBeInTheDocument();
   });
 });

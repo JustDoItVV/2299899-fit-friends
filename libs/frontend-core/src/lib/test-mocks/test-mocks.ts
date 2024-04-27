@@ -28,6 +28,7 @@ export const makeFakeUser = (): User => {
   }
 
   return {
+    id: faker.string.uuid(),
     name: faker.person.fullName(),
     email: faker.internet.email(MOCK_EMAIL_OPTIONS),
     avatar: avatarName,
@@ -71,6 +72,7 @@ export const makeFakeTraining = () => {
   const videoName = `${faker.string.uuid()}-mockVideo`;
 
   return {
+    id: faker.string.uuid(),
     title: faker.commerce.productName(),
     backgroundPicture: backgroundPictureName,
     level: faker.helpers.arrayElement(Object.values(TrainingLevel)) as TrainingLevel,
@@ -88,6 +90,7 @@ export const makeFakeTraining = () => {
 };
 
 export const makeFakeReview = () => ({
+  id: faker.string.uuid(),
   userId: faker.string.uuid(),
   trainingId: faker.string.uuid(),
   rating: faker.number.int({ min: RatingLimit.Min, max: RatingLimit.Max }),
@@ -125,6 +128,7 @@ export const makeFakeOrder = () => {
   const amount = faker.number.int({ min: OrderAmountLimit.Min, max: OrderAmountLimit.Max });
 
   return {
+    id: faker.string.uuid(),
     type: OrderType.Subscription,
     trainingId: faker.string.uuid(),
     price: training.price,
@@ -136,11 +140,13 @@ export const makeFakeOrder = () => {
 };
 
 export const makeFakeNotification = () => ({
+  id: faker.string.uuid(),
   userId: faker.string.uuid(),
   text: faker.commerce.productDescription(),
 });
 
 export const makeFakeRequest = () => ({
+  id: faker.string.uuid(),
   authorId: faker.string.uuid(),
   targetId: faker.string.uuid(),
   status: faker.helpers.arrayElement(Object.values(TrainingRequestStatus)),
