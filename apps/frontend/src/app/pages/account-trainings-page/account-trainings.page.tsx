@@ -11,7 +11,9 @@ import FormFilterSortCatalog from '../../components/forms/form-filter-sort-catal
 import Header from '../../components/header/header';
 
 export default function AccountTrainingsPage(): JSX.Element {
-  const [query, setQuery] = useState<QueryPagination>({ limit: QueryParameters.AccountMyTrainingsLimit });
+  const [query, setQuery] = useState<QueryPagination>({
+    limit: QueryParameters.AccountMyTrainingsLimit,
+  });
 
   return (
     <div className="wrapper">

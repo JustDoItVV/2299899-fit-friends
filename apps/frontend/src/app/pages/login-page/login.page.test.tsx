@@ -43,7 +43,7 @@ describe('Component LoginPage', () => {
     expect(screen.queryByText('Продолжить')).toBeInTheDocument();
   });
 
-  test('should dispatch "loginUser.pending", "loginUser.fulfilled" when submit button clicked', async () => {
+  test('should dispatch "loginUser.pending", "APP/setResponseError", "APP/redirectToRoute", "loginUser.fulfilled" when submit button clicked', async () => {
     const user = userEvent.setup();
     const user1 = makeFakeUser();
     const mockData = { ...user1, birthdate: user1.birthdate?.toDateString()};

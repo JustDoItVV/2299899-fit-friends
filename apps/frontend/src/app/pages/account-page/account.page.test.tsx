@@ -13,6 +13,36 @@ jest.mock('react-pdf', () => ({
   Page: () => <div>page</div>,
   Document: () => <div>page</div>,
 }));
+jest.mock('../../components/header/header', () => ({
+  ...jest.requireActual('../../components/header/header'),
+  __esModule: true,
+  default: jest.fn(() => <div>Header</div>),
+}));
+jest.mock('../../components/account-about/account-about', () => ({
+  ...jest.requireActual('../../components/account-about/account-about'),
+  __esModule: true,
+  default: jest.fn(() => <div>AccountAbout</div>),
+}));
+jest.mock('../../components/account-certificates/account-certificates', () => ({
+  ...jest.requireActual('../../components/account-certificates/account-certificates'),
+  __esModule: true,
+  default: jest.fn(() => <div>AccountCertificates</div>),
+}));
+jest.mock('../../components/account-panel-trainer/account-panel-trainer', () => ({
+  ...jest.requireActual('../../components/account-panel-trainer/account-panel-trainer'),
+  __esModule: true,
+  default: jest.fn(() => <div>AccountPanelTrainer</div>),
+}));
+jest.mock('../../components/account-panel-user/account-panel-user', () => ({
+  ...jest.requireActual('../../components/account-panel-user/account-panel-user'),
+  __esModule: true,
+  default: jest.fn(() => <div>AccountPanelUser</div>),
+}));
+jest.mock('../../components/account-user-schedule/account-user-schedule', () => ({
+  ...jest.requireActual('../../components/account-user-schedule/account-user-schedule'),
+  __esModule: true,
+  default: jest.fn(() => <div>AccountUserSchedule</div>),
+}));
 
 describe('Component AccountPage', () => {
   let mockState: State;
@@ -34,11 +64,13 @@ describe('Component AccountPage', () => {
 
     await act(async () => render(withStoreComponent));
 
+    expect(screen.queryByText('Header')).toBeInTheDocument();
     expect(screen.queryByText('Личный кабинет')).toBeInTheDocument();
-    expect(screen.queryByText('Мои тренировки')).toBeInTheDocument();
-    expect(screen.queryByText('Создать тренировку')).toBeInTheDocument();
-    expect(screen.queryByText('Мои друзья')).toBeInTheDocument();
-    expect(screen.queryByText('Мои заказы')).toBeInTheDocument();
+    expect(screen.queryByText('AccountAbout')).toBeInTheDocument();
+    expect(screen.queryByText('AccountCertificates')).toBeInTheDocument();
+    expect(screen.queryByText('AccountPanelTrainer')).toBeInTheDocument();
+    expect(screen.queryByText('AccountPanelUser')).not.toBeInTheDocument();
+    expect(screen.queryByText('AccountUserSchedule')).not.toBeInTheDocument();
   });
 
   test('should render correctly with role User', async () => {
@@ -46,8 +78,12 @@ describe('Component AccountPage', () => {
 
     await act(async () => render(withStoreComponent));
 
+    expect(screen.queryByText('Header')).toBeInTheDocument();
     expect(screen.queryByText('Личный кабинет')).toBeInTheDocument();
-    expect(screen.queryByText('Мои друзья')).toBeInTheDocument();
-    expect(screen.queryByText('Мои покупки')).toBeInTheDocument();
+    expect(screen.queryByText('AccountAbout')).toBeInTheDocument();
+    expect(screen.queryByText('AccountCertificates')).not.toBeInTheDocument();
+    expect(screen.queryByText('AccountPanelTrainer')).not.toBeInTheDocument();
+    expect(screen.queryByText('AccountPanelUser')).toBeInTheDocument();
+    expect(screen.queryByText('AccountUserSchedule')).toBeInTheDocument();
   });
 });

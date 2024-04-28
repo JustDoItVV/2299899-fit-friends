@@ -1,46 +1,33 @@
 import '@testing-library/jest-dom';
 
-import MockAdapter from 'axios-mock-adapter';
-
-import { ApiRoute } from '@2299899-fit-friends/consts';
-import {
-    makeFakeState, makeFakeTraining, makeFakeUser, State
-} from '@2299899-fit-friends/frontend-core';
-import { AuthStatus, UserRole } from '@2299899-fit-friends/types';
+import { makeFakeState } from '@2299899-fit-friends/frontend-core';
 import { act, render, screen } from '@testing-library/react';
 
 import { withHistory, withStore } from '../../test-mocks/test-mocks-components';
 import MainPage from './main.page';
 
-describe('Component MainPage', () => {
-  let mockState: State;
-  let withStoreComponent: JSX.Element;
-  let mockAxiosAdapter: MockAdapter;
+jest.mock('../../components/header/header', () => ({
+  ...jest.requireActual('../../components/header/header'),
+  __esModule: true,
+  default: jest.fn(() => <div>Header</div>),
+}));
+jest.mock('../../components/slider-block/slider-block', () => ({
+  ...jest.requireActual('../../components/slider-block/slider-block'),
+  __esModule: true,
+  default: jest.fn(() => <div>SliderBlock</div>),
+}));
 
-  beforeEach(() => {
-    mockState = makeFakeState();
-    const withStoreResult = withStore(
+describe('Component MainPage', () => {
+  test('should render correctly', async () => {
+    const mockState = makeFakeState();
+    const { withStoreComponent } = withStore(
       withHistory(<MainPage />),
       mockState,
     );
-    withStoreComponent = withStoreResult.withStoreComponent;
-    mockAxiosAdapter = withStoreResult.mockAxiosAdapter;
 
-    mockState.APP.authStatus = AuthStatus.Auth;
-    mockState.APP.currentUser = { ...makeFakeUser(), role: UserRole.User };
-
-    mockAxiosAdapter.onGet(new RegExp(`${ApiRoute.Training}?(.*)`, 'g'))
-      .reply(200, { entities: [makeFakeTraining()], totalPages: 1, totalItems: 1, itemsPerPage: 50, currentPage: 1 });
-    mockAxiosAdapter.onGet(new RegExp(`${ApiRoute.User}?(.*)`, 'g'))
-      .reply(200, { entities: [makeFakeUser()], totalPages: 1, totalItems: 1, itemsPerPage: 50, currentPage: 1 });
-  });
-
-  test('should render correctly', async () => {
     await act(async () => render(withStoreComponent));
 
-    expect(screen.queryByTestId('slider-block-special-for-you')).toBeInTheDocument();
-    expect(screen.queryByTestId('slider-block-special-offers')).toBeInTheDocument();
-    expect(screen.queryByTestId('slider-block-popular-trainings')).toBeInTheDocument();
-    expect(screen.queryByTestId('slider-block-look-for-company')).toBeInTheDocument();
+    expect(screen.queryByText('Header')).toBeInTheDocument();
+    expect(screen.queryAllByText('SliderBlock').length).toBe(4);
   });
 });

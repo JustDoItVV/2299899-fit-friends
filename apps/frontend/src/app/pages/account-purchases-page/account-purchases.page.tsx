@@ -10,7 +10,9 @@ import ExpandingCatalog from '../../components/expanding-catalog/expanding-catal
 import Header from '../../components/header/header';
 
 export default function AccountPurchasesPage(): JSX.Element {
-  const [query, setQuery] = useState<QueryPagination>({ limit: QueryParameters.PurchasesLimit });
+  const [query, setQuery] = useState<QueryPagination>({
+    limit: QueryParameters.PurchasesLimit,
+  });
   const [active, setActive] = useState<boolean>(false);
 
   const handleBackButtonClick = useBackButton();

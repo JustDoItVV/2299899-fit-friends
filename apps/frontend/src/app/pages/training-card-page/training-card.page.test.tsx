@@ -28,7 +28,7 @@ jest.mock('../not-found-page/not-found.page', () => ({
   __esModule: true,
   default: jest.fn(() => <div>NotFound</div>),
 }));
-// jest.mock('react-player/lazy');
+jest.mock('react-player/lazy');
 
 describe('Component TrainingCardPage', () => {
   let mockState: State;
