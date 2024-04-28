@@ -1,8 +1,5 @@
 import '@testing-library/jest-dom';
 
-import MockAdapter from 'axios-mock-adapter';
-
-import { ApiRoute } from '@2299899-fit-friends/consts';
 import { makeFakeState, makeFakeUser, State } from '@2299899-fit-friends/frontend-core';
 import { AuthStatus, User, UserRole } from '@2299899-fit-friends/types';
 import { act, render, screen } from '@testing-library/react';
@@ -10,9 +7,18 @@ import { act, render, screen } from '@testing-library/react';
 import { withHistory, withStore } from '../../../test-mocks/test-mocks-components';
 import RouteAnonymous from './route-anonymous';
 
+jest.mock('../../loading/loading', () => ({
+  ...jest.requireActual('../../loading/loading'),
+  __esModule: true,
+  default: jest.fn(() => <div>Loading</div>),
+}));
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+  Navigate: jest.fn(() => <div>Navigate</div>),
+}));
+
 describe('Component RouteAnonymous', () => {
   let mockState: State;
-  let mockAxiosAdapter: MockAdapter;
   let withStoreComponent: JSX.Element;
   let mockUser: User;
 
@@ -27,13 +33,9 @@ describe('Component RouteAnonymous', () => {
       mockState,
     );
     withStoreComponent = withStoreResult.withStoreComponent;
-    mockAxiosAdapter = withStoreResult.mockAxiosAdapter;
 
     mockState.APP.authStatus = AuthStatus.NoAuth;
     mockState.APP.currentUser = { ...mockUser };
-
-    mockAxiosAdapter.onPost(`${ApiRoute.User}${ApiRoute.Check}`).reply(200, mockUser);
-    mockAxiosAdapter.onGet(new RegExp(`${ApiRoute.User}/(.*)`)).reply(200, mockUser);
   });
 
   test('should render correctly when not authorized', async () => {
@@ -49,6 +51,7 @@ describe('Component RouteAnonymous', () => {
     await act(async () => render(withStoreComponent));
 
     expect(screen.queryByText(expectedText)).not.toBeInTheDocument();
+    expect(screen.queryByText('Navigate')).toBeInTheDocument();
   });
 
   test('should not render when authorized and role User', async () => {
@@ -58,6 +61,7 @@ describe('Component RouteAnonymous', () => {
     await act(async () => render(withStoreComponent));
 
     expect(screen.queryByText(expectedText)).not.toBeInTheDocument();
+    expect(screen.queryByText('Navigate')).toBeInTheDocument();
   });
 
   test('should render Loading when status unknown', async () => {
@@ -66,6 +70,6 @@ describe('Component RouteAnonymous', () => {
     await act(async () => render(withStoreComponent));
 
     expect(screen.queryByText(expectedText)).not.toBeInTheDocument();
-    expect(screen.queryByTestId('loading-spinner')).toBeInTheDocument();
+    expect(screen.queryByText('Loading')).toBeInTheDocument();
   });
 });

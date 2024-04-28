@@ -7,6 +7,16 @@ import { act, render, screen } from '@testing-library/react';
 import { withHistory, withStore } from '../../../test-mocks/test-mocks-components';
 import RouteRole from './route-role';
 
+jest.mock('../../loading/loading', () => ({
+  ...jest.requireActual('../../loading/loading'),
+  __esModule: true,
+  default: jest.fn(() => <div>Loading</div>),
+}));
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+  Navigate: jest.fn(() => <div>Navigate</div>),
+}));
+
 describe('Component RouteRole', () => {
   let mockState: State;
   let withStoreComponent: JSX.Element;
@@ -41,6 +51,7 @@ describe('Component RouteRole', () => {
     await act(async () => render(withStoreComponent));
 
     expect(screen.queryByText(expectedText)).not.toBeInTheDocument();
+    expect(screen.queryByText('Navigate')).toBeInTheDocument();
   });
 
   test('should render Loading when current user pending', async () => {
@@ -49,6 +60,6 @@ describe('Component RouteRole', () => {
     await act(async () => render(withStoreComponent));
 
     expect(screen.queryByText(expectedText)).not.toBeInTheDocument();
-    expect(screen.queryByTestId('loading-spinner')).toBeInTheDocument();
+    expect(screen.queryByText('Loading')).toBeInTheDocument();
   });
 });

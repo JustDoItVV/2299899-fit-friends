@@ -93,14 +93,14 @@ export default function Header(props: HeaderProps): JSX.Element {
             </li>
             <li className="main-nav__item main-nav__item--notifications">
               <Popup trigger={
-                <button className="main-nav__link" aria-label="Уведомления">
+                <button className="main-nav__link" aria-label="Уведомления" data-testid='header-notifications-button-trigger'>
                   <svg width={14} height={18} aria-hidden="true">
                     <use xlinkHref="#icon-notification" />
                   </svg>
                 </button>
               } className='popup-notifications' onOpen={handleNotificationsOpen}>
                   <p className="main-nav__label">Оповещения</p>
-                  <ul className="main-nav__sublist">
+                  <ul className="main-nav__sublist" data-testid='header-notifications-list'>
                     {
                       notificationsElements.length > 0
                       ? notificationsElements

@@ -8,6 +8,17 @@ import {
 } from '../../test-mocks/test-mocks-components';
 import SliderBlock from './slider-block';
 
+jest.mock('../cards/card-placeholder/card-placeholder', () => ({
+  ...jest.requireActual('../cards/card-placeholder/card-placeholder'),
+  __esModule: true,
+  default: jest.fn(() => <div>CardPlaceholder</div>),
+}));
+jest.mock('../loading/loading', () => ({
+  ...jest.requireActual('../loading/loading'),
+  __esModule: true,
+  default: jest.fn(() => <div>Loading</div>),
+}));
+
 describe('Component SliderBlock', () => {
   let mockState: State;
 
@@ -27,7 +38,7 @@ describe('Component SliderBlock', () => {
 
     await act(async () => render(withStoreComponent));
 
-    expect(screen.queryByTestId('slider-block-list-placeholder')).not.toBeInTheDocument();
+    expect(screen.queryByText('CardPlaceholder')).not.toBeInTheDocument();
     expect(screen.getByTestId('slider-block-list').firstChild?.firstChild?.childNodes.length).toBe(1);
   });
 
@@ -43,7 +54,7 @@ describe('Component SliderBlock', () => {
 
     await act(async () => render(withStoreComponent));
 
-    expect(screen.queryByTestId('slider-block-list-placeholder')).toBeInTheDocument();
+    expect(screen.queryByText('CardPlaceholder')).toBeInTheDocument();
   });
 
   test('should render with title', async () => {
@@ -132,7 +143,7 @@ describe('Component SliderBlock', () => {
 
     await act(async () => render(withStoreComponent));
 
-    expect(screen.queryByTestId('slider-block-list-placeholder')).not.toBeInTheDocument();
+    expect(screen.queryByText('CardPlaceholder')).not.toBeInTheDocument();
     expect(screen.getByTestId('slider-block-list').firstChild?.firstChild?.childNodes.length).toBe(1);
   });
 

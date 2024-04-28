@@ -51,12 +51,6 @@ export default function AccountAbout(): JSX.Element {
     }
   }, [dispatch, currentUser]);
 
-  useEffect(() => {
-    if (responseError) {
-      setIsFormDisabled(false);
-    }
-  }, [responseError]);
-
   if (!currentUser) {
     return (
       <section className="user-info-edit">
@@ -66,7 +60,7 @@ export default function AccountAbout(): JSX.Element {
   }
 
   const handleEditButtonClick = () => {
-    setIsFormDisabled(!isFormDisabled);
+    setIsFormDisabled((old) => !old);
   };
 
   const handleUpdateAvatarButtonClick = () => {
@@ -201,7 +195,13 @@ export default function AccountAbout(): JSX.Element {
 
   return (
     <section className="user-info-edit">
-      <button className='btn-flat btn-flat--underlined' onClick={handleLogoutButtonCLick}>Выйти</button>
+      <button
+        className='btn-flat btn-flat--underlined'
+        onClick={handleLogoutButtonCLick}
+        data-testid='account-about-button-logout'
+      >
+        Выйти
+      </button>
       <div className="user-info-edit__header">
         <div className="input-load-avatar">
           <label>
@@ -217,7 +217,7 @@ export default function AccountAbout(): JSX.Element {
               {
                 loading
                 ? <Loading />
-                : <img src={avatar} alt="user avatar"/>
+                : <img src={avatar} alt="user avatar" data-testid='account-about-avatar' />
               }
             </span>
           </label>
@@ -260,6 +260,7 @@ export default function AccountAbout(): JSX.Element {
           type={isFormDisabled ? 'submit' : 'button'}
           aria-label={isFormDisabled ? 'Редактировать' : 'Сохранить'}
           onClick={handleEditButtonClick}
+          data-testid='account-about-button-edit'
         >
           <svg width={12} height={12} aria-hidden="true">
             <use xlinkHref="#icon-edit" />
@@ -282,6 +283,7 @@ export default function AccountAbout(): JSX.Element {
                   value={name ?? ''}
                   onChange={getInputChangeHandler<string | null, HTMLInputElement>(setName)}
                   disabled={isFormDisabled}
+                  data-testid='account-about-input-name'
                 />
               </span>
               <span className="custom-input__error">
