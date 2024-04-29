@@ -85,6 +85,7 @@ export default function AccountCertificates(): JSX.Element {
             tabIndex={-1}
             accept=".pdf"
             onChange={handleUploadCertificateInputChange}
+            data-testid='account-certificate-input-upload'
           />
           <svg width={14} height={14} aria-hidden="true">
             <use xlinkHref="#icon-import" />
