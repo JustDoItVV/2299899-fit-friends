@@ -18,7 +18,6 @@ export const makeFakeUser = (): User => {
 
   const pageBackgroundName = `${faker.string.uuid()}-pageBackground`;
 
-
   const certificates = [];
   if (role === UserRole.Trainer) {
     const certificatesCount = faker.number.int({ min: 1, max: MockCertificate.Count + 1 });
