@@ -352,7 +352,7 @@ export default function FormFilterSortCatalog(props: FormFilterSortCatalogProps)
         title &&
         <h2 className="visually-hidden">{title} Фильтр</h2>
       }
-        <div className={`${classNamePrefix}-form__wrapper`}>
+      <div className={`${classNamePrefix}-form__wrapper`}>
         <button
           className={`btn-flat btn-flat--underlined ${classNamePrefix}-form__btnback`}
           type="button"
@@ -367,7 +367,7 @@ export default function FormFilterSortCatalog(props: FormFilterSortCatalogProps)
           !isEmptyObject(filters) &&
           <h3 className={`${classNamePrefix}-form__title`}>фильтры</h3>
         }
-        <form className={`${classNamePrefix}-form__form`}>
+        <form className={`${classNamePrefix}-form__form`} data-testid='form-filters'>
           {
             Object.prototype.hasOwnProperty.call(filters, 'price') &&
             <div className={`${classNamePrefix}-form__block ${classNamePrefix}-form__block--price`}>
@@ -549,7 +549,7 @@ export default function FormFilterSortCatalog(props: FormFilterSortCatalogProps)
           }
           {
             !isEmptyObject(sorters) &&
-            <div className={`${classNamePrefix}-form__block ${classNamePrefix}-form__block--sort`}>
+            <div className={`${classNamePrefix}-form__block ${classNamePrefix}-form__block--sort`} data-testid='form-sorters'>
               <h4 className={`${classNamePrefix}-form__title ${classNamePrefix}-form__title--sort`}>
                 Сортировка
               </h4>
