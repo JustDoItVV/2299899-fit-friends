@@ -18,6 +18,11 @@ jest.mock('react-pdf', () => ({
   Page: () => <div>page</div>,
   Document: () => <div>page</div>,
 }));
+jest.mock('../../components/header/header', () => ({
+  ...jest.requireActual('../../components/header/header'),
+  __esModule: true,
+  default: jest.fn(() => <div>Header</div>),
+}));
 jest.mock('../../components/loading/loading', () => ({
   ...jest.requireActual('../../components/loading/loading'),
   __esModule: true,
@@ -28,7 +33,11 @@ jest.mock('../not-found-page/not-found.page', () => ({
   __esModule: true,
   default: jest.fn(() => <div>NotFound</div>),
 }));
-jest.mock('react-player/lazy');
+jest.mock('../../components/cards/card-training-info/card-training-info', () => ({
+  ...jest.requireActual('../../components/cards/card-training-info/card-training-info'),
+  __esModule: true,
+  default: jest.fn(() => <div>CardTrainingInfo</div>),
+}));
 
 describe('Component TrainingCardPage', () => {
   let mockState: State;
@@ -53,11 +62,12 @@ describe('Component TrainingCardPage', () => {
       .reply(200, makeFakeTraining());
   });
 
-  // test('should render correctly', async () => {
-  //   await act(async () => render(withStoreComponent));
+  test('should render correctly', async () => {
+    await act(async () => render(withStoreComponent));
 
-  //   expect(screen.queryByText('Карточка тренировки')).toBeInTheDocument();
-  // });
+    expect(screen.queryByText('Header')).toBeInTheDocument();
+    expect(screen.queryByText('CardTrainingInfo')).toBeInTheDocument();
+  });
 
   test('should render with NotFoundPage when training not found', async () => {
     mockAxiosAdapter.onGet(new RegExp(`${ApiRoute.Training}/(.*)}`))

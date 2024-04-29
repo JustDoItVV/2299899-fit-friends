@@ -33,33 +33,28 @@ describe('Component Header', () => {
     expect(screen.queryByText('Поиск')).toBeInTheDocument();
   });
 
-  // test('should dispatch "fetchNotifications.pending", "fetchNotifications.fulfilled", "deleteNotification.pending", "deleteNotification.fulfilled" and render correctly when open notifications button cilck', async () => {
-  //   const user = userEvent.setup();
-  //   const { withStoreComponent, mockAxiosAdapter, mockStore } = withStore(
-  //     withHistory(<Header page={FrontendRoute.Main} />),
-  //     mockState,
-  //   );
-  //   mockAxiosAdapter.onGet(ApiRoute.Notification).reply(200, [makeFakeNotification(), makeFakeNotification()]);
-  //   mockAxiosAdapter.onDelete(new RegExp(`${ApiRoute.Notification}/(.*)`)).reply(204);
+  test('should dispatch "fetchNotifications.pending", "fetchNotifications.fulfilled", "deleteNotification.pending", "deleteNotification.fulfilled" and render correctly when open notifications button cilck', async () => {
+    const user = userEvent.setup();
+    const { withStoreComponent, mockAxiosAdapter, mockStore } = withStore(
+      withHistory(<Header page={FrontendRoute.Main} />),
+      mockState,
+    );
+    mockAxiosAdapter.onGet(ApiRoute.Notification).reply(200, [makeFakeNotification(), makeFakeNotification()]);
+    mockAxiosAdapter.onDelete(new RegExp(`${ApiRoute.Notification}/(.*)`)).reply(204);
 
-  //   await act(async () => render(withStoreComponent));
-  //   await user.click(screen.getByTestId('header-notifications-button-trigger'));
-  //   const emittedActions1 = mockStore.getActions();
-  //   const actionsTypes1 = extractActionsTypes(emittedActions1);
-  //   await user.click(screen.getByTestId('header-notifications-list').children[0].children[0]);
-  //   const emittedActions2 = mockStore.getActions();
-  //   const actionsTypes2 = extractActionsTypes(emittedActions2);
-  //   console.log(screen.debug());
+    await act(async () => render(withStoreComponent));
+    await user.click(screen.getByTestId('header-notifications-button-trigger'));
+    await user.click(screen.getByTestId('header-notifications-list').children[0].children[0]);
+    const emittedActions = mockStore.getActions();
+    const actions = extractActionsTypes(emittedActions);
 
-  //   expect(actionsTypes1).toEqual([
-  //     fetchNotifications.pending.type,
-  //     fetchNotifications.fulfilled.type,
-  //   ]);
-  //   expect(actionsTypes2).toEqual([
-  //     deleteNotification.pending.type,
-  //     deleteNotification.fulfilled.type,
-  //   ]);
-  //   expect(screen.queryByText('Оповещения')).toBeInTheDocument();
-  //   expect(screen.getByTestId('header-notifications-list').children.length).toBe(2);
-  // });
+    expect(actions).toEqual([
+      fetchNotifications.pending.type,
+      fetchNotifications.fulfilled.type,
+      deleteNotification.pending.type,
+      deleteNotification.fulfilled.type,
+    ]);
+    expect(screen.queryByText('Оповещения')).toBeInTheDocument();
+    expect(screen.getByTestId('header-notifications-list').children.length).toBe(2);
+  });
 });

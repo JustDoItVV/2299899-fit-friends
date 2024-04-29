@@ -60,23 +60,6 @@ describe('Component AccountAbout', () => {
     expect(screen.queryByText('Loading')).toBeInTheDocument();
   });
 
-  // test('should render form editable when edit button click', async () => {
-  //   const user = userEvent.setup();
-  //   const { withStoreComponent } = withStore(
-  //     withHistory(<AccountAbout />),
-  //     mockState,
-  //   );
-
-  //   await act(async () => render(withStoreComponent));
-  //   await user.click(screen.getByTestId('account-about-button-edit'));
-
-  //   expect(screen.queryByText('Выйти')).toBeInTheDocument();
-  //   expect(screen.queryByTestId('account-about-avatar')).toBeInTheDocument();
-  //   expect(screen.queryByText('Сохранить')).toBeInTheDocument();
-  //   expect(screen.queryByText('Обо мне')).toBeInTheDocument();
-  //   expect(screen.getByTestId('account-about-input-name')).not.toBeDisabled();
-  // });
-
   test('should dispatch "APP/setCurrentUser", "APP/setAuthStatus" logout button click', async () => {
     const { withStoreComponent, mockStore } = withStore(
       withHistory(<AccountAbout />),

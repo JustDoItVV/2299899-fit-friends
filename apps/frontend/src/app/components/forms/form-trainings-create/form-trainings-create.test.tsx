@@ -3,7 +3,7 @@ import '@testing-library/jest-dom';
 import { ApiRoute } from '@2299899-fit-friends/consts';
 import {
     createTraining, extractActionsTypes, makeFakeState, makeFakeTraining, redirectToRoute,
-    setResponseError
+    setResponseError, State
 } from '@2299899-fit-friends/frontend-core';
 import { act, fireEvent, render, screen } from '@testing-library/react';
 
@@ -11,6 +11,13 @@ import { withHistory, withStore } from '../../../test-mocks/test-mocks-component
 import FormTrainingsCreate from './form-trainings-create';
 
 describe('Component FormQuestionnaireUser', () => {
+  let mockState: State;
+
+  beforeEach(() => {
+    mockState = makeFakeState();
+    mockState.APP.responseError = null;
+  });
+
   test('should render correctly', async () => {
     const { withStoreComponent } = withStore(withHistory(<FormTrainingsCreate />), makeFakeState());
 
