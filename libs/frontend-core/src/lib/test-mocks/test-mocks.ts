@@ -4,8 +4,8 @@ import {
 } from '@2299899-fit-friends/consts';
 import { randomArrayElement } from '@2299899-fit-friends/helpers';
 import {
-    AuthStatus, NameSpace, OrderPaymentMethod, OrderType, TrainingAuditory, TrainingDuration,
-    TrainingLevel, TrainingRequestStatus, TrainingType, User, UserGender, UserRole
+    AuthStatus, NameSpace, OrderPaymentMethod, OrderType, Training, TrainingAuditory,
+    TrainingDuration, TrainingLevel, TrainingRequestStatus, TrainingType, User, UserGender, UserRole
 } from '@2299899-fit-friends/types';
 import { faker } from '@faker-js/faker';
 
@@ -68,7 +68,7 @@ export const makeFakeResponseError = () => ({
   statusCode: faker.number.int({ min: 400, max: 500 }),
 });
 
-export const makeFakeTraining = () => {
+export const makeFakeTraining = (): Training => {
   const backgroundPictureName = `${faker.string.uuid()}-mockBackgroundPicture`;
 
   const videoName = `${faker.string.uuid()}-mockVideo`;

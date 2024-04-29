@@ -188,6 +188,7 @@ export default function CardTrainingInfo({ id }: CardTrainingInfoProps): JSX.Ele
                     width={64}
                     height={64}
                     alt={trainer?.name}
+                    data-testid='card-avatar'
                   />
                 }
               </picture>

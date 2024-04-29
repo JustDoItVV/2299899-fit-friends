@@ -179,6 +179,7 @@ export default function CardUserInfo(): JSX.Element {
                     width={334}
                     height={573}
                     alt="photo1"
+                    data-testid='card-avatar'
                   />
                 }
               </li>
@@ -193,6 +194,7 @@ export default function CardUserInfo(): JSX.Element {
                     width={334}
                     height={573}
                     alt="photo1"
+                    data-testid='card-avatar'
                   />
                 }
               </li>
@@ -234,6 +236,7 @@ export default function CardUserInfo(): JSX.Element {
                     name="user-agreement"
                     checked={subscribed}
                     onChange={handleSubscribeInputChange}
+                    data-testid='card-user-info-checkbox-subscribe'
                   />
                   <span className="custom-toggle__icon">
                     <svg width={9} height={6} aria-hidden="true">
