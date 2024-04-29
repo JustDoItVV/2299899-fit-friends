@@ -8,7 +8,7 @@ import { ToastContainer } from 'react-toastify';
 import { browserHistory, frontendStorage } from '@2299899-fit-friends/frontend-core';
 
 import App from './app/app';
-import HistoryRouter from './app/components/history-router/history-router.component';
+import HistoryRouter from './app/components/history-router/history-router';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement

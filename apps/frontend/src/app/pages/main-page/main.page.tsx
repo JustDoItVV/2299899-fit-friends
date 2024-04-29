@@ -92,7 +92,7 @@ export default function MainPage(): JSX.Element {
         <section className='look-for-company'>
           <div className="container">
             <SliderBlock
-              title='Ишут компанию для тренировки'
+              title='Ищут компанию для тренировки'
               classNamePrefix='look-for-company'
               fetch={fetchUsersCatalog}
               query={{ isReadyToTraining: true }}

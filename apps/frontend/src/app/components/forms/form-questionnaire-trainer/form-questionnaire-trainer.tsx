@@ -111,6 +111,7 @@ export default function FormQuestionnaireTrainer(): JSX.Element {
           value={type}
           checked={trainingTypes.includes(type)}
           onChange={hadleTrainingTypeInputChange}
+          data-testid='form-questionnaire-input-type'
         />
         <span className="btn-checkbox__btn">
           {type.charAt(0).toLocaleUpperCase() + type.slice(1)}
@@ -128,6 +129,7 @@ export default function FormQuestionnaireTrainer(): JSX.Element {
           value={level}
           checked={trainingLevel === level}
           onChange={handleTrainingLevelChange}
+          data-testid='form-questionnaire-input-level'
         />
         <span className="custom-toggle-radio__icon" />
         <span className="custom-toggle-radio__label">
@@ -138,7 +140,7 @@ export default function FormQuestionnaireTrainer(): JSX.Element {
   ));
 
   return (
-    <form method="post" action="#" onSubmit={handleFormSubmit}>
+    <form method="post" action="#" onSubmit={handleFormSubmit} data-testid='questionnaire-form'>
       <div className="questionnaire-coach">
         <h1 className="visually-hidden">Опросник</h1>
         <div className="questionnaire-coach__wrapper">
@@ -181,6 +183,7 @@ export default function FormQuestionnaireTrainer(): JSX.Element {
                   tabIndex={-1}
                   accept=".pdf"
                   onChange={handleCertificateInputChange}
+                  data-testid='form-questionnaire-input-certificate'
                 />
                 <span className="custom-input__error">
                   {getResponseErrorMessage(responseError, 'file')}
@@ -199,6 +202,7 @@ export default function FormQuestionnaireTrainer(): JSX.Element {
                   placeholder=" "
                   defaultValue={merits}
                   onChange={handleMeritsChange}
+                  data-testid='form-questionnaire-input-description'
                 />
               </label>
             </div>
@@ -214,6 +218,7 @@ export default function FormQuestionnaireTrainer(): JSX.Element {
                   name="individual-training"
                   checked={isReadyToPersonal}
                   onChange={handleIsReadyToPersonalInputChange}
+                  data-testid='form-questionnaire-input-flag'
                 />
                 <span className="questionnaire-coach__checkbox-icon">
                   <svg width={9} height={6} aria-hidden="true">

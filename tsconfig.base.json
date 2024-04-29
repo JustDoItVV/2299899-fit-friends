@@ -8,23 +8,47 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "importHelpers": true,
-    "target": "es2015",
+    "target": "es2020",
     "module": "esnext",
-    "lib": ["es2020", "dom"],
+    "lib": [
+      "es2020",
+      "dom"
+    ],
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@2299899-fit-friends/backend-core": ["libs/backend-core/src/index.ts"],
-      "@2299899-fit-friends/config": ["libs/config/src/index.ts"],
-      "@2299899-fit-friends/consts": ["libs/consts/src/index.ts"],
-      "@2299899-fit-friends/dtos": ["libs/dtos/src/index.ts"],
-      "@2299899-fit-friends/frontend-core": ["libs/frontend-core/src/index.ts"],
-      "@2299899-fit-friends/helpers": ["libs/helpers/src/index.ts"],
-      "@2299899-fit-friends/logger": ["libs/logger/src/index.ts"],
-      "@2299899-fit-friends/models": ["libs/models/src/index.ts"],
-      "@2299899-fit-friends/types": ["libs/types/src/index.ts"]
+      "@2299899-fit-friends/backend-core": [
+        "libs/backend-core/src/index.ts"
+      ],
+      "@2299899-fit-friends/config": [
+        "libs/config/src/index.ts"
+      ],
+      "@2299899-fit-friends/consts": [
+        "libs/consts/src/index.ts"
+      ],
+      "@2299899-fit-friends/dtos": [
+        "libs/dtos/src/index.ts"
+      ],
+      "@2299899-fit-friends/frontend-core": [
+        "libs/frontend-core/src/index.ts"
+      ],
+      "@2299899-fit-friends/helpers": [
+        "libs/helpers/src/index.ts"
+      ],
+      "@2299899-fit-friends/logger": [
+        "libs/logger/src/index.ts"
+      ],
+      "@2299899-fit-friends/models": [
+        "libs/models/src/index.ts"
+      ],
+      "@2299899-fit-friends/types": [
+        "libs/types/src/index.ts"
+      ]
     }
   },
-  "exclude": ["node_modules", "tmp"]
+  "exclude": [
+    "node_modules",
+    "tmp"
+  ]
 }

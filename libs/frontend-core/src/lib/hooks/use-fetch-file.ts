@@ -19,7 +19,7 @@ export function useFetchFileUrl(
   useEffect(() => {
     const fetchFile = async () => {
       if (params && (params.id || params.path)) {
-        let url: string;
+        let url: string = defaultValue;
         setLoading(true);
         try {
           url = unwrapResult(await dispatch(fetch(params)));

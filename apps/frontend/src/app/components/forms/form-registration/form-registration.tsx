@@ -72,7 +72,7 @@ export default function RegistrationForm(): JSX.Element {
   ));
 
   return (
-    <form method="post" onSubmit={handleFormSubmit}>
+    <form method="post" onSubmit={handleFormSubmit} data-testid='register-form'>
       <div className="sign-up">
         <div className="sign-up__load-photo">
           <div className="input-load-avatar">

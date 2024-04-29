@@ -114,7 +114,7 @@ export default function SliderBlock(props: SliderBlockProps): JSX.Element {
   ));
 
   return (
-    <div className={`${classNamePrefix}__wrapper`}>
+    <div className={`${classNamePrefix}__wrapper`} data-testid={`slider-block-${classNamePrefix}`}>
       <div className={`${classNamePrefix}__title-wrapper`}>
         {
           title &&
@@ -128,7 +128,7 @@ export default function SliderBlock(props: SliderBlockProps): JSX.Element {
         { headerAdditionalElement }
         {
           controls &&
-          <div className={`${classNamePrefix}__controls`}>
+          <div className={`${classNamePrefix}__controls`} data-testid='slider-block-controls'>
             <button
               className={classnames(
                 'btn-icon',
@@ -165,7 +165,7 @@ export default function SliderBlock(props: SliderBlockProps): JSX.Element {
       {
         !loading
         ?
-        <ul className={`${items.length !== 0 ? 'slider-block-wrapper' : ''} ${classNamePrefix}__list`}>
+        <ul className={`${items.length !== 0 ? 'slider-block-wrapper' : ''} ${classNamePrefix}__list`} data-testid='slider-block-list'>
           {
             items.length !== 0
             ?
@@ -184,7 +184,7 @@ export default function SliderBlock(props: SliderBlockProps): JSX.Element {
               {itemsElements}
             </Slider>
             :
-            <li className={`${classNamePrefix}__item`}>
+            <li className={`${classNamePrefix}__item`} data-testid='slider-block-list-placeholder'>
               <CardPlaceholder classNameInfix={placeholderInfix} imagePath={PlaceholderPath.CardForYou} />
             </li>
           }

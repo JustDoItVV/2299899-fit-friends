@@ -8,9 +8,10 @@ import { rootReducer } from '../root-reducer';
 type Reducer = ReturnType<typeof rootReducer>;
 
 export const redirect: Middleware<unknown, Reducer> =
-  () => (next) => (action: PayloadAction<string>) => {
-    if (action.type === 'frontend/redirectToRoute') {
-      browserHistory.push(action.payload);
+  () => (next) => (action: unknown) => {
+    const act = action as PayloadAction<string>;
+    if (act.type === 'frontend/redirectToRoute') {
+      browserHistory.push(act.payload);
     }
 
     return next(action);

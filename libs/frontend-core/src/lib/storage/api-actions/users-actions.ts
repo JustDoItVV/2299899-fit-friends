@@ -3,8 +3,8 @@ import { stringify } from 'qs';
 
 import { ApiRoute } from '@2299899-fit-friends/consts';
 import {
-    AuthData, AuthStatus, FetchFileParams, FrontendRoute, Pagination, QueryPagination, User,
-    UserWithToken
+    AuthData, AuthStatus, FetchFileParams, FrontendRoute, Pagination, QueryPagination,
+    ResponseError, User, UserWithToken
 } from '@2299899-fit-friends/types';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
@@ -26,10 +26,10 @@ export const checkAuth = createAsyncThunk<
 });
 
 export const loginUser = createAsyncThunk<
-  UserWithToken,
+  UserWithToken | null,
   AuthData,
   { dispatch: AppDispatch; state: State; extra: AxiosInstance }
->('users/loginUser', async (authData, { dispatch, extra: api, rejectWithValue }) => {
+>('users/loginUser', async (authData, { dispatch, extra: api }) => {
   try {
     const { data } = await api.post<UserWithToken>(
       `${ApiRoute.User}${ApiRoute.Login}`,
@@ -40,20 +40,26 @@ export const loginUser = createAsyncThunk<
     dispatch(redirectToRoute(`/${FrontendRoute.Login}`));
     return data;
   } catch (error) {
-    if (!error.response) {
-      throw new Error(error);
+    if (
+      typeof error === 'object'
+      && error
+      && 'response' in error
+      && typeof error.response === 'object'
+      && error.response
+      && 'data' in error.response
+      && typeof error.response.data === 'object'
+    ) {
+      dispatch(setResponseError(error.response.data as ResponseError));
     }
-
-    dispatch(setResponseError(error.response.data));
-    return rejectWithValue(error.response.data);
+    return null;
   }
 });
 
 export const registerUser = createAsyncThunk<
-  UserWithToken,
+  UserWithToken | null,
   FormData,
   { dispatch: AppDispatch; state: State; extra: AxiosInstance }
->('users/registerUser', async (userData, { dispatch, extra: api, rejectWithValue }) => {
+>('users/registerUser', async (userData, { dispatch, extra: api }) => {
   try {
     await api.post<User>(`${ApiRoute.User}${ApiRoute.Register}`, userData);
     const { data: loggedData } = await api.post<UserWithToken>(
@@ -63,15 +69,22 @@ export const registerUser = createAsyncThunk<
 
     dispatch(setAuthStatus(AuthStatus.Unknown));
     saveToken(loggedData.accessToken);
+    dispatch(setResponseError(null));
     dispatch(redirectToRoute(`/${FrontendRoute.Questionnaire}`));
     return loggedData;
   } catch (error) {
-    if (!error.response) {
-      throw new Error(error);
+    if (
+      typeof error === 'object'
+      && error
+      && 'response' in error
+      && typeof error.response === 'object'
+      && error.response
+      && 'data' in error.response
+      && typeof error.response.data === 'object'
+    ) {
+      dispatch(setResponseError(error.response.data as ResponseError));
     }
-
-    dispatch(setResponseError(error.response.data));
-    return rejectWithValue(error.response.data);
+    return null;
   }
 });
 
@@ -85,12 +98,12 @@ export const fetchUser = createAsyncThunk<
 });
 
 export const updateUser = createAsyncThunk<
-  User,
+  User | null,
   { id: string; data: FormData },
   { dispatch: AppDispatch; state: State; extra: AxiosInstance }
 >(
   'users/updateUser',
-  async ({ id, data }, { dispatch, extra: api, rejectWithValue }) => {
+  async ({ id, data }, { dispatch, extra: api }) => {
     try {
       const { data: user } = await api.patch<User>(
         `${ApiRoute.User}/${id}`,
@@ -99,12 +112,18 @@ export const updateUser = createAsyncThunk<
       dispatch(setResponseError(null));
       return user;
     } catch (error) {
-      if (!error.response) {
-        throw new Error(error);
+      if (
+        typeof error === 'object'
+        && error
+        && 'response' in error
+        && typeof error.response === 'object'
+        && error.response
+        && 'data' in error.response
+        && typeof error.response.data === 'object'
+      ) {
+        dispatch(setResponseError(error.response.data as ResponseError));
       }
-
-      dispatch(setResponseError(error.response.data));
-      return rejectWithValue(error.response.data);
+      return null;
     }
   }
 );

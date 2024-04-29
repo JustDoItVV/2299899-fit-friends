@@ -2,7 +2,9 @@ import { AxiosInstance } from 'axios';
 import { stringify } from 'qs';
 
 import { ApiRoute } from '@2299899-fit-friends/consts';
-import { Balance, Pagination, QueryPagination, User } from '@2299899-fit-friends/types';
+import {
+    Balance, Pagination, QueryPagination, ResponseError, User
+} from '@2299899-fit-friends/types';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
 import { setCurrentUser, setResponseError } from '../reducers/app-process/app-process.slice';
@@ -38,18 +40,24 @@ export const addFriend = createAsyncThunk<
   void,
   string,
   { dispatch: AppDispatch; state: State; extra: AxiosInstance }
->('accountUser/addFriend', async (id, { dispatch, extra: api, rejectWithValue }) => {
+>('accountUser/addFriend', async (id, { dispatch, extra: api }) => {
   try {
     await api.post(`${ApiRoute.User}/${id}${ApiRoute.Friend}`);
     const { data } = await api.get<User>(`${ApiRoute.User}/${id}`);
     dispatch(setUser(data));
+    dispatch(setResponseError(null));
   } catch (error) {
-    if (!error.response) {
-      throw new Error(error);
+    if (
+      typeof error === 'object'
+      && error
+      && 'response' in error
+      && typeof error.response === 'object'
+      && error.response
+      && 'data' in error.response
+      && typeof error.response.data === 'object'
+    ) {
+      dispatch(setResponseError(error.response.data as ResponseError));
     }
-
-    dispatch(setResponseError(error.response.data));
-    return rejectWithValue(error.response.data);
   }
 });
 
@@ -57,18 +65,24 @@ export const deleteFriend = createAsyncThunk<
   void,
   string,
   { dispatch: AppDispatch; state: State; extra: AxiosInstance }
->('accountUser/deleteFriend', async (id, { dispatch, extra: api, rejectWithValue }) => {
+>('accountUser/deleteFriend', async (id, { dispatch, extra: api }) => {
   try {
     await api.delete(`${ApiRoute.User}/${id}${ApiRoute.Friend}`);
     const { data } = await api.get<User>(`${ApiRoute.User}/${id}`);
     dispatch(setUser(data));
+    dispatch(setResponseError(null));
   } catch (error) {
-    if (!error.response) {
-      throw new Error(error);
+    if (
+      typeof error === 'object'
+      && error
+      && 'response' in error
+      && typeof error.response === 'object'
+      && error.response
+      && 'data' in error.response
+      && typeof error.response.data === 'object'
+    ) {
+      dispatch(setResponseError(error.response.data as ResponseError));
     }
-
-    dispatch(setResponseError(error.response.data));
-    return rejectWithValue(error.response.data);
   }
 });
 
@@ -76,21 +90,26 @@ export const subscribeToTrainer = createAsyncThunk<
   void,
   string,
   { dispatch: AppDispatch; state: State; extra: AxiosInstance }
->('accountUser/subscribeToTrainer', async (id, { dispatch, extra: api, rejectWithValue, getState }) => {
+>('accountUser/subscribeToTrainer', async (id, { dispatch, extra: api, getState }) => {
   try {
     const state = getState();
     await api.post(`${ApiRoute.User}/${id}${ApiRoute.Subscribe}`);
     await api.post(`${ApiRoute.Account}${ApiRoute.User}${ApiRoute.SendNewTrainingsMail}`);
-    const { data } = await api.get<User>(`${ApiRoute.User}/${state.APP.currentUser.id}`);
+    const { data } = await api.get<User>(`${ApiRoute.User}/${state.APP.currentUser?.id}`);
     dispatch(setCurrentUser(data));
     dispatch(setResponseError(null));
   } catch (error) {
-    if (!error.response) {
-      throw new Error(error);
+    if (
+      typeof error === 'object'
+      && error
+      && 'response' in error
+      && typeof error.response === 'object'
+      && error.response
+      && 'data' in error.response
+      && typeof error.response.data === 'object'
+    ) {
+      dispatch(setResponseError(error.response.data as ResponseError));
     }
-
-    dispatch(setResponseError(error.response.data));
-    return rejectWithValue(error.response.data);
   }
 });
 
@@ -98,19 +117,25 @@ export const unsubscribeFromTrainer = createAsyncThunk<
   void,
   string,
   { dispatch: AppDispatch; state: State; extra: AxiosInstance }
->('accountUser/unsubscribeFromTrainer', async (id, { dispatch, extra: api, rejectWithValue, getState }) => {
+>('accountUser/unsubscribeFromTrainer', async (id, { dispatch, extra: api, getState }) => {
   try {
     const state = getState();
     await api.delete(`${ApiRoute.User}/${id}${ApiRoute.Subscribe}`);
-    const { data } = await api.get<User>(`${ApiRoute.User}/${state.APP.currentUser.id}`);
+    const { data } = await api.get<User>(`${ApiRoute.User}/${state.APP.currentUser?.id}`);
     dispatch(setCurrentUser(data));
+    dispatch(setResponseError(null));
   } catch (error) {
-    if (!error.response) {
-      throw new Error(error);
+    if (
+      typeof error === 'object'
+      && error
+      && 'response' in error
+      && typeof error.response === 'object'
+      && error.response
+      && 'data' in error.response
+      && typeof error.response.data === 'object'
+    ) {
+      dispatch(setResponseError(error.response.data as ResponseError));
     }
-
-    dispatch(setResponseError(error.response.data));
-    return rejectWithValue(error.response.data);
   }
 });
 

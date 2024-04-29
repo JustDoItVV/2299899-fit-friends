@@ -161,6 +161,7 @@ export default function PopupBuy(props: PopupBuyProps): JSX.Element {
                   type="button"
                   aria-label="plus"
                   onClick={handlePlusAmountButtonClick}
+                  data-testid='buy-button-amount'
                 >
                   <svg width={12} height={12} aria-hidden="true">
                     <use xlinkHref="#icon-plus" />
@@ -181,6 +182,7 @@ export default function PopupBuy(props: PopupBuyProps): JSX.Element {
                       aria-label="Visa."
                       value={OrderPaymentMethod.Visa}
                       onChange={handlePaymentMethodInputChange}
+                      data-testid='buy-method-visa'
                     />
                     <span className="btn-radio-image__image">
                       <svg width={58} height={20} aria-hidden="true">
@@ -246,6 +248,7 @@ export default function PopupBuy(props: PopupBuyProps): JSX.Element {
               type="button"
               onClick={handleBuyButtonClick}
               disabled={!amount || !paymentMethod}
+              data-testid='buy-button'
             >
               Купить
             </button>

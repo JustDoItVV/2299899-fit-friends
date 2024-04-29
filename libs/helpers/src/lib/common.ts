@@ -53,7 +53,7 @@ export function randomArrayElement<T>(array: T[]): T {
 }
 
 export function randomArrayElements<T>(array: T[], count?: number): T[] {
-  const randomArray = [];
+  const randomArray: T[] = [];
 
   while (randomArray.length !== count) {
     const element = randomArrayElement<T>(array);
@@ -65,7 +65,7 @@ export function randomArrayElements<T>(array: T[], count?: number): T[] {
   return randomArray;
 }
 
-export function isEmptyObject(object): boolean {
+export function isEmptyObject(object: object): boolean {
   for (const key in object) {
     if (Object.prototype.hasOwnProperty.call(object, key)) {
       return false;

@@ -105,7 +105,7 @@ export default function TrainingsCreateForm(): JSX.Element {
             <h1 className="popup-form__title">Создание тренировки</h1>
           </div>
           <div className="popup-form__form">
-            <form method="post" onSubmit={handleFormSubmit}>
+            <form method="post" onSubmit={handleFormSubmit} data-testid='create-form'>
               <div className="create-training">
                 <div className="create-training__wrapper">
                   <div className="create-training__block">

@@ -59,6 +59,7 @@ export default function PopupReview({ trainingId, trigger }: PopupReviewProps): 
             aria-label={`оценка ${index + 1}.`}
             value={index + 1}
             onChange={handleRatingInputChange}
+            data-testid='review-rating'
           />
           <span className="popup__rate-number">{index + 1}</span>
         </label>
@@ -109,6 +110,7 @@ export default function PopupReview({ trainingId, trigger }: PopupReviewProps): 
                       placeholder=''
                       defaultValue=''
                       onChange={handleTextareaChange}
+                      data-testid='review-text'
                     />
                      <span className="custom-input__error">
                       {getResponseErrorMessage(responseError, 'text')}
@@ -123,6 +125,7 @@ export default function PopupReview({ trainingId, trigger }: PopupReviewProps): 
                 type="button"
                 disabled={!(!!rating && !!text)}
                 onClick={handleCreateReviewButtonClick}
+                data-testid='review-create'
               >
                 Продолжить
               </button>

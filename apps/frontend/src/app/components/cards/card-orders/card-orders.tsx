@@ -38,6 +38,7 @@ export default memo(function OrderCatalogCard({ item }: OrderCatalogCardProps): 
                 width={330}
                 height={190}
                 alt="training"
+                data-testid='card-image'
               />
             }
           </picture>

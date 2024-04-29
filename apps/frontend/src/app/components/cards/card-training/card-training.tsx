@@ -37,6 +37,7 @@ export default memo(function CardTraining({ item }: CardTrainingProps): JSX.Elem
                 width={330}
                 height={190}
                 alt={training.title}
+                data-testid='card-image'
               />
             }
           </picture>

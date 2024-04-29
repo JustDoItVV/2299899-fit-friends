@@ -50,6 +50,7 @@ export default memo(function CardReview({ item }: CardReviewProps): JSX.Element 
                 width={64}
                 height={64}
                 alt={`user_${review.userId}`}
+                data-testid='card-image'
               />
             }
           </picture>

@@ -3,6 +3,7 @@ import './account-friends.page.css';
 import { useEffect, useRef, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 
+import { QueryParameters } from '@2299899-fit-friends/consts';
 import {
     fetchRequests, fetchTrainerFriends, fetchUserFriends, selectCurrentUser, useAppSelector,
     useBackButton, useFetchPagination
@@ -58,7 +59,7 @@ export default function AccountFriendsPage(): JSX.Element {
                 fetch={currentUser?.role === UserRole.Trainer ? fetchTrainerFriends : fetchUserFriends}
                 component={CardFriends}
                 classNamePrefix='friends-list'
-                query={{ limit: 3 }}
+                query={{ limit: QueryParameters.AccountMyTrainingsLimit }}
                 additionalData={{ requests }}
               />
             </div>

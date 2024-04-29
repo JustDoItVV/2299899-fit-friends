@@ -100,6 +100,7 @@ export default function QuestionnaireFormUser(): JSX.Element {
           value={type}
           checked={trainingTypes.includes(type)}
           onChange={hadleTrainingTypeInputChange}
+          data-testid='form-questionnaire-input-type'
         />
         <span className="btn-checkbox__btn">
           {type.charAt(0).toLocaleUpperCase() + type.slice(1)}
@@ -121,6 +122,7 @@ export default function QuestionnaireFormUser(): JSX.Element {
             value={duration}
             checked={trainingDuration === duration}
             onChange={handleTrainingDurationChange}
+            data-testid='form-questionnaire-input-duration'
           />
           <span className="custom-toggle-radio__icon" />
           <span className="custom-toggle-radio__label">{duration}</span>
@@ -138,6 +140,7 @@ export default function QuestionnaireFormUser(): JSX.Element {
           value={level}
           checked={trainingLevel === level}
           onChange={handleTrainingLevelChange}
+          data-testid='form-questionnaire-input-level'
         />
         <span className="custom-toggle-radio__icon" />
         <span className="custom-toggle-radio__label">
@@ -148,7 +151,7 @@ export default function QuestionnaireFormUser(): JSX.Element {
   ));
 
   return (
-    <form method="post" action="#" onSubmit={handleFormSubmit}>
+    <form method="post" action="#" onSubmit={handleFormSubmit} data-testid='questionnaire-form'>
       <div className="questionnaire-user">
         <h1 className="visually-hidden">Опросник</h1>
         <div className="questionnaire-user__wrapper">

@@ -51,7 +51,7 @@ export function useFetchPagination<T extends CatalogItem>(
             newItems.push(entity);
           }
         });
-        return newItems
+        return newItems;
       });
       nextPageRef.current++;
     }
@@ -60,13 +60,14 @@ export function useFetchPagination<T extends CatalogItem>(
 
   const fetchAll = useCallback(async () => {
     setLoading(true);
-    const result = [];
+    const result: T[] = [];
     let page = 1;
+
 
     do {
       if (!isEmptyObject(query)) {
         const { entities, totalPages, totalItems } = unwrapResult(
-          await dispatch(fetch(query))
+          await dispatch(fetch({ ...query, page }))
         );
 
         if (!totalPagesRef.current || !totalItemsRef.current) {

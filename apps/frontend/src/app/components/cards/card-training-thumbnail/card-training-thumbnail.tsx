@@ -36,6 +36,7 @@ export default memo(function CardTrainingThumbnail(props: CardTrainingThumbnailP
               width={452}
               height={191}
               alt={training.title}
+              data-testid='card-image'
             />
           }
         </picture>

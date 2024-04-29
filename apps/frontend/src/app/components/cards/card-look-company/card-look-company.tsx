@@ -45,6 +45,7 @@ export default memo(function CardLookCompany({ item }: CardSeekCompanyProps): JS
                 width={82}
                 height={82}
                 alt={user.name}
+                data-testid='card-image'
               />
             }
           </picture>
