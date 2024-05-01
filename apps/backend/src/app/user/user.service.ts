@@ -135,7 +135,7 @@ export class UserService {
       const mockPageBackgroundeName = `${MockTrainingBackgroundPicture.Prefix}${pictureNumber}${MockTrainingBackgroundPicture.Suffix}`;
       const pageBackgroundName = `${randomUUID()}-${mockPageBackgroundeName}`;
       copyFileSync(
-        join(MockTrainingBackgroundPicture.Directory, mockPageBackgroundeName),
+        join(`${this.uploaderService.getPublicDirectory()}/img/content`, mockPageBackgroundeName),
         join(uploadPath, pageBackgroundName)
       );
       const pageBackground = join(

@@ -29,6 +29,10 @@ export class UploaderService {
     return this.config.uploadDirectory;
   }
 
+  public getPublicDirectory(): string {
+    return this.config.publicDirectory;
+  }
+
   public getSubDirectoryUpload(): string {
     const [year, month] = dayjs().format(this.DATE_FORMAT).split(' ');
     return join(year, month);
