@@ -7,6 +7,8 @@ services:
       - fit_friends_fakesmtp
     restart: always
     image: ${IMAGE}
+    env_file:
+      - .stage.env
     ports:
       - ${BACKEND_PORT}:${BACKEND_PORT}
       - ${VITE_FRONTEND_PREVIEW_PORT}:${VITE_FRONTEND_PREVIEW_PORT}

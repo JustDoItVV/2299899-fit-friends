@@ -29,7 +29,6 @@ COPY ./dist/apps/frontend .
 COPY server.nginx.conf /etc/nginx/conf.d/default.conf
 RUN rm -rf ../../../../node_modules
 WORKDIR /opt/fit-friends
-COPY .stage.env .env
 COPY stage.start.sh .
 RUN chmod +x stage.start.sh
 CMD ["sh", "stage.start.sh"]
