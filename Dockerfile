@@ -21,7 +21,7 @@ COPY ./dist/apps/cli .
 
 
 
-WORKDIR /usr/share/nginx/html
+WORKDIR /opt/fit-friends/apps/frontend
 COPY ./dist/apps/frontend .
 
 

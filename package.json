@@ -8,17 +8,20 @@
     "dev:frontend": "npx nx serve frontend",
     "dev:lint": "npx eslint",
     "dev:tests": "npx nx test frontend && npx nx test frontend-core",
+    "dev:dependencies": "docker compose --file ./docker-compose.dev.yml --env-file ./.env --project-name 'fit_friends' up -d --remove-orphans && npx nx run backend:db:generate && npx nx run backend:db:migrate",
+    "dev": "npm i && npm run dev:dependencies",
     "stage:build:backend": "npx nx run backend:build",
     "stage:build:cli": "npx nx run cli:build",
     "stage:build:frontend": "npx nx run frontend:build",
     "stage:build": "npm run stage:build:backend && npm run stage:build:cli && npm run stage:build:frontend",
     "stage:container:build": "docker build --file ./Dockerfile --tag fit-friends:latest .",
-    "stage:container:up": "docker compose --file ./docker-compose.dev.yml --file ./docker-compose.stage.yml --env-file .stage.env --project-name 'fit_friends_stage' up -d",
+    "stage:container:up": "IMAGE=fit-friends:latest docker compose --file ./docker-compose.dev.yml --file ./docker-compose.stage.yml --env-file .stage.env --project-name 'fit_friends_stage' up -d --remove-orphans",
     "stage:container:db:migrate": "docker exec fit-friends npx prisma@5.12.1 migrate deploy --schema ./apps/backend/schema.prisma",
     "stage:container:db:reset": "docker exec fit-friends npx prisma@5.12.1 migrate reset --schema ./apps/backend/schema.prisma --force",
-    "stage:container": "npm run stage:container:build && npm run stage:container:up && npm run stage:container:db:migrate",
+    "stage:container": "npm run stage:container:build && npm run stage:container:up",
     "stage": "npm run stage:build && npm run stage:container",
-    "stage:cli": "docker exec fit-friends node ./apps/cli/main.js"
+    "stage:cli": "docker exec fit-friends node ./apps/cli/main.js",
+    "stage:pull:up": "docker pull ghcr.io/justdoitvv/fit-friends.stage:latest && IMAGE=ghcr.io/justdoitvv/fit-friends.stage:latest docker compose --file ./docker-compose.stage.yml --file ./docker-compose.dev.yml up -d"
   },
   "private": true,
   "dependencies": {

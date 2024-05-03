@@ -6,7 +6,7 @@ services:
       - fit_friends_postgres
       - fit_friends_fakesmtp
     restart: always
-    image: fit-friends:latest
+    image: ${IMAGE}
     ports:
       - ${BACKEND_PORT}:${BACKEND_PORT}
       - ${VITE_FRONTEND_PREVIEW_PORT}:${VITE_FRONTEND_PREVIEW_PORT}
