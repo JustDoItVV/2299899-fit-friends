@@ -66,6 +66,7 @@ npm run dev:cli -- --generate 50 postgresql://admin:123456@localhost:5432/fit_fr
 - `dev:frontend` - запуск фронтэнд приложения
 - `dev:lint` - проверка EsLint директорий
 - `dev:tests` - запуск юнит тестов frontend, frontend-core с детализацией
+- `dev:install` - установка npm зависимостей и генерация клиента Prisma
 - `dev:dependencies` - установка зависимостей приложения в docker контейнерах
 - `dev` - установка всех необходимых для запуска приложения зависимостей npm, docker, миграций на этапе разработки
 - `stage:build:backend` - сборка build дистрибутива приложения `backend`

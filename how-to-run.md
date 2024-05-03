@@ -20,6 +20,7 @@ npm run stage:pull:up
 Самостоятельно локально собрать и запустить docker образ
 
 ```
+npm run dev:install
 npm run stage
 ```
 
