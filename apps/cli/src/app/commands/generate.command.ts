@@ -40,13 +40,13 @@ export class GenerateCommand implements CliCommand {
     for (let i = 0; i < count; i++) {
       const role = i % 2 ? UserRole.Trainer : UserRole.User;
 
-      const mockAvatarDirectory = `apps/frontend/public/img/content/avatars/${role === UserRole.Trainer ? 'coaches' : 'users'}`;
+      const mockAvatarDirectory = `${this.config().publicDirectory}/img/content/avatars/${role === UserRole.Trainer ? 'coaches' : 'users'}`;
       const mockAvatarName = faker.helpers.arrayElement(readdirSync(mockAvatarDirectory));
       const avatarName = `${randomUUID()}-${mockAvatarName}`;
       copyFileSync(join(mockAvatarDirectory, mockAvatarName), join(uploadDirectory, avatarName));
       const avatar = join(this.getSubDirectoryUpload(), avatarName);
 
-      const mockPageBackgroundDirectory = `apps/frontend/public/img/content/user-card-coach`;
+      const mockPageBackgroundDirectory = `${this.config().publicDirectory}/img/content/user-card-coach`;
       const mockPageBackgroundName = faker.helpers.arrayElement(readdirSync(mockPageBackgroundDirectory));
       const pageBackgroundName = `${randomUUID()}-${mockPageBackgroundName}`;
       copyFileSync(join(mockPageBackgroundDirectory, mockPageBackgroundName), join(uploadDirectory, pageBackgroundName));
@@ -58,7 +58,10 @@ export class GenerateCommand implements CliCommand {
         for (let i = 1; i <= certificatesCount; i++) {
           const mockCertificateName = `${MockCertificate.Prefix}${i}${MockCertificate.Suffix}`;
           const certificateName = `${randomUUID()}-${mockCertificateName}`;
-          copyFileSync(join(MockCertificate.Directory, mockCertificateName), join(uploadDirectory, certificateName));
+          copyFileSync(
+            join(`${this.config().publicDirectory}/img/content/certificates-and-diplomas`, mockCertificateName),
+            join(uploadDirectory, certificateName),
+          );
           certificates.push(join(this.getSubDirectoryUpload(), certificateName));
         }
       }
@@ -110,13 +113,13 @@ export class GenerateCommand implements CliCommand {
     for (let i = 0; i < count; i++) {
       const user = faker.helpers.arrayElement(trainers);
 
-      const mockBackgroundPictureDirectory = `apps/frontend/public/img/content/user-card-coach`;
+      const mockBackgroundPictureDirectory = `${this.config().publicDirectory}/img/content/user-card-coach`;
       const mockBackgroundPictureName = faker.helpers.arrayElement(readdirSync(mockBackgroundPictureDirectory));
       const backgroundPictureName = `${randomUUID()}-${mockBackgroundPictureName}`;
       copyFileSync(join(mockBackgroundPictureDirectory, mockBackgroundPictureName), join(uploadDirectory, backgroundPictureName));
       const backgroundPicture = join(this.getSubDirectoryUpload(), backgroundPictureName);
 
-      const mockVideoDirectory = `apps/frontend/public/img/content/training-video`;
+      const mockVideoDirectory = `${this.config().publicDirectory}/img/content/training-video`;
       const mockVideoName = faker.helpers.arrayElement(['video-1.mp4']);
       const videoName = `${randomUUID()}-${mockVideoName}`;
       copyFileSync(join(mockVideoDirectory, mockVideoName), join(uploadDirectory, videoName));

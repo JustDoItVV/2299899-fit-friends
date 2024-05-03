@@ -13,6 +13,7 @@ export interface BackendConfig {
   refreshTokenSecret: string;
   refreshTokenExpiresIn: string;
   mockPassword: string;
+  publicDirectory: string;
 }
 
 const validationSchema = Joi.object({
@@ -25,6 +26,7 @@ const validationSchema = Joi.object({
   refreshTokenSecret: Joi.string().required().label('JWT_REFRESH_TOKEN_SECRET'),
   refreshTokenExpiresIn: Joi.string().required().label('JWT_REFRESH_TOKEN_EXPIRES_IN'),
   mockPassword: Joi.string().required().label('MOCK_PASSWORD'),
+  publicDirectory: Joi.string().required().label('PUBLIC_DIRECTORY_PATH'),
 });
 
 function validateConvig(config: BackendConfig): void {
@@ -48,6 +50,7 @@ function getConfig(): BackendConfig {
     refreshTokenSecret: process.env.JWT_REFRESH_TOKEN_SECRET,
     refreshTokenExpiresIn: process.env.JWT_REFRESH_TOKEN_EXPIRES_IN,
     mockPassword: process.env.MOCK_PASSWORD,
+    publicDirectory: process.env.PUBLIC_DIRECTORY_PATH,
   };
 
   validateConvig(config);

@@ -1,0 +1,23 @@
+version: '3.9'
+services:
+  fit_friends:
+    container_name: fit-friends
+    depends_on:
+      - fit_friends_postgres
+      - fit_friends_fakesmtp
+    restart: always
+    image: ${IMAGE}
+    env_file:
+      - .stage.env
+    ports:
+      - ${BACKEND_PORT}:${BACKEND_PORT}
+      - ${VITE_FRONTEND_PREVIEW_PORT}:${VITE_FRONTEND_PREVIEW_PORT}
+    networks:
+      - fit_friends
+
+volumes:
+  fit_friends_postgres:
+
+networks:
+  fit_friends:
+    driver: bridge

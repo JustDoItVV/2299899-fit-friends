@@ -20,6 +20,11 @@
         }
       }
     },
+    "build": {
+      "options": {
+        "generatePackageJson": true
+      }
+    },
     "db:lint": {
       "executor": "nx:run-commands",
       "options": {

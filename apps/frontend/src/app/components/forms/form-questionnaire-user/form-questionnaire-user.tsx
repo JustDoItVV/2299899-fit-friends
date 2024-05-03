@@ -82,8 +82,10 @@ export default function QuestionnaireFormUser(): JSX.Element {
         formData.append('caloriesTarget', caloriesTarget ? caloriesTarget.toString() : '');
         formData.append('caloriesPerDay', caloriesPerDay ? caloriesPerDay.toString() : '');
 
-        unwrapResult(await dispatch(updateUser({ id: currentUser.id, data: formData })));
-        dispatch(redirectToRoute(`/${FrontendRoute.Main}`));
+        const result = unwrapResult(await dispatch(updateUser({ id: currentUser.id, data: formData })));
+        if (result) {
+          dispatch(redirectToRoute(`/${FrontendRoute.Main}`));
+        }
       } catch {
         pass();
       }
@@ -151,7 +153,7 @@ export default function QuestionnaireFormUser(): JSX.Element {
   ));
 
   return (
-    <form method="post" action="#" onSubmit={handleFormSubmit} data-testid='questionnaire-form'>
+    <form onSubmit={handleFormSubmit} data-testid='questionnaire-form'>
       <div className="questionnaire-user">
         <h1 className="visually-hidden">Опросник</h1>
         <div className="questionnaire-user__wrapper">

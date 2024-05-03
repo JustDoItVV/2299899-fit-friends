@@ -49,7 +49,7 @@ export class TrainingService {
     const mockBackgroundPictureName = `${MockTrainingBackgroundPicture.Prefix}${pictureNumber}${MockTrainingBackgroundPicture.Suffix}`;
     const backgroundPictureName = `${randomUUID()}-${mockBackgroundPictureName}`;
     copyFileSync(
-      join(MockTrainingBackgroundPicture.Directory, mockBackgroundPictureName),
+      join(`${this.uploaderService.getPublicDirectory()}/img/content`, mockBackgroundPictureName),
       join(uploadPath, backgroundPictureName)
     );
     const backgroundPicture = join(

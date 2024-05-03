@@ -6,14 +6,12 @@ export enum BalanceAvailable {
 }
 
 export enum MockTrainingBackgroundPicture {
-  Directory = 'apps/frontend/public/img/content',
   Count = 4,
   Prefix = 'training-',
   Suffix = '.png',
 }
 
 export enum MockCertificate {
-  Directory = 'apps/frontend/public/img/content/certificates-and-diplomas',
   Count = 6,
   Prefix = 'certificate-',
   Suffix = '.pdf',
