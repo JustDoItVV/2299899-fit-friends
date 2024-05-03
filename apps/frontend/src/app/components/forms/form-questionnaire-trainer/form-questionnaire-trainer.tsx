@@ -93,8 +93,10 @@ export default function FormQuestionnaireTrainer(): JSX.Element {
         formData.append('merits', merits);
         formData.append('isReadyToPersonal', isReadyToPersonal.toString());
 
-        unwrapResult(await dispatch(updateUser({ id: currentUser.id, data: formData })));
-        dispatch(redirectToRoute(`/${FrontendRoute.Account}`));
+        const result = unwrapResult(await dispatch(updateUser({ id: currentUser.id, data: formData })));
+        if (result) {
+          dispatch(redirectToRoute(`/${FrontendRoute.Account}`));
+        }
       } catch {
         pass();
       }
@@ -140,7 +142,7 @@ export default function FormQuestionnaireTrainer(): JSX.Element {
   ));
 
   return (
-    <form method="post" action="#" onSubmit={handleFormSubmit} data-testid='questionnaire-form'>
+    <form onSubmit={handleFormSubmit} data-testid='questionnaire-form'>
       <div className="questionnaire-coach">
         <h1 className="visually-hidden">Опросник</h1>
         <div className="questionnaire-coach__wrapper">
