@@ -10,6 +10,18 @@
 npm run dev
 ```
 
+### 2.1. Выборочная установка зависимостей (для тестирования)
+
+Только npm пакеты и генерация клиента Prisma
+```
+dev:install
+```
+
+Только развертывание docker контейнеров внешних приложений
+```
+dev:dependencies
+```
+
 ### 3. Запустить проект
 
 Терминал 1:
@@ -38,6 +50,15 @@ npm run dev:cli -- --generate 50 postgresql://admin:123456@localhost:5432/fit_fr
 - Вкладка Connection -> поле Hostname/address: fit_friends_postgres (container_name из docker-compose.dev.yml)
 - Вкладка Connection -> поле username: POSTGRES_USER из env файла
 - Вкладка Connection -> поле password: POSTGRES_PASSWORD из env файла
+
+## Автоматизированное тестирование
+
+Запуск юнит тестов
+
+```
+npm run dev:tests
+```
+
 
 ## Ручное тестирование
 
